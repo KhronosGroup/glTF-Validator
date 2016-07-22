@@ -1,8 +1,5 @@
 analyzer:
   strong-mode: true
-  exclude:
-    - lib/src/ext/khr_materials_common/khr_materials_common.dart
-    - web/viewer.dart
 
 linter:
   rules:
