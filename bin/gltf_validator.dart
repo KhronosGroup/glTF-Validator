@@ -37,8 +37,8 @@ void main(List<String> args) {
   } on FormatException catch (_) {}
 
   if (argResult?.rest?.length != 1) {
-    stderr.write("Usage: gltf_validator [<options>] <asset-file>");
-    stderr.write(parser.usage);
+    stderr.writeln("Usage: gltf_validator [<options>] <asset-file>");
+    stderr.writeln(parser.usage);
   } else {
     _load(argResult.rest[0]);
   }
@@ -55,16 +55,17 @@ Future _load(String filename) async {
   } else if (filename.endsWith(".glb")) {
     reader = new GlbReader(fileStream);
   } else {
-    stderr.write("Unknown file format.");
+    stderr.writeln("Unknown file format.");
+    return;
   }
 
   try {
     await reader.root;
-    stdout.write(reader.context);
+    stdout.writeln(reader.context);
   } on Context catch (e) {
     // Failed before Gltf.fromMap call
-    stdout.write(e);
+    stdout.writeln(e);
   } on FileSystemException catch (e) {
-    stderr.writeln(e.message);
+    stderr.writeln(e);
   }
 }

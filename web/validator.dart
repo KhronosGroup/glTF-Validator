@@ -43,6 +43,7 @@ void main() {
 
   dropZone.onDrop.listen((MouseEvent e) async {
     e.preventDefault();
+    output.text = "";
     dropZone.classes.remove('hover');
     dropZone.classes.add('drop');
 
