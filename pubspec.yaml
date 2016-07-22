@@ -20,4 +20,4 @@ executables:
   gltf_validator:
 
 transformers:
-- dart_to_js_script_rewriter
+ - dart_to_js_script_rewriter

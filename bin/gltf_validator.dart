@@ -45,9 +45,10 @@ void main(List<String> args) {
 }
 
 Future _load(String filename) async {
-  stderr.writeln("Loading $filename...");
+  final file = new File(filename);
+  stderr.writeln("Loading ${file.path}...");
 
-  final fileStream = new File(filename).openRead();
+  final fileStream = file.openRead();
 
   GltfReader reader;
   if (filename.endsWith(".gltf")) {
@@ -55,7 +56,7 @@ Future _load(String filename) async {
   } else if (filename.endsWith(".glb")) {
     reader = new GlbReader(fileStream);
   } else {
-    stderr.writeln("Unknown file format.");
+    stderr.writeln("Unknown file extension.");
     return;
   }
 

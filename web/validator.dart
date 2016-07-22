@@ -57,7 +57,7 @@ void main() {
         write("<strong>Loading ${file.name}...</strong>");
         reader = new GltfReader(controller.stream);
       } else {
-        write("<strong>Unknown file format: ${file.name}</strong><br>");
+        write("<strong>${file.name}: Unknown file extension.</strong><br>");
         continue;
       }
 
