@@ -41,13 +41,16 @@ void main() {
     e.preventDefault();
   });
 
-  dropZone.onDrop.listen((MouseEvent e) async {
+  dropZone.onDrop.listen((MouseEvent e) {
     e.preventDefault();
     output.text = "";
     dropZone.classes.remove('hover');
     dropZone.classes.add('drop');
 
-    for (final file in e.dataTransfer.files) {
+    // Workaround for dart-sdk#26945
+    final iterator = e.dataTransfer.files.iterator;
+
+    void handleFile(File file) {
       final controller = new StreamController<List<int>>();
       GltfReader reader;
       if (file.name.endsWith(".glb")) {
@@ -58,7 +61,7 @@ void main() {
         reader = new GltfReader(controller.stream);
       } else {
         write("<strong>${file.name}: Unknown file extension.</strong><br>");
-        continue;
+        if (iterator.moveNext()) handleFile(iterator.current);
       }
 
       int index = 0;
@@ -80,15 +83,18 @@ void main() {
       handleNextChunk(file);
 
       try {
-        await reader.root;
-        write(reader.context);
+        reader.root.then((_) {
+          write(reader.context);
+          if (iterator.moveNext()) handleFile(iterator.current);
+        });
       } on Context catch (e) {
         // Failed before Gltf.fromMap call
         write(e);
+        if (iterator.moveNext()) handleFile(iterator.current);
       }
-
-      write("<strong>${file.name} done</strong><br>");
     }
+
+    if (iterator.moveNext()) handleFile(iterator.current);
     dropZone.classes.remove('drop');
   });
 }
