@@ -17,6 +17,7 @@
 
 library gltf.extensions.khr_binary_gltf;
 
+import 'errors.dart';
 import "package:gltf/src/utils.dart";
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
@@ -116,6 +117,9 @@ class KhrBinaryGltfExtension extends Extension {
     Image: const ExtFuncs(KhrBinaryGltfImage.fromMap, null),
     Shader: const ExtFuncs(KhrBinaryGltfShader.fromMap, null),
   };
+
+  final Map<String, ErrorFunction> errors = GlbError.messages;
+  final Map<String, ErrorFunction> warnings = GlbWarning.messages;
 
   factory KhrBinaryGltfExtension() => _singleton;
 

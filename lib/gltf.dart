@@ -19,5 +19,6 @@ library gltf;
 
 export "package:gltf/src/context.dart";
 export "package:gltf/src/gltf_reader.dart";
+export "package:gltf/src/report.dart";
 export "package:gltf/src/base/gltf.dart";
 export "package:gltf/src/ext/khr_binary_gltf/glb_reader.dart";

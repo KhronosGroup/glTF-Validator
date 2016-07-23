@@ -18,8 +18,6 @@
 import 'dart:async';
 import 'dart:io';
 
-//import 'package:test/test.dart';
-
 const files = const <String>[
   "data/khronos/2CylinderEngine/glTF/2CylinderEngine.gltf",
   "data/khronos/Box/glTF/Box.gltf",
@@ -124,44 +122,35 @@ const fr24 = const <String>[
 ];
 
 Future main() async {
-/*
   print("Core samples:");
   for (final path in files) {
     await run(path);
   }
-
-
 
   print("Embedded samples:");
   for (final path in filesEmbedded) {
     await run(path);
   }
 
-
   print("Binary samples:");
   for (final path in filesGlb) {
     await run(path);
   }
-*/
 
   print("MaterialsCommon samples:");
   for (final path in filesMatCommon) {
-    try {
-      await run(path);
-    } catch (e, st) {
-      print(e);
-      print(st);
-    }
+    await run(path);
   }
-/*
+
   print("Flightradar24 samples:");
   for (final path in fr24) {
     await run(path);
-  }*/
+  }
 }
 
 Future run(String filename) async {
-  final p = await Process.run('dart', ["bin/gltf_validator.dart", "$filename"]);
+  final p = await Process.run(
+      Platform.resolvedExecutable, ["bin/gltf_validator.dart", "$filename"]);
   stderr.write(p.stderr);
   stdout.write(p.stdout);
 }

@@ -22,32 +22,33 @@ import 'package:gltf/src/errors.dart';
 enum Severity { Error, Warning }
 
 abstract class GlbWarning {
-  static const SUB_OPTIMAL_SCENELENGTH = "SUB_OPTIMAL_SCENELENGTH";
+  static const GLB_SUB_OPTIMAL_SCENELENGTH = "GLB_SUB_OPTIMAL_SCENELENGTH";
 
   static final messages = <String, ErrorFunction>{
-    SUB_OPTIMAL_SCENELENGTH: (List args) =>
-        "Sub-optimal (% 4 != 0) scene length: ${args[0]}."
+    GLB_SUB_OPTIMAL_SCENELENGTH: (List args) =>
+        "Sub-optimal (${args[0]} % 4 != 0) scene length."
   };
 }
 
 abstract class GlbError {
-  static const INVALID_MAGIC = "INVALID_MAGIC";
-  static const INVALID_VERSION = "INVALID_VERSION";
-  static const INVALID_SCENEFORMAT = "INVALID_SCENEFORMAT";
-  static const FILE_TOO_SHORT = "FILE_TOO_SHORT";
-  static const UNEXPECTED_END_OF_HEADER = "UNEXPECTED_END_OF_HEADER";
-  static const UNEXPECTED_END_OF_SCENE = "UNEXPECTED_END_OF_SCENE";
-  static const UNEXPECTED_END_OF_FILE = "UNEXPECTED_END_OF_FILE";
+  static const GLB_INVALID_MAGIC = "GLB_INVALID_MAGIC";
+  static const GLB_INVALID_VERSION = "GLB_INVALID_VERSION";
+  static const GLB_INVALID_SCENEFORMAT = "GLB_INVALID_SCENEFORMAT";
+  static const GLB_FILE_TOO_SHORT = "GLB_FILE_TOO_SHORT";
+  static const GLB_UNEXPECTED_END_OF_HEADER = "GLB_UNEXPECTED_END_OF_HEADER";
+  static const GLB_UNEXPECTED_END_OF_SCENE = "GLB_UNEXPECTED_END_OF_SCENE";
+  static const GLB_UNEXPECTED_END_OF_FILE = "GLB_UNEXPECTED_END_OF_FILE";
 
   static final messages = <String, ErrorFunction>{
-    INVALID_MAGIC: (List args) => "Invalid glTF magic value (${args[0]}).",
-    INVALID_VERSION: (List args) => "Invalid glTF version value (${args[0]}).",
-    INVALID_SCENEFORMAT: (List args) =>
+    GLB_INVALID_MAGIC: (List args) => "Invalid glTF magic value (${args[0]}).",
+    GLB_INVALID_VERSION: (List args) =>
+        "Invalid glTF version value (${args[0]}).",
+    GLB_INVALID_SCENEFORMAT: (List args) =>
         "Invalid glTF sceneFormat value (${args[0]}).",
-    FILE_TOO_SHORT: (List args) =>
+    GLB_FILE_TOO_SHORT: (List args) =>
         "File length less than headerLength + sceneLength",
-    UNEXPECTED_END_OF_HEADER: (List args) => "Unexpected end of header.",
-    UNEXPECTED_END_OF_SCENE: (List args) => "Unexpected end of `scene`.",
-    UNEXPECTED_END_OF_FILE: (List args) => "Unexpected end of file."
+    GLB_UNEXPECTED_END_OF_HEADER: (List args) => "Unexpected end of header.",
+    GLB_UNEXPECTED_END_OF_SCENE: (List args) => "Unexpected end of `scene`.",
+    GLB_UNEXPECTED_END_OF_FILE: (List args) => "Unexpected end of file."
   };
 }

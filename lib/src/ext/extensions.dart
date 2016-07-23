@@ -40,6 +40,8 @@ abstract class Extension {
       const <String, Semantic>{};
   Map<String, Semantic> get attributeParameterSemantics =>
       const <String, Semantic>{};
+  Map<String, ErrorFunction> get errors => const <String, ErrorFunction>{};
+  Map<String, ErrorFunction> get warnings => const <String, ErrorFunction>{};
 
   // Sub-classes should be singletons instead of consts because of
   // https://github.com/dart-lang/sdk/issues/17207

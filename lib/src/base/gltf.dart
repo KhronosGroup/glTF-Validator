@@ -17,6 +17,8 @@
 
 library gltf.core.gltf;
 
+import 'dart:math';
+
 import 'package:gltf/src/gl.dart' as gl;
 
 import 'accessor.dart';
@@ -110,7 +112,7 @@ class Gltf extends GltfProperty {
   factory Gltf.fromMap(Map<String, Object> map, Context context) {
     context.path
       ..clear()
-      ..add(GLTF);
+      ..add("");
     if (context.validate) checkMembers(map, GLTF_MEMBERS, context);
 
     // Prepare glTF extensions handlers
@@ -134,6 +136,7 @@ class Gltf extends GltfProperty {
       final items = getMap(map, name, context, req: req);
       context.path
         ..clear()
+        ..add("")
         ..add(name);
 
       for (final id in items.keys) {
@@ -152,6 +155,7 @@ class Gltf extends GltfProperty {
       final item = getMap(map, name, context, req: req);
       context.path
         ..clear()
+        ..add("")
         ..add(name);
       if (item == null) return null;
       return fromMap(item, context);
@@ -206,7 +210,7 @@ class Gltf extends GltfProperty {
 
     context.path
       ..clear()
-      ..add(GLTF);
+      ..add("");
 
     final gltf = new Gltf._(
         extensionsUsed,
@@ -234,7 +238,9 @@ class Gltf extends GltfProperty {
         getExtras(map));
 
     // Step 2: linking IDs
-    context.path.clear();
+    context.path
+      ..clear()
+      ..add("");
 
     final topLevelMaps = <String, Map<String, GltfProperty>>{
       ACCESSORS: accessors,
@@ -275,5 +281,68 @@ class Gltf extends GltfProperty {
     linkCollection(MESHES, meshes);
 
     return gltf;
+  }
+
+  Map<String, Object> get info {
+    final info = <String, Object>{};
+
+    info[VERSION] = asset.version;
+    if (extensionsUsed.isNotEmpty) info[EXTENSIONS_USED] = extensionsUsed;
+    if (glExtensionsUsed.isNotEmpty)
+      info[GL_EXTENSIONS_USED] = glExtensionsUsed;
+
+    final externalResources = <String, List<String>>{};
+
+    final externalBuffers = <String>[];
+    for (final buffer in buffers.values) {
+      if (buffer.uri != null) externalBuffers.add(buffer.uri.toString());
+    }
+    if (externalBuffers.isNotEmpty)
+      externalResources["buffers"] = externalBuffers;
+
+    final externalImages = <String>[];
+    for (final image in images.values) {
+      if (image.uri != null) externalImages.add(image.uri.toString());
+    }
+    if (externalImages.isNotEmpty) externalResources["images"] = externalImages;
+
+    final externalShaders = <String>[];
+    for (final shader in shaders.values) {
+      if (shader.uri != null) externalShaders.add(shader.uri.toString());
+    }
+    if (externalShaders.isNotEmpty)
+      externalResources["shaders"] = externalShaders;
+
+    if (externalResources.isNotEmpty)
+      info["externalResources"] = externalResources;
+
+    info["hasAnimations"] = animations.isNotEmpty;
+    info["hasMaterials"] = materials.isNotEmpty;
+    info["hasSkins"] = skins.isNotEmpty;
+    info["hasAnimations"] = textures.isNotEmpty;
+
+    int primitivesCount = 0;
+    int maxAttributesUsed = 0;
+    for (final mesh in meshes.values) {
+      if (mesh.primitives != null) {
+        primitivesCount += mesh.primitives.length;
+        for (final primitive in mesh.primitives) {
+          maxAttributesUsed =
+              max(maxAttributesUsed, primitive.attributes.length);
+        }
+      }
+    }
+    info["primitivesCount"] = primitivesCount;
+    info["maxAttributesUsed"] = maxAttributesUsed;
+
+    info["programsCount"] = programs.length;
+
+    int maxUniformsUsed = 0;
+    for (final technique in techniques.values) {
+      maxUniformsUsed = max(maxUniformsUsed, technique.uniforms.length);
+    }
+    info["maxUniformsUsed"] = maxUniformsUsed;
+
+    return info;
   }
 }

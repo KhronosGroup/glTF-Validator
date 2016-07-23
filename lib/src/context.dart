@@ -26,6 +26,8 @@ import 'ext/extensions.dart';
 class Context {
   final bool validate;
 
+  String mimeType;
+
   final List<GltfIssue> _errors = <GltfIssue>[];
   List<GltfIssue> get errors => new UnmodifiableListView<GltfIssue>(_errors);
 
@@ -103,7 +105,8 @@ class Context {
               orElse: () => null));
 
       if (extension == null) {
-        addIssue(GltfWarning.UNSUPPORTED_EXTENSION, args: [extensionName]);
+        addIssue(GltfWarning.UNSUPPORTED_EXTENSION,
+            name: EXTENSIONS_USED, args: [extensionName]);
         continue;
       }
 
@@ -187,7 +190,12 @@ class Context {
     return sb.toString();
   }
 
-  //String toJson() {}
+  @Deprecated("Not API part, will remove later")
+  void registerErrorMessages(
+      Map<String, ErrorFunction> errors, Map<String, ErrorFunction> warnings) {
+    GltfError.messages.addAll(errors);
+    GltfWarning.messages.addAll(warnings);
+  }
 
-  Context({this.validate: true});
+  Context({this.validate: true, this.mimeType: "model/gltf+json"});
 }

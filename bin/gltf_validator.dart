@@ -22,6 +22,8 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:gltf/gltf.dart';
 
+ArgResults argResult;
+
 void main(List<String> args) {
   final parser = new ArgParser();
 
@@ -31,7 +33,6 @@ void main(List<String> args) {
       help: 'Validation output format.',
       allowed: ['json', 'text']);
 
-  var argResult;
   try {
     argResult = parser.parse(args);
   } on FormatException catch (_) {}
@@ -60,13 +61,20 @@ Future _load(String filename) async {
     return;
   }
 
+  final report = new Report(reader.context, file.absolute.uri.toString());
+
   try {
-    await reader.root;
-    stdout.writeln(reader.context);
-  } on Context catch (e) {
-    // Failed before Gltf.fromMap call
-    stdout.writeln(e);
+    final root = await reader.root;
+    await reader.done;
+    report.info = root?.info;
+    _write(report);
   } on FileSystemException catch (e) {
     stderr.writeln(e);
   }
+}
+
+void _write(Report report) {
+  stdout.writeln(argResult["output-format"] == "json"
+      ? report.toJsonString()
+      : report.toString());
 }

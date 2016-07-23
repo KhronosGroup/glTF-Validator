@@ -16,7 +16,9 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
+import 'dart:js';
 import 'dart:math';
 
 import 'package:gltf/gltf.dart';
@@ -26,8 +28,9 @@ const int CHUNK_SIZE = 1024 * 1024;
 final dropZone = querySelector('#dropZone');
 final output = querySelector('#output');
 
-void write(Object text) {
-  output.appendHtml("$text\n");
+void write(String text) {
+  output.appendText("$text\n");
+  context["Prism"].callMethod("highlightAll");
 }
 
 void main() {
@@ -47,51 +50,59 @@ void main() {
     dropZone.classes.remove('hover');
     dropZone.classes.add('drop');
 
+    final reports = <Report>[];
+
     // Workaround for dart-sdk#26945
     final iterator = e.dataTransfer.files.iterator;
 
     void handleFile(File file) {
       final controller = new StreamController<List<int>>();
       GltfReader reader;
+      Report report;
       if (file.name.endsWith(".glb")) {
-        write("<strong>Loading ${file.name}...</strong>");
         reader = new GlbReader(controller.stream);
+        report = new Report(reader.context, file.name);
       } else if (file.name.endsWith(".gltf")) {
-        write("<strong>Loading ${file.name}...</strong>");
         reader = new GltfReader(controller.stream);
+        report = new Report(reader.context, file.name);
       } else {
-        write("<strong>${file.name}: Unknown file extension.</strong><br>");
         if (iterator.moveNext()) handleFile(iterator.current);
+        return;
+      }
+
+      void checkNext() {
+        if (iterator.moveNext())
+          handleFile(iterator.current);
+        else
+          write(new JsonEncoder.withIndent("    ").convert(reports));
       }
 
       int index = 0;
 
       void handleNextChunk(File file) {
-        final reader = new FileReader();
-        reader.onLoadEnd.listen((ProgressEvent event) {
+        final fileReader = new FileReader();
+        fileReader.onLoadEnd.listen((ProgressEvent event) {
           // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-          controller.add(reader.result);
+          controller.add(fileReader.result);
           if (index < file.size)
             handleNextChunk(file);
           else
             controller.close();
         });
         final length = min(CHUNK_SIZE, file.size - index);
-        reader.readAsArrayBuffer(file.slice(index, index += length));
+        fileReader.readAsArrayBuffer(file.slice(index, index += length));
       }
 
       handleNextChunk(file);
 
-      try {
-        reader.root.then((_) {
-          write(reader.context);
-          if (iterator.moveNext()) handleFile(iterator.current);
-        });
-      } on Context catch (e) {
-        // Failed before Gltf.fromMap call
-        write(e);
-        if (iterator.moveNext()) handleFile(iterator.current);
-      }
+      Future.wait([reader.root, reader.done]).then((futures) {
+        final root = futures[0] as dynamic /*=Gltf*/;
+        report.info = root?.info;
+        reports.add(report);
+        checkNext();
+      }, onError: (e) {
+        checkNext();
+      });
     }
 
     if (iterator.moveNext()) handleFile(iterator.current);

@@ -29,7 +29,8 @@ export "package:gltf/src/base/gltf.dart";
 
 abstract class GltfReader {
   Future<Gltf> get root;
-  Context context;
+  Context get context;
+  Future get done;
 
   factory GltfReader(Stream<List<int>> stream, [Context context]) =>
       new GltfJsonReader(stream, context);
@@ -37,16 +38,19 @@ abstract class GltfReader {
 
 class GltfJsonReader implements GltfReader {
   Future<Gltf> get root => _rootCompleter.future;
+  Future get done => root;
 
   final _rootCompleter = new Completer<Gltf>();
   StreamSubscription<List<int>> _subscription;
 
   ByteConversionSink _byteSink;
 
-  Context context;
+  Context _context;
+  Context get context => _context;
 
   GltfJsonReader(Stream<List<int>> stream, [Context context]) {
-    this.context = context ?? new Context();
+    _context = context ?? new Context();
+
     final outSink =
         new ChunkedConversionSink<Map<String, Object>>.withCallback((json) {
       try {
@@ -67,7 +71,7 @@ class GltfJsonReader implements GltfReader {
       _subscription.resume();
     } on FormatException catch (e) {
       context.addIssue(GltfError.INVALID_JSON, args: [e]);
-      _onError(context);
+      _abort();
     }
   }
 
@@ -81,7 +85,12 @@ class GltfJsonReader implements GltfReader {
       _byteSink.close();
     } on FormatException catch (e) {
       context.addIssue(GltfError.INVALID_JSON, args: [e]);
-      _onError(context);
+      _abort();
     }
+  }
+
+  void _abort() {
+    _subscription.cancel();
+    _rootCompleter.complete();
   }
 }

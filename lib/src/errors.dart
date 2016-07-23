@@ -212,27 +212,27 @@ typedef String ErrorFunction(List args);
 class GltfIssue {
   final Severity severity;
   final String path;
-  final String errorString;
+  final String type;
 
   final ErrorFunction _message;
   final List _args;
 
   String get message {
     if (_message == null)
-      return (errorString);
+      return (type);
     else
       return _message(_args);
   }
 
-  factory GltfIssue(String errorString, String path, List args) {
-    if (GltfError.messages.containsKey(errorString)) {
-      return new GltfIssue._(Severity.Error, errorString, path,
-          GltfError.messages[errorString], args);
-    } else if (GltfWarning.messages.containsKey(errorString)) {
-      return new GltfIssue._(Severity.Warning, errorString, path,
-          GltfWarning.messages[errorString], args);
+  factory GltfIssue(String type, String path, List args) {
+    if (GltfError.messages.containsKey(type)) {
+      return new GltfIssue._(
+          Severity.Error, type, path, GltfError.messages[type], args);
+    } else if (GltfWarning.messages.containsKey(type)) {
+      return new GltfIssue._(
+          Severity.Warning, type, path, GltfWarning.messages[type], args);
     } else {
-      throw new ArgumentError.value(errorString, "errorString");
+      throw new ArgumentError.value(type, "type");
     }
   }
 
@@ -240,9 +240,16 @@ class GltfIssue {
     if (path.isNotEmpty)
       return "$path: $message";
     else
-      return "$message";
+      return message;
   }
 
-  GltfIssue._(
-      this.severity, this.errorString, this.path, this._message, this._args);
+  Map<String, String> toMap() {
+    final map = <String, String>{};
+    map["type"] = type;
+    if (path.isNotEmpty) map["path"] = path;
+    if (_message != null) map["message"] = message;
+    return map;
+  }
+
+  GltfIssue._(this.severity, this.type, this.path, this._message, this._args);
 }

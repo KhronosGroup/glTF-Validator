@@ -34,6 +34,8 @@ const int GLB_SCENEFORMAT = 0;
 
 class GlbReader implements GltfReader {
   final bool stopOnBody;
+
+  Future get done => _bodyCompleter.future;
   Future<Gltf> get root => _rootCompleter.future;
   Future<Object> get body => _bodyCompleter.future;
 
@@ -50,11 +52,15 @@ class GlbReader implements GltfReader {
   int _bodySize = 0;
   Uint8List _body;
 
-  Context context;
+  Context _context;
+  Context get context => _context;
 
   GlbReader(Stream<List<int>> stream,
       [Context context, this.stopOnBody = false]) {
-    this.context = context ?? new Context();
+    _context = context ?? new Context();
+    _context.mimeType = "model/gltf.binary";
+    _context.registerErrorMessages(GlbError.messages, GlbWarning.messages);
+
     final outSink =
         new ChunkedConversionSink<Map<String, Object>>.withCallback((json) {
       try {
@@ -98,8 +104,8 @@ class GlbReader implements GltfReader {
             // Check glTF bytes
             final magic = _headerByteData.getUint32(0);
             if (magic != GLTF_ASCII) {
-              context.addIssue(GlbError.INVALID_MAGIC, args: [magic]);
-              _onError(context);
+              context.addIssue(GlbError.GLB_INVALID_MAGIC, args: [magic]);
+              _abort();
               return;
             }
 
@@ -107,17 +113,17 @@ class GlbReader implements GltfReader {
             final version =
                 _headerByteData.getUint32(4, Endianness.LITTLE_ENDIAN);
             if (version != GLB_VERSION) {
-              context.addIssue(GlbError.INVALID_VERSION, args: [version]);
-              _onError(context);
+              context.addIssue(GlbError.GLB_INVALID_VERSION, args: [version]);
+              _abort();
               return;
             }
 
             // Check glTF scene format
             final sceneFormat = _headerByteData.getUint32(16);
             if (sceneFormat != GLB_SCENEFORMAT) {
-              context
-                  .addIssue(GlbError.INVALID_SCENEFORMAT, args: [sceneFormat]);
-              _onError(context);
+              context.addIssue(GlbError.GLB_INVALID_SCENEFORMAT,
+                  args: [sceneFormat]);
+              _abort();
               return;
             }
 
@@ -126,7 +132,7 @@ class GlbReader implements GltfReader {
                 _headerByteData.getUint32(12, Endianness.LITTLE_ENDIAN);
 
             if (_sceneSize % 4 != 0)
-              context.addIssue(GlbWarning.SUB_OPTIMAL_SCENELENGTH,
+              context.addIssue(GlbWarning.GLB_SUB_OPTIMAL_SCENELENGTH,
                   args: [_sceneSize]);
 
             // Get body size
@@ -135,8 +141,8 @@ class GlbReader implements GltfReader {
             _bodySize = fileLength - _header.length - _sceneSize;
 
             if (_bodySize < 0) {
-              context.addIssue(GlbError.FILE_TOO_SHORT);
-              _onError(context);
+              context.addIssue(GlbError.GLB_FILE_TOO_SHORT);
+              _abort();
               return;
             }
 
@@ -156,7 +162,7 @@ class GlbReader implements GltfReader {
             index += _availableDataLength;
           } catch (e) {
             context.addIssue(GltfError.INVALID_JSON, args: [e]);
-            _onError(context);
+            _abort();
             return;
           }
           _bufferIndex += _availableDataLength;
@@ -166,13 +172,13 @@ class GlbReader implements GltfReader {
               _sceneSink.close();
             } catch (e) {
               context.addIssue(GltfError.INVALID_JSON, args: [e]);
-              _onError(context);
+              _abort();
               return;
             }
 
             if (stopOnBody) {
               _subscription.cancel();
-              _bodyCompleter.complete(null);
+              _bodyCompleter.complete();
               return;
             }
 
@@ -206,18 +212,29 @@ class GlbReader implements GltfReader {
   void _onDone() {
     switch (_state) {
       case START:
-        context.addIssue(GlbError.UNEXPECTED_END_OF_HEADER);
+        context.addIssue(GlbError.GLB_UNEXPECTED_END_OF_HEADER);
+        _abort();
         break;
 
       case SCENE:
-        if (_bufferIndex != _sceneSize)
-          context.addIssue(GlbError.UNEXPECTED_END_OF_SCENE);
+        if (_bufferIndex != _sceneSize) {
+          context.addIssue(GlbError.GLB_UNEXPECTED_END_OF_SCENE);
+          _abort();
+        }
         break;
 
       case BODY:
-        if (_bufferIndex != _bodySize)
-          context.addIssue(GlbError.UNEXPECTED_END_OF_FILE);
+        if (_bufferIndex != _bodySize) {
+          context.addIssue(GlbError.GLB_UNEXPECTED_END_OF_FILE);
+          _abort();
+        }
         break;
     }
+  }
+
+  void _abort() {
+    _subscription.cancel();
+    if (!_rootCompleter.isCompleted) _rootCompleter.complete();
+    _bodyCompleter.complete();
   }
 }
