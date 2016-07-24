@@ -51,12 +51,17 @@ class GltfJsonReader implements GltfReader {
   GltfJsonReader(Stream<List<int>> stream, [Context context]) {
     _context = context ?? new Context();
 
-    final outSink =
-        new ChunkedConversionSink<Map<String, Object>>.withCallback((json) {
-      try {
-        _rootCompleter.complete(new Gltf.fromMap(json[0], this.context));
-      } catch (e, st) {
-        _rootCompleter.completeError(e, st);
+    final outSink = new ChunkedConversionSink<Object>.withCallback((json) {
+      final result = json[0];
+      if (result is Map<String, Object>) {
+        try {
+          _rootCompleter.complete(new Gltf.fromMap(result, this.context));
+        } catch (e, st) {
+          _rootCompleter.completeError(e, st);
+        }
+      } else {
+        _context.addIssue(GltfError.INVALID_JSON_ROOT_OBJECT);
+        _abort();
       }
     });
 

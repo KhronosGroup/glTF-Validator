@@ -45,6 +45,7 @@ abstract class GltfWarning {
 
 abstract class GltfError {
   static const INVALID_JSON = "INVALID_JSON";
+  static const INVALID_JSON_ROOT_OBJECT = "INVALID_JSON_ROOT_OBJECT";
 
   // Generic errors
   static const ARRAY_LENGTH_NOT_IN_LIST = "ARRAY_LENGTH_NOT_IN_LIST";
@@ -121,6 +122,7 @@ abstract class GltfError {
   static final messages = <String, ErrorFunction>{
     INVALID_JSON: (List args) =>
         "Invalid JSON data. Parser output: ${args[0]}.",
+    INVALID_JSON_ROOT_OBJECT: (List args) => "JSON root must be an object.",
     ARRAY_LENGTH_NOT_IN_LIST: (List args) =>
         "Wrong array length (${args[0]}). Valid lengths are ${args[1]}.",
     ARRAY_LENGTH_OUT_OF_RANGE: (List args) =>
