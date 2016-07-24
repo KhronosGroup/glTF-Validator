@@ -133,15 +133,14 @@ class Gltf extends GltfProperty {
     // Helper function for converting JSON dictionary to Map of proper glTF objects
     Map<String, Object> toMap(String name, FromMapFunction fromMap,
         {bool req: false}) {
-      final items = getMap(map, name, context, req: req);
       context.path
         ..clear()
-        ..add("")
-        ..add(name);
+        ..add("");
+      final items = getMap(map, name, context, req: req);
+      context.path.add(name);
 
       for (final id in items.keys) {
         final itemMap = getMap(items, id, context, req: true);
-        if (itemMap.isEmpty) continue;
         context.path.add(id);
         items[id] = fromMap(itemMap, context);
         context.path.removeLast();
@@ -152,11 +151,12 @@ class Gltf extends GltfProperty {
 
     // Helper function for converting JSON dictionary to proper glTF object
     Object toValue(String name, FromMapFunction fromMap, {bool req: false}) {
-      final item = getMap(map, name, context, req: req);
       context.path
         ..clear()
-        ..add("")
-        ..add(name);
+        ..add("");
+      final item = getMap(map, name, context, req: req);
+      context.path.add(name);
+
       if (item == null) return null;
       return fromMap(item, context);
     }
@@ -255,7 +255,7 @@ class Gltf extends GltfProperty {
 
     void linkCollection(String key, Map<String, GltfProperty> collection) {
       context.path.add(key);
-      collection.forEach((id, item) {
+      collection.forEach((id, GltfProperty item) {
         context.path.add(id);
         if (item is Linkable)
           (item as dynamic/*=Linkable*/).link(gltf, context);

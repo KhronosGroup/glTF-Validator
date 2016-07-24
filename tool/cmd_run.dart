@@ -150,7 +150,7 @@ Future main() async {
 
 Future run(String filename) async {
   final p = await Process.run(
-      Platform.resolvedExecutable, ["bin/gltf_validator.dart", "$filename"]);
+      Platform.resolvedExecutable, ["--checked", "bin/gltf_validator.dart", "$filename"]);
   stderr.write(p.stderr);
   stdout.write(p.stdout);
 }

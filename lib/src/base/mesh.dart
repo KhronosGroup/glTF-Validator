@@ -114,7 +114,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
     return new MeshPrimitive._(
         attributes,
         getId(map, INDICES, context, req: false),
-        getId(map, MATERIAL, context),
+        getId(map, MATERIAL, context, req: false),
         getInt(map, MODE, context, list: modesEnum, def: gl.TRIANGLES),
         getExtensions(map, MeshPrimitive, context),
         getExtras(map));
