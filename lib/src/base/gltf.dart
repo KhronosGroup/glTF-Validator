@@ -155,6 +155,8 @@ class Gltf extends GltfProperty {
           }
           return items;
         } else {
+          if (req)
+            context.addIssue(GltfError.ROOT_DICTIONARY_EMPTY, name: name);
           return itemMaps;
         }
       } else {
@@ -191,8 +193,6 @@ class Gltf extends GltfProperty {
     final materials = toMap/*<Material>*/(MATERIALS, Material.fromMap);
 
     final meshes = toMap/*<Mesh>*/(MESHES, Mesh.fromMap, req: true);
-    if (meshes?.isEmpty == true)
-      context.addIssue(GltfError.MESHES_EMPTY, name: MESHES);
 
     final nodes = toMap/*<Node>*/(NODES, Node.fromMap);
 
