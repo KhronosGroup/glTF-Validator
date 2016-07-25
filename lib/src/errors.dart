@@ -72,7 +72,6 @@ abstract class GltfError {
   // Specific
   static const ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE =
       "ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE";
-  static const ACCESSOR_MIN_MAX = "ACCESSOR_MIN_MAX";
   static const ACCESSOR_MULTIPLE_COMPONENT_TYPE =
       "ACCESSOR_MULTIPLE_COMPONENT_TYPE";
   static const ACCESSOR_SMALL_BYTESTRIDE = "ACCESSOR_SMALL_BYTESTRIDE";
@@ -80,6 +79,7 @@ abstract class GltfError {
   static const ACCESSOR_UINT_NO_EXT = "ACCESSOR_UINT_NO_EXT";
   static const ACCESSOR_UINT_NO_ELEMENT_ARRAY =
       "ACCESSOR_UINT_NO_ELEMENT_ARRAY";
+  static const ACCESSOR_UINT_NO_SCALAR = "ACCESSOR_UINT_NO_SCALAR";
 
   static const BUFFERVIEW_TOO_LONG = "BUFFERVIEW_TOO_LONG";
 
@@ -153,18 +153,18 @@ abstract class GltfError {
     ROOT_DICTIONARY_EMPTY: (List args) => "Dictionary mustn't be empty",
     ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE: (List args) =>
         "Invalid value (${args[0]}) for bufferView with ELEMENT_ARRAY_BUFFER target",
-    ACCESSOR_MIN_MAX: (List args) =>
-        "Both `min` and `max` arrays must have the same length",
     ACCESSOR_MULTIPLE_COMPONENT_TYPE: (List args) =>
-        "Value (${args[0]}) isn't a multiple of componentType length (${args[1]})",
+        "Value (${args[0]}) isn't a multiple of a componentType length (${args[1]})",
     ACCESSOR_SMALL_BYTESTRIDE: (List args) =>
-        "Value is less than attribute length (${args[0]})",
+        "Value (${args[0]}) is less than an attribute length (${args[1]})",
     ACCESSOR_TOO_LONG: (List args) =>
         "Value (${args[0]}) exceeds referenced bufferView (`${args[1]}`) length (${args[2]})",
     ACCESSOR_UINT_NO_EXT: (List args) =>
         "5125 (UNSIGNED_INT) is only allowed when the `OES_element_index_uint` GL extension used",
     ACCESSOR_UINT_NO_ELEMENT_ARRAY: (List args) =>
         "5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with `ELEMENT_ARRAY_BUFFER` target",
+    ACCESSOR_UINT_NO_SCALAR: (List args) =>
+        "5125 (UNSIGNED_INT) is only allowed when the `type` is `SCALAR`",
     BUFFERVIEW_TOO_LONG: (List args) =>
         "BufferView doesn't fit buffer (`${args[0]}`) byteLength (${args[1]})",
     CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` mustn't be equal to `znear`",

@@ -33,9 +33,10 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
   int get byteLength =>
       (byteStride > 0
               ? byteStride
-              : gl.TYPE_LENGTHS[componentType] * ACCESSOR_TYPES_LENGTHS[type]) *
+              : gl.COMPONENT_TYPE_LENGTHS[componentType] *
+                  ACCESSOR_TYPES_LENGTHS[type]) *
           (count - 1) +
-      gl.TYPE_LENGTHS[componentType] * ACCESSOR_TYPES_LENGTHS[type];
+      gl.COMPONENT_TYPE_LENGTHS[componentType] * ACCESSOR_TYPES_LENGTHS[type];
 
   BufferView bufferView;
 
@@ -67,38 +68,30 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
   static Accessor fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, ACCESSORS_MEMBERS, context);
 
-    const List<int> componentTypesEnum = const <int>[
-      gl.BYTE,
-      gl.UNSIGNED_BYTE,
-      gl.SHORT,
-      gl.UNSIGNED_SHORT,
-      gl.UNSIGNED_INT,
-      gl.FLOAT
-    ];
-
-    final max = getNumList(map, MAX, context,
-        lengthsList: ACCESSOR_TYPES_LENGTHS.values, req: true);
-    final min = getNumList(map, MIN, context,
-        lengthsList: ACCESSOR_TYPES_LENGTHS.values, req: true);
-    if (max != null && min != null && max.length != min.length)
-      context.addIssue(GltfError.ACCESSOR_MIN_MAX);
-
     final byteOffset = getInt(map, BYTE_OFFSET, context, req: true, min: 0);
     final byteStride =
         getInt(map, BYTE_STRIDE, context, min: 0, max: 255, def: 0);
     final componentType = getInt(map, COMPONENT_TYPE, context,
-        req: true, list: componentTypesEnum);
-
-    if (context.validate) {
-      if (componentType == gl.UNSIGNED_INT &&
-          !context.glExtensionsUsed.contains(gl.OES_ELEMENT_INDEX_UINT)) {
-        context.addIssue(GltfError.ACCESSOR_UINT_NO_EXT, name: COMPONENT_TYPE);
-      }
-    }
+        req: true, list: gl.COMPONENT_TYPE_LENGTHS.keys);
 
     final count = getInt(map, COUNT, context, req: true, min: 1);
     final type = getString(map, TYPE, context,
         req: true, list: ACCESSOR_TYPES_LENGTHS.keys);
+
+    if (context.validate && componentType == gl.UNSIGNED_INT) {
+      if (!context.glExtensionsUsed.contains(gl.OES_ELEMENT_INDEX_UINT)) {
+        context.addIssue(GltfError.ACCESSOR_UINT_NO_EXT, name: COMPONENT_TYPE);
+      }
+      if (type != SCALAR) {
+        context.addIssue(GltfError.ACCESSOR_UINT_NO_SCALAR,
+            name: COMPONENT_TYPE);
+      }
+    }
+
+    final min = getNumList(map, MIN, context,
+        lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], req: true);
+    final max = getNumList(map, MAX, context,
+        lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], req: true);
 
     if (context.validate &&
         byteOffset != null &&
@@ -106,23 +99,23 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
         componentType != null &&
         count != null &&
         type != null) {
-      final attributeLength =
-          gl.TYPE_LENGTHS[componentType] * ACCESSOR_TYPES_LENGTHS[type];
+      final attributeLength = gl.COMPONENT_TYPE_LENGTHS[componentType] *
+          ACCESSOR_TYPES_LENGTHS[type];
 
-      if (byteOffset % gl.TYPE_LENGTHS[componentType] != 0)
+      if (byteOffset % gl.COMPONENT_TYPE_LENGTHS[componentType] != 0)
         context.addIssue(GltfError.ACCESSOR_MULTIPLE_COMPONENT_TYPE,
             name: BYTE_OFFSET,
-            args: [byteOffset, gl.TYPE_LENGTHS[componentType]]);
+            args: [byteOffset, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
 
       if (byteStride > 0) {
         if (byteStride < attributeLength)
           context.addIssue(GltfError.ACCESSOR_SMALL_BYTESTRIDE,
-              name: BYTE_STRIDE, args: [attributeLength]);
+              name: BYTE_STRIDE, args: [byteStride, attributeLength]);
 
-        if (byteStride % gl.TYPE_LENGTHS[componentType] != 0)
+        if (byteStride % gl.COMPONENT_TYPE_LENGTHS[componentType] != 0)
           context.addIssue(GltfError.ACCESSOR_MULTIPLE_COMPONENT_TYPE,
               name: BYTE_STRIDE,
-              args: [byteOffset, gl.TYPE_LENGTHS[componentType]]);
+              args: [byteStride, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
       }
     }
 
@@ -143,7 +136,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
   void link(Gltf gltf, Context context) {
     bufferView = gltf.bufferViews[_bufferViewId];
 
-    if (context.validate) {
+    if (context.validate && _bufferViewId != null) {
       if (bufferView == null) {
         context.addIssue(GltfError.UNRESOLVED_REFERENCE,
             name: BUFFER_VIEW, args: [_bufferViewId]);

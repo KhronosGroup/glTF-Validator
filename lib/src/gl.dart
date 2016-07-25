@@ -58,6 +58,15 @@ const int INT = 5124;
 const int UNSIGNED_INT = 5125;
 const int FLOAT = 5126;
 
+const Map<int, int> COMPONENT_TYPE_LENGTHS = const <int, int>{
+  BYTE: 1,
+  UNSIGNED_BYTE: 1,
+  SHORT: 2,
+  UNSIGNED_SHORT: 2,
+  UNSIGNED_INT: 4,
+  FLOAT: 4
+};
+
 const int ALPHA = 6406;
 const int RGB = 6407;
 const int RGBA = 6408;
