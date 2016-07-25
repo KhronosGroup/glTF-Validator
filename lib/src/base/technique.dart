@@ -55,14 +55,13 @@ class Technique extends GltfChildOfRootProperty implements Linkable {
   static Technique fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, TECHNIQUE_MEMBERS, context);
 
-    final parameters = getMap(map, PARAMETERS, context);
-    if (parameters.isNotEmpty) {
+    final parameters = <String, TechniqueParameter>{};
+    final parameterMaps = getMap(map, PARAMETERS, context);
+    if (parameterMaps.isNotEmpty) {
       context.path.add(PARAMETERS);
-      for (final k in parameters.keys) {
-        final parameterMap = getMap(parameters, k, context, req: true);
-
-        // Don't add invalid fields
-        if (parameterMap.isEmpty) continue;
+      for (final k in parameterMaps.keys) {
+        final parameterMap = getMap(parameterMaps, k, context, req: true);
+        if (parameterMap == null) continue;
 
         context.path.add(k);
         parameters[k] = new TechniqueParameter.fromMap(parameterMap, context);
@@ -71,63 +70,61 @@ class Technique extends GltfChildOfRootProperty implements Linkable {
       context.path.removeLast();
     }
 
-    final attributesId = getMap(map, ATTRIBUTES, context);
     final attributes = <String, TechniqueParameter>{};
+    final attributeIds = getMap(map, ATTRIBUTES, context);
 
-    context.path.add(ATTRIBUTES);
-    attributesId.forEach((id, parameterId) {
-      if (parameterId is String) {
-        final parameter =
-            parameters[parameterId] as dynamic/*=TechniqueParameter*/;
-        if (parameter != null) {
-          attributes[id] = parameter;
+    if (attributeIds.isNotEmpty) {
+      context.path.add(ATTRIBUTES);
+      attributeIds.forEach((id, parameterId) {
+        if (parameterId is String) {
+          final parameter = parameters[parameterId];
+          if (parameter != null) {
+            attributes[id] = parameter;
+          } else if (context.validate) {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: id, args: [parameterId]);
+          }
         } else if (context.validate) {
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: id, args: [parameterId]);
-        }
-      } else if (context.validate) {
-        if (parameterId == null)
-          context.addIssue(GltfError.UNDEFINED_PROPERTY, name: id);
-        else
           context.addIssue(GltfError.TYPE_MISMATCH,
               name: id, args: [parameterId, "string"]);
-      }
-    });
-    context.path.removeLast();
+        }
+      });
+      context.path.removeLast();
+    }
 
-    final uniformsId = getMap(map, UNIFORMS, context);
     final uniforms = <String, TechniqueParameter>{};
+    final uniformIds = getMap(map, UNIFORMS, context);
 
-    context.path.add(UNIFORMS);
-    uniformsId.forEach((id, parameterId) {
-      if (parameterId is String) {
-        final parameter = parameters[parameterId];
-        if (parameter != null) {
-          uniforms[id] = parameter;
+    if (uniformIds.isNotEmpty) {
+      context.path.add(UNIFORMS);
+      uniformIds.forEach((id, parameterId) {
+        if (parameterId is String) {
+          final parameter = parameters[parameterId];
+          if (parameter != null) {
+            uniforms[id] = parameter;
+          } else if (context.validate) {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: id, args: [parameterId]);
+          }
         } else if (context.validate) {
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: id, args: [parameterId]);
-        }
-      } else if (context.validate) {
-        if (parameterId == null)
-          context.addIssue(GltfError.UNDEFINED_PROPERTY, name: id);
-        else
           context.addIssue(GltfError.TYPE_MISMATCH,
               name: id, args: [parameterId, "string"]);
-      }
-    });
+        }
+      });
+      context.path.removeLast();
+    }
 
+    final statesMap = getMap(map, STATES, context);
     context.path.add(STATES);
-    final states =
-        new TechniqueStates.fromMap(getMap(map, STATES, context), context);
+    final states = new TechniqueStates.fromMap(statesMap, context);
     context.path.removeLast();
 
     return new Technique._(
         parameters,
-        attributesId,
+        attributeIds,
         attributes,
         getId(map, PROGRAM, context),
-        uniformsId,
+        uniformIds,
         uniforms,
         states,
         getName(map, context),
@@ -341,9 +338,11 @@ class TechniqueStates extends GltfProperty {
         context.addIssue(GltfWarning.DUPLICATE_ITEMS, name: ENABLE);
     }
 
+    final functionsMap = getMap(map, FUNCTIONS, context);
+
     context.path.add(FUNCTIONS);
-    final functions = new TechniqueStatesFunctions.fromMap(
-        getMap(map, FUNCTIONS, context), context);
+    final functions =
+        new TechniqueStatesFunctions.fromMap(functionsMap, context);
     context.path.removeLast();
 
     return new TechniqueStates._(enable, functions,

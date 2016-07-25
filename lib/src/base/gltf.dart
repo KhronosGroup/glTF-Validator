@@ -110,9 +110,13 @@ class Gltf extends GltfProperty {
       : super(extensions, extras);
 
   factory Gltf.fromMap(Map<String, Object> map, Context context) {
-    context.path
-      ..clear()
-      ..add("");
+    void resetPath() {
+      context.path
+        ..clear()
+        ..add("");
+    }
+
+    resetPath();
     if (context.validate) checkMembers(map, GLTF_MEMBERS, context);
 
     // Prepare glTF extensions handlers
@@ -131,65 +135,70 @@ class Gltf extends GltfProperty {
     context.initGlExtensions(glExtensionsUsed ?? <String>[]);
 
     // Helper function for converting JSON dictionary to Map of proper glTF objects
-    Map<String, Object> toMap(String name, FromMapFunction fromMap,
+    Map<String, dynamic/*=T*/ > toMap/*<T>*/(
+        String name, FromMapFunction fromMap,
         {bool req: false}) {
-      context.path
-        ..clear()
-        ..add("");
-      final items = getMap(map, name, context, req: req);
-      context.path.add(name);
+      resetPath();
 
-      for (final id in items.keys) {
-        final itemMap = getMap(items, id, context, req: true);
-        context.path.add(id);
-        items[id] = fromMap(itemMap, context);
-        context.path.removeLast();
+      final itemMaps = getMap(map, name, context, req: req);
+
+      if (itemMaps != null) {
+        if (itemMaps.isNotEmpty) {
+          final items = <String, dynamic/*=T*/ >{};
+          context.path.add(name);
+          for (final id in itemMaps.keys) {
+            final itemMap = getMap(itemMaps, id, context, req: true);
+            if (itemMap == null) continue;
+            context.path.add(id);
+            items[id] = fromMap(itemMap, context) as dynamic/*=T*/;
+            context.path.removeLast();
+          }
+          return items;
+        } else {
+          return itemMaps;
+        }
+      } else {
+        return <String, dynamic/*=T*/ >{};
       }
-
-      return items;
     }
 
     // Helper function for converting JSON dictionary to proper glTF object
     Object toValue(String name, FromMapFunction fromMap, {bool req: false}) {
-      context.path
-        ..clear()
-        ..add("");
+      resetPath();
       final item = getMap(map, name, context, req: req);
-      context.path.add(name);
-
       if (item == null) return null;
+      context.path.add(name);
       return fromMap(item, context);
     }
 
     final Asset asset = toValue(ASSET, Asset.fromMap, req: true);
 
-    final Map<String, Accessor> accessors =
-        toMap(ACCESSORS, Accessor.fromMap, req: true);
+    final accessors =
+        toMap/*<Accessor>*/(ACCESSORS, Accessor.fromMap, req: true);
 
-    final Map<String, Animation> animations =
-        toMap(ANIMATIONS, Animation.fromMap);
+    final animations = toMap/*<Animation>*/(ANIMATIONS, Animation.fromMap);
 
     final Map<String, Buffer> buffers =
-        toMap(BUFFERS, Buffer.fromMap, req: true);
+        toMap/*<Buffer>*/(BUFFERS, Buffer.fromMap, req: true);
 
-    final Map<String, BufferView> bufferViews =
-        toMap(BUFFER_VIEWS, BufferView.fromMap, req: true);
+    final bufferViews =
+        toMap/*<BufferView>*/(BUFFER_VIEWS, BufferView.fromMap, req: true);
 
-    final Map<String, Camera> cameras = toMap(CAMERAS, Camera.fromMap);
+    final cameras = toMap/*<Camera>*/(CAMERAS, Camera.fromMap);
 
-    final Map<String, Image> images = toMap(IMAGES, Image.fromMap);
+    final images = toMap/*<Image>*/(IMAGES, Image.fromMap);
 
-    final Map<String, Material> materials = toMap(MATERIALS, Material.fromMap);
+    final materials = toMap/*<Material>*/(MATERIALS, Material.fromMap);
 
-    final Map<String, Mesh> meshes = toMap(MESHES, Mesh.fromMap, req: true);
+    final meshes = toMap/*<Mesh>*/(MESHES, Mesh.fromMap, req: true);
 
-    final Map<String, Node> nodes = toMap(NODES, Node.fromMap);
+    final nodes = toMap/*<Node>*/(NODES, Node.fromMap);
 
-    final Map<String, Program> programs = toMap(PROGRAMS, Program.fromMap);
+    final programs = toMap/*<Program>*/(PROGRAMS, Program.fromMap);
 
-    final Map<String, Sampler> samplers = toMap(SAMPLERS, Sampler.fromMap);
+    final samplers = toMap/*<Sampler>*/(SAMPLERS, Sampler.fromMap);
 
-    final Map<String, Scene> scenes = toMap(SCENES, Scene.fromMap);
+    final scenes = toMap/*<Scene>*/(SCENES, Scene.fromMap);
 
     final sceneId = getId(map, SCENE, context, req: false);
 
@@ -199,18 +208,16 @@ class Gltf extends GltfProperty {
       context.addIssue(GltfError.UNRESOLVED_REFERENCE,
           name: SCENE, args: [sceneId]);
 
-    final Map<String, Shader> shaders = toMap(SHADERS, Shader.fromMap);
+    final shaders = toMap/*<Shader>*/(SHADERS, Shader.fromMap);
 
-    final Map<String, Skin> skins = toMap(SKINS, Skin.fromMap);
+    final skins = toMap/*<Skin>*/(SKINS, Skin.fromMap);
 
-    final Map<String, Technique> techniques =
-        toMap(TECHNIQUES, Technique.fromMap);
+    final techniques = toMap/*<Technique>*/(TECHNIQUES, Technique.fromMap);
 
-    final Map<String, Texture> textures = toMap(TEXTURES, Texture.fromMap);
+    final Map<String, Texture> textures =
+        toMap/*<Texture>*/(TEXTURES, Texture.fromMap);
 
-    context.path
-      ..clear()
-      ..add("");
+    resetPath();
 
     final gltf = new Gltf._(
         extensionsUsed,
@@ -238,10 +245,6 @@ class Gltf extends GltfProperty {
         getExtras(map));
 
     // Step 2: linking IDs
-    context.path
-      ..clear()
-      ..add("");
-
     final topLevelMaps = <String, Map<String, GltfProperty>>{
       ACCESSORS: accessors,
       ANIMATIONS: animations,

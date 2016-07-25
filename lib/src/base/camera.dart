@@ -41,16 +41,19 @@ class Camera extends GltfChildOfRootProperty {
 
     final cameraMap = getMap(map, type, context, req: true);
 
-    if (cameraMap.isNotEmpty) {
+    if (cameraMap != null) {
       context.path.add(type);
+
+      final camera = (type == ORTHOGRAPHIC)
+          ? new CameraOrthographic.fromMap(cameraMap, context)
+          : (type == PERSPECTIVE)
+              ? new CameraPerspective.fromMap(cameraMap, context)
+              : null;
+
       return new Camera._(type, getName(map, context),
           getExtensions(map, Camera, context), getExtras(map),
-          orthographic: type == ORTHOGRAPHIC
-              ? new CameraOrthographic.fromMap(cameraMap, context)
-              : null,
-          perspective: type == PERSPECTIVE
-              ? new CameraPerspective.fromMap(cameraMap, context)
-              : null);
+          orthographic: type == ORTHOGRAPHIC ? camera : null,
+          perspective: type == PERSPECTIVE ? camera : null);
     } else {
       return new Camera._(type, getName(map, context),
           getExtensions(map, Camera, context), getExtras(map));

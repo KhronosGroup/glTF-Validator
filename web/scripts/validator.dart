@@ -82,8 +82,7 @@ void main() {
       void handleNextChunk(File file) {
         final fileReader = new FileReader();
         fileReader.onLoadEnd.listen((ProgressEvent event) {
-          // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-          controller.add(fileReader.result);
+          controller.add(fileReader.result as dynamic/*=List<int>*/);
           if (index < file.size)
             handleNextChunk(file);
           else
@@ -96,7 +95,7 @@ void main() {
       handleNextChunk(file);
 
       Future.wait([reader.root, reader.done]).then((futures) {
-        final root = futures[0] as dynamic /*=Gltf*/;
+        final root = futures[0] as dynamic/*=Gltf*/;
         report.info = root?.info;
         reports.add(report);
         checkNext();

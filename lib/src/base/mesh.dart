@@ -93,7 +93,8 @@ class MeshPrimitive extends GltfProperty implements Linkable {
       gl.TRIANGLE_FAN
     ];
 
-    final attributes = getMap(map, ATTRIBUTES, context, req: true);
+    final attributes =
+        getMap(map, ATTRIBUTES, context, req: true) ?? <String, String>{};
     if (context.validate && attributes.isNotEmpty) {
       context.path.add(ATTRIBUTES);
       for (final semantic in attributes.keys) {

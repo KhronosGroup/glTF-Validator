@@ -37,7 +37,7 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
     if (context.validate) checkMembers(map, ANIMATION_MEMBERS, context);
 
     context.path.add(CHANNELS);
-    var i = 0;
+    int i = 0;
     final channels = getMapList(map, CHANNELS, context)
         ?.map((Map<String, Object> channelMap) {
       context.path.add((i++).toString());
@@ -47,12 +47,13 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
     })?.toList();
     context.path.removeLast();
 
-    final samplers = getMap(map, SAMPLERS, context);
-    if (samplers.isNotEmpty) {
+    final samplers = <String, AnimationSampler>{};
+    final samplerMaps = getMap(map, SAMPLERS, context);
+    if (samplerMaps.isNotEmpty) {
       context.path.add(SAMPLERS);
-      for (final id in samplers.keys) {
-        final samplerMap = getMap(samplers, id, context, req: true);
-        if (samplerMap.isEmpty) continue;
+      for (final id in samplerMaps.keys) {
+        final samplerMap = getMap(samplerMaps, id, context, req: true);
+        if (samplerMap == null) continue;
         context.path.add(id);
         samplers[id] = new AnimationSampler.fromMap(samplerMap, context);
         context.path.removeLast();
@@ -135,7 +136,7 @@ class AnimationChannel extends GltfProperty {
 
     AnimationChannelTarget target;
     final targetMap = getMap(map, TARGET, context, req: true);
-    if (targetMap.isNotEmpty) {
+    if (targetMap != null) {
       target = new AnimationChannelTarget.fromMap(targetMap, context);
     }
 

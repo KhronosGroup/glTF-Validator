@@ -116,13 +116,16 @@ Map<String, Object> getMap(
   final value = map[name];
   if (value is Map) {
     // JSON mandates all keys to be string
-    // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return value;
+    return value as dynamic/*=Map<String, Object>*/;
   } else if (value == null) {
-    if (req) context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
+    if (req) {
+      context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
+      return null;
+    }
   } else {
     context.addIssue(GltfError.TYPE_MISMATCH,
         name: name, args: [value, "JSON object"]);
+    if (req) return null;
   }
   return <String, dynamic>{};
 }
@@ -170,8 +173,7 @@ List<bool> getBoolList(Map<String, Object> map, String name, Context context,
       }
     }
     if (wrongMemberFound) return null;
-    // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return value;
+    return value as dynamic/*=List<bool>*/;
   }
   if (value == null) {
     if (!req) return def;
@@ -222,8 +224,7 @@ List<num> getNumList(Map<String, Object> map, String name, Context context,
       }
     }
     if (wrongMemberFound) return null;
-    // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return value;
+    return value as dynamic/*=List<num>*/;
   } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
@@ -264,8 +265,7 @@ List<String> getStringList(
         wrongMemberFound = true;
     }
     if (wrongMemberFound) return null;
-    // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return value;
+    return value as dynamic/*=List<String>*/;
   } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
@@ -292,8 +292,7 @@ List<Map<String, Object>> getMapList(
       }
     }
     if (wrongMemberFound) return null;
-    // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return value;
+    return value as dynamic/*=List<Map<String, Object>>*/;
   } else if (value == null) {
     if (!req) return <Map<String, Object>>[];
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
@@ -334,7 +333,7 @@ Map<String, Object> getExtensions(
     }
 
     final extensionMap = getMap(extensionMaps, extension, context, req: true);
-    if (extensionMap.isNotEmpty) {
+    if (extensionMap != null) {
       context.path.add(extension);
       extensions[extension] = functions.fromMap(extensionMap, context);
       context.path.removeLast();
