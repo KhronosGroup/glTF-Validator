@@ -41,9 +41,9 @@ class Asset extends GltfProperty {
   static Asset fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, ASSET_MEMBERS, context);
 
+    final profileMap = getMap(map, PROFILE, context);
     context.path.add(PROFILE);
-    final profile =
-        AssetProfile.fromMap(getMap(map, PROFILE, context), context);
+    final profile = AssetProfile.fromMap(profileMap, context);
     context.path.removeLast();
 
     return new Asset._(
