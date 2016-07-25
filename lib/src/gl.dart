@@ -99,6 +99,8 @@ const int UNSIGNED_SHORT_4_4_4_4 = 32819;
 const int UNSIGNED_SHORT_5_5_5_1 = 32820;
 const int UNSIGNED_SHORT_5_6_5 = 33635;
 
+const List<int> TARGETS = const <int>[ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER];
+
 const int ARRAY_BUFFER = 34962;
 const int ELEMENT_ARRAY_BUFFER = 34963;
 

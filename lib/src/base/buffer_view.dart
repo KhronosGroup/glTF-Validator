@@ -42,16 +42,11 @@ class BufferView extends GltfChildOfRootProperty implements Linkable {
   static BufferView fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, BUFFER_VIEW_MEMBERS, context);
 
-    const List<int> targetsEnum = const <int>[
-      gl.ARRAY_BUFFER,
-      gl.ELEMENT_ARRAY_BUFFER
-    ];
-
     return new BufferView._(
         getId(map, BUFFER, context),
         getInt(map, BYTE_OFFSET, context, req: true, min: 0),
         getInt(map, BYTE_LENGTH, context, req: true, min: 0),
-        getInt(map, TARGET, context, list: targetsEnum),
+        getInt(map, TARGET, context, list: gl.TARGETS),
         getName(map, context),
         getExtensions(map, BufferView, context),
         getExtras(map));
@@ -59,11 +54,11 @@ class BufferView extends GltfChildOfRootProperty implements Linkable {
 
   void link(Gltf gltf, Context context) {
     buffer = gltf.buffers[_bufferId];
-    if (context.validate) {
+    if (context.validate && _bufferId != null) {
       if (buffer == null) {
         context.addIssue(GltfError.UNRESOLVED_REFERENCE,
             name: BUFFER, args: [_bufferId]);
-      } else if (byteOffset > buffer.byteLength) {
+      } else if (byteOffset >= buffer.byteLength) {
         context.addIssue(GltfError.BUFFERVIEW_TOO_LONG,
             name: BYTE_OFFSET, args: [_bufferId, buffer.byteLength]);
       } else if (byteOffset + byteLength > buffer.byteLength) {

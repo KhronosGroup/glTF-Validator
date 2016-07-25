@@ -166,7 +166,7 @@ abstract class GltfError {
     ACCESSOR_UINT_NO_ELEMENT_ARRAY: (List args) =>
         "5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with `ELEMENT_ARRAY_BUFFER` target",
     BUFFERVIEW_TOO_LONG: (List args) =>
-        "Value exceeds buffer (`${args[0]}`) byteLength (${args[1]})",
+        "BufferView doesn't fit buffer (`${args[0]}`) byteLength (${args[1]})",
     CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` mustn't be equal to `znear`",
     MATERIAL_NO_ATTRIBUTES: (List args) =>
         "Material can't refer attribute parameters",
