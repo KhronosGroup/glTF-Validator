@@ -154,7 +154,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
         } else if (byteOffset + byteLength > bufferView.byteLength) {
           context.addIssue(GltfError.ACCESSOR_TOO_LONG,
               name: BYTE_LENGTH,
-              args: [byteOffset, _bufferViewId, bufferView.byteLength]);
+              args: [byteLength, _bufferViewId, bufferView.byteLength]);
         }
 
         if (componentType == gl.UNSIGNED_INT &&
