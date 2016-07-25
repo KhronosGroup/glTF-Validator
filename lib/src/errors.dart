@@ -31,15 +31,15 @@ abstract class GltfWarning {
 
   static final messages = <String, ErrorFunction>{
     BUFFER_EMBEDDED_BYTELENGTH_MISMATCH: (List args) =>
-        "Value (${args[0]}) is not equal to the embedded data length (${args[1]}).",
-    DUPLICATE_ITEMS: (List args) => "Array contains duplicate items.",
+        "Value (${args[0]}) is not equal to the embedded data length (${args[1]})",
+    DUPLICATE_ITEMS: (List args) => "Array contains duplicate items",
     MATERIALS_VALUES_WITHOUT_TECHNIQUE: (List args) =>
-        "When technique is undefined, values must be undefined too.",
+        "When technique is undefined, values must be undefined too",
     UNEXPECTED_ATTRIBUTE: (List args) =>
         "Unexpected attribute `${args[0]}` for "
-        "${args.length == 1 ? "the default material" : "`${args[1]}`"}.",
-    UNEXPECTED_PROPERTY: (List args) => "Unexpected property.",
-    UNSUPPORTED_EXTENSION: (List args) => "Unsupported extension `${args[0]}`."
+        "${args.length == 1 ? "the default material" : "`${args[1]}`"}",
+    UNEXPECTED_PROPERTY: (List args) => "Unexpected property",
+    UNSUPPORTED_EXTENSION: (List args) => "Unsupported extension `${args[0]}`"
   };
 }
 
@@ -122,93 +122,92 @@ abstract class GltfError {
   static const TECHNIQUE_UNUSED_PARAMETER = "TECHNIQUE_UNUSED_PARAMETER";
 
   static final messages = <String, ErrorFunction>{
-    INVALID_JSON: (List args) =>
-        "Invalid JSON data. Parser output: ${args[0]}.",
-    INVALID_JSON_ROOT_OBJECT: (List args) => "JSON root must be an object.",
+    INVALID_JSON: (List args) => "Invalid JSON data. Parser output: ${args[0]}",
+    INVALID_JSON_ROOT_OBJECT: (List args) => "JSON root must be an object",
     ARRAY_LENGTH_NOT_IN_LIST: (List args) =>
-        "Wrong array length (${args[0]}). Valid lengths are ${args[1]}.",
+        "Wrong array length (${args[0]}). Valid lengths are ${args[1]}",
     ARRAY_LENGTH_OUT_OF_RANGE: (List args) =>
-        "Array length (${args[0]}) out of range.",
+        "Array length (${args[0]}) out of range",
     ARRAY_TYPE_MISMATCH: (List args) =>
-        "Type mismatch. Array member (`${args[0]}`) isn't a `${args[1]}`.",
-    EMPTY_ID: (List args) => "ID can't be an empty string.",
+        "Type mismatch. Array member (`${args[0]}`) isn't a `${args[1]}`",
+    EMPTY_ID: (List args) => "ID can't be an empty string",
     INVALID_ACCESSOR_TYPE: (List args) =>
-        "Accessor with incompatible `type` (${args[0]}) referenced.",
+        "Accessor with incompatible `type` (${args[0]}) referenced",
     INVALID_GL_VALUE: (List args) =>
-        "Invalid value (${args[0]}) for GL type `${args[1]}`.",
+        "Invalid value (${args[0]}) for GL type `${args[1]}`",
     INVALID_GL_VALUE_LENGTH: (List args) =>
-        "Invalid array length (${args[0]}) for GL type `${args[1]} x ${args[2]}`.",
-    INVALID_URI: (List args) => "Invalid URI (`${args[0]}`): ${args[1]}.",
-    INVALID_DATAURI: (List args) => "Invalid Data URI: ${args[0]}.",
-    INVALID_DATAURI_MIME: (List args) => "Invalid MIME type (`${args[0]}`).",
+        "Invalid array length (${args[0]}) for GL type `${args[1]} x ${args[2]}`",
+    INVALID_URI: (List args) => "Invalid URI (`${args[0]}`): ${args[1]}",
+    INVALID_DATAURI: (List args) => "Invalid Data URI: ${args[0]}",
+    INVALID_DATAURI_MIME: (List args) => "Invalid MIME type (`${args[0]}`)",
     TYPE_MISMATCH: (List args) =>
-        "Type mismatch. Property value (`${args[0]}`) isn't a `${args[1]}`.",
+        "Type mismatch. Property value (`${args[0]}`) isn't a `${args[1]}`",
     VALUE_NOT_IN_LIST: (List args) =>
-        "Wrong value (${args[0]}). Valid values are ${args[1]}.",
-    VALUE_OUT_OF_RANGE: (List args) => "Value (${args[0]}) out of range.",
+        "Wrong value (${args[0]}). Valid values are ${args[1]}",
+    VALUE_OUT_OF_RANGE: (List args) => "Value (${args[0]}) out of range",
     UNDECLARED_EXTENSION: (List args) =>
-        "Extension wasn't declared in `extensionsUsed`.",
-    UNDEFINED_PROPERTY: (List args) => "Property must be defined.",
-    UNEXPECTED_EXTENSION: (List args) => "Extension unexpected.",
+        "Extension wasn't declared in `extensionsUsed`",
+    UNDEFINED_PROPERTY: (List args) => "Property must be defined",
+    UNEXPECTED_EXTENSION: (List args) => "Extension unexpected",
     UNRESOLVED_REFERENCE: (List args) => "Unresolved reference: `${args[0]}`",
-    ROOT_DICTIONARY_EMPTY: (List args) => "Dictionary mustn't be empty.",
+    ROOT_DICTIONARY_EMPTY: (List args) => "Dictionary mustn't be empty",
     ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE: (List args) =>
-        "Invalid value (${args[0]}) for bufferView with ELEMENT_ARRAY_BUFFER target.",
+        "Invalid value (${args[0]}) for bufferView with ELEMENT_ARRAY_BUFFER target",
     ACCESSOR_MIN_MAX: (List args) =>
-        "Both `min` and `max` arrays must have the same length.",
+        "Both `min` and `max` arrays must have the same length",
     ACCESSOR_MULTIPLE_COMPONENT_TYPE: (List args) =>
-        "Value (${args[0]}) isn't a multiple of componentType length (${args[1]}).",
+        "Value (${args[0]}) isn't a multiple of componentType length (${args[1]})",
     ACCESSOR_SMALL_BYTESTRIDE: (List args) =>
         "Value is less than attribute length (${args[0]})",
     ACCESSOR_TOO_LONG: (List args) =>
         "Value (${args[0]}) exceeds referenced bufferView (`${args[1]}`) length (${args[2]})",
     ACCESSOR_UINT_NO_EXT: (List args) =>
-        "5125 (UNSIGNED_INT) is only allowed when the `OES_element_index_uint` GL extension used.",
+        "5125 (UNSIGNED_INT) is only allowed when the `OES_element_index_uint` GL extension used",
     ACCESSOR_UINT_NO_ELEMENT_ARRAY: (List args) =>
-        "5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with `ELEMENT_ARRAY_BUFFER` target.",
+        "5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with `ELEMENT_ARRAY_BUFFER` target",
     BUFFERVIEW_TOO_LONG: (List args) =>
-        "Value exceeds buffer (`${args[0]}`) byteLength (${args[1]}).",
-    CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` mustn't be equal to `znear`.",
+        "Value exceeds buffer (`${args[0]}`) byteLength (${args[1]})",
+    CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` mustn't be equal to `znear`",
     MATERIAL_NO_ATTRIBUTES: (List args) =>
-        "Material can't refer attribute parameters.",
+        "Material can't refer attribute parameters",
     MESH_DEFAULT_NO_POSITION: (List args) => "No POSITION attribute found",
     MESH_INVALID_ACCESSOR_BUFFERVIEW: (List args) =>
-        "Incompatible accessor referenced: bufferView is null or has wrong target.",
+        "Incompatible accessor referenced: bufferView is null or has wrong target",
     MESH_INVALID_ACCESSOR_TYPE: (List args) =>
-        "Incompatible accessor referenced: wrong type and/or componentType.",
+        "Incompatible accessor referenced: wrong type and/or componentType",
     MESH_UINT_ATTRIBUTE_ACCESSOR: (List args) =>
-        "5125 (UNSIGNED_INT) accessors aren't allowed for attributes.",
+        "5125 (UNSIGNED_INT) accessors aren't allowed for attributes",
     MESH_UNEQUAL_ACCESSOR_COUNT: (List args) =>
-        "All accessors of the same primitive must have the same count.",
+        "All accessors of the same primitive must have the same count",
     TEXTURE_FORMAT_INTERNALFORMAT: (List args) =>
-        "When defined, `format` must match `internalformat`.",
+        "When defined, `format` must match `internalformat`",
     TEXTURE_FORMAT_TYPE: (List args) =>
-        "Invalid combination of `type` and `format`.",
+        "Invalid combination of `type` and `format`",
     SKIN_INVALID_ACCESSOR_COUNT: (List args) =>
-        "Accessor with incompatible `count` (${args[0]}) referenced.",
+        "Accessor with incompatible `count` (${args[0]}) referenced",
     TECHNIQUE_AMBIGUOUS_PARAMETER: (List args) =>
-        "Parameter can't be uniform and attribute at the same time.",
+        "Parameter can't be uniform and attribute at the same time",
     TECHNIQUE_ATTRIBUTE_COUNT: (List args) =>
-        "Attribute parameter can't have `count` property.",
+        "Attribute parameter can't have `count` property",
     TECHNIQUE_ATTRIBUTE_NODE: (List args) =>
-        "Attribute parameter can't have `node` property.",
+        "Attribute parameter can't have `node` property",
     TECHNIQUE_ATTRIBUTE_VALUE: (List args) =>
-        "Attribute parameter can't have `value` property.",
+        "Attribute parameter can't have `value` property",
     TECHNIQUE_ATTRIBUTE_INVALID_TYPE: (List args) =>
-        "Invalid type (${args[0]}) for attribute parameter.",
+        "Invalid type (${args[0]}) for attribute parameter",
     TECHNIQUE_ATTRIBUTE_TYPE_OVERRIDE: (List args) =>
-        "Invalid type override for semantic `${args[0]}`.",
+        "Invalid type override for semantic `${args[0]}`",
     TECHNIQUE_INVALID_SEMANTIC: (List args) =>
-        "Invalid `semantic` value (`${args[0]}`).",
+        "Invalid `semantic` value (`${args[0]}`)",
     TECHNIQUE_UNIFORM_NODE_TYPE: (List args) =>
-        "When node is defined, type must be FLOAT_MAT4.",
+        "When node is defined, type must be FLOAT_MAT4",
     TECHNIQUE_UNIFORM_SEMANTIC_TYPE: (List args) =>
-        "Unexpected type ${args[0]} for semantic ${args[1]}.",
+        "Unexpected type ${args[0]} for semantic ${args[1]}",
     TECHNIQUE_UNIFORM_SEMANTIC_COUNT: (List args) =>
-        "${args[0]} can't have `count` property.",
+        "${args[0]} can't have `count` property",
     TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT: (List args) =>
-        "${args[0]} must have `count` property.",
-    TECHNIQUE_UNUSED_PARAMETER: (List args) => "Unused parameter.",
+        "${args[0]} must have `count` property",
+    TECHNIQUE_UNUSED_PARAMETER: (List args) => "Unused parameter",
   };
 }
 

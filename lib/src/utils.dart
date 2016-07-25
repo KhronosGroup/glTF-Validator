@@ -153,7 +153,7 @@ Uri getUri(String uri, Context context) {
   try {
     return Uri.parse(uri);
   } on FormatException catch (e) {
-    context.addIssue(GltfError.INVALID_URI, name: URI, args: [e]);
+    context.addIssue(GltfError.INVALID_URI, name: URI, args: [uri, e]);
     return null;
   }
 }
