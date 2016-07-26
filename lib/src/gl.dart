@@ -25,6 +25,16 @@ const int TRIANGLES = 4;
 const int TRIANGLE_STRIP = 5;
 const int TRIANGLE_FAN = 6;
 
+const List<int> MODES = const <int>[
+  POINTS,
+  LINES,
+  LINE_LOOP,
+  LINE_STRIP,
+  TRIANGLES,
+  TRIANGLE_STRIP,
+  TRIANGLE_FAN
+];
+
 const int NEVER = 512;
 const int LESS = 513;
 const int EQUAL = 514;
@@ -66,6 +76,12 @@ const Map<int, int> COMPONENT_TYPE_LENGTHS = const <int, int>{
   UNSIGNED_INT: 4,
   FLOAT: 4
 };
+
+const List<int> ELEMENT_ARRAY_TYPES = const <int>[
+  UNSIGNED_BYTE,
+  UNSIGNED_SHORT,
+  UNSIGNED_INT,
+];
 
 const int ALPHA = 6406;
 const int RGB = 6407;

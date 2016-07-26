@@ -74,6 +74,8 @@ abstract class GltfError {
       "ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE";
   static const ACCESSOR_MULTIPLE_COMPONENT_TYPE =
       "ACCESSOR_MULTIPLE_COMPONENT_TYPE";
+  static const ACCESSOR_TOTAL_MULTIPLE_COMPONENT_TYPE =
+      "ACCESSOR_TOTAL_MULTIPLE_COMPONENT_TYPE";
   static const ACCESSOR_SMALL_BYTESTRIDE = "ACCESSOR_SMALL_BYTESTRIDE";
   static const ACCESSOR_TOO_LONG = "ACCESSOR_TOO_LONG";
   static const ACCESSOR_UINT_NO_EXT = "ACCESSOR_UINT_NO_EXT";
@@ -155,6 +157,8 @@ abstract class GltfError {
         "Invalid value (${args[0]}) for bufferView with ELEMENT_ARRAY_BUFFER target",
     ACCESSOR_MULTIPLE_COMPONENT_TYPE: (List args) =>
         "Value (${args[0]}) isn't a multiple of a componentType length (${args[1]})",
+    ACCESSOR_TOTAL_MULTIPLE_COMPONENT_TYPE: (List args) =>
+        "Accessor's total byteOffset (${args[0]}) isn't a multiple of a componentType length (${args[1]})",
     ACCESSOR_SMALL_BYTESTRIDE: (List args) =>
         "Value (${args[0]}) is less than an attribute length (${args[1]})",
     ACCESSOR_TOO_LONG: (List args) =>

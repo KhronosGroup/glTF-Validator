@@ -142,6 +142,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
             name: BUFFER_VIEW, args: [_bufferViewId]);
         return;
       }
+
       if (byteOffset != null &&
           byteStride != null &&
           componentType != null &&
@@ -156,21 +157,31 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
               name: BYTE_LENGTH,
               args: [byteLength, _bufferViewId, bufferView.byteLength]);
         }
+      }
 
+      if (byteOffset != null &&
+          componentType != null &&
+          bufferView.byteOffset != null &&
+          (bufferView.byteOffset + byteOffset) %
+                  gl.COMPONENT_TYPE_LENGTHS[componentType] !=
+              0) {
+        context.addIssue(GltfError.ACCESSOR_TOTAL_MULTIPLE_COMPONENT_TYPE,
+            name: BYTE_OFFSET,
+            args: [
+              bufferView.byteOffset + byteOffset,
+              gl.COMPONENT_TYPE_LENGTHS[componentType]
+            ]);
+      }
+
+      if (componentType != null && bufferView.target != null) {
         if (componentType == gl.UNSIGNED_INT &&
             bufferView.target != gl.ELEMENT_ARRAY_BUFFER) {
           context.addIssue(GltfError.ACCESSOR_UINT_NO_ELEMENT_ARRAY,
               name: COMPONENT_TYPE);
         }
 
-        const List<int> indicesComponentTypesEnum = const <int>[
-          gl.UNSIGNED_BYTE,
-          gl.UNSIGNED_SHORT,
-          gl.UNSIGNED_INT,
-        ];
-
         if (bufferView.target == gl.ELEMENT_ARRAY_BUFFER &&
-            !indicesComponentTypesEnum.contains(componentType)) {
+            !gl.ELEMENT_ARRAY_TYPES.contains(componentType)) {
           context.addIssue(GltfError.ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE,
               name: COMPONENT_TYPE, args: [componentType]);
         }

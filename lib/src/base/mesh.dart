@@ -32,25 +32,27 @@ class Mesh extends GltfChildOfRootProperty implements Linkable {
   static Mesh fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, MESH_MEMBERS, context);
 
-    var i = 0;
-    final primitives =
-        getMapList(map, PRIMITIVES, context, req: true, minItems: 1)
-            ?.map((Map<String, Object> p) {
-      context.path.add((i++).toString());
-      final primitive = new MeshPrimitive.fromMap(p, context);
+    final primitives = <MeshPrimitive>[];
+    final primitivesMaps =
+        getMapList(map, PRIMITIVES, context, req: true, minItems: 1);
+
+    if (primitivesMaps != null && primitivesMaps.isNotEmpty) {
+      context.path.add(PRIMITIVES);
+      for (int i = 0; i < primitivesMaps.length; i++) {
+        context.path.add(i.toString());
+        primitives.add(new MeshPrimitive.fromMap(primitivesMaps[i], context));
+        context.path.removeLast();
+      }
       context.path.removeLast();
-      return primitive;
-    })?.toList();
+    }
 
     return new Mesh._(primitives, getName(map, context),
         getExtensions(map, Mesh, context), getExtras(map));
   }
 
   void link(Gltf gltf, Context context) {
-    if (primitives == null) return;
-
     context.path.add(PRIMITIVES);
-    for (var i = 0; i < primitives.length; i++) {
+    for (int i = 0; i < primitives.length; i++) {
       context.path.add(i.toString());
       primitives[i].link(gltf, context);
       context.path.removeLast();
@@ -83,19 +85,8 @@ class MeshPrimitive extends GltfProperty implements Linkable {
   factory MeshPrimitive.fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, MESH_PRIMITIVE_MEMBERS, context);
 
-    const List<int> modesEnum = const <int>[
-      gl.POINTS,
-      gl.LINES,
-      gl.LINE_LOOP,
-      gl.LINE_STRIP,
-      gl.TRIANGLES,
-      gl.TRIANGLE_STRIP,
-      gl.TRIANGLE_FAN
-    ];
-
-    final attributes =
-        getMap(map, ATTRIBUTES, context, req: true) ?? <String, String>{};
-    if (context.validate && attributes.isNotEmpty) {
+    final attributes = getMap(map, ATTRIBUTES, context, req: true);
+    if (context.validate && attributes != null && attributes.isNotEmpty) {
       context.path.add(ATTRIBUTES);
       for (final semantic in attributes.keys) {
         if (!ATTRIBUTE_SEMANTIC_MEMBERS.contains(semantic) &&
@@ -105,7 +96,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
               semParts.length == 2 &&
               int.parse(semParts[1], onError: (_) => -1) != -1)) {
             context.addIssue(GltfError.TECHNIQUE_INVALID_SEMANTIC,
-                name: semantic);
+                args: [semantic]);
           }
         }
       }
@@ -116,7 +107,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
         attributes,
         getId(map, INDICES, context, req: false),
         getId(map, MATERIAL, context, req: false),
-        getInt(map, MODE, context, list: modesEnum, def: gl.TRIANGLES),
+        getInt(map, MODE, context, list: gl.MODES, def: gl.TRIANGLES),
         getExtensions(map, MeshPrimitive, context),
         getExtras(map));
   }
@@ -137,7 +128,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
 
       var foundPosition = false;
       context.path.add(ATTRIBUTES);
-      _attributesIds.forEach((semantic, accessorId) {
+      _attributesIds?.forEach((semantic, accessorId) {
         if (semantic == POSITION) {
           foundPosition = true;
         } else {
@@ -151,8 +142,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
             context.addIssue(GltfError.UNRESOLVED_REFERENCE,
                 name: semantic, args: [accessorId]);
           } else {
-            if (semantic == POSITION &&
-                (accessor.type != VEC3 || accessor.componentType != gl.FLOAT)) {
+            if (semantic == POSITION && accessor.type != VEC3) {
               context.addIssue(GltfError.MESH_INVALID_ACCESSOR_TYPE,
                   name: semantic);
             }
@@ -171,7 +161,8 @@ class MeshPrimitive extends GltfProperty implements Linkable {
 
         attributes[semantic] = accessor;
       });
-      if (!foundPosition) context.addIssue(GltfError.MESH_DEFAULT_NO_POSITION);
+      if (_attributesIds != null && !foundPosition)
+        context.addIssue(GltfError.MESH_DEFAULT_NO_POSITION);
       context.path.removeLast();
     } else if (material.extensions.isEmpty) {
       // assume material.technique defined
@@ -179,7 +170,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
       int count;
 
       context.path.add(ATTRIBUTES);
-      _attributesIds.forEach((semantic, accessorId) {
+      _attributesIds?.forEach((semantic, accessorId) {
         final accessor = gltf.accessors[accessorId];
 
         if (context.validate) {
@@ -229,7 +220,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
       int count;
 
       context.path.add(ATTRIBUTES);
-      _attributesIds.forEach((semantic, accessorId) {
+      _attributesIds?.forEach((semantic, accessorId) {
         final accessor = gltf.accessors[accessorId];
 
         if (context.validate) {
