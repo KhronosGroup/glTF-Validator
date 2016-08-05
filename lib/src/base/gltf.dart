@@ -324,7 +324,7 @@ class Gltf extends GltfProperty {
     info["hasAnimations"] = animations.isNotEmpty;
     info["hasMaterials"] = materials.isNotEmpty;
     info["hasSkins"] = skins.isNotEmpty;
-    info["hasAnimations"] = textures.isNotEmpty;
+    info["hasTextures"] = textures.isNotEmpty;
 
     int primitivesCount = 0;
     int maxAttributesUsed = 0;
