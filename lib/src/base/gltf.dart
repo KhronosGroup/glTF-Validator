@@ -157,7 +157,7 @@ class Gltf extends GltfProperty {
         } else {
           if (req)
             context.addIssue(GltfError.ROOT_DICTIONARY_EMPTY, name: name);
-          return itemMaps;
+          return <String, dynamic/*=T*/ >{};
         }
       } else {
         return <String, dynamic/*=T*/ >{};
@@ -173,7 +173,7 @@ class Gltf extends GltfProperty {
       return fromMap(item, context);
     }
 
-    final Asset asset = toValue(ASSET, Asset.fromMap, req: true);
+    final asset = toValue(ASSET, Asset.fromMap, req: true) as dynamic/*=Asset*/;
 
     final accessors =
         toMap/*<Accessor>*/(ACCESSORS, Accessor.fromMap, req: true);

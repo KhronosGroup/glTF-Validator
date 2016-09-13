@@ -71,7 +71,7 @@ class Technique extends GltfChildOfRootProperty implements Linkable {
     }
 
     final attributes = <String, TechniqueParameter>{};
-    final attributeIds = getMap(map, ATTRIBUTES, context);
+    final attributeIds = getStringMap(map, ATTRIBUTES, context);
 
     if (attributeIds.isNotEmpty) {
       context.path.add(ATTRIBUTES);
@@ -93,7 +93,7 @@ class Technique extends GltfChildOfRootProperty implements Linkable {
     }
 
     final uniforms = <String, TechniqueParameter>{};
-    final uniformIds = getMap(map, UNIFORMS, context);
+    final uniformIds = getStringMap(map, UNIFORMS, context);
 
     if (uniformIds.isNotEmpty) {
       context.path.add(UNIFORMS);

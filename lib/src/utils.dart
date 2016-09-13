@@ -140,6 +140,39 @@ Map<String, Object> getMap(
   return <String, dynamic>{};
 }
 
+Map<String, String> getStringMap(
+    Map<String, Object> map, String name, Context context,
+    {bool req: false}) {
+  final value = map[name];
+  if (value is Map) {
+    // JSON mandates all keys to be string
+    if (context.validate) {
+      var wrongMemberFound = false;
+      context.path.add(name);
+      value.forEach((String k, v) {
+        if (v is! String) {
+          context
+              .addIssue(GltfError.TYPE_MISMATCH, name: k, args: [v, "string"]);
+          wrongMemberFound = true;
+        }
+      });
+      context.path.removeLast();
+      if (wrongMemberFound) <String, String>{};
+    }
+    return value as dynamic/*=Map<String, String>*/;
+  } else if (value == null) {
+    if (req) {
+      context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
+      return null;
+    }
+  } else {
+    context.addIssue(GltfError.TYPE_MISMATCH,
+        name: name, args: [value, "JSON object"]);
+    if (req) return null;
+  }
+  return <String, String>{};
+}
+
 Uri parseUri(String uri, Context context) {
   try {
     return Uri.parse(uri);
@@ -198,18 +231,18 @@ List<num> getNumList(Map<String, Object> map, String name, Context context,
     }
     var wrongMemberFound = false;
     for (final v in value) {
-      if (v is! num) {
+      if (v is num) {
+        if (list != null) {
+          if (!checkEnum(name, v, list, context)) wrongMemberFound = true;
+        } else if ((min != null && v < min) ||
+            (exclMin != null && v <= exclMin) ||
+            (max != null && v > max)) {
+          context.addIssue(GltfError.VALUE_OUT_OF_RANGE, name: name, args: [v]);
+          wrongMemberFound = true;
+        }
+      } else {
         context.addIssue(GltfError.ARRAY_TYPE_MISMATCH,
             name: name, args: [v, "number"]);
-        wrongMemberFound = true;
-        continue;
-      }
-      if (list != null) {
-        if (!checkEnum(name, v, list, context)) wrongMemberFound = true;
-      } else if ((min != null && v < min) ||
-          (exclMin != null && v <= exclMin) ||
-          (max != null && v > max)) {
-        context.addIssue(GltfError.VALUE_OUT_OF_RANGE, name: name, args: [v]);
         wrongMemberFound = true;
       }
     }
@@ -235,20 +268,20 @@ List<int> getGlIntList(Map<String, Object> map, String name, Context context,
     }
     var wrongMemberFound = false;
     for (final v in value) {
-      if (v is! int) {
+      if (v is int) {
+        if (type != null) {
+          final min = gl.TYPE_MINS[type];
+          final max = gl.TYPE_MAXS[type];
+          if ((v < min) || (v > max)) {
+            context.addIssue(GltfError.INVALID_GL_VALUE,
+                name: name, args: [v, gl.TYPE_NAMES[type]]);
+            wrongMemberFound = true;
+          }
+        }
+      } else {
         context.addIssue(GltfError.ARRAY_TYPE_MISMATCH,
             name: name, args: [v, "integer"]);
         wrongMemberFound = true;
-        continue;
-      }
-      if (type != null) {
-        final min = gl.TYPE_MINS[type];
-        final max = gl.TYPE_MAXS[type];
-        if ((v < min) || (v > max)) {
-          context.addIssue(GltfError.INVALID_GL_VALUE,
-              name: name, args: [v, gl.TYPE_NAMES[type]]);
-          wrongMemberFound = true;
-        }
       }
     }
     if (wrongMemberFound) return null;

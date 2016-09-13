@@ -52,8 +52,10 @@ class Camera extends GltfChildOfRootProperty {
 
       return new Camera._(type, getName(map, context),
           getExtensions(map, Camera, context), getExtras(map),
-          orthographic: type == ORTHOGRAPHIC ? camera : null,
-          perspective: type == PERSPECTIVE ? camera : null);
+          orthographic: type == ORTHOGRAPHIC
+              ? camera as dynamic/*=CameraOrthographic*/ : null,
+          perspective: type == PERSPECTIVE
+              ? camera as dynamic/*=CameraPerspective*/ : null);
     } else {
       return new Camera._(type, getName(map, context),
           getExtensions(map, Camera, context), getExtras(map));

@@ -24,7 +24,7 @@ class Buffer extends GltfChildOfRootProperty {
   static const String ARRAYBUFFER = "arraybuffer";
 
   final Uri uri;
-  final Uint8List data;
+  final List<int> data;
   final int byteLength;
   final String type;
 
@@ -45,7 +45,7 @@ class Buffer extends GltfChildOfRootProperty {
     final uriString = getString(map, URI, context, req: true);
 
     Uri uri;
-    Uint8List data;
+    List<int> data;
 
     if (uriString != null) {
       if (uriString.startsWith("data:")) {

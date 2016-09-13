@@ -85,7 +85,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
   factory MeshPrimitive.fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, MESH_PRIMITIVE_MEMBERS, context);
 
-    final attributes = getMap(map, ATTRIBUTES, context, req: true);
+    final attributes = getStringMap(map, ATTRIBUTES, context, req: true);
     if (context.validate && attributes != null && attributes.isNotEmpty) {
       context.path.add(ATTRIBUTES);
       for (final semantic in attributes.keys) {
