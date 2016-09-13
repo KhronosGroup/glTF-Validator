@@ -18,6 +18,7 @@
 library gltf.core.animation;
 
 import 'gltf_property.dart';
+import 'package:gltf/src/gl.dart' as gl;
 
 class Animation extends GltfChildOfRootProperty implements Linkable {
   final List<AnimationChannel> channels;
@@ -76,9 +77,17 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
       _parametersIds.forEach((id, accessorId) {
         parameters[id] = gltf.accessors[accessorId];
 
-        if (context.validate && parameters[id] == null)
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: id, args: [accessorId]);
+        if (context.validate) {
+          if (parameters[id] == null) {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: id, args: [accessorId]);
+          } else if (parameters[id].bufferView?.target != null) {
+            context.addIssue(
+                GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+                name: id,
+                args: [accessorId]);
+          }
+        }
       });
       context.path.removeLast();
     }
@@ -86,33 +95,72 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
     if (samplers.isNotEmpty) {
       context.path.add(SAMPLERS);
       samplers.forEach((id, sampler) {
-        context.path.add(id);
-
         sampler.input = parameters[sampler._inputId];
-
-        if (context.validate && sampler.input == null)
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: INPUT, args: [sampler._inputId]);
-
         sampler.output = parameters[sampler._outputId];
 
-        if (context.validate && sampler.output == null)
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: OUTPUT, args: [sampler._outputId]);
+        if (context.validate) {
+          context.path.add(id);
+          if (sampler.input == null) {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: INPUT, args: [sampler._inputId]);
+          }
 
-        context.path.removeLast();
+          if (sampler.output == null) {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: OUTPUT, args: [sampler._outputId]);
+          }
+          context.path.removeLast();
+        }
       });
       context.path.removeLast();
     }
 
     if (channels.isNotEmpty) {
       context.path.add(CHANNELS);
-      for (final channel in channels) {
+      for (int i = 0; i < channels.length; i++) {
+        final channel = channels[i];
         channel.sampler = samplers[channel._samplerId];
 
-        if (context.validate && channel.sampler == null)
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: SAMPLER, args: [channel._samplerId]);
+        if (channel.target != null) {
+          channel.target.node = gltf.nodes[channel.target._id];
+          if (context.validate && channel.target.node == null) {
+            context.path.add(TARGET);
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: ID, args: [channel.target._id]);
+            context.path.removeLast();
+          }
+        }
+
+        if (context.validate) {
+          context.path.add(i.toString());
+
+          if (channel.sampler == null) {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: SAMPLER, args: [channel._samplerId]);
+          } else {
+            if (channel.target != null &&
+                channel.sampler.input != null &&
+                channel.sampler.output != null) {
+              if (channel.sampler.input.type != SCALAR) {
+                context.addIssue(GltfError.ANIMATION_ACCESSOR_INVALID,
+                    name: SAMPLER, args: [channel.sampler._inputId]);
+              }
+
+              const outputTypes = const <String, String>{
+                TRANSLATION: VEC3,
+                ROTATION: VEC4,
+                SCALE: VEC3
+              };
+
+              if (channel.sampler.output.type !=
+                  outputTypes[channel.target.path]) {
+                context.addIssue(GltfError.ANIMATION_ACCESSOR_INVALID,
+                    name: SAMPLER, args: [channel.sampler._outputId]);
+              }
+            }
+          }
+          context.path.removeLast();
+        }
       }
       context.path.removeLast();
     }

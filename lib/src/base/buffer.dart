@@ -62,7 +62,7 @@ class Buffer extends GltfChildOfRootProperty {
           context.addIssue(GltfError.INVALID_DATAURI, name: URI, args: [e]);
         }
       } else {
-        uri = getUri(uriString, context);
+        uri = parseUri(uriString, context);
       }
 
       if (data != null && data.length > 0 && data.length != byteLength) {

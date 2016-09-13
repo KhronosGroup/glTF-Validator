@@ -53,18 +53,20 @@ int getInt(Map<String, Object> map, String name, Context context,
     {bool req: false, int min, int max, int def, Iterable<int> list}) {
   final value = map[name];
   if (value is int) {
-    if (list != null)
-      return checkEnum(name, value, list, context) ? value : null;
-    else if ((min != null && value < min) || (max != null && value > max))
+    if (list != null) {
+      if (!checkEnum(name, value, list, context)) return null;
+    } else if ((min != null && value < min) || (max != null && value > max)) {
       context.addIssue(GltfError.VALUE_OUT_OF_RANGE, name: name, args: [value]);
-    else
-      return value;
+      return null;
+    }
+    return value;
   } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
-  } else
+  } else {
     context.addIssue(GltfError.TYPE_MISMATCH,
         name: name, args: [value, "integer"]);
+  }
   return null;
 }
 
@@ -77,36 +79,44 @@ num getNum(Map<String, Object> map, String name, Context context,
     Iterable<num> list}) {
   final value = map[name];
   if (value is num) {
-    if (list != null)
-      return checkEnum(name, value, list, context) ? value : null;
-    else if ((min != null && value < min) ||
+    if (list != null) {
+      if (!checkEnum(name, value, list, context)) return null;
+    } else if ((min != null && value < min) ||
         (exclMin != null && value <= exclMin) ||
-        (max != null && value > max))
+        (max != null && value > max)) {
       context.addIssue(GltfError.VALUE_OUT_OF_RANGE, name: name, args: [value]);
-    else
-      return value;
+      return null;
+    }
+    return value;
   } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
-  } else
+  } else {
     context
         .addIssue(GltfError.TYPE_MISMATCH, name: name, args: [value, "number"]);
+  }
   return null;
 }
 
 String getString(Map<String, Object> map, String name, Context context,
-    {bool req: false, Iterable<String> list, String def}) {
+    {bool req: false, Iterable<String> list, String def, RegExp regexp}) {
   final value = map[name];
   if (value is String) {
-    if (list != null && !checkEnum(name, value, list, context)) return null;
+    if (list != null) {
+      if (!checkEnum(name, value, list, context)) return null;
+    } else if (regexp?.hasMatch(value) == false) {
+      context.addIssue(GltfError.PATTERN_MISMATCH,
+          name: name, args: [value, regexp.pattern]);
+      return null;
+    }
     return value;
-  }
-  if (value == null) {
+  } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
-  } else
+  } else {
     context
         .addIssue(GltfError.TYPE_MISMATCH, name: name, args: [value, "string"]);
+  }
   return null;
 }
 
@@ -130,26 +140,7 @@ Map<String, Object> getMap(
   return <String, dynamic>{};
 }
 
-/*Map<String, String> getStringMap(Map<String, Object> map, String name) {
-  final value = map[name];
-  final result = <String, String>{};
-  if (value is Map) {
-    // JSON mandates all keys to be string
-    value.forEach((mapKey, mapValue) {
-      if (mapValue is String)
-        result[mapKey] = mapValue;
-      else if (mapValue == null)
-        context.addIssue(name, "$mapKey value can't be null");
-      else
-        context.addIssue(name, "$mapKey value ($value) is not a string");
-    });
-  } else if (value != null) {
-    context.addIssue(name, "Value ($value) is not a Map");
-  }
-  return result;
-}*/
-
-Uri getUri(String uri, Context context) {
+Uri parseUri(String uri, Context context) {
   try {
     return Uri.parse(uri);
   } on FormatException catch (e) {
@@ -174,8 +165,7 @@ List<bool> getBoolList(Map<String, Object> map, String name, Context context,
     }
     if (wrongMemberFound) return null;
     return value as dynamic/*=List<bool>*/;
-  }
-  if (value == null) {
+  } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
   } else {
@@ -228,9 +218,43 @@ List<num> getNumList(Map<String, Object> map, String name, Context context,
   } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
-  } else
+  } else {
     context.addIssue(GltfError.TYPE_MISMATCH,
         name: name, args: [value, "number[]"]);
+  }
+  return null;
+}
+
+List<int> getGlIntList(Map<String, Object> map, String name, Context context,
+    {bool req: false, num min, num max, int length}) {
+  final value = map[name];
+  if (value is List) {
+    if (value.length != length) {
+      context.addIssue(GltfError.ARRAY_LENGTH_NOT_IN_LIST,
+          name: name, args: [value, length]);
+    }
+    var wrongMemberFound = false;
+    for (final v in value) {
+      if (v is! int) {
+        context.addIssue(GltfError.ARRAY_TYPE_MISMATCH,
+            name: name, args: [v, "integer"]);
+        wrongMemberFound = true;
+        continue;
+      }
+      if ((min != null && v < min) || (max != null && v > max)) {
+        context.addIssue(GltfError.VALUE_OUT_OF_RANGE, name: name, args: [v]);
+        wrongMemberFound = true;
+      }
+    }
+    if (wrongMemberFound) return null;
+    return value as dynamic/*=List<int>*/;
+  } else if (value == null) {
+    if (!req) return null;
+    context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
+  } else {
+    context.addIssue(GltfError.TYPE_MISMATCH,
+        name: name, args: [value, "number[]"]);
+  }
   return null;
 }
 
@@ -269,9 +293,10 @@ List<String> getStringList(
   } else if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
-  } else
+  } else {
     context.addIssue(GltfError.TYPE_MISMATCH,
         name: name, args: [value, "string[]"]);
+  }
   return null;
 }
 
@@ -299,7 +324,6 @@ List<Map<String, Object>> getMapList(
   } else {
     context.addIssue(GltfError.TYPE_MISMATCH,
         name: name, args: [value, "JSON object[]"]);
-    if (!req) return <Map<String, Object>>[];
   }
   return null;
 }
@@ -406,15 +430,14 @@ void checkGlType(Object value, int type, int count, Context context,
       }
 
       for (int i = 0; i < value.length; i++) {
-        final val = value[i];
-        if (!checkFunction(val)) {
+        if (!checkFunction(value[i])) {
           context.addIssue(GltfError.INVALID_GL_VALUE,
-              name: name, args: [value, gl.TYPE_NAMES[type]]);
+              name: "$name[$i]", args: [value[i], gl.TYPE_NAMES[type]]);
         }
       }
     } else {
-      context.addIssue(GltfError.INVALID_GL_VALUE,
-          name: name, args: [value, gl.TYPE_NAMES[type]]);
+      context.addIssue(GltfError.TYPE_MISMATCH,
+          name: name, args: [value, "${gl.TYPE_NAMES[type]}[]"]);
     }
     return true;
   }
@@ -443,9 +466,13 @@ void checkGlType(Object value, int type, int count, Context context,
     gl.SAMPLER_2D: checkSampler
   };
 
-  if (!checkFunctions[type](value))
-    context.addIssue(GltfError.INVALID_GL_VALUE,
-        name: name, args: [value, gl.TYPE_NAMES[type]]);
+  if (count == null) {
+    if (!checkFunctions[type](value))
+      context.addIssue(GltfError.INVALID_GL_VALUE,
+          name: name, args: [value, gl.TYPE_NAMES[type]]);
+  } else {
+    checkVec(value, checkFunctions[type]);
+  }
 }
 
 String mapToString([Map map]) {

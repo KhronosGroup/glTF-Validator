@@ -59,7 +59,7 @@ class Image extends GltfChildOfRootProperty {
           }
         }
       } else {
-        uri = getUri(uriString, context);
+        uri = parseUri(uriString, context);
       }
     }
     return new Image._(uri, uriString, getName(map, context),

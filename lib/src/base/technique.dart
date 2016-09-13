@@ -276,7 +276,7 @@ class TechniqueParameter extends GltfProperty {
   final String _nodeId;
   final int type;
   final String semantic;
-  final Object value;
+  final List value;
 
   Node node;
 
@@ -296,12 +296,35 @@ class TechniqueParameter extends GltfProperty {
     if (context.validate)
       checkMembers(map, TECHNIQUE_PARAMETER_MEMBERS, context);
 
+    final type =
+        getInt(map, TYPE, context, list: gl.TYPE_LENGTHS.keys, req: true);
+
+    final count = getInt(map, COUNT, context, min: 1);
+
+    List value;
+    if (type != null) {
+      if (type == gl.SAMPLER_2D) {
+        value = getStringList(map, VALUE, context, lengthsList: [count ?? 1]);
+      } else if (gl.BOOL_TYPES.contains(type)) {
+        value = getBoolList(map, VALUE, context,
+            lengthsList: [(count ?? 1) * gl.TYPE_LENGTHS[type]]);
+      } else if (gl.FLOAT_TYPES.contains(type)) {
+        value = getNumList(map, VALUE, context,
+            lengthsList: [(count ?? 1) * gl.TYPE_LENGTHS[type]]);
+      } else if (gl.INT_TYPES.contains(type)) {
+        value = getGlIntList(map, VALUE, context,
+            length: (count ?? 1) * gl.TYPE_LENGTHS[type],
+            min: gl.TYPE_MINS[type],
+            max: gl.TYPE_MAXS[type]);
+      }
+    }
+
     return new TechniqueParameter._(
-        getInt(map, COUNT, context, min: 1),
+        count,
         getId(map, NODE, context, req: false),
-        getInt(map, TYPE, context, list: gl.TYPE_LENGTHS.keys, req: true),
+        type,
         getString(map, SEMANTIC, context),
-        map[VALUE],
+        value,
         getExtensions(map, TechniqueParameter, context),
         getExtras(map));
   }

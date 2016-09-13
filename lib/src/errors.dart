@@ -25,6 +25,10 @@ abstract class GltfWarning {
   static const DUPLICATE_ITEMS = "DUPLICATE_ITEMS";
   static const MATERIALS_VALUES_WITHOUT_TECHNIQUE =
       "MATERIALS_VALUES_WITHOUT_TECHNIQUE";
+  static const NORMALIZED_FLOAT = "NORMALIZED_FLOAT";
+  static const NORMALIZED_NON_ARRAY = "NORMALIZED_NON_ARRAY";
+  static const ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET =
+      "ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET";
   static const UNEXPECTED_ATTRIBUTE = "UNEXPECTED_ATTRIBUTE";
   static const UNEXPECTED_PROPERTY = "UNEXPECTED_PROPERTY";
   static const UNSUPPORTED_EXTENSION = "UNSUPPORTED_EXTENSION";
@@ -35,6 +39,12 @@ abstract class GltfWarning {
     DUPLICATE_ITEMS: (List args) => "Array contains duplicate items",
     MATERIALS_VALUES_WITHOUT_TECHNIQUE: (List args) =>
         "When technique is undefined, values must be undefined too",
+    NORMALIZED_FLOAT: (List args) =>
+        "Only non-float attributes can be normalized",
+    NORMALIZED_NON_ARRAY: (List args) =>
+        "Only vertex array buffer data can be normalized",
+    ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET: (List args) =>
+        "bufferView.target must be undefined for animation accessor (`${args[0]}`)",
     UNEXPECTED_ATTRIBUTE: (List args) =>
         "Unexpected attribute `${args[0]}` for "
         "${args.length == 1 ? "the default material" : "`${args[1]}`"}",
@@ -59,6 +69,7 @@ abstract class GltfError {
   static const INVALID_DATAURI = "INVALID_DATAURI";
   static const INVALID_DATAURI_MIME = "INVALID_DATAURI_MIME";
   static const TYPE_MISMATCH = "TYPE_MISMATCH";
+  static const PATTERN_MISMATCH = "PATTERN_MISMATCH";
   static const VALUE_NOT_IN_LIST = "VALUE_NOT_IN_LIST";
   static const VALUE_OUT_OF_RANGE = "VALUE_OUT_OF_RANGE";
   static const UNDECLARED_EXTENSION = "UNDECLARED_EXTENSION";
@@ -82,6 +93,8 @@ abstract class GltfError {
   static const ACCESSOR_UINT_NO_ELEMENT_ARRAY =
       "ACCESSOR_UINT_NO_ELEMENT_ARRAY";
   static const ACCESSOR_UINT_NO_SCALAR = "ACCESSOR_UINT_NO_SCALAR";
+
+  static const ANIMATION_ACCESSOR_INVALID = "ANIMATION_ACCESSOR_INVALID";
 
   static const BUFFERVIEW_TOO_LONG = "BUFFERVIEW_TOO_LONG";
 
@@ -127,11 +140,11 @@ abstract class GltfError {
     INVALID_JSON: (List args) => "Invalid JSON data. Parser output: ${args[0]}",
     INVALID_JSON_ROOT_OBJECT: (List args) => "JSON root must be an object",
     ARRAY_LENGTH_NOT_IN_LIST: (List args) =>
-        "Wrong array length (${args[0]}). Valid lengths are ${args[1]}",
+        "Wrong array length (${args[0]}). Valid lengths are: ${args[1]}",
     ARRAY_LENGTH_OUT_OF_RANGE: (List args) =>
         "Array length (${args[0]}) out of range",
     ARRAY_TYPE_MISMATCH: (List args) =>
-        "Type mismatch. Array member (`${args[0]}`) isn't a `${args[1]}`",
+        "Type mismatch. Member (`${args[0]}`) isn't a `${args[1]}`",
     EMPTY_ID: (List args) => "ID can't be an empty string",
     INVALID_ACCESSOR_TYPE: (List args) =>
         "Accessor with incompatible `type` (${args[0]}) referenced",
@@ -144,6 +157,8 @@ abstract class GltfError {
     INVALID_DATAURI_MIME: (List args) => "Invalid MIME type (`${args[0]}`)",
     TYPE_MISMATCH: (List args) =>
         "Type mismatch. Property value (`${args[0]}`) isn't a `${args[1]}`",
+    PATTERN_MISMATCH: (List args) =>
+        "Value (`${args[0]}`) doesn't match pattern `${args[1]}`",
     VALUE_NOT_IN_LIST: (List args) =>
         "Wrong value (${args[0]}). Valid values are ${args[1]}",
     VALUE_OUT_OF_RANGE: (List args) => "Value (${args[0]}) out of range",
@@ -169,6 +184,8 @@ abstract class GltfError {
         "5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with `ELEMENT_ARRAY_BUFFER` target",
     ACCESSOR_UINT_NO_SCALAR: (List args) =>
         "5125 (UNSIGNED_INT) is only allowed when the `type` is `SCALAR`",
+    ANIMATION_ACCESSOR_INVALID: (List args) =>
+        "Incompatible animation accessor (`${args[0]}`)",
     BUFFERVIEW_TOO_LONG: (List args) =>
         "BufferView doesn't fit buffer (`${args[0]}`) byteLength (${args[1]})",
     CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` mustn't be equal to `znear`",
@@ -260,4 +277,10 @@ class GltfIssue {
   }
 
   GltfIssue._(this.severity, this.type, this.path, this._message, this._args);
+
+  @override
+  int get hashCode => toString().hashCode;
+
+  @override
+  bool operator ==(dynamic o) => o is GltfIssue && o.toString() == toString();
 }

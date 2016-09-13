@@ -49,7 +49,7 @@ class Asset extends GltfProperty {
     return new Asset._(
         getString(map, COPYRIGHT, context),
         getString(map, GENERATOR, context),
-        getBool(map, PREMULTIPLIED_ALPHA, context),
+        getBool(map, PREMULTIPLIED_ALPHA, context, def: false),
         profile,
         getString(map, VERSION, context, req: true),
         getExtensions(map, Asset, context),
@@ -59,7 +59,8 @@ class Asset extends GltfProperty {
 
 class AssetProfile extends GltfProperty {
   static const String WEBGL = "WebGL";
-  static const String V1_0_3 = "1.0.3";
+  static const String V1_0 = "1.0";
+  static final RegExp versionRegexp = new RegExp(r"^\d+\.\d+$");
 
   final String api;
   final String version;
@@ -75,7 +76,7 @@ class AssetProfile extends GltfProperty {
 
     return new AssetProfile._(
         getString(map, API, context, def: WEBGL),
-        getString(map, VERSION, context, def: V1_0_3),
+        getString(map, VERSION, context, regexp: versionRegexp, def: V1_0),
         getExtensions(map, AssetProfile, context),
         getExtras(map));
   }

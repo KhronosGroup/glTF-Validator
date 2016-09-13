@@ -27,6 +27,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
   final int componentType;
   final int count;
   final String type;
+  final bool normalized;
   final List<num> max;
   final List<num> min;
 
@@ -47,6 +48,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
       this.componentType,
       this.count,
       this.type,
+      this.normalized,
       this.max,
       this.min,
       String name,
@@ -61,6 +63,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
         COMPONENT_TYPE: componentType,
         COUNT: count,
         TYPE: type,
+        NORMALIZED: normalized,
         MAX: max,
         MIN: min
       });
@@ -78,47 +81,64 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
     final type = getString(map, TYPE, context,
         req: true, list: ACCESSOR_TYPES_LENGTHS.keys);
 
-    if (context.validate && componentType == gl.UNSIGNED_INT) {
-      if (!context.glExtensionsUsed.contains(gl.OES_ELEMENT_INDEX_UINT)) {
-        context.addIssue(GltfError.ACCESSOR_UINT_NO_EXT, name: COMPONENT_TYPE);
-      }
-      if (type != SCALAR) {
-        context.addIssue(GltfError.ACCESSOR_UINT_NO_SCALAR,
-            name: COMPONENT_TYPE);
-      }
-    }
+    final normalized = getBool(map, NORMALIZED, context, def: false);
 
     final min = getNumList(map, MIN, context,
-        lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], req: true);
+        lengthsList: ACCESSOR_TYPES_LENGTHS.values, req: false);
     final max = getNumList(map, MAX, context,
-        lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], req: true);
+        lengthsList: ACCESSOR_TYPES_LENGTHS.values, req: false);
 
-    if (context.validate &&
-        byteOffset != null &&
-        byteStride != null &&
-        componentType != null &&
-        count != null &&
-        type != null) {
-      final attributeLength = gl.COMPONENT_TYPE_LENGTHS[componentType] *
-          ACCESSOR_TYPES_LENGTHS[type];
+    if (context.validate) {
+      // need to check explicitly to force bool compare
+      if (normalized == true && componentType == gl.FLOAT) {
+        context.addIssue(GltfWarning.NORMALIZED_FLOAT, name: NORMALIZED);
+      }
 
-      if (byteOffset % gl.COMPONENT_TYPE_LENGTHS[componentType] != 0)
-        context.addIssue(GltfError.ACCESSOR_MULTIPLE_COMPONENT_TYPE,
-            name: BYTE_OFFSET,
-            args: [byteOffset, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
+      if (componentType == gl.UNSIGNED_INT) {
+        if (!context.glExtensionsUsed.contains(gl.OES_ELEMENT_INDEX_UINT)) {
+          context.addIssue(GltfError.ACCESSOR_UINT_NO_EXT,
+              name: COMPONENT_TYPE);
+        }
+        if (type != SCALAR) {
+          context.addIssue(GltfError.ACCESSOR_UINT_NO_SCALAR,
+              name: COMPONENT_TYPE);
+        }
+      }
 
-      if (byteStride > 0) {
-        if (byteStride < attributeLength)
-          context.addIssue(GltfError.ACCESSOR_SMALL_BYTESTRIDE,
-              name: BYTE_STRIDE, args: [byteStride, attributeLength]);
+      if (byteOffset != null &&
+          byteStride != null &&
+          componentType != null &&
+          type != null) {
+        final attributeLength = gl.COMPONENT_TYPE_LENGTHS[componentType] *
+            ACCESSOR_TYPES_LENGTHS[type];
 
-        if (byteStride % gl.COMPONENT_TYPE_LENGTHS[componentType] != 0)
+        if (byteOffset % gl.COMPONENT_TYPE_LENGTHS[componentType] != 0) {
           context.addIssue(GltfError.ACCESSOR_MULTIPLE_COMPONENT_TYPE,
-              name: BYTE_STRIDE,
-              args: [byteStride, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
+              name: BYTE_OFFSET,
+              args: [byteOffset, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
+        }
+
+        if (byteStride > 0) {
+          if (byteStride < attributeLength) {
+            context.addIssue(GltfError.ACCESSOR_SMALL_BYTESTRIDE,
+                name: BYTE_STRIDE, args: [byteStride, attributeLength]);
+          }
+
+          if (byteStride % gl.COMPONENT_TYPE_LENGTHS[componentType] != 0) {
+            context.addIssue(GltfError.ACCESSOR_MULTIPLE_COMPONENT_TYPE,
+                name: BYTE_STRIDE,
+                args: [byteStride, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
+          }
+        }
+      }
+
+      if (type != null && componentType != null && max != null && min != null) {
+        checkGlType(
+            min, componentType, ACCESSOR_TYPES_LENGTHS[type], context, MIN);
+        checkGlType(
+            max, componentType, ACCESSOR_TYPES_LENGTHS[type], context, MAX);
       }
     }
-
     return new Accessor._(
         getId(map, BUFFER_VIEW, context),
         byteOffset,
@@ -126,6 +146,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
         componentType,
         count,
         type,
+        normalized,
         max,
         min,
         getName(map, context),
@@ -184,6 +205,10 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
             !gl.ELEMENT_ARRAY_TYPES.contains(componentType)) {
           context.addIssue(GltfError.ACCESSOR_INVALID_ELEMENT_ARRAY_TYPE,
               name: COMPONENT_TYPE, args: [componentType]);
+        }
+
+        if (bufferView.target != gl.ARRAY_BUFFER && normalized == true) {
+          context.addIssue(GltfWarning.NORMALIZED_NON_ARRAY, name: NORMALIZED);
         }
       }
     }

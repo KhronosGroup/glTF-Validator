@@ -35,6 +35,7 @@ const String BYTE_STRIDE = "byteStride";
 const String COMPONENT_TYPE = "componentType";
 const String COUNT = "count";
 const String TYPE = "type";
+const String NORMALIZED = "normalized";
 const String MAX = "max";
 const String MIN = "min";
 
@@ -45,6 +46,7 @@ const List<String> ACCESSORS_MEMBERS = const <String>[
   COMPONENT_TYPE,
   COUNT,
   TYPE,
+  NORMALIZED,
   MAX,
   MIN,
   NAME

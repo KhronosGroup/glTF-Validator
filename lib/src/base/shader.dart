@@ -60,7 +60,7 @@ class Shader extends GltfChildOfRootProperty {
           context.addIssue(GltfError.INVALID_DATAURI, name: URI, args: [e]);
         }
       } else {
-        uri = getUri(uriString, context);
+        uri = parseUri(uriString, context);
       }
     }
 
