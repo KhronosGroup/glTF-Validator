@@ -226,7 +226,7 @@ List<num> getNumList(Map<String, Object> map, String name, Context context,
 }
 
 List<int> getGlIntList(Map<String, Object> map, String name, Context context,
-    {bool req: false, num min, num max, int length}) {
+    {bool req: false, int type, int length}) {
   final value = map[name];
   if (value is List) {
     if (value.length != length) {
@@ -241,9 +241,14 @@ List<int> getGlIntList(Map<String, Object> map, String name, Context context,
         wrongMemberFound = true;
         continue;
       }
-      if ((min != null && v < min) || (max != null && v > max)) {
-        context.addIssue(GltfError.VALUE_OUT_OF_RANGE, name: name, args: [v]);
-        wrongMemberFound = true;
+      if (type != null) {
+        final min = gl.TYPE_MINS[type];
+        final max = gl.TYPE_MAXS[type];
+        if ((v < min) || (v > max)) {
+          context.addIssue(GltfError.INVALID_GL_VALUE,
+              name: name, args: [v, gl.TYPE_NAMES[type]]);
+          wrongMemberFound = true;
+        }
       }
     }
     if (wrongMemberFound) return null;
@@ -392,86 +397,6 @@ void checkMembers(
   for (final k in map.keys) {
     if (!knownMembers.contains(k) && !(useSuper && superMembers.contains(k)))
       context.addIssue(GltfWarning.UNEXPECTED_PROPERTY, name: k);
-  }
-}
-
-typedef bool CheckFunction(Object value);
-
-void checkGlType(Object value, int type, int count, Context context,
-    [String name = VALUE]) {
-  bool checkBool(Object value) => value is bool;
-
-  bool checkByte(Object value) => value is int && value < 128 && value > -129;
-
-  bool checkUbyte(Object value) => value is int && value < 256 && value > -1;
-
-  bool checkShort(Object value) =>
-      value is int && value < 32768 && value > -32769;
-
-  bool checkUshort(Object value) => value is int && value < 65536 && value > -1;
-
-  bool checkInt(Object value) =>
-      value is int && value < 2147483648 && value > -2147483649;
-
-  bool checkUint(Object value) =>
-      value is int && value < 4294967296 && value > -1;
-
-  bool checkFloat(Object value) => value is num;
-
-  bool checkSampler(Object value) => value is String;
-
-  bool checkVec(Object value, CheckFunction checkFunction) {
-    if (value is List) {
-      final expectedLength = (count ?? 1) * gl.TYPE_LENGTHS[type];
-
-      if (value.length != expectedLength) {
-        context.addIssue(GltfError.INVALID_GL_VALUE_LENGTH,
-            name: name, args: [value.length, gl.TYPE_NAMES[type], count]);
-      }
-
-      for (int i = 0; i < value.length; i++) {
-        if (!checkFunction(value[i])) {
-          context.addIssue(GltfError.INVALID_GL_VALUE,
-              name: "$name[$i]", args: [value[i], gl.TYPE_NAMES[type]]);
-        }
-      }
-    } else {
-      context.addIssue(GltfError.TYPE_MISMATCH,
-          name: name, args: [value, "${gl.TYPE_NAMES[type]}[]"]);
-    }
-    return true;
-  }
-
-  final checkFunctions = <int, CheckFunction>{
-    gl.BYTE: checkByte,
-    gl.UNSIGNED_BYTE: checkUbyte,
-    gl.SHORT: checkShort,
-    gl.UNSIGNED_SHORT: checkUshort,
-    gl.INT: checkInt,
-    gl.UNSIGNED_INT: checkUint,
-    gl.FLOAT: checkFloat,
-    gl.FLOAT_VEC2: (value) => checkVec(value, checkFloat),
-    gl.FLOAT_VEC3: (value) => checkVec(value, checkFloat),
-    gl.FLOAT_VEC4: (value) => checkVec(value, checkFloat),
-    gl.INT_VEC2: (value) => checkVec(value, checkInt),
-    gl.INT_VEC3: (value) => checkVec(value, checkInt),
-    gl.INT_VEC4: (value) => checkVec(value, checkInt),
-    gl.BOOL: checkBool,
-    gl.BOOL_VEC2: (value) => checkVec(value, checkBool),
-    gl.BOOL_VEC3: (value) => checkVec(value, checkBool),
-    gl.BOOL_VEC4: (value) => checkVec(value, checkBool),
-    gl.FLOAT_MAT2: (value) => checkVec(value, checkFloat),
-    gl.FLOAT_MAT3: (value) => checkVec(value, checkFloat),
-    gl.FLOAT_MAT4: (value) => checkVec(value, checkFloat),
-    gl.SAMPLER_2D: checkSampler
-  };
-
-  if (count == null) {
-    if (!checkFunctions[type](value))
-      context.addIssue(GltfError.INVALID_GL_VALUE,
-          name: name, args: [value, gl.TYPE_NAMES[type]]);
-  } else {
-    checkVec(value, checkFunctions[type]);
   }
 }
 

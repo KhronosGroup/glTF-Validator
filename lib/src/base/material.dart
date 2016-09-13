@@ -75,19 +75,19 @@ class Material extends GltfChildOfRootProperty implements Linkable {
           List value;
           if (parameter.type != null) {
             if (parameter.type == gl.SAMPLER_2D) {
-              value = new List<Texture>();
+              value = new List<Texture>(parameter.count ?? 1);
 
               final stringValues = getStringList(_values, parameterId, context,
                   lengthsList: [parameter.count ?? 1]);
 
               if (stringValues != null) {
-                for (final textureId in stringValues) {
-                  final texture = gltf.textures[textureId];
+                for (int i = 0; i < stringValues.length; i++) {
+                  final texture = gltf.textures[stringValues[i]];
                   if (texture == null) {
                     context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                        name: parameterId, args: [textureId]);
+                        name: parameterId, args: [stringValues[i]]);
                   } else {
-                    value.add(texture);
+                    value[i] = texture;
                   }
                 }
               }
@@ -103,8 +103,7 @@ class Material extends GltfChildOfRootProperty implements Linkable {
               value = getGlIntList(_values, parameterId, context,
                   length:
                       (parameter.count ?? 1) * gl.TYPE_LENGTHS[parameter.type],
-                  min: gl.TYPE_MINS[parameter.type],
-                  max: gl.TYPE_MAXS[parameter.type]);
+                  type: parameter.type);
             }
             values[parameterId] = value;
           }

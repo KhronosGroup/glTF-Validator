@@ -81,11 +81,17 @@ class Skin extends GltfChildOfRootProperty implements Linkable {
         } else {
           if (inverseBindMatrices.type != MAT4)
             context.addIssue(GltfError.INVALID_ACCESSOR_TYPE,
-                name: INVERSE_BIND_MATRICES, args: [inverseBindMatrices.type]);
+                name: INVERSE_BIND_MATRICES,
+                args: [MAT4, inverseBindMatrices.type]);
+
+          if (inverseBindMatrices.bufferView?.target != null)
+            context.addIssue(GltfWarning.SKIN_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+                name: INVERSE_BIND_MATRICES, args: [_inverseBindMatricesId]);
 
           if (inverseBindMatrices.count != jointNames.length)
             context.addIssue(GltfError.SKIN_INVALID_ACCESSOR_COUNT,
-                name: INVERSE_BIND_MATRICES, args: [inverseBindMatrices.count]);
+                name: INVERSE_BIND_MATRICES,
+                args: [jointNames.length, inverseBindMatrices.count]);
         }
       }
     }

@@ -206,7 +206,8 @@ class MeshPrimitive extends GltfProperty implements Linkable {
             if (parameter != null) {
               if (accessor.type != ATTRIBUTE_TYPES[parameter.type])
                 context.addIssue(GltfError.INVALID_ACCESSOR_TYPE,
-                    name: semantic);
+                    name: semantic,
+                    args: [ATTRIBUTE_TYPES[parameter.type], accessor.type]);
             }
           }
         }
@@ -255,7 +256,8 @@ class MeshPrimitive extends GltfProperty implements Linkable {
             if (parameter != null) {
               if (accessor.type != ATTRIBUTE_TYPES[parameter.type])
                 context.addIssue(GltfError.INVALID_ACCESSOR_TYPE,
-                    name: semantic);
+                    name: semantic,
+                    args: [ATTRIBUTE_TYPES[parameter.type], accessor.type]);
             }
           }
         }

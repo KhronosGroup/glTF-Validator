@@ -170,14 +170,6 @@ class Technique extends GltfChildOfRootProperty implements Linkable {
           }
         }
 
-        if (context.validate &&
-            parameter.type == gl.SAMPLER_2D &&
-            parameter.value != null &&
-            gltf.textures[parameter.value] == null) {
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: VALUE, args: [parameter.value]);
-        }
-
         if (context.validate) {
           final isAttributeParameter = _attributesIds.containsValue(id);
           final isUniformParameter = _uniformsIds.containsValue(id);
@@ -227,9 +219,16 @@ class Technique extends GltfChildOfRootProperty implements Linkable {
               context.addIssue(GltfError.TECHNIQUE_UNIFORM_NODE_TYPE);
             }
 
-            if (parameter.value != null && parameter.type != null) {
-              checkGlType(
-                  parameter.value, parameter.type, parameter.count, context);
+            if (parameter._value != null && parameter.type == gl.SAMPLER_2D) {
+              for (int i = 0; i < parameter.value.length; i++) {
+                final texture = gltf.textures[parameter._value[i]];
+                if (texture == null) {
+                  context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                      name: "$VALUE[$i]", args: [parameter._value[i]]);
+                } else {
+                  parameter.value[i] = texture;
+                }
+              }
             }
 
             if (parameter.semantic != null) {
@@ -277,11 +276,12 @@ class TechniqueParameter extends GltfProperty {
   final int type;
   final String semantic;
   final List value;
+  final List _value;
 
   Node node;
 
   TechniqueParameter._(this.count, this._nodeId, this.type, this.semantic,
-      this.value, Map<String, Object> extensions, Object extras)
+      this._value, this.value, Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
   String toString([_]) => super.toString({
@@ -289,7 +289,7 @@ class TechniqueParameter extends GltfProperty {
         COUNT: count,
         NODE: _nodeId,
         SEMANTIC: semantic,
-        VALUE: value
+        VALUE: _value
       });
 
   factory TechniqueParameter.fromMap(Map<String, Object> map, Context context) {
@@ -302,20 +302,23 @@ class TechniqueParameter extends GltfProperty {
     final count = getInt(map, COUNT, context, min: 1);
 
     List value;
+    List _value;
     if (type != null) {
       if (type == gl.SAMPLER_2D) {
-        value = getStringList(map, VALUE, context, lengthsList: [count ?? 1]);
+        _value = getStringList(map, VALUE, context, lengthsList: [count ?? 1]);
+        value = new List<Texture>(count ?? 1);
       } else if (gl.BOOL_TYPES.contains(type)) {
-        value = getBoolList(map, VALUE, context,
+        _value = getBoolList(map, VALUE, context,
             lengthsList: [(count ?? 1) * gl.TYPE_LENGTHS[type]]);
+        value = _value;
       } else if (gl.FLOAT_TYPES.contains(type)) {
-        value = getNumList(map, VALUE, context,
+        _value = getNumList(map, VALUE, context,
             lengthsList: [(count ?? 1) * gl.TYPE_LENGTHS[type]]);
+        value = _value;
       } else if (gl.INT_TYPES.contains(type)) {
-        value = getGlIntList(map, VALUE, context,
-            length: (count ?? 1) * gl.TYPE_LENGTHS[type],
-            min: gl.TYPE_MINS[type],
-            max: gl.TYPE_MAXS[type]);
+        _value = getGlIntList(map, VALUE, context,
+            length: (count ?? 1) * gl.TYPE_LENGTHS[type], type: type);
+        value = _value;
       }
     }
 
@@ -324,6 +327,7 @@ class TechniqueParameter extends GltfProperty {
         getId(map, NODE, context, req: false),
         type,
         getString(map, SEMANTIC, context),
+        _value,
         value,
         getExtensions(map, TechniqueParameter, context),
         getExtras(map));

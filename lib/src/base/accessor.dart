@@ -83,10 +83,25 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
 
     final normalized = getBool(map, NORMALIZED, context, def: false);
 
-    final min = getNumList(map, MIN, context,
-        lengthsList: ACCESSOR_TYPES_LENGTHS.values, req: false);
-    final max = getNumList(map, MAX, context,
-        lengthsList: ACCESSOR_TYPES_LENGTHS.values, req: false);
+    List<num> max;
+    List<num> min;
+    if (type != null && componentType != null) {
+      if (componentType == gl.FLOAT) {
+        min = getNumList(map, MIN, context,
+            lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], req: true);
+        max = getNumList(map, MAX, context,
+            lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], req: true);
+      } else {
+        min = getGlIntList(map, MIN, context,
+            req: true,
+            length: ACCESSOR_TYPES_LENGTHS[type],
+            type: componentType);
+        max = getGlIntList(map, MAX, context,
+            req: true,
+            length: ACCESSOR_TYPES_LENGTHS[type],
+            type: componentType);
+      }
+    }
 
     if (context.validate) {
       // need to check explicitly to force bool compare
@@ -130,13 +145,6 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
                 args: [byteStride, gl.COMPONENT_TYPE_LENGTHS[componentType]]);
           }
         }
-      }
-
-      if (type != null && componentType != null && max != null && min != null) {
-        checkGlType(
-            min, componentType, ACCESSOR_TYPES_LENGTHS[type], context, MIN);
-        checkGlType(
-            max, componentType, ACCESSOR_TYPES_LENGTHS[type], context, MAX);
       }
     }
     return new Accessor._(
@@ -208,7 +216,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
         }
 
         if (bufferView.target != gl.ARRAY_BUFFER && normalized == true) {
-          context.addIssue(GltfWarning.NORMALIZED_NON_ARRAY, name: NORMALIZED);
+          context.addIssue(GltfWarning.NORMALIZED_NON_ARRAY_BUFFER, name: NORMALIZED);
         }
       }
     }
