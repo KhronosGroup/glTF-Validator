@@ -234,7 +234,7 @@ abstract class GltfError {
         "Semantic `${args[0]}` must have `count` property.",
     TECHNIQUE_UNUSED_PARAMETER: (List args) => "Unused parameter.",
     TECHNIQUE_DEPTHRANGE_VALUES: (List args) =>
-        "zNear must be less than or equal to zFar.",
+        "`zNear` must be less than or equal to `zFar`.",
   };
 }
 

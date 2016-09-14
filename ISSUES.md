@@ -54,6 +54,7 @@
 | 50. | TECHNIQUE_UNIFORM_SEMANTIC_COUNT | Semantic `%1` can't have `count` property. |
 | 51. | TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT | Semantic `%1` must have `count` property. |
 | 52. | TECHNIQUE_UNUSED_PARAMETER | Unused parameter. |
+| 53. | TECHNIQUE_DEPTHRANGE_VALUES | `zNear` must be less than or equal to `zFar`. |
 
 ## Warnings
 | No | Name | Message |
