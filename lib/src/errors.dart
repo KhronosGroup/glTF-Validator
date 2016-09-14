@@ -138,6 +138,7 @@ abstract class GltfError {
       "TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT";
 
   static const TECHNIQUE_UNUSED_PARAMETER = "TECHNIQUE_UNUSED_PARAMETER";
+  static const TECHNIQUE_DEPTHRANGE_VALUES = "TECHNIQUE_DEPTHRANGE_VALUES";
 
   static final messages = <String, ErrorFunction>{
     INVALID_JSON: (List args) => "Invalid JSON data. Parser output: ${args[0]}",
@@ -232,6 +233,8 @@ abstract class GltfError {
     TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT: (List args) =>
         "Semantic `${args[0]}` must have `count` property.",
     TECHNIQUE_UNUSED_PARAMETER: (List args) => "Unused parameter.",
+    TECHNIQUE_DEPTHRANGE_VALUES: (List args) =>
+        "zNear must be less than or equal to zFar.",
   };
 }
 

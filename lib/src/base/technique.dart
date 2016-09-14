@@ -357,7 +357,8 @@ class TechniqueStates extends GltfProperty {
     ];
 
     final enable =
-        getNumList(map, ENABLE, context, def: <int>[], list: enablesEnum);
+        getNumList(map, ENABLE, context, def: <int>[], list: enablesEnum)
+        as dynamic/*=List<int>*/;
 
     if (context.validate && enable != null && enable.length > 1) {
       final enableSet = new Set<int>.from(enable);
@@ -484,31 +485,48 @@ class TechniqueStatesFunctions extends GltfProperty {
     final defPolygonOffset = <num>[0.0, 0.0];
     final defScissor = <num>[0.0, 0.0, 0.0, 0.0];
 
+    final depthRange = getNumList(map, DEPTH_RANGE, context,
+        minItems: 2, maxItems: 2, def: defDepthRange, min: 0, max: 1);
+
+    if (depthRange != null && depthRange[0] > depthRange[1]) {
+      context.addIssue(GltfError.TECHNIQUE_DEPTHRANGE_VALUES,
+          name: DEPTH_RANGE);
+    }
+
     return new TechniqueStatesFunctions._(
         getNumList(map, BLEND_COLOR, context,
-            minItems: 4, maxItems: 4, def: defBlendColor),
+            lengthsList: <int>[4], def: defBlendColor, min: 0, max: 1),
         getNumList(map, BLEND_EQUATION_SEPARATE, context,
-            minItems: 2, maxItems: 2, list: blendEqEnum, def: defBlendEq),
+            lengthsList: <int>[2],
+            list: blendEqEnum,
+            def: defBlendEq) as dynamic/*=List<int>*/,
         getNumList(map, BLEND_FUNC_SEPARATE, context,
-            minItems: 4, maxItems: 4, list: blendFuncEnum, def: defBlendFunc),
+            lengthsList: <int>[4],
+            list: blendFuncEnum,
+            def: defBlendFunc) as dynamic/*=List<int>*/,
         getBoolList(map, COLOR_MASK, context,
             lengthsList: <int>[4], def: defColorMask),
         getNumList(map, CULL_FACE, context,
-            minItems: 1, maxItems: 1, list: cullFaceEnum, def: defCullFace),
+            lengthsList: <int>[1],
+            list: cullFaceEnum,
+            def: defCullFace) as dynamic/*=List<int>*/,
         getNumList(map, DEPTH_FUNC, context,
-            minItems: 1, maxItems: 1, list: depthFuncEnum, def: defDepthFunc),
+            lengthsList: <int>[1],
+            list: depthFuncEnum,
+            def: defDepthFunc) as dynamic/*=List<int>*/,
         getBoolList(map, DEPTH_MASK, context,
             lengthsList: <int>[1], def: defDepthMask),
-        getNumList(map, DEPTH_RANGE, context,
-            minItems: 2, maxItems: 2, def: defDepthRange),
+        depthRange,
         getNumList(map, FRONT_FACE, context,
-            minItems: 1, maxItems: 1, list: frontFaceEnum, def: defFrontFace),
+            lengthsList: <int>[1],
+            list: frontFaceEnum,
+            def: defFrontFace) as dynamic/*=List<int>*/,
         getNumList(map, LINE_WIDTH, context,
-            minItems: 1, maxItems: 1, def: defLineWidth, exclMin: 0),
+            lengthsList: <int>[1], def: defLineWidth, exclMin: 0),
         getNumList(map, POLYGON_OFFSET, context,
-            minItems: 2, maxItems: 2, def: defPolygonOffset),
+            lengthsList: <int>[2], def: defPolygonOffset),
         getNumList(map, SCISSOR, context,
-            minItems: 4, maxItems: 4, def: defScissor),
+            lengthsList: <int>[4], def: defScissor),
         getExtensions(map, TechniqueStatesFunctions, context),
         getExtras(map));
   }
