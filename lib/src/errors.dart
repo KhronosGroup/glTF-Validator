@@ -70,6 +70,8 @@ abstract class GltfError {
   static const ARRAY_TYPE_MISMATCH = "ARRAY_TYPE_MISMATCH";
   static const EMPTY_ID = "EMPTY_ID";
   static const INVALID_ACCESSOR_TYPE = "INVALID_ACCESSOR_TYPE";
+  static const INVALID_ACCESSOR_COMPONENT_TYPE =
+      "INVALID_ACCESSOR_COMPONENT_TYPE";
   static const INVALID_GL_VALUE = "INVALID_GL_VALUE";
   static const INVALID_URI = "INVALID_URI";
   static const INVALID_DATA_URI = "INVALID_DATA_URI";
@@ -159,6 +161,8 @@ abstract class GltfError {
     EMPTY_ID: (List args) => "ID can't be an empty string.",
     INVALID_ACCESSOR_TYPE: (List args) =>
         "Accessor of type `${args[0]}` expected. Got `${args[1]}`.",
+    INVALID_ACCESSOR_COMPONENT_TYPE: (List args) =>
+        "Accessor of componentType `${args[0]}` expected. Got `${args[1]}`.",
     INVALID_GL_VALUE: (List args) =>
         "Invalid value `${args[0]}` for GL type `${args[1]}`.",
     INVALID_URI: (List args) =>

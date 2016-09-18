@@ -18,6 +18,7 @@
 library gltf.core.skin;
 
 import 'gltf_property.dart';
+import 'package:gltf/src/gl.dart' as gl;
 
 class Skin extends GltfChildOfRootProperty implements Linkable {
   final List<num> bindShapeMatrix;
@@ -79,19 +80,28 @@ class Skin extends GltfChildOfRootProperty implements Linkable {
           context.addIssue(GltfError.UNRESOLVED_REFERENCE,
               name: INVERSE_BIND_MATRICES, args: [_inverseBindMatricesId]);
         } else {
-          if (inverseBindMatrices.type != MAT4)
+          if (inverseBindMatrices.type != MAT4) {
             context.addIssue(GltfError.INVALID_ACCESSOR_TYPE,
                 name: INVERSE_BIND_MATRICES,
                 args: [MAT4, inverseBindMatrices.type]);
+          }
 
-          if (inverseBindMatrices.bufferView?.target != null)
+          if (inverseBindMatrices.componentType != gl.FLOAT) {
+            context.addIssue(GltfError.INVALID_ACCESSOR_COMPONENT_TYPE,
+                name: INVERSE_BIND_MATRICES,
+                args: [gl.FLOAT, inverseBindMatrices.componentType]);
+          }
+
+          if (inverseBindMatrices.bufferView?.target != null) {
             context.addIssue(GltfWarning.SKIN_ACCESSOR_WRONG_BUFFER_VIEW_TARGET,
                 name: INVERSE_BIND_MATRICES, args: [_inverseBindMatricesId]);
+          }
 
-          if (inverseBindMatrices.count != jointNames.length)
+          if (inverseBindMatrices.count != jointNames.length) {
             context.addIssue(GltfError.SKIN_INVALID_ACCESSOR_COUNT,
                 name: INVERSE_BIND_MATRICES,
                 args: [jointNames.length, inverseBindMatrices.count]);
+          }
         }
       }
     }
