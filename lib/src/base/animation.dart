@@ -230,6 +230,7 @@ class AnimationChannelTarget extends GltfProperty {
 
 class AnimationSampler extends GltfProperty {
   static const String LINEAR = "LINEAR";
+  static const String STEP = "STEP";
 
   final String _inputId;
   final String interpolation;
@@ -248,7 +249,7 @@ class AnimationSampler extends GltfProperty {
   factory AnimationSampler.fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, ANIMATION_SAMPLER_MEMBERS, context);
 
-    const List<String> interpolationTypesEnum = const <String>[LINEAR];
+    const List<String> interpolationTypesEnum = const <String>[LINEAR, STEP];
 
     return new AnimationSampler._(
         getId(map, INPUT, context),
