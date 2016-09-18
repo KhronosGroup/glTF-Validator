@@ -27,10 +27,10 @@ abstract class GltfWarning {
       "MATERIALS_VALUES_WITHOUT_TECHNIQUE";
   static const NORMALIZED_FLOAT = "NORMALIZED_FLOAT";
   static const NORMALIZED_NON_ARRAY_BUFFER = "NORMALIZED_NON_ARRAY_BUFFER";
-  static const ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET =
-      "ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET";
-  static const SKIN_ACCESSOR_WRONG_BUFFERVIEW_TARGET =
-      "SKIN_ACCESSOR_WRONG_BUFFERVIEW_TARGET";
+  static const ANIMATION_ACCESSOR_WRONG_BUFFER_VIEW_TARGET =
+      "ANIMATION_ACCESSOR_WRONG_BUFFER_VIEW_TARGET";
+  static const SKIN_ACCESSOR_WRONG_BUFFER_VIEW_TARGET =
+      "SKIN_ACCESSOR_WRONG_BUFFER_VIEW_TARGET";
   static const UNEXPECTED_ATTRIBUTE = "UNEXPECTED_ATTRIBUTE";
   static const UNEXPECTED_PROPERTY = "UNEXPECTED_PROPERTY";
   static const UNSUPPORTED_EXTENSION = "UNSUPPORTED_EXTENSION";
@@ -46,9 +46,9 @@ abstract class GltfWarning {
         "Only non-float attributes can be normalized.",
     NORMALIZED_NON_ARRAY_BUFFER: (List args) =>
         "Only vertex array buffer data can be normalized.",
-    ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET: (List args) =>
+    ANIMATION_ACCESSOR_WRONG_BUFFER_VIEW_TARGET: (List args) =>
         "`bufferView.target` must be undefined for an animation accessor `${args[0]}`.",
-    SKIN_ACCESSOR_WRONG_BUFFERVIEW_TARGET: (List args) =>
+    SKIN_ACCESSOR_WRONG_BUFFER_VIEW_TARGET: (List args) =>
         "`bufferView.target` must be undefined for an IBM skin accessor `${args[0]}`.",
     UNEXPECTED_ATTRIBUTE: (List args) =>
         "Unexpected attribute `${args[0]}` for "
@@ -56,7 +56,7 @@ abstract class GltfWarning {
     UNEXPECTED_PROPERTY: (List args) => "Unexpected property.",
     UNSUPPORTED_EXTENSION: (List args) => "Unsupported extension `${args[0]}`.",
     UNUSED_EXTENSION_REQUIRED: (List args) =>
-        "Unused extension `${args[0]}` required."
+        "Unused extension `${args[0]}` can't be required."
   };
 }
 
@@ -72,8 +72,8 @@ abstract class GltfError {
   static const INVALID_ACCESSOR_TYPE = "INVALID_ACCESSOR_TYPE";
   static const INVALID_GL_VALUE = "INVALID_GL_VALUE";
   static const INVALID_URI = "INVALID_URI";
-  static const INVALID_DATAURI = "INVALID_DATAURI";
-  static const INVALID_DATAURI_MIME = "INVALID_DATAURI_MIME";
+  static const INVALID_DATA_URI = "INVALID_DATA_URI";
+  static const INVALID_DATA_URI_MIME = "INVALID_DATA_URI_MIME";
   static const TYPE_MISMATCH = "TYPE_MISMATCH";
   static const PATTERN_MISMATCH = "PATTERN_MISMATCH";
   static const VALUE_NOT_IN_LIST = "VALUE_NOT_IN_LIST";
@@ -106,15 +106,15 @@ abstract class GltfError {
       "ANIMATION_SAMPLER_INVALID_OUTPUT";
   static const ANIMATION_DUPLICATE_TARGETS = "ANIMATION_DUPLICATE_TARGETS";
 
-  static const BUFFERVIEW_TOO_LONG = "BUFFERVIEW_TOO_LONG";
+  static const BUFFER_VIEW_TOO_LONG = "BUFFER_VIEW_TOO_LONG";
 
-  static const CAMERA_ZFAR_ZNEAR = "CAMERA_ZFAR_ZNEAR";
+  static const CAMERA_ZFAR_LEQUAL_ZNEAR = "CAMERA_ZFAR_LEQUAL_ZNEAR";
 
   static const MATERIAL_NO_ATTRIBUTES = "MATERIAL_NO_ATTRIBUTES";
 
   static const MESH_DEFAULT_NO_POSITION = "MESH_DEFAULT_NO_POSITION";
-  static const MESH_INVALID_ACCESSOR_BUFFERVIEW =
-      "MESH_INVALID_ACCESSOR_BUFFERVIEW";
+  static const MESH_INVALID_ACCESSOR_BUFFER_VIEW =
+      "MESH_INVALID_ACCESSOR_BUFFER_VIEW";
   static const MESH_INVALID_ACCESSOR_TYPE = "MESH_INVALID_ACCESSOR_TYPE";
   static const MESH_UINT_ATTRIBUTE_ACCESSOR = "MESH_UINT_ATTRIBUTE_ACCESSOR";
   static const MESH_UNEQUAL_ACCESSOR_COUNT = "MESH_UNEQUAL_ACCESSOR_COUNT";
@@ -163,9 +163,9 @@ abstract class GltfError {
         "Invalid value `${args[0]}` for GL type `${args[1]}`.",
     INVALID_URI: (List args) =>
         "Invalid URI `${args[0]}`. Parser output: ${args[1]}",
-    INVALID_DATAURI: (List args) =>
+    INVALID_DATA_URI: (List args) =>
         "Invalid Data URI. Parser output: ${args[0]}",
-    INVALID_DATAURI_MIME: (List args) => "Invalid MIME type `${args[0]}`.",
+    INVALID_DATA_URI_MIME: (List args) => "Invalid MIME type `${args[0]}`.",
     TYPE_MISMATCH: (List args) =>
         "Type mismatch. Property value `${args[0]}` isn't a `${args[1]}`.",
     PATTERN_MISMATCH: (List args) =>
@@ -201,13 +201,14 @@ abstract class GltfError {
         "Invalid animation sampler (`${args[0]}`) output accessor (`${args[1]}`).",
     ANIMATION_DUPLICATE_TARGETS: (List args) =>
         "Animation channel has the same target as channel `${args[0]}`.",
-    BUFFERVIEW_TOO_LONG: (List args) =>
+    BUFFER_VIEW_TOO_LONG: (List args) =>
         "BufferView doesn't fit buffer (`${args[0]}`) byteLength (`${args[1]}`).",
-    CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` can't be equal to `znear`.",
+    CAMERA_ZFAR_LEQUAL_ZNEAR: (List args) =>
+        "`zfar` must be greater than `znear`.",
     MATERIAL_NO_ATTRIBUTES: (List args) =>
         "Material can't refer attribute parameters.",
     MESH_DEFAULT_NO_POSITION: (List args) => "No POSITION attribute found.",
-    MESH_INVALID_ACCESSOR_BUFFERVIEW: (List args) =>
+    MESH_INVALID_ACCESSOR_BUFFER_VIEW: (List args) =>
         "Incompatible accessor referenced: bufferView is undefined or has wrong `target`.",
     MESH_INVALID_ACCESSOR_TYPE: (List args) =>
         "Incompatible accessor referenced: wrong `type` and/or `componentType`.",

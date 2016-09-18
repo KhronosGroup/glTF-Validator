@@ -84,8 +84,8 @@ class CameraOrthographic extends GltfProperty {
     final zfar = getNum(map, ZFAR, context, req: true, min: 0);
     final znear = getNum(map, ZNEAR, context, req: true, min: 0);
 
-    if (context.validate && zfar != null && zfar == znear) {
-      context.addIssue(GltfError.CAMERA_ZFAR_ZNEAR);
+    if (context.validate && zfar != null && zfar <= znear) {
+      context.addIssue(GltfError.CAMERA_ZFAR_LEQUAL_ZNEAR);
     }
 
     return new CameraOrthographic._(getNum(map, XMAG, context, req: true),
@@ -114,8 +114,8 @@ class CameraPerspective extends GltfProperty {
     final zfar = getNum(map, ZFAR, context, req: true, exclMin: 0);
     final znear = getNum(map, ZNEAR, context, req: true, exclMin: 0);
 
-    if (context.validate && zfar != null && zfar == znear) {
-      context.addIssue(GltfError.CAMERA_ZFAR_ZNEAR);
+    if (context.validate && zfar != null && zfar <= znear) {
+      context.addIssue(GltfError.CAMERA_ZFAR_LEQUAL_ZNEAR);
     }
 
     return new CameraPerspective._(

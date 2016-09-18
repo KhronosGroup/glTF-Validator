@@ -153,7 +153,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
             }
 
             if (accessor.bufferView?.target != gl.ARRAY_BUFFER) {
-              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFERVIEW,
+              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFER_VIEW,
                   name: semantic);
             }
           }
@@ -187,7 +187,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
                 name: semantic, args: [accessorId]);
           } else {
             if (accessor.bufferView?.target != gl.ARRAY_BUFFER) {
-              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFERVIEW,
+              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFER_VIEW,
                   name: semantic);
             }
 
@@ -237,7 +237,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
                 name: semantic, args: [accessorId]);
           } else {
             if (accessor.bufferView?.target != gl.ARRAY_BUFFER) {
-              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFERVIEW,
+              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFER_VIEW,
                   name: semantic);
             }
 
@@ -275,7 +275,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
               name: INDICES, args: [_indicesId]);
         } else {
           if (indices.bufferView?.target != gl.ELEMENT_ARRAY_BUFFER) {
-            context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFERVIEW,
+            context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFER_VIEW,
                 name: INDICES);
           }
         }

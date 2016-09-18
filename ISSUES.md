@@ -11,8 +11,8 @@
 | 7. | INVALID_ACCESSOR_TYPE | Accessor of type `%1` expected. Got `%2`. |
 | 8. | INVALID_GL_VALUE | Invalid value `%1` for GL type `%2`. |
 | 9. | INVALID_URI | Invalid URI `%1`. Parser output: %2 |
-| 10. | INVALID_DATAURI | Invalid Data URI. Parser output: %1 |
-| 11. | INVALID_DATAURI_MIME | Invalid MIME type `%1`. |
+| 10. | INVALID_DATA_URI | Invalid Data URI. Parser output: %1 |
+| 11. | INVALID_DATA_URI_MIME | Invalid MIME type `%1`. |
 | 12. | TYPE_MISMATCH | Type mismatch. Property value `%1` isn't a `%2`. |
 | 13. | PATTERN_MISMATCH | Value `%1` doesn't match regexp pattern `%2`. |
 | 14. | VALUE_NOT_IN_LIST | Wrong value `%1`. Valid values are `%2`. |
@@ -30,31 +30,33 @@
 | 26. | ACCESSOR_UINT_NO_EXT | 5125 (UNSIGNED_INT) is only allowed when the `OES_element_index_uint` GL extension used. |
 | 27. | ACCESSOR_UINT_NO_ELEMENT_ARRAY | 5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with ELEMENT_ARRAY_BUFFER target. |
 | 28. | ACCESSOR_UINT_NO_SCALAR | 5125 (UNSIGNED_INT) is only allowed when the type is SCALAR. |
-| 29. | ANIMATION_ACCESSOR_INVALID | Incompatible animation accessor `%1`. |
-| 30. | BUFFERVIEW_TOO_LONG | BufferView doesn't fit buffer (`%1`) byteLength (`%2`). |
-| 31. | CAMERA_ZFAR_ZNEAR | `zfar` can't be equal to `znear`. |
-| 32. | MATERIAL_NO_ATTRIBUTES | Material can't refer attribute parameters. |
-| 33. | MESH_DEFAULT_NO_POSITION | No POSITION attribute found. |
-| 34. | MESH_INVALID_ACCESSOR_BUFFERVIEW | Incompatible accessor referenced: bufferView is undefined or has wrong `target`. |
-| 35. | MESH_INVALID_ACCESSOR_TYPE | Incompatible accessor referenced: wrong `type` and/or `componentType`. |
-| 36. | MESH_UINT_ATTRIBUTE_ACCESSOR | 5125 (UNSIGNED_INT) accessors aren't allowed for attributes. |
-| 37. | MESH_UNEQUAL_ACCESSOR_COUNT | All accessors of the same primitive must have the same `count`. |
-| 38. | TEXTURE_FORMAT_INTERNALFORMAT | When defined, `format` must match `internalformat`. |
-| 39. | TEXTURE_FORMAT_TYPE | Invalid combination of `type` and `format`. |
-| 40. | SKIN_INVALID_ACCESSOR_COUNT | Incompatible accessor used. Expected count: `%1`, got: `%2`. |
-| 41. | TECHNIQUE_AMBIGUOUS_PARAMETER | Parameter can't be uniform and attribute at the same time. |
-| 42. | TECHNIQUE_ATTRIBUTE_COUNT | Attribute parameter can't have `count` property. |
-| 43. | TECHNIQUE_ATTRIBUTE_NODE | Attribute parameter can't have `node` property. |
-| 44. | TECHNIQUE_ATTRIBUTE_VALUE | Attribute parameter can't have `value` property. |
-| 45. | TECHNIQUE_ATTRIBUTE_INVALID_TYPE | Invalid type `%1` for attribute parameter. |
-| 46. | TECHNIQUE_ATTRIBUTE_TYPE_OVERRIDE | Invalid type override for semantic `%1`. |
-| 47. | TECHNIQUE_INVALID_SEMANTIC | Invalid `semantic` value (`%1`). |
-| 48. | TECHNIQUE_UNIFORM_NODE_TYPE | When `node` is defined, `type` must be FLOAT_MAT4. |
-| 49. | TECHNIQUE_UNIFORM_SEMANTIC_TYPE | Unexpected type `%1` for semantic `%2`. |
-| 50. | TECHNIQUE_UNIFORM_SEMANTIC_COUNT | Semantic `%1` can't have `count` property. |
-| 51. | TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT | Semantic `%1` must have `count` property. |
-| 52. | TECHNIQUE_UNUSED_PARAMETER | Unused parameter. |
-| 53. | TECHNIQUE_DEPTHRANGE_VALUES | `zNear` must be less than or equal to `zFar`. |
+| 29. | ANIMATION_SAMPLER_INVALID_INPUT | Invalid animation sampler (`%1`) input accessor (`%2`). |
+| 30. | ANIMATION_SAMPLER_INVALID_OUTPUT | Invalid animation sampler (`%1`) output accessor (`%2`). |
+| 31. | ANIMATION_DUPLICATE_TARGETS | Animation channel has the same target as channel `%1`. |
+| 32. | BUFFER_VIEW_TOO_LONG | BufferView doesn't fit buffer (`%1`) byteLength (`%2`). |
+| 33. | CAMERA_ZFAR_LEQUAL_ZNEAR | `zfar` must be greater than `znear`. |
+| 34. | MATERIAL_NO_ATTRIBUTES | Material can't refer attribute parameters. |
+| 35. | MESH_DEFAULT_NO_POSITION | No POSITION attribute found. |
+| 36. | MESH_INVALID_ACCESSOR_BUFFER_VIEW | Incompatible accessor referenced: bufferView is undefined or has wrong `target`. |
+| 37. | MESH_INVALID_ACCESSOR_TYPE | Incompatible accessor referenced: wrong `type` and/or `componentType`. |
+| 38. | MESH_UINT_ATTRIBUTE_ACCESSOR | 5125 (UNSIGNED_INT) accessors aren't allowed for attributes. |
+| 39. | MESH_UNEQUAL_ACCESSOR_COUNT | All accessors of the same primitive must have the same `count`. |
+| 40. | TEXTURE_FORMAT_INTERNALFORMAT | When defined, `format` must match `internalformat`. |
+| 41. | TEXTURE_FORMAT_TYPE | Invalid combination of `type` and `format`. |
+| 42. | SKIN_INVALID_ACCESSOR_COUNT | Incompatible accessor used. Expected count: `%1`, got: `%2`. |
+| 43. | TECHNIQUE_AMBIGUOUS_PARAMETER | Parameter can't be uniform and attribute at the same time. |
+| 44. | TECHNIQUE_ATTRIBUTE_COUNT | Attribute parameter can't have `count` property. |
+| 45. | TECHNIQUE_ATTRIBUTE_NODE | Attribute parameter can't have `node` property. |
+| 46. | TECHNIQUE_ATTRIBUTE_VALUE | Attribute parameter can't have `value` property. |
+| 47. | TECHNIQUE_ATTRIBUTE_INVALID_TYPE | Invalid type `%1` for attribute parameter. |
+| 48. | TECHNIQUE_ATTRIBUTE_TYPE_OVERRIDE | Invalid type override for semantic `%1`. |
+| 49. | TECHNIQUE_INVALID_SEMANTIC | Invalid `semantic` value (`%1`). |
+| 50. | TECHNIQUE_UNIFORM_NODE_TYPE | When `node` is defined, `type` must be FLOAT_MAT4. |
+| 51. | TECHNIQUE_UNIFORM_SEMANTIC_TYPE | Unexpected type `%1` for semantic `%2`. |
+| 52. | TECHNIQUE_UNIFORM_SEMANTIC_COUNT | Semantic `%1` can't have `count` property. |
+| 53. | TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT | Semantic `%1` must have `count` property. |
+| 54. | TECHNIQUE_UNUSED_PARAMETER | Unused parameter. |
+| 55. | TECHNIQUE_DEPTHRANGE_VALUES | `zNear` must be less than or equal to `zFar`. |
 
 ## Warnings
 | No | Name | Message |
@@ -64,8 +66,9 @@
 | 3. | MATERIALS_VALUES_WITHOUT_TECHNIQUE | When technique is undefined, values must be undefined too. |
 | 4. | NORMALIZED_FLOAT | Only non-float attributes can be normalized. |
 | 5. | NORMALIZED_NON_ARRAY_BUFFER | Only vertex array buffer data can be normalized. |
-| 6. | ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET | `bufferView.target` must be undefined for an animation accessor `%1`. |
-| 7. | SKIN_ACCESSOR_WRONG_BUFFERVIEW_TARGET | `bufferView.target` must be undefined for an IBM skin accessor `%1`. |
+| 6. | ANIMATION_ACCESSOR_WRONG_BUFFER_VIEW_TARGET | `bufferView.target` must be undefined for an animation accessor `%1`. |
+| 7. | SKIN_ACCESSOR_WRONG_BUFFER_VIEW_TARGET | `bufferView.target` must be undefined for an IBM skin accessor `%1`. |
 | 8. | UNEXPECTED_ATTRIBUTE | Unexpected attribute `%1` for `%2` technique or extension. |
 | 9. | UNEXPECTED_PROPERTY | Unexpected property. |
 | 10. | UNSUPPORTED_EXTENSION | Unsupported extension `%1`. |
+| 11. | UNUSED_EXTENSION_REQUIRED | Unused extension `%1` required. |

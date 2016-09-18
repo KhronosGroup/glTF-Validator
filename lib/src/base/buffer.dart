@@ -54,11 +54,11 @@ class Buffer extends GltfChildOfRootProperty {
             data = uriData.contentAsBytes();
           } else if (uriData.contentText.isNotEmpty) {
             // Stub for an empty data URI
-            context.addIssue(GltfError.INVALID_DATAURI_MIME,
+            context.addIssue(GltfError.INVALID_DATA_URI_MIME,
                 name: URI, args: [uriData.mimeType]);
           }
         } on FormatException catch (e) {
-          context.addIssue(GltfError.INVALID_DATAURI, name: URI, args: [e]);
+          context.addIssue(GltfError.INVALID_DATA_URI, name: URI, args: [e]);
         }
       } else {
         uri = parseUri(uriString, context);

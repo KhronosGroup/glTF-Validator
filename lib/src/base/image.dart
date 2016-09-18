@@ -49,13 +49,13 @@ class Image extends GltfChildOfRootProperty {
             final uriData = UriData.parse(uriString);
             if (!mimeTypesEnum.contains(uriData.mimeType) &&
                 uriData.contentText.isNotEmpty)
-              context.addIssue(GltfError.INVALID_DATAURI_MIME,
+              context.addIssue(GltfError.INVALID_DATA_URI_MIME,
                   name: URI, args: [uriData.mimeType]);
 
             // Decode BASE64 to check encoding
             uriData.contentAsBytes();
           } on FormatException catch (e) {
-            context.addIssue(GltfError.INVALID_DATAURI, name: URI, args: [e]);
+            context.addIssue(GltfError.INVALID_DATA_URI, name: URI, args: [e]);
           }
         }
       } else {

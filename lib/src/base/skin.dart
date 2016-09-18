@@ -85,7 +85,7 @@ class Skin extends GltfChildOfRootProperty implements Linkable {
                 args: [MAT4, inverseBindMatrices.type]);
 
           if (inverseBindMatrices.bufferView?.target != null)
-            context.addIssue(GltfWarning.SKIN_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+            context.addIssue(GltfWarning.SKIN_ACCESSOR_WRONG_BUFFER_VIEW_TARGET,
                 name: INVERSE_BIND_MATRICES, args: [_inverseBindMatricesId]);
 
           if (inverseBindMatrices.count != jointNames.length)

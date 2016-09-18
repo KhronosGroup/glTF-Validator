@@ -59,10 +59,10 @@ class BufferView extends GltfChildOfRootProperty implements Linkable {
         context.addIssue(GltfError.UNRESOLVED_REFERENCE,
             name: BUFFER, args: [_bufferId]);
       } else if (byteOffset >= buffer.byteLength) {
-        context.addIssue(GltfError.BUFFERVIEW_TOO_LONG,
+        context.addIssue(GltfError.BUFFER_VIEW_TOO_LONG,
             name: BYTE_OFFSET, args: [_bufferId, buffer.byteLength]);
       } else if (byteOffset + byteLength > buffer.byteLength) {
-        context.addIssue(GltfError.BUFFERVIEW_TOO_LONG,
+        context.addIssue(GltfError.BUFFER_VIEW_TOO_LONG,
             name: BYTE_LENGTH, args: [_bufferId, buffer.byteLength]);
       }
     }

@@ -81,7 +81,7 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
               name: INPUT, args: [sampler._inputId]);
         } else if (sampler.input.bufferView?.target != null) {
           context.addIssue(
-              GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+              GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFER_VIEW_TARGET,
               name: INPUT,
               args: [sampler._inputId]);
         }
@@ -91,7 +91,7 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
               name: OUTPUT, args: [sampler._outputId]);
         } else if (sampler.output.bufferView?.target != null) {
           context.addIssue(
-              GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+              GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFER_VIEW_TARGET,
               name: OUTPUT,
               args: [sampler._outputId]);
         }
