@@ -79,7 +79,6 @@ const String PARAMETERS = "parameters";
 const List<String> ANIMATION_MEMBERS = const <String>[
   CHANNELS,
   SAMPLERS,
-  PARAMETERS,
   NAME
 ];
 

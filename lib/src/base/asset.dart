@@ -51,7 +51,7 @@ class Asset extends GltfProperty {
         getString(map, GENERATOR, context),
         getBool(map, PREMULTIPLIED_ALPHA, context, def: false),
         profile,
-        getString(map, VERSION, context, req: true),
+        getString(map, VERSION, context, req: true, list: ["1.0.1"]),
         getExtensions(map, Asset, context),
         getExtras(map));
   }

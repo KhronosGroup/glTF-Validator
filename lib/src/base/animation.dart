@@ -19,34 +19,36 @@ library gltf.core.animation;
 
 import 'gltf_property.dart';
 import 'package:gltf/src/gl.dart' as gl;
+import 'package:quiver/core.dart';
 
 class Animation extends GltfChildOfRootProperty implements Linkable {
   final List<AnimationChannel> channels;
-  final Map<String, String> _parametersIds;
   final Map<String, AnimationSampler> samplers;
 
-  final Map<String, Accessor> parameters = <String, Accessor>{};
-
-  Animation._(this.channels, this._parametersIds, this.samplers, String name,
+  Animation._(this.channels, this.samplers, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
 
-  String toString([_]) => super.toString(
-      {PARAMETERS: _parametersIds, CHANNELS: channels, SAMPLERS: samplers});
+  String toString([_]) =>
+      super.toString({CHANNELS: channels, SAMPLERS: samplers});
 
   static Animation fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, ANIMATION_MEMBERS, context);
 
-    context.path.add(CHANNELS);
-    int i = 0;
-    final channels = getMapList(map, CHANNELS, context)
-        ?.map((Map<String, Object> channelMap) {
-      context.path.add((i++).toString());
-      final channel = new AnimationChannel.fromMap(channelMap, context);
+    final channels = <AnimationChannel>[];
+    final channelMaps =
+        getMapList(map, CHANNELS, context, req: true, minItems: 1);
+    if (channelMaps != null) {
+      context.path.add(CHANNELS);
+      int i = 0;
+      for (final channelMap in channelMaps) {
+        context.path.add((i++).toString());
+        final channel = new AnimationChannel.fromMap(channelMap, context);
+        context.path.removeLast();
+        channels.add(channel);
+      }
       context.path.removeLast();
-      return channel;
-    })?.toList();
-    context.path.removeLast();
+    }
 
     final samplers = <String, AnimationSampler>{};
     final samplerMaps = getMap(map, SAMPLERS, context);
@@ -62,108 +64,101 @@ class Animation extends GltfChildOfRootProperty implements Linkable {
       context.path.removeLast();
     }
 
-    return new Animation._(
-        channels,
-        getMap(map, PARAMETERS, context),
-        samplers,
-        getName(map, context),
-        getExtensions(map, Animation, context),
-        getExtras(map));
+    return new Animation._(channels, samplers, getName(map, context),
+        getExtensions(map, Animation, context), getExtras(map));
   }
 
   void link(Gltf gltf, Context context) {
-    if (_parametersIds.isNotEmpty) {
-      context.path.add(PARAMETERS);
-      _parametersIds.forEach((id, accessorId) {
-        parameters[id] = gltf.accessors[accessorId];
+    context.path.add(SAMPLERS);
+    samplers.forEach((id, sampler) {
+      sampler.input = gltf.accessors[sampler._inputId];
+      sampler.output = gltf.accessors[sampler._outputId];
 
-        if (context.validate) {
-          if (parameters[id] == null) {
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: id, args: [accessorId]);
-          } else if (parameters[id].bufferView?.target != null) {
-            context.addIssue(
-                GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
-                name: id,
-                args: [accessorId]);
-          }
-        }
-      });
-      context.path.removeLast();
-    }
-
-    if (samplers.isNotEmpty) {
-      context.path.add(SAMPLERS);
-      samplers.forEach((id, sampler) {
-        sampler.input = parameters[sampler._inputId];
-        sampler.output = parameters[sampler._outputId];
-
-        if (context.validate) {
-          context.path.add(id);
-          if (sampler.input == null) {
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: INPUT, args: [sampler._inputId]);
-          }
-
-          if (sampler.output == null) {
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: OUTPUT, args: [sampler._outputId]);
-          }
-          context.path.removeLast();
-        }
-      });
-      context.path.removeLast();
-    }
-
-    if (channels.isNotEmpty) {
-      context.path.add(CHANNELS);
-      for (int i = 0; i < channels.length; i++) {
-        final channel = channels[i];
-        channel.sampler = samplers[channel._samplerId];
-
-        if (channel.target != null) {
-          channel.target.node = gltf.nodes[channel.target._id];
-          if (context.validate && channel.target.node == null) {
-            context.path.add(TARGET);
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: ID, args: [channel.target._id]);
-            context.path.removeLast();
-          }
+      if (context.validate) {
+        context.path.add(id);
+        if (sampler.input == null) {
+          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+              name: INPUT, args: [sampler._inputId]);
+        } else if (sampler.input.bufferView?.target != null) {
+          context.addIssue(
+              GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+              name: INPUT,
+              args: [sampler._inputId]);
         }
 
-        if (context.validate) {
-          context.path.add(i.toString());
+        if (sampler.output == null) {
+          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+              name: OUTPUT, args: [sampler._outputId]);
+        } else if (sampler.output.bufferView?.target != null) {
+          context.addIssue(
+              GltfWarning.ANIMATION_ACCESSOR_WRONG_BUFFERVIEW_TARGET,
+              name: OUTPUT,
+              args: [sampler._outputId]);
+        }
+        context.path.removeLast();
+      }
+    });
+    context.path.removeLast();
 
-          if (channel.sampler == null) {
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: SAMPLER, args: [channel._samplerId]);
-          } else {
-            if (channel.target != null &&
-                channel.sampler.input != null &&
-                channel.sampler.output != null) {
-              if (channel.sampler.input.type != SCALAR) {
-                context.addIssue(GltfError.ANIMATION_ACCESSOR_INVALID,
-                    name: SAMPLER, args: [channel.sampler._inputId]);
-              }
+    context.path.add(CHANNELS);
+    for (int i = 0; i < channels.length; i++) {
+      context.path.add(i.toString());
 
-              const outputTypes = const <String, String>{
-                TRANSLATION: VEC3,
-                ROTATION: VEC4,
-                SCALE: VEC3
-              };
+      final channel = channels[i];
+      channel.sampler = samplers[channel._samplerId];
 
-              if (channel.sampler.output.type !=
-                  outputTypes[channel.target.path]) {
-                context.addIssue(GltfError.ANIMATION_ACCESSOR_INVALID,
-                    name: SAMPLER, args: [channel.sampler._outputId]);
-              }
-            }
-          }
+      if (channel.target != null) {
+        channel.target.node = gltf.nodes[channel.target.id];
+        if (context.validate && channel.target.node == null) {
+          context.path.add(TARGET);
+          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+              name: ID, args: [channel.target.id]);
           context.path.removeLast();
         }
       }
-      context.path.removeLast();
+
+      if (context.validate) {
+        if (channel.sampler == null) {
+          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+              name: SAMPLER, args: [channel._samplerId]);
+        } else {
+          if (channel.sampler.input != null) {
+            if (channel.sampler.input.type != SCALAR ||
+                channel.sampler.input.componentType != gl.FLOAT ||
+                channel.sampler.input.normalized) {
+              context.addIssue(GltfError.ANIMATION_SAMPLER_INVALID_INPUT,
+                  name: SAMPLER,
+                  args: [channel._samplerId, channel.sampler._inputId]);
+            }
+          }
+
+          if (channel.target != null && channel.sampler.output != null) {
+            const outputTypes = const <String, String>{
+              TRANSLATION: VEC3,
+              ROTATION: VEC4,
+              SCALE: VEC3
+            };
+
+            if (channel.sampler.output.type !=
+                    outputTypes[channel.target.path] ||
+                channel.sampler.output.componentType != gl.FLOAT ||
+                channel.sampler.output.normalized) {
+              context.addIssue(GltfError.ANIMATION_SAMPLER_INVALID_OUTPUT,
+                  name: SAMPLER,
+                  args: [channel._samplerId, channel.sampler._outputId]);
+            }
+          }
+        }
+        for (int j = i + 1; j < channels.length - 1; j++) {
+          if (channel.target != null && channel.target == channels[j].target) {
+            context.addIssue(GltfError.ANIMATION_DUPLICATE_TARGETS,
+                name: TARGET, args: [j]);
+          }
+        }
+        context.path.removeLast();
+      }
     }
+    context.path.removeLast();
   }
 }
 
@@ -194,20 +189,16 @@ class AnimationChannel extends GltfProperty {
 }
 
 class AnimationChannelTarget extends GltfProperty {
-  static const String TRANSLATION = "translation";
-  static const String ROTATION = "rotation";
-  static const String SCALE = "scale";
-
-  final String _id;
+  final String id;
   final String path;
 
   Node node;
 
   AnimationChannelTarget._(
-      this._id, this.path, Map<String, Object> extensions, Object extras)
+      this.id, this.path, Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  String toString([_]) => super.toString({ID: _id, PATH: path});
+  String toString([_]) => super.toString({ID: id, PATH: path});
 
   factory AnimationChannelTarget.fromMap(
       Map<String, Object> map, Context context) {
@@ -226,6 +217,13 @@ class AnimationChannelTarget extends GltfProperty {
         getExtensions(map, AnimationChannelTarget, context),
         getExtras(map));
   }
+
+  @override
+  int get hashCode => hash2(id.hashCode, path.hashCode);
+
+  @override
+  bool operator ==(dynamic o) =>
+      o is AnimationChannelTarget && id == o.id && path == o.path;
 }
 
 class AnimationSampler extends GltfProperty {

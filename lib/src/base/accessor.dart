@@ -104,8 +104,7 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
     }
 
     if (context.validate) {
-      // need to check explicitly to force bool compare
-      if (normalized == true && componentType == gl.FLOAT) {
+      if (normalized && componentType == gl.FLOAT) {
         context.addIssue(GltfWarning.NORMALIZED_FLOAT, name: NORMALIZED);
       }
 
@@ -216,7 +215,8 @@ class Accessor extends GltfChildOfRootProperty implements Linkable {
         }
 
         if (bufferView.target != gl.ARRAY_BUFFER && normalized == true) {
-          context.addIssue(GltfWarning.NORMALIZED_NON_ARRAY_BUFFER, name: NORMALIZED);
+          context.addIssue(GltfWarning.NORMALIZED_NON_ARRAY_BUFFER,
+              name: NORMALIZED);
         }
       }
     }

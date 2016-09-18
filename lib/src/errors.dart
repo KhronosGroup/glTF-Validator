@@ -55,7 +55,8 @@ abstract class GltfWarning {
         "${args.length == 1 ? "the default material" : "`${args[1]}` technique or extension."}",
     UNEXPECTED_PROPERTY: (List args) => "Unexpected property.",
     UNSUPPORTED_EXTENSION: (List args) => "Unsupported extension `${args[0]}`.",
-    UNUSED_EXTENSION_REQUIRED: (List args) => "Unused extension `${args[0]}` required."
+    UNUSED_EXTENSION_REQUIRED: (List args) =>
+        "Unused extension `${args[0]}` required."
   };
 }
 
@@ -99,7 +100,11 @@ abstract class GltfError {
       "ACCESSOR_UINT_NO_ELEMENT_ARRAY";
   static const ACCESSOR_UINT_NO_SCALAR = "ACCESSOR_UINT_NO_SCALAR";
 
-  static const ANIMATION_ACCESSOR_INVALID = "ANIMATION_ACCESSOR_INVALID";
+  static const ANIMATION_SAMPLER_INVALID_INPUT =
+      "ANIMATION_SAMPLER_INVALID_INPUT";
+  static const ANIMATION_SAMPLER_INVALID_OUTPUT =
+      "ANIMATION_SAMPLER_INVALID_OUTPUT";
+  static const ANIMATION_DUPLICATE_TARGETS = "ANIMATION_DUPLICATE_TARGETS";
 
   static const BUFFERVIEW_TOO_LONG = "BUFFERVIEW_TOO_LONG";
 
@@ -190,8 +195,12 @@ abstract class GltfError {
         "5125 (UNSIGNED_INT) is only allowed when the accessor references bufferView with ELEMENT_ARRAY_BUFFER target.",
     ACCESSOR_UINT_NO_SCALAR: (List args) =>
         "5125 (UNSIGNED_INT) is only allowed when the type is SCALAR.",
-    ANIMATION_ACCESSOR_INVALID: (List args) =>
-        "Incompatible animation accessor `${args[0]}`.",
+    ANIMATION_SAMPLER_INVALID_INPUT: (List args) =>
+        "Invalid animation sampler (`${args[0]}`) input accessor (`${args[1]}`).",
+    ANIMATION_SAMPLER_INVALID_OUTPUT: (List args) =>
+        "Invalid animation sampler (`${args[0]}`) output accessor (`${args[1]}`).",
+    ANIMATION_DUPLICATE_TARGETS: (List args) =>
+        "Animation channel has the same target as channel `${args[0]}`.",
     BUFFERVIEW_TOO_LONG: (List args) =>
         "BufferView doesn't fit buffer (`${args[0]}`) byteLength (`${args[1]}`).",
     CAMERA_ZFAR_ZNEAR: (List args) => "`zfar` can't be equal to `znear`.",

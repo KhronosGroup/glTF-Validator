@@ -43,9 +43,11 @@ bool getBool(Map<String, Object> map, String name, Context context,
   if (value == null) {
     if (!req) return def;
     context.addIssue(GltfError.UNDEFINED_PROPERTY, name: name);
-  } else
+  } else {
     context.addIssue(GltfError.TYPE_MISMATCH,
         name: name, args: [value, "boolean"]);
+    return def;
+  }
   return null;
 }
 
