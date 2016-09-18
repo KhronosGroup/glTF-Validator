@@ -144,12 +144,12 @@ Map<String, String> getStringMap(
     Map<String, Object> map, String name, Context context,
     {bool req: false}) {
   final value = map[name];
-  if (value is Map) {
+  if (value is Map/*=Map<String, Object>*/) {
     // JSON mandates all keys to be string
     if (context.validate) {
       var wrongMemberFound = false;
       context.path.add(name);
-      value.forEach((String k, v) {
+      value.forEach((k, v) {
         if (v is! String) {
           context
               .addIssue(GltfError.TYPE_MISMATCH, name: k, args: [v, "string"]);
@@ -185,7 +185,7 @@ Uri parseUri(String uri, Context context) {
 List<bool> getBoolList(Map<String, Object> map, String name, Context context,
     {bool req: false, List<bool> def, List<int> lengthsList}) {
   final value = map[name];
-  if (value is List) {
+  if (value is List/*=List<Object>*/) {
     if ((lengthsList != null) &&
         !checkEnum(name, value.length, lengthsList, context, true)) return null;
     var wrongMemberFound = false;
@@ -219,7 +219,7 @@ List<num> getNumList(Map<String, Object> map, String name, Context context,
     List<num> list,
     Iterable<int> lengthsList}) {
   final value = map[name];
-  if (value is List) {
+  if (value is List/*=List<Object>*/) {
     if (lengthsList != null) {
       if (!checkEnum(name, value.length, lengthsList, context, true))
         return null;
@@ -261,7 +261,7 @@ List<num> getNumList(Map<String, Object> map, String name, Context context,
 List<int> getGlIntList(Map<String, Object> map, String name, Context context,
     {bool req: false, int type, int length}) {
   final value = map[name];
-  if (value is List) {
+  if (value is List/*=List<Object>*/) {
     if (value.length != length) {
       context.addIssue(GltfError.ARRAY_LENGTH_NOT_IN_LIST,
           name: name, args: [value, length]);
@@ -305,7 +305,7 @@ List<String> getStringList(
     List<String> list,
     Iterable<int> lengthsList}) {
   final value = map[name];
-  if (value is List) {
+  if (value is List/*=List<Object>*/) {
     if (lengthsList != null) {
       if (!checkEnum(name, value.length, lengthsList, context, true))
         return null;
@@ -342,7 +342,7 @@ List<Map<String, Object>> getMapList(
     Map<String, Object> map, String name, Context context,
     {bool req: false, int minItems: 0}) {
   final value = map[name];
-  if (value is List) {
+  if (value is List/*=List<Object>*/) {
     if (value.length < minItems)
       context.addIssue(GltfError.ARRAY_LENGTH_OUT_OF_RANGE,
           name: name, args: [value.length]);
@@ -433,9 +433,9 @@ void checkMembers(
   }
 }
 
-String mapToString([Map map]) {
-  return new Map.fromIterable(
+String mapToString([Map/*=Map<String, Object>*/ map]) {
+  return new Map<String, Object>.fromIterable(
       map.keys.where((key) => key != null && map[key] != null),
-      key: (key) => key,
-      value: (key) => map[key]).toString();
+      key: (String key) => key,
+      value: (String key) => map[key]).toString();
 }

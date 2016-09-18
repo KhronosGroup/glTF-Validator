@@ -275,8 +275,8 @@ class TechniqueParameter extends GltfProperty {
   final String _nodeId;
   final int type;
   final String semantic;
-  final List value;
-  final List _value;
+  final List<Object> value;
+  final List<Object> _value;
 
   Node node;
 

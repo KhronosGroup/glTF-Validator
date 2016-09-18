@@ -37,7 +37,8 @@ abstract class Linkable {
 }
 
 abstract class Stringable {
-  String toString([Map map]) => mapToString(map ?? <String, Object>{});
+  String toString([Map/*=Map<String, Object>*/ map]) =>
+      mapToString(map ?? <String, Object>{});
 }
 
 abstract class GltfProperty extends Stringable {
@@ -45,7 +46,7 @@ abstract class GltfProperty extends Stringable {
   final Object extras;
   GltfProperty(this.extensions, this.extras);
 
-  String toString([Map map]) {
+  String toString([Map/*=Map<String, Object>*/ map]) {
     map ??= <String, Object>{};
     map[EXTENSIONS] = extensions;
     map[EXTRAS] = extras;
@@ -60,7 +61,7 @@ abstract class GltfChildOfRootProperty extends GltfProperty {
       this.name, Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  String toString([Map map]) {
+  String toString([Map/*=Map<String, Object>*/ map]) {
     map ??= <String, Object>{};
     map[NAME] = name;
     return super.toString(map);

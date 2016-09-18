@@ -1,6 +1,7 @@
 analyzer:
   strong-mode:
     implicit-casts: False
+#    implicit-dynamic: False
 
 linter:
   rules:

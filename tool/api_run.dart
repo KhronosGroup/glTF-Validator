@@ -19,9 +19,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:gltf/gltf.dart';
 
-//import 'package:test/test.dart';
-
-const files = const <String>[
+const coreFiles = const <String>[
   "data/khronos/2CylinderEngine/glTF/2CylinderEngine.gltf",
   "data/khronos/Box/glTF/Box.gltf",
   "data/khronos/BoxAnimated/glTF/BoxAnimated.gltf",
@@ -41,7 +39,7 @@ const files = const <String>[
   "data/khronos/VC/glTF/VC.gltf"
 ];
 
-const filesEmbedded = const <String>[
+const embeddedFiles = const <String>[
   "data/khronos/2CylinderEngine/glTF-Embedded/2CylinderEngine.gltf",
   "data/khronos/Box/glTF-Embedded/Box.gltf",
   "data/khronos/BoxAnimated/glTF-Embedded/BoxAnimated.gltf",
@@ -61,7 +59,7 @@ const filesEmbedded = const <String>[
   "data/khronos/VC/glTF-Embedded/VC.gltf"
 ];
 
-const filesGlb = const <String>[
+const binaryFiles = const <String>[
   "data/khronos/2CylinderEngine/glTF-Binary/2CylinderEngine.glb",
   "data/khronos/Box/glTF-Binary/Box.glb",
   "data/khronos/BoxAnimated/glTF-Binary/BoxAnimated.glb",
@@ -81,7 +79,7 @@ const filesGlb = const <String>[
   "data/khronos/VC/glTF-Binary/VC.glb"
 ];
 
-const filesMatCommon = const <String>[
+const matCommonFiles = const <String>[
   "data/khronos/2CylinderEngine/glTF-MaterialsCommon/2CylinderEngine.gltf",
   "data/khronos/Box/glTF-MaterialsCommon/Box.gltf",
   "data/khronos/BoxAnimated/glTF-MaterialsCommon/BoxAnimated.gltf",
@@ -101,7 +99,7 @@ const filesMatCommon = const <String>[
   "data/khronos/VC/glTF-MaterialsCommon/VC.gltf"
 ];
 
-const fr24 = const <String>[
+const fr24Files = const <String>[
   "data/fr24/320.gltf",
   "data/fr24/330.gltf",
   "data/fr24/340.gltf",
@@ -125,44 +123,30 @@ const fr24 = const <String>[
 ];
 
 Future main() async {
-/*
-  print("Core samples:");
-  for (final path in files) {
-    await run(path);
-  }
+  final samples = {
+    "Core": coreFiles,
+    "Embedded": embeddedFiles,
+    "Binary": binaryFiles,
+    "Materials Common": matCommonFiles,
+    "FR24": fr24Files
+  };
 
-
-
-  print("Embedded samples:");
-  for (final path in filesEmbedded) {
-    await run(path);
-  }
-
-
-  print("Binary samples:");
-  for (final path in filesGlb) {
-    await run(path);
-  }
-*/
-
-  print("MaterialsCommon samples:");
-  for (final path in filesMatCommon) {
-    try {
-      await _load(path);
-    } catch (e, st) {
-      print(e);
-      print(st);
+  for (final name in samples.keys) {
+    final files = samples[name];
+    stdout.writeln("$name samples:");
+    for (final path in files) {
+      try {
+        await _load(path);
+      } catch (e, st) {
+        print(e);
+        print(st);
+      }
     }
   }
-/*
-  print("Flightradar24 samples:");
-  for (final path in fr24) {
-    await run(path);
-  }*/
 }
 
 Future _load(String filename) async {
-  stderr.writeln("Loading $filename...");
+  stdout.writeln("Loading $filename...");
 
   final fileStream = new File(filename).openRead();
 
