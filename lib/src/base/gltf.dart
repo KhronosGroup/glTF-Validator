@@ -183,15 +183,16 @@ class Gltf extends GltfProperty {
     }
 
     // Helper function for converting JSON dictionary to proper glTF object
-    Object toValue(String name, FromMapFunction fromMap, {bool req: false}) {
+    Object toValue/*<T>*/(String name, FromMapFunction fromMap,
+        {bool req: false}) {
       resetPath();
       final item = getMap(map, name, context, req: req);
       if (item == null) return null;
       context.path.add(name);
-      return fromMap(item, context);
+      return fromMap(item, context) as dynamic/*=T*/;
     }
 
-    final asset = toValue(ASSET, Asset.fromMap, req: true) as dynamic/*=Asset*/;
+    final asset = toValue/*<Asset>*/(ASSET, Asset.fromMap, req: true);
 
     final accessors =
         toMap/*<Accessor>*/(ACCESSORS, Accessor.fromMap, req: true);
