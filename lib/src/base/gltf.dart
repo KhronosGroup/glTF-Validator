@@ -183,7 +183,7 @@ class Gltf extends GltfProperty {
     }
 
     // Helper function for converting JSON dictionary to proper glTF object
-    Object toValue/*<T>*/(String name, FromMapFunction fromMap,
+    Object/*=T*/ toValue/*<T>*/(String name, FromMapFunction fromMap,
         {bool req: false}) {
       resetPath();
       final item = getMap(map, name, context, req: req);
