@@ -360,10 +360,8 @@ class TechniqueStates extends GltfProperty {
         getNumList(map, ENABLE, context, def: <int>[], list: enablesEnum)
         as dynamic/*=List<int>*/;
 
-    if (context.validate && enable != null && enable.length > 1) {
-      final enableSet = new Set<int>.from(enable);
-      if (enableSet.length != enable.length)
-        context.addIssue(GltfWarning.DUPLICATE_ITEMS, name: ENABLE);
+    if (context.validate && enable != null) {
+      checkDuplicates(enable, ENABLE, context);
     }
 
     final functionsMap = getMap(map, FUNCTIONS, context);

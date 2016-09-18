@@ -433,6 +433,14 @@ void checkMembers(
   }
 }
 
+void checkDuplicates(List elements, String name, Context context) {
+  if (elements.length > 1) {
+    final set = new Set<Object>.from(elements);
+    if (set.length != elements.length)
+      context.addIssue(GltfWarning.DUPLICATE_ITEMS, name: name);
+  }
+}
+
 String mapToString([Map/*=Map<String, Object>*/ map]) {
   return new Map<String, Object>.fromIterable(
       map.keys.where((key) => key != null && map[key] != null),

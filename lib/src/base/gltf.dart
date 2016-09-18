@@ -60,6 +60,7 @@ export 'texture.dart';
 
 class Gltf extends GltfProperty {
   final List<String> extensionsUsed;
+  final List<String> extensionsRequired;
   final List<String> glExtensionsUsed;
   final Map<String, Accessor> accessors;
   final Map<String, Animation> animations;
@@ -85,6 +86,7 @@ class Gltf extends GltfProperty {
 
   Gltf._(
       this.extensionsUsed,
+      this.extensionsRequired,
       this.glExtensionsUsed,
       this.accessors,
       this.animations,
@@ -124,7 +126,23 @@ class Gltf extends GltfProperty {
         getStringList(map, EXTENSIONS_USED, context, def: <String>[]);
     context.initExtensions(extensionsUsed ?? <String>[]);
 
-    // TODO: check for repeating items
+    if (context.validate && extensionsUsed != null) {
+      checkDuplicates(extensionsUsed, EXTENSIONS_USED, context);
+    }
+
+    final extensionsRequired =
+        getStringList(map, EXTENSIONS_REQUIRED, context, def: <String>[]);
+
+    if (context.validate && extensionsRequired != null) {
+      checkDuplicates(extensionsRequired, EXTENSIONS_REQUIRED, context);
+      for (final value in extensionsRequired) {
+        // Explicit check to handle null
+        if (extensionsUsed?.contains(value) != true) {
+          context.addIssue(GltfWarning.UNUSED_EXTENSION_REQUIRED,
+              name: EXTENSIONS_REQUIRED, args: [value]);
+        }
+      }
+    }
 
     // Get used GL extensions and store valid in the current `context`.
     const glExtensionsUsedEnum = const <String>[gl.OES_ELEMENT_INDEX_UINT];
@@ -223,6 +241,7 @@ class Gltf extends GltfProperty {
 
     final gltf = new Gltf._(
         extensionsUsed,
+        extensionsRequired,
         glExtensionsUsed,
         accessors,
         animations,
@@ -293,6 +312,9 @@ class Gltf extends GltfProperty {
 
     info[VERSION] = asset.version;
     if (extensionsUsed.isNotEmpty) info[EXTENSIONS_USED] = extensionsUsed;
+    if (extensionsRequired.isNotEmpty) {
+      info[EXTENSIONS_REQUIRED] = extensionsRequired;
+    }
     if (glExtensionsUsed.isNotEmpty)
       info[GL_EXTENSIONS_USED] = glExtensionsUsed;
 
@@ -315,11 +337,13 @@ class Gltf extends GltfProperty {
     for (final shader in shaders.values) {
       if (shader.uri != null) externalShaders.add(shader.uri.toString());
     }
-    if (externalShaders.isNotEmpty)
+    if (externalShaders.isNotEmpty) {
       externalResources["shaders"] = externalShaders;
+    }
 
-    if (externalResources.isNotEmpty)
+    if (externalResources.isNotEmpty) {
       info["externalResources"] = externalResources;
+    }
 
     info["hasAnimations"] = animations.isNotEmpty;
     info["hasMaterials"] = materials.isNotEmpty;

@@ -34,6 +34,7 @@ abstract class GltfWarning {
   static const UNEXPECTED_ATTRIBUTE = "UNEXPECTED_ATTRIBUTE";
   static const UNEXPECTED_PROPERTY = "UNEXPECTED_PROPERTY";
   static const UNSUPPORTED_EXTENSION = "UNSUPPORTED_EXTENSION";
+  static const UNUSED_EXTENSION_REQUIRED = "UNUSED_EXTENSION_REQUIRED";
 
   static final messages = <String, ErrorFunction>{
     BUFFER_EMBEDDED_BYTELENGTH_MISMATCH: (List args) =>
@@ -53,7 +54,8 @@ abstract class GltfWarning {
         "Unexpected attribute `${args[0]}` for "
         "${args.length == 1 ? "the default material" : "`${args[1]}` technique or extension."}",
     UNEXPECTED_PROPERTY: (List args) => "Unexpected property.",
-    UNSUPPORTED_EXTENSION: (List args) => "Unsupported extension `${args[0]}`."
+    UNSUPPORTED_EXTENSION: (List args) => "Unsupported extension `${args[0]}`.",
+    UNUSED_EXTENSION_REQUIRED: (List args) => "Unused extension `${args[0]}` required."
   };
 }
 

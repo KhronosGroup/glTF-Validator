@@ -185,6 +185,7 @@ const List<String> CAMERA_PERSPECTIVE_MEMBERS = const <String>[
 
 // Gltf
 const String EXTENSIONS_USED = "extensionsUsed";
+const String EXTENSIONS_REQUIRED = "extensionsRequired";
 const String GL_EXTENSIONS_USED = "glExtensionsUsed";
 const String ACCESSORS = "accessors";
 const String ANIMATIONS = "animations";
@@ -206,6 +207,7 @@ const String TEXTURES = "textures";
 
 const List<String> GLTF_MEMBERS = const <String>[
   EXTENSIONS_USED,
+  EXTENSIONS_REQUIRED,
   GL_EXTENSIONS_USED,
   ACCESSORS,
   ANIMATIONS,
