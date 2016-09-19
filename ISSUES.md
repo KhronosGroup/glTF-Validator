@@ -63,7 +63,7 @@
 | No | Name | Message |
 |:-:|------------|-------------|
 | 1. | BUFFER_EMBEDDED_BYTELENGTH_MISMATCH | Value `%1` is not equal to the embedded data length `%2`. |
-| 2. | DUPLICATE_ITEMS | Array contains duplicate items. |
+| 2. | DUPLICATE_ELEMENTS | Array contains duplicate elements. |
 | 3. | MATERIALS_VALUES_WITHOUT_TECHNIQUE | When technique is undefined, values must be undefined too. |
 | 4. | NORMALIZED_FLOAT | Only non-float attributes can be normalized. |
 | 5. | NORMALIZED_NON_ARRAY_BUFFER | Only vertex array buffer data can be normalized. |

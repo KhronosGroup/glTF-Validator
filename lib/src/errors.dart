@@ -22,7 +22,7 @@ enum Severity { Error, Warning }
 abstract class GltfWarning {
   static const BUFFER_EMBEDDED_BYTELENGTH_MISMATCH =
       "BUFFER_EMBEDDED_BYTELENGTH_MISMATCH";
-  static const DUPLICATE_ITEMS = "DUPLICATE_ITEMS";
+  static const DUPLICATE_ELEMENTS = "DUPLICATE_ELEMENTS";
   static const MATERIALS_VALUES_WITHOUT_TECHNIQUE =
       "MATERIALS_VALUES_WITHOUT_TECHNIQUE";
   static const NORMALIZED_FLOAT = "NORMALIZED_FLOAT";
@@ -39,7 +39,7 @@ abstract class GltfWarning {
   static final messages = <String, ErrorFunction>{
     BUFFER_EMBEDDED_BYTELENGTH_MISMATCH: (List args) =>
         "Value `${args[0]}` is not equal to the embedded data length `${args[1]}`.",
-    DUPLICATE_ITEMS: (List args) => "Array contains duplicate items.",
+    DUPLICATE_ELEMENTS: (List args) => "Array contains duplicate elements.",
     MATERIALS_VALUES_WITHOUT_TECHNIQUE: (List args) =>
         "When technique is undefined, values must be undefined too.",
     NORMALIZED_FLOAT: (List args) =>

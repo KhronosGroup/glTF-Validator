@@ -75,10 +75,7 @@ class Context {
       _extensionOptions[extension];
 
   void initGlExtensions(List<String> glExtensionsUsed) {
-    final glExtensionsSet = new Set<String>.from(glExtensionsUsed);
-
-    if (glExtensionsSet.length != glExtensionsUsed.length)
-      addIssue(GltfWarning.DUPLICATE_ITEMS, name: GL_EXTENSIONS_USED);
+    if (validate) checkDuplicates(glExtensionsUsed, GL_EXTENSIONS_USED, this);
 
     _glExtensionsUsed = new List<String>.unmodifiable(glExtensionsUsed);
   }
@@ -93,11 +90,11 @@ class Context {
     final extensionsSet = new Set<String>.from(extensionsUsed);
 
     if (extensionsSet.length != extensionsUsed.length)
-      addIssue(GltfWarning.DUPLICATE_ITEMS, name: EXTENSIONS_USED);
+      addIssue(GltfWarning.DUPLICATE_ELEMENTS, name: EXTENSIONS_USED);
 
     _extensionsUsed = new List<String>.unmodifiable(extensionsSet);
 
-    for (final extensionName in extensionsUsed) {
+    for (final extensionName in _extensionsUsed) {
       final extension = _userExtensions.firstWhere(
           (extension) => extension.name == extensionName,
           orElse: () => defaultExtensions.firstWhere(

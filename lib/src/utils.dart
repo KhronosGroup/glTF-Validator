@@ -381,10 +381,14 @@ Map<String, Object> getExtensions(
   context.path.add(EXTENSIONS);
   for (final extension in extensionMaps.keys) {
     if (!context.extensionsLoaded.contains(extension)) {
-      if (context.extensionsUsed.contains(extension))
-        context.addIssue(GltfWarning.UNSUPPORTED_EXTENSION, args: [extension]);
-      else
-        context.addIssue(GltfError.UNDECLARED_EXTENSION, name: extension);
+      if (context.validate) {
+        if (context.extensionsUsed.contains(extension)) {
+          context
+              .addIssue(GltfWarning.UNSUPPORTED_EXTENSION, args: [extension]);
+        } else {
+          context.addIssue(GltfError.UNDECLARED_EXTENSION, name: extension);
+        }
+      }
       continue;
     }
 
@@ -439,7 +443,7 @@ void checkDuplicates(List elements, String name, Context context) {
   if (elements.length > 1) {
     final set = new Set<Object>.from(elements);
     if (set.length != elements.length)
-      context.addIssue(GltfWarning.DUPLICATE_ITEMS, name: name);
+      context.addIssue(GltfWarning.DUPLICATE_ELEMENTS, name: name);
   }
 }
 
