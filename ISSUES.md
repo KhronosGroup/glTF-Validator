@@ -42,22 +42,25 @@
 | 38. | MESH_INVALID_ACCESSOR_TYPE | Incompatible accessor referenced: wrong `type` and/or `componentType`. |
 | 39. | MESH_UINT_ATTRIBUTE_ACCESSOR | 5125 (UNSIGNED_INT) accessors aren't allowed for attributes. |
 | 40. | MESH_UNEQUAL_ACCESSOR_COUNT | All accessors of the same primitive must have the same `count`. |
-| 41. | TEXTURE_FORMAT_INTERNALFORMAT | When defined, `format` must match `internalformat`. |
-| 42. | TEXTURE_FORMAT_TYPE | Invalid combination of `type` and `format`. |
-| 43. | SKIN_INVALID_ACCESSOR_COUNT | Incompatible accessor used. Expected count: `%1`, got: `%2`. |
-| 44. | TECHNIQUE_AMBIGUOUS_PARAMETER | Parameter can't be uniform and attribute at the same time. |
-| 45. | TECHNIQUE_ATTRIBUTE_COUNT | Attribute parameter can't have `count` property. |
-| 46. | TECHNIQUE_ATTRIBUTE_NODE | Attribute parameter can't have `node` property. |
-| 47. | TECHNIQUE_ATTRIBUTE_VALUE | Attribute parameter can't have `value` property. |
-| 48. | TECHNIQUE_ATTRIBUTE_INVALID_TYPE | Invalid type `%1` for attribute parameter. |
-| 49. | TECHNIQUE_ATTRIBUTE_TYPE_OVERRIDE | Invalid type override for semantic `%1`. |
-| 50. | TECHNIQUE_INVALID_SEMANTIC | Invalid `semantic` value (`%1`). |
-| 51. | TECHNIQUE_UNIFORM_NODE_TYPE | When `node` is defined, `type` must be FLOAT_MAT4. |
-| 52. | TECHNIQUE_UNIFORM_SEMANTIC_TYPE | Unexpected type `%1` for semantic `%2`. |
-| 53. | TECHNIQUE_UNIFORM_SEMANTIC_COUNT | Semantic `%1` can't have `count` property. |
-| 54. | TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT | Semantic `%1` must have `count` property. |
-| 55. | TECHNIQUE_UNUSED_PARAMETER | Unused parameter. |
-| 56. | TECHNIQUE_DEPTHRANGE_VALUES | `zNear` must be less than or equal to `zFar`. |
+| 41. | NODE_PARENT_OVERRIDE | Value overrides parent of `%1` node. |
+| 42. | NODE_LOOP | Node is a part of node loop. |
+| 43. | TEXTURE_FORMAT_INTERNALFORMAT | When defined, `format` must match `internalformat`. |
+| 44. | TEXTURE_FORMAT_TYPE | Invalid combination of `type` and `format`. |
+| 45. | SKIN_INVALID_ACCESSOR_COUNT | Incompatible accessor used. Expected count: `%1`, got: `%2`. |
+| 46. | SCENE_NON_ROOT_NODE | Node `%1` is not a root node. |
+| 47. | TECHNIQUE_AMBIGUOUS_PARAMETER | Parameter can't be uniform and attribute at the same time. |
+| 48. | TECHNIQUE_ATTRIBUTE_COUNT | Attribute parameter can't have `count` property. |
+| 49. | TECHNIQUE_ATTRIBUTE_NODE | Attribute parameter can't have `node` property. |
+| 50. | TECHNIQUE_ATTRIBUTE_VALUE | Attribute parameter can't have `value` property. |
+| 51. | TECHNIQUE_ATTRIBUTE_INVALID_TYPE | Invalid type `%1` for attribute parameter. |
+| 52. | TECHNIQUE_ATTRIBUTE_TYPE_OVERRIDE | Invalid type override for semantic `%1`. |
+| 53. | TECHNIQUE_INVALID_SEMANTIC | Invalid `semantic` value (`%1`). |
+| 54. | TECHNIQUE_UNIFORM_NODE_TYPE | When `node` is defined, `type` must be FLOAT_MAT4. |
+| 55. | TECHNIQUE_UNIFORM_SEMANTIC_TYPE | Unexpected type `%1` for semantic `%2`. |
+| 56. | TECHNIQUE_UNIFORM_SEMANTIC_COUNT | Semantic `%1` can't have `count` property. |
+| 57. | TECHNIQUE_UNIFORM_SEMANTIC_NO_COUNT | Semantic `%1` must have `count` property. |
+| 58. | TECHNIQUE_UNUSED_PARAMETER | Unused parameter. |
+| 59. | TECHNIQUE_DEPTHRANGE_VALUES | `zNear` must be less than or equal to `zFar`. |
 
 ## Warnings
 | No | Name | Message |
