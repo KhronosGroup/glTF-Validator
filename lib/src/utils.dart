@@ -447,6 +447,36 @@ void checkDuplicates(List elements, String name, Context context) {
   }
 }
 
+void removeDuplicates(List<String> list, Context context, String name) {
+  final set = new Set<String>.from(list);
+  if (set.length != list.length) {
+    context.addIssue(GltfWarning.DUPLICATE_ELEMENTS, name: name);
+    list
+      ..clear()
+      ..addAll(set);
+  }
+}
+
+typedef void _NodeHandlerFunction(Node element, String id);
+
+void resolveList/*<T>*/(List<String> sourceList, List/*<T>*/ targetList,
+    Map<String, Object/*=T*/ > map, String name, Context context,
+    [_NodeHandlerFunction handleNode]) {
+  if (sourceList != null) {
+    for (final id in sourceList) {
+      final element = map[id];
+      if (element != null) {
+        targetList.add(element);
+        if (handleNode != null)
+          handleNode((element as dynamic/*=Node*/), id);
+      } else {
+        context
+            .addIssue(GltfError.UNRESOLVED_REFERENCE, name: name, args: [id]);
+      }
+    }
+  }
+}
+
 String mapToString([Map/*=Map<String, Object>*/ map]) {
   return new Map<String, Object>.fromIterable(
       map.keys.where((key) => key != null && map[key] != null),

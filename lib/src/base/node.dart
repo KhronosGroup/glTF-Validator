@@ -71,16 +71,6 @@ class Node extends GltfChildOfRootProperty implements Linkable {
   static Node fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, NODE_MEMBERS, context);
 
-    void removeDuplicates(List<String> list, Context context, String name) {
-      final set = new Set<String>.from(list);
-      if (set.length != list.length) {
-        context.addIssue(GltfWarning.DUPLICATE_ELEMENTS, name: name);
-        list
-          ..clear()
-          ..addAll(set);
-      }
-    }
-
     final childrenIds = getStringList(map, CHILDREN, context, def: <String>[]);
     if (context.validate && childrenIds != null) {
       removeDuplicates(childrenIds, context, CHILDREN);
@@ -155,35 +145,16 @@ class Node extends GltfChildOfRootProperty implements Linkable {
       }
     }
 
-    void resolveList/*<T>*/(List<String> sourceList, List/*<T>*/ targetList,
-        Map<String, Object/*=T*/ > map, String name,
-        [_NodeHandlerFunction handleElement]) {
-      if (sourceList != null) {
-        for (final id in sourceList) {
-          final element = map[id];
-          if (element != null) {
-            targetList.add(element);
-            if (handleElement != null)
-              handleElement((element as dynamic/*=Node*/), id);
-          } else {
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: name, args: [id]);
-          }
-        }
-      }
-    }
-
-    resolveList/*<Node>*/(_childrenIds, children, gltf.nodes, CHILDREN,
-        (element, id) {
-      if (element.parent != null) {
+    resolveList/*<Node>*/(_childrenIds, children, gltf.nodes, CHILDREN, context,
+        (node, id) {
+      if (node.parent != null) {
         context.addIssue(GltfError.NODE_PARENT_OVERRIDE,
             name: CHILDREN, args: [id]);
       }
-      element.parent = this;
+      node.parent = this;
     });
-    resolveList/*<Node>*/(_skeletonsIds, skeletons, gltf.nodes, SKELETONS);
-    resolveList/*<Mesh>*/(_meshesIds, meshes, gltf.meshes, MESHES);
+    resolveList/*<Node>*/(
+        _skeletonsIds, skeletons, gltf.nodes, SKELETONS, context);
+    resolveList/*<Mesh>*/(_meshesIds, meshes, gltf.meshes, MESHES, context);
   }
 }
-
-typedef void _NodeHandlerFunction(Node element, String id);

@@ -273,7 +273,6 @@ class Gltf extends GltfProperty {
       BUFFER_VIEWS: bufferViews,
       MATERIALS: materials,
       PROGRAMS: programs,
-      SCENES: scenes,
       TECHNIQUES: techniques,
       TEXTURES: textures
     };
@@ -304,6 +303,7 @@ class Gltf extends GltfProperty {
     linkCollection(NODES, nodes);
     linkCollection(SKINS, skins);
     linkCollection(MESHES, meshes);
+    linkCollection(SCENES, scenes);
 
     // Check node tree loops
     if (context.validate) {

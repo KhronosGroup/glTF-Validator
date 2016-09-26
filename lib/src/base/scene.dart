@@ -20,7 +20,7 @@ library gltf.core.scene;
 import 'gltf_property.dart';
 
 class Scene extends GltfChildOfRootProperty implements Linkable {
-  final Iterable<String> _nodesIds;
+  final List<String> _nodesIds;
   final List<Node> nodes = <Node>[];
 
   Scene._(this._nodesIds, String name, Map<String, Object> extensions,
@@ -32,23 +32,21 @@ class Scene extends GltfChildOfRootProperty implements Linkable {
   static Scene fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, SCENE_MEMBERS, context);
 
-    final nodesIds =
-        getStringList(map, NODES, context, def: <String>[]).toSet();
+    final nodesIds = getStringList(map, NODES, context, def: <String>[]);
+    if (context.validate && nodesIds != null) {
+      removeDuplicates(nodesIds, context, NODES);
+    }
 
     return new Scene._(nodesIds, getName(map, context),
         getExtensions(map, Scene, context), getExtras(map));
   }
 
   void link(Gltf gltf, Context context) {
-    if (_nodesIds != null) {
-      for (final id in _nodesIds) {
-        final node = gltf.nodes[id];
-        if (node != null)
-          nodes.add(node);
-        else
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: NODES, args: [id]);
+    resolveList(_nodesIds, nodes, gltf.nodes, NODES, context, (node, id) {
+      if (node.parent != null) {
+        context
+            .addIssue(GltfError.SCENE_NON_ROOT_NODE, name: NODES, args: [id]);
       }
-    }
+    });
   }
 }

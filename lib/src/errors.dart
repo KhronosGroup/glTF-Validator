@@ -129,6 +129,8 @@ abstract class GltfError {
 
   static const SKIN_INVALID_ACCESSOR_COUNT = "SKIN_INVALID_ACCESSOR_COUNT";
 
+  static const SCENE_NON_ROOT_NODE = "SCENE_NON_ROOT_NODE";
+
   static const TECHNIQUE_AMBIGUOUS_PARAMETER = "TECHNIQUE_AMBIGUOUS_PARAMETER";
 
   static const TECHNIQUE_ATTRIBUTE_COUNT = "TECHNIQUE_ATTRIBUTE_COUNT";
@@ -232,6 +234,7 @@ abstract class GltfError {
         "Invalid combination of `type` and `format`.",
     SKIN_INVALID_ACCESSOR_COUNT: (List args) =>
         "Incompatible accessor used. Expected count: `${args[0]}`, got: `${args[1]}`.",
+    SCENE_NON_ROOT_NODE: (List args) => "Node `${args[0]}` is not a root node.",
     TECHNIQUE_AMBIGUOUS_PARAMETER: (List args) =>
         "Parameter can't be uniform and attribute at the same time.",
     TECHNIQUE_ATTRIBUTE_COUNT: (List args) =>
