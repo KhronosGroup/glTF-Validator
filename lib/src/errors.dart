@@ -121,6 +121,9 @@ abstract class GltfError {
   static const MESH_UINT_ATTRIBUTE_ACCESSOR = "MESH_UINT_ATTRIBUTE_ACCESSOR";
   static const MESH_UNEQUAL_ACCESSOR_COUNT = "MESH_UNEQUAL_ACCESSOR_COUNT";
 
+  static const NODE_PARENT_OVERRIDE = "NODE_PARENT_OVERRIDE";
+  static const NODE_LOOP = "NODE_LOOP";
+
   static const TEXTURE_FORMAT_INTERNALFORMAT = "TEXTURE_FORMAT_INTERNALFORMAT";
   static const TEXTURE_FORMAT_TYPE = "TEXTURE_FORMAT_TYPE";
 
@@ -220,6 +223,9 @@ abstract class GltfError {
         "5125 (UNSIGNED_INT) accessors aren't allowed for attributes.",
     MESH_UNEQUAL_ACCESSOR_COUNT: (List args) =>
         "All accessors of the same primitive must have the same `count`.",
+    NODE_PARENT_OVERRIDE: (List args) =>
+        "Value overrides parent of `${args[0]}` node.",
+    NODE_LOOP: (List args) => "Node is a part of node loop.",
     TEXTURE_FORMAT_INTERNALFORMAT: (List args) =>
         "When defined, `format` must match `internalformat`.",
     TEXTURE_FORMAT_TYPE: (List args) =>

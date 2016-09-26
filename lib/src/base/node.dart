@@ -21,21 +21,23 @@ import 'gltf_property.dart';
 
 class Node extends GltfChildOfRootProperty implements Linkable {
   final String _cameraId;
-  final Iterable<String> _childrenIds;
-  final Iterable<String> _skeletonsIds;
+  final List<String> _childrenIds;
+  final List<String> _skeletonsIds;
   final String _skinId;
   final String jointName;
   final List<num> matrix;
-  final Iterable<String> _meshesIds;
+  final List<String> _meshesIds;
   final List<num> rotation;
   final List<num> scale;
   final List<num> translation;
 
   Camera camera;
+  Skin skin;
   final List<Node> children = <Node>[];
   final List<Node> skeletons = <Node>[];
-  Skin skin;
   final List<Mesh> meshes = <Mesh>[];
+
+  Node parent;
 
   Node._(
       this._cameraId,
@@ -69,9 +71,30 @@ class Node extends GltfChildOfRootProperty implements Linkable {
   static Node fromMap(Map<String, Object> map, Context context) {
     if (context.validate) checkMembers(map, NODE_MEMBERS, context);
 
+    void removeDuplicates(List<String> list, Context context, String name) {
+      final set = new Set<String>.from(list);
+      if (set.length != list.length) {
+        context.addIssue(GltfWarning.DUPLICATE_ELEMENTS, name: name);
+        list
+          ..clear()
+          ..addAll(set);
+      }
+    }
+
     final childrenIds = getStringList(map, CHILDREN, context, def: <String>[]);
+    if (context.validate && childrenIds != null) {
+      removeDuplicates(childrenIds, context, CHILDREN);
+    }
+
     final skeletonsIds = getStringList(map, SKELETONS, context);
+    if (context.validate && skeletonsIds != null) {
+      removeDuplicates(skeletonsIds, context, SKELETONS);
+    }
+
     final meshesIds = getStringList(map, MESHES, context);
+    if (context.validate && meshesIds != null) {
+      removeDuplicates(meshesIds, context, MESHES);
+    }
 
     final defMat = <num>[
       1.0,
@@ -97,13 +120,13 @@ class Node extends GltfChildOfRootProperty implements Linkable {
 
     return new Node._(
         getId(map, CAMERA, context, req: false),
-        childrenIds?.toSet(),
-        skeletonsIds?.toSet(),
+        childrenIds,
+        skeletonsIds,
         getId(map, SKIN, context, req: false),
         getId(map, JOINT_NAME, context, req: false),
         getNumList(map, MATRIX, context,
             minItems: 16, maxItems: 16, def: defMat),
-        meshesIds?.toSet(),
+        meshesIds,
         getNumList(map, ROTATION, context,
             minItems: 4, maxItems: 4, def: defRot),
         getNumList(map, SCALE, context,
@@ -116,56 +139,51 @@ class Node extends GltfChildOfRootProperty implements Linkable {
   }
 
   void link(Gltf gltf, Context context) {
-    // TODO: proper node hierarchy validation
+    // TODO: skinning-related checks
 
     camera = gltf.cameras[_cameraId];
+    skin = gltf.skins[_skinId];
 
-    if (context.validate && _cameraId != null && camera == null)
-      context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-          name: CAMERA, args: [_cameraId]);
-
-    if (_childrenIds != null) {
-      for (final id in _childrenIds) {
-        final child = gltf.nodes[id];
-        if (child != null)
-          children.add(child);
-        else
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: CHILDREN, args: [id]);
-      }
-    }
-
-    if (_skeletonsIds != null) {
-      for (final id in _skeletonsIds) {
-        final skeleton = gltf.nodes[id];
-        if (skeleton != null)
-          skeletons.add(skeleton);
-        else
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: SKELETONS, args: [id]);
-      }
-    }
-
-    if (_skinId != null) {
-      final skin = gltf.skins[_skinId];
-      if (skin != null)
-        this.skin = skin;
-      else
+    if (context.validate) {
+      if (_cameraId != null && camera == null) {
         context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-            name: SKINS, args: [_skinId]);
-    }
-
-    if (_meshesIds != null) {
-      for (final id in _meshesIds) {
-        final mesh = gltf.meshes[id];
-        if (mesh != null)
-          meshes.add(mesh);
-        else
-          context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-              name: MESHES, args: [id]);
+            name: CAMERA, args: [_cameraId]);
+      }
+      if (_skinId != null && skin == null) {
+        context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+            name: SKIN, args: [_skinId]);
       }
     }
 
-    //if (jointName != null) gltf.joints[jointName] = this;
+    void resolveList/*<T>*/(List<String> sourceList, List/*<T>*/ targetList,
+        Map<String, Object/*=T*/ > map, String name,
+        [_NodeHandlerFunction handleElement]) {
+      if (sourceList != null) {
+        for (final id in sourceList) {
+          final element = map[id];
+          if (element != null) {
+            targetList.add(element);
+            if (handleElement != null)
+              handleElement((element as dynamic/*=Node*/), id);
+          } else {
+            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
+                name: name, args: [id]);
+          }
+        }
+      }
+    }
+
+    resolveList/*<Node>*/(_childrenIds, children, gltf.nodes, CHILDREN,
+        (element, id) {
+      if (element.parent != null) {
+        context.addIssue(GltfError.NODE_PARENT_OVERRIDE,
+            name: CHILDREN, args: [id]);
+      }
+      element.parent = this;
+    });
+    resolveList/*<Node>*/(_skeletonsIds, skeletons, gltf.nodes, SKELETONS);
+    resolveList/*<Mesh>*/(_meshesIds, meshes, gltf.meshes, MESHES);
   }
 }
+
+typedef void _NodeHandlerFunction(Node element, String id);

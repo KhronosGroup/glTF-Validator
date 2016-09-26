@@ -305,6 +305,30 @@ class Gltf extends GltfProperty {
     linkCollection(SKINS, skins);
     linkCollection(MESHES, meshes);
 
+    // Check node tree loops
+    if (context.validate) {
+      context.path.add(NODES);
+      final seenNodes = <Node>[];
+      Node temp;
+      gltf.nodes.forEach((id, node) {
+        if (node.parent == null) return;
+        seenNodes.clear();
+        temp = node;
+        while (true) {
+          if (seenNodes.contains(temp)) {
+            context.addIssue(GltfError.NODE_LOOP, name: id);
+            break;
+          } else if (temp.parent == null) {
+            break;
+          } else {
+            seenNodes.add(temp);
+            temp = temp.parent;
+          }
+        }
+      });
+      context.path.removeLast();
+    }
+
     return gltf;
   }
 
