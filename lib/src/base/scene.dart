@@ -42,7 +42,8 @@ class Scene extends GltfChildOfRootProperty implements Linkable {
   }
 
   void link(Gltf gltf, Context context) {
-    resolveList(_nodesIds, nodes, gltf.nodes, NODES, context, (node, id) {
+    resolveList/*<Node>*/(_nodesIds, nodes, gltf.nodes, NODES, context,
+        (node, id) {
       if (node.parent != null) {
         context
             .addIssue(GltfError.SCENE_NON_ROOT_NODE, name: NODES, args: [id]);
