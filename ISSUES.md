@@ -43,7 +43,7 @@
 | 39. | MESH_UINT_ATTRIBUTE_ACCESSOR | 5125 (UNSIGNED_INT) accessors aren't allowed for attributes. |
 | 40. | MESH_UNEQUAL_ACCESSOR_COUNT | All accessors of the same primitive must have the same `count`. |
 | 41. | NODE_PARENT_OVERRIDE | Value overrides parent of `%1` node. |
-| 42. | NODE_LOOP | Node is a part of node loop. |
+| 42. | NODE_LOOP | Node is a part of a node loop. |
 | 43. | TEXTURE_FORMAT_INTERNALFORMAT | When defined, `format` must match `internalformat`. |
 | 44. | TEXTURE_FORMAT_TYPE | Invalid combination of `type` and `format`. |
 | 45. | SKIN_INVALID_ACCESSOR_COUNT | Incompatible accessor used. Expected count: `%1`, got: `%2`. |
