@@ -227,7 +227,7 @@ abstract class GltfError {
         "All accessors of the same primitive must have the same `count`.",
     NODE_PARENT_OVERRIDE: (List args) =>
         "Value overrides parent of `${args[0]}` node.",
-    NODE_LOOP: (List args) => "Node is a part of node loop.",
+    NODE_LOOP: (List args) => "Node is a part of a node loop.",
     TEXTURE_FORMAT_INTERNALFORMAT: (List args) =>
         "When defined, `format` must match `internalformat`.",
     TEXTURE_FORMAT_TYPE: (List args) =>

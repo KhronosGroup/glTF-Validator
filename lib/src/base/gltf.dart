@@ -308,21 +308,19 @@ class Gltf extends GltfProperty {
     // Check node tree loops
     if (context.validate) {
       context.path.add(NODES);
-      final seenNodes = <Node>[];
+      final seenNodes = new Set<Node>();
       Node temp;
       gltf.nodes.forEach((id, node) {
         if (node.parent == null) return;
         seenNodes.clear();
         temp = node;
         while (true) {
-          if (seenNodes.contains(temp)) {
-            context.addIssue(GltfError.NODE_LOOP, name: id);
-            break;
-          } else if (temp.parent == null) {
-            break;
-          } else {
-            seenNodes.add(temp);
+          if (temp.parent == null) break;
+          if (seenNodes.add(temp)) {
             temp = temp.parent;
+          } else {
+            if (temp == node) context.addIssue(GltfError.NODE_LOOP, name: id);
+            break;
           }
         }
       });
