@@ -333,7 +333,7 @@ class Gltf extends GltfProperty {
   Map<String, Object> get info {
     final info = <String, Object>{};
 
-    info[VERSION] = asset.version;
+    info[VERSION] = asset?.version;
     if (extensionsUsed.isNotEmpty) info[EXTENSIONS_USED] = extensionsUsed;
     if (extensionsRequired.isNotEmpty) {
       info[EXTENSIONS_REQUIRED] = extensionsRequired;
