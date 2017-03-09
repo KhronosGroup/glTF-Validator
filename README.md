@@ -41,6 +41,7 @@ Due to frequent updates, it's recommended to use hosted [web front-end tool](htt
 #### Usage
 Run `gltf_validator <asset-file>`. JSON report will be printed to `stdout`.
 
+## Self Test
 
-
-
+1. Follow the instructions for installation
+1. From the respository root folder, run `pub run test`

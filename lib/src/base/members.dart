@@ -108,22 +108,13 @@ const List<String> ANIMATION_SAMPLER_MEMBERS = const <String>[
 // Asset
 const String COPYRIGHT = "copyright";
 const String GENERATOR = "generator";
-const String PREMULTIPLIED_ALPHA = "premultipliedAlpha";
-const String PROFILE = "profile";
 const String VERSION = "version";
 
 const List<String> ASSET_MEMBERS = const <String>[
   COPYRIGHT,
   GENERATOR,
-  PREMULTIPLIED_ALPHA,
-  PROFILE,
   VERSION
 ];
-
-// AssetProfile
-const String API = "api";
-
-const List<String> ASSET_PROFILE_MEMBERS = const <String>[API, VERSION];
 
 // Buffer
 const String URI = "uri";
@@ -280,17 +271,6 @@ const List<String> NODE_MEMBERS = const <String>[
   NAME
 ];
 
-// Program
-const String FRAGMENT_SHADER = "fragmentShader";
-const String VERTEX_SHADER = "vertexShader";
-
-const List<String> PROGRAM_MEMBERS = const <String>[
-  ATTRIBUTES,
-  FRAGMENT_SHADER,
-  VERTEX_SHADER,
-  NAME
-];
-
 // Sampler
 const String MAG_FILTER = "magFilter";
 const String MIN_FILTER = "minFilter";
@@ -308,9 +288,6 @@ const List<String> SAMPLER_MEMBERS = const <String>[
 // Scene
 const List<String> SCENE_MEMBERS = const <String>[NODES, NAME];
 
-// Shader
-const List<String> SHADER_MEMBERS = const <String>[URI, TYPE, NAME];
-
 // Skin
 const String BIND_SHAPE_MATRIX = "bindShapeMatrix";
 const String INVERSE_BIND_MATRICES = "inverseBindMatrices";
@@ -322,25 +299,6 @@ const List<String> SKIN_MEMBERS = const <String>[
   JOINT_NAMES,
   NAME
 ];
-
-// Technique
-const String PROGRAM = "program";
-const String UNIFORMS = "uniforms";
-const String STATES = "states";
-
-const List<String> TECHNIQUE_MEMBERS = const <String>[
-  PARAMETERS,
-  ATTRIBUTES,
-  PROGRAM,
-  UNIFORMS,
-  STATES,
-  NAME
-];
-
-// TechniqueParameter
-const String NODE = "node";
-const String SEMANTIC = "semantic";
-const String VALUE = "value";
 
 // Attribute semantics
 const String POSITION = "POSITION";
@@ -367,14 +325,6 @@ const String MODELINVERSETRANSPOSE = "MODELINVERSETRANSPOSE";
 const String MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
 const String VIEWPORT = "VIEWPORT";
 const String JOINTMATRIX = "JOINTMATRIX";
-
-const List<String> TECHNIQUE_PARAMETER_MEMBERS = const <String>[
-  COUNT,
-  NODE,
-  TYPE,
-  SEMANTIC,
-  VALUE
-];
 
 const List<String> ATTRIBUTE_SEMANTIC_MEMBERS = const <String>[
   POSITION,
