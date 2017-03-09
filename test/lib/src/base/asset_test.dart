@@ -19,7 +19,10 @@ import "package:test/test.dart";
 import "package:gltf/gltf.dart";
 
 void main() {
-  const String VERSION = "version"; //should we import members.dart?
+  const String VERSION = "version";  //should we import members.dart?
+  const String VALUE_NOT_IN_LIST = "VALUE_NOT_IN_LIST";  // should we import errors.dart?
+  const String UNDEFINED_PROPERTY = "UNDEFINED_PROPERTY";
+  const String TYPE_MISMATCH = "TYPE_MISMATCH";
 
   test("An empty Asset is invalid", () {
     Map<String, Object> map = new Map();
@@ -28,6 +31,8 @@ void main() {
     Asset.fromMap(map, context);
 
     expect(context.errors.isEmpty, false);
+    expect(context.errors.length, 1);
+    expect(context.errors.first.type, UNDEFINED_PROPERTY);
     expect(context.warnings.isEmpty, true);
   });
 
@@ -38,8 +43,23 @@ void main() {
 
     Asset.fromMap(map, context);
 
-  expect(context.errors.isEmpty, false);
-  expect(context.warnings.isEmpty, true);
+    expect(context.errors.isEmpty, false);
+    expect(context.errors.length, 1);
+    expect(context.errors.first.type, VALUE_NOT_IN_LIST);
+    expect(context.warnings.isEmpty, true);
+  });
+
+  test("Verify version required to be a string", () {
+    Map<String, Object> map = new Map();
+    map[VERSION] = 2.0;
+    Context context = new Context();
+
+    Asset.fromMap(map, context);
+
+    expect(context.errors.isEmpty, false);
+    expect(context.errors.length, 1);
+    expect(context.errors.first.type, TYPE_MISMATCH);
+    expect(context.warnings.isEmpty, true);
   });
 
   test("Verify version 2.0 is valid", () {
@@ -49,7 +69,7 @@ void main() {
 
     Asset.fromMap(map, context);
 
-  expect(context.errors.isEmpty, true);
-  expect(context.warnings.isEmpty, true);
+    expect(context.errors.isEmpty, true);
+    expect(context.warnings.isEmpty, true);
   });
 }
