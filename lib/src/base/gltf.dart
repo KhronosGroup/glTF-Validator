@@ -32,12 +32,9 @@ import 'image.dart';
 import 'material.dart';
 import 'mesh.dart';
 import 'node.dart';
-import 'program.dart';
 import 'sampler.dart';
 import 'scene.dart';
-import 'shader.dart';
 import 'skin.dart';
-import 'technique.dart';
 import 'texture.dart';
 
 export 'accessor.dart';
@@ -50,12 +47,9 @@ export 'image.dart';
 export 'material.dart';
 export 'mesh.dart';
 export 'node.dart';
-export 'program.dart';
 export 'sampler.dart';
 export 'scene.dart';
-export 'shader.dart';
 export 'skin.dart';
-export 'technique.dart';
 export 'texture.dart';
 
 class Gltf extends GltfProperty {
@@ -72,14 +66,11 @@ class Gltf extends GltfProperty {
   final Map<String, Material> materials;
   final Map<String, Mesh> meshes;
   final Map<String, Node> nodes;
-  final Map<String, Program> programs;
   final Map<String, Sampler> samplers;
   final String sceneId;
   final Scene scene;
   final Map<String, Scene> scenes;
-  final Map<String, Shader> shaders;
   final Map<String, Skin> skins;
-  final Map<String, Technique> techniques;
   final Map<String, Texture> textures;
 
   final Map<String, Node> joints = <String, Node>{};
@@ -98,14 +89,11 @@ class Gltf extends GltfProperty {
       this.materials,
       this.meshes,
       this.nodes,
-      this.programs,
       this.samplers,
       this.sceneId,
       this.scene,
       this.scenes,
-      this.shaders,
       this.skins,
-      this.techniques,
       this.textures,
       Map<String, Object> extensions,
       Object extras)
@@ -215,8 +203,6 @@ class Gltf extends GltfProperty {
 
     final nodes = toMap/*<Node>*/(NODES, Node.fromMap);
 
-    final programs = toMap/*<Program>*/(PROGRAMS, Program.fromMap);
-
     final samplers = toMap/*<Sampler>*/(SAMPLERS, Sampler.fromMap);
 
     final scenes = toMap/*<Scene>*/(SCENES, Scene.fromMap);
@@ -229,11 +215,7 @@ class Gltf extends GltfProperty {
       context.addIssue(GltfError.UNRESOLVED_REFERENCE,
           name: SCENE, args: [sceneId]);
 
-    final shaders = toMap/*<Shader>*/(SHADERS, Shader.fromMap);
-
     final skins = toMap/*<Skin>*/(SKINS, Skin.fromMap);
-
-    final techniques = toMap/*<Technique>*/(TECHNIQUES, Technique.fromMap);
 
     final Map<String, Texture> textures =
         toMap/*<Texture>*/(TEXTURES, Texture.fromMap);
@@ -254,14 +236,11 @@ class Gltf extends GltfProperty {
         materials,
         meshes,
         nodes,
-        programs,
         samplers,
         sceneId,
         scene,
         scenes,
-        shaders,
         skins,
-        techniques,
         textures,
         getExtensions(map, Gltf, context),
         getExtras(map));
@@ -272,8 +251,6 @@ class Gltf extends GltfProperty {
       ANIMATIONS: animations,
       BUFFER_VIEWS: bufferViews,
       MATERIALS: materials,
-      PROGRAMS: programs,
-      TECHNIQUES: techniques,
       TEXTURES: textures
     };
 
@@ -356,14 +333,6 @@ class Gltf extends GltfProperty {
     }
     if (externalImages.isNotEmpty) externalResources["images"] = externalImages;
 
-    final externalShaders = <String>[];
-    for (final shader in shaders.values) {
-      if (shader.uri != null) externalShaders.add(shader.uri.toString());
-    }
-    if (externalShaders.isNotEmpty) {
-      externalResources["shaders"] = externalShaders;
-    }
-
     if (externalResources.isNotEmpty) {
       info["externalResources"] = externalResources;
     }
@@ -386,14 +355,6 @@ class Gltf extends GltfProperty {
     }
     info["primitivesCount"] = primitivesCount;
     info["maxAttributesUsed"] = maxAttributesUsed;
-
-    info["programsCount"] = programs.length;
-
-    int maxUniformsUsed = 0;
-    for (final technique in techniques.values) {
-      maxUniformsUsed = max(maxUniformsUsed, technique.uniforms.length);
-    }
-    info["maxUniformsUsed"] = maxUniformsUsed;
 
     return info;
   }

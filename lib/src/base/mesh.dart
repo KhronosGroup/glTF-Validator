@@ -123,7 +123,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
     // TODO: refactor similar code
 
     if (material == null ||
-        (material.technique == null && material.extensions.isEmpty)) {
+        (material.extensions.isEmpty)) {
       //  Assuming default material
 
       var foundPosition = false;
@@ -167,54 +167,7 @@ class MeshPrimitive extends GltfProperty implements Linkable {
     } else if (material.extensions.isEmpty) {
       // assume material.technique defined
 
-      int count;
 
-      context.path.add(ATTRIBUTES);
-      _attributesIds?.forEach((semantic, accessorId) {
-        final accessor = gltf.accessors[accessorId];
-
-        if (context.validate) {
-          final parameter = material.technique.attributes.values.firstWhere(
-              (parameter) => parameter.semantic == semantic,
-              orElse: () => null);
-
-          if (parameter == null)
-            context.addIssue(GltfWarning.UNEXPECTED_ATTRIBUTE,
-                args: [semantic, material.techniqueId]);
-
-          if (accessor == null) {
-            context.addIssue(GltfError.UNRESOLVED_REFERENCE,
-                name: semantic, args: [accessorId]);
-          } else {
-            if (accessor.bufferView?.target != gl.ARRAY_BUFFER) {
-              context.addIssue(GltfError.MESH_INVALID_ACCESSOR_BUFFER_VIEW,
-                  name: semantic);
-            }
-
-            if (accessor.componentType == gl.UNSIGNED_INT) {
-              context.addIssue(GltfError.MESH_UINT_ATTRIBUTE_ACCESSOR,
-                  name: semantic);
-            }
-
-            if (count == null) {
-              count = accessor.count;
-            } else if (count != accessor.count) {
-              context.addIssue(GltfError.MESH_UNEQUAL_ACCESSOR_COUNT,
-                  name: semantic);
-            }
-
-            if (parameter != null) {
-              if (accessor.type != ATTRIBUTE_TYPES[parameter.type])
-                context.addIssue(GltfError.INVALID_ACCESSOR_TYPE,
-                    name: semantic,
-                    args: [ATTRIBUTE_TYPES[parameter.type], accessor.type]);
-            }
-          }
-        }
-
-        attributes[semantic] = accessor;
-      });
-      context.path.removeLast();
     } else {
       // assume material.extensions not empty
 

@@ -115,7 +115,6 @@ class KhrBinaryGltfExtension extends Extension {
 
   final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
     Image: const ExtFuncs(KhrBinaryGltfImage.fromMap, null),
-    Shader: const ExtFuncs(KhrBinaryGltfShader.fromMap, null),
   };
 
   final Map<String, ErrorFunction> errors = GlbError.messages;
