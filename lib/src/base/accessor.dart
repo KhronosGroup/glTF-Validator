@@ -482,7 +482,7 @@ class Accessor extends GltfChildOfRootProperty {
           }
 
           if (index == sparseIndex) {
-            yield values[sparsePosition * components + componentIndex];
+            yield element + values[sparsePosition * components + componentIndex];
           } else {
             yield element;
           }
