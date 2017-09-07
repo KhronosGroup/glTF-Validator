@@ -1,0 +1,71 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "targets": [
+                        {
+                            "POSITION": 1
+                        }
+                    ]
+                },
+                {
+                    "attributes": {
+                        "POSITION": 2
+                    },
+                    "targets": [
+                        {
+                            "NORMAL": 2,
+                            "POSITION": 3
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 3
+        },
+        {
+            "bufferView": 0,
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 6,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 36
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 36,
+            "uri": ""
+        }
+    ]
+}

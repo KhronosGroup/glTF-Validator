@@ -1,0 +1,37 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "skins": [
+        {
+            "inverseBindMatrices": 0,
+            "joints": [0, 1]
+        }
+    ],
+    "nodes": [
+        {
+        },
+        {
+        }
+    ],
+    "accessors": [
+        {
+            "type": "MAT3",
+            "componentType": 5126,
+            "count": 3,
+            "bufferView": 0
+        }
+    ],
+    "buffers": [
+        {
+            "uri": "",
+            "byteLength": 108
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 108
+        }
+    ]
+}

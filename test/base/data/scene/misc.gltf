@@ -1,0 +1,20 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "scenes": [
+        {
+            "nodes": []
+        },
+        {
+            "nodes": [1]
+        }
+    ],
+    "nodes": [
+        {
+            "children": [1]
+        },
+        {
+        }
+    ]
+}

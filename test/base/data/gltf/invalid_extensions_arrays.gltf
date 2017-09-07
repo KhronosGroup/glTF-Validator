@@ -1,0 +1,7 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": ["_test_extension", "_test_extension"],
+    "extensionsRequired": ["_test_extension2", "_test_extension2"]
+}

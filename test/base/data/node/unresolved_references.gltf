@@ -1,0 +1,18 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "camera": 0,
+            "mesh": 0,
+            "skin": 0
+        },
+        {
+            "children": []
+        },
+        {
+            "children": [4]
+        }
+    ]
+}

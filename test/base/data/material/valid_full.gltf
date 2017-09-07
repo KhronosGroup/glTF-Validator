@@ -1,0 +1,61 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "materials": [
+        {
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    1.0,
+                    0.0,
+                    1.0,
+                    1.0
+                ],
+                "baseColorTexture": {
+                    "index": 0,
+                    "texCoord": 0
+                },
+                "metallicFactor": 0.5,
+                "roughnessFactor": 0.5,
+                "metallicRoughnessTexture": {
+                    "index": 1,
+                    "texCoord": 1
+                }
+            },
+            "normalTexture": {
+                "index": 2,
+                "texCoord": 2,
+                "scale": 2.1
+            },
+            "occlusionTexture": {
+                "index": 3,
+                "texCoord": 3,
+                "strength": 0.5
+            },
+            "emissiveTexture": {
+                "index": 4,
+                "texCoord": 4
+            },
+            "emissiveFactor": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "alphaMode": "MASK",
+            "alphaCutoff": 0.4,
+            "doubleSided": true
+        }
+    ],
+    "textures": [
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        }
+    ]
+}

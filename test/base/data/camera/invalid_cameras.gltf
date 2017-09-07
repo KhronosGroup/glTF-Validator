@@ -1,0 +1,49 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "cameras": [
+        {
+            "type": "perspective",
+            "perspective": {
+                "znear": 10,
+                "zfar": 1,
+                "yfov": 10,
+                "aspectRatio": 1
+            },
+            "orthographic": {
+                "znear": 1,
+                "zfar": 10,
+                "ymag": 1,
+                "xmag": 1
+            }
+        },
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 10,
+                "zfar": 1,
+                "ymag": 1,
+                "xmag": 1
+            }
+        },
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 1,
+                "zfar": 2,
+                "ymag": 0,
+                "xmag": 1
+            }
+        },
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 1,
+                "zfar": 2,
+                "ymag": 1,
+                "xmag": 0
+            }
+        }
+    ]
+}

@@ -1,0 +1,83 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 1
+                    },
+                    "mode": 4,
+                    "indices": 0,
+                    "material": 0,
+                    "targets": [
+                        {
+                            "POSITION": 2
+                        },
+                        {
+                            "POSITION": 3
+                        }
+                    ]
+                }
+            ],
+            "weights": [0.7, 0.2]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "SCALAR",
+            "componentType": 5123,
+            "count": 6
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+        ,{
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "materials": [
+        {}
+    ]
+}

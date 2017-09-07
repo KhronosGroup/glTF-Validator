@@ -1,0 +1,27 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "uri": ":",
+            "byteLength": 1
+        },
+        {
+            "uri": "data:application/octet-stream;;base64,AA==",
+            "byteLength": 1
+        },
+        {
+            "uri": "data:application/octet-stream2;base64,AA==",
+            "byteLength": 1
+        },
+        {
+            "uri": "data:application/octet-stream;base64,AA==",
+            "byteLength": 2
+        },
+        {
+            "uri": "http://example.com/buffer.bin",
+            "byteLength": 2
+        }
+    ]
+}

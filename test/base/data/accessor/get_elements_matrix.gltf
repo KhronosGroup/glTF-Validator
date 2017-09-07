@@ -1,0 +1,58 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "type": "MAT2",
+            "componentType": 5120,
+            "count": 2,
+            "bufferView": 0
+        },
+        {
+            "type": "MAT2",
+            "componentType": 5122,
+            "count": 2,
+            "bufferView": 1
+        },
+        {
+            "type": "MAT3",
+            "componentType": 5121,
+            "count": 2,
+            "bufferView": 2
+        },
+        {
+            "type": "MAT3",
+            "componentType": 5123,
+            "count": 2,
+            "bufferView": 3
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 14
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 14,
+            "byteLength": 16
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 30,
+            "byteLength": 23
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 54,
+            "byteLength": 46
+        }
+    ],
+    "buffers": [
+        {
+            "uri": "data:application/octet-stream;base64,AQIAAP38AAAFBgAA+fj///7/AwAEAPv/+v8HAAgAAQIDAAQFBgAHCAkACgsMAA0ODwAQERIAAwACAAEAAAAGAAUABAAAAAkACAAHAAAADAALAAoAAAAPAA4ADQAAABIAEQAQAA==",
+            "byteLength": 100
+        }
+    ]
+}

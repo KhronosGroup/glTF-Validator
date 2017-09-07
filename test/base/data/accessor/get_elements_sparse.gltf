@@ -1,0 +1,78 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "name": "zero data",
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 2
+        },
+        {
+            "name": "zero data fully covered by sparse",
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 2,
+            "sparse": {
+                "count": 2,
+                "indices": {
+                    "componentType": 5121,
+                    "bufferView": 0,
+                    "byteOffset": 8
+                },
+                "values": {
+                    "bufferView": 0,
+                    "byteOffset": 0
+                }
+            }
+        },
+        {
+            "name": "partially overridden data",
+            "type": "SCALAR",
+            "componentType": 5125,
+            "count": 4,
+            "bufferView": 1,
+            "sparse": {
+                "count": 2,
+                "indices": {
+                    "componentType": 5125,
+                    "bufferView": 2,
+                    "byteOffset": 0
+                },
+                "values": {
+                    "bufferView": 2,
+                    "byteOffset": 8
+                }
+            }
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 10
+        },
+        {
+            "buffer": 1,
+            "byteLength": 16
+        },
+        {
+            "buffer": 2,
+            "byteLength": 16
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 10,
+            "uri": "data:application/octet-stream;base64,AAAAPgAAgEQAAQ=="
+        },
+        {
+            "byteLength": 16,
+            "uri": "data:application/octet-stream;base64,cBEBAAAAAAAx1AAAhRoAAA=="
+        },
+        {
+            "byteLength": 16,
+            "uri": "data:application/octet-stream;base64,AQAAAAMAAAChhgEAQg0DAA=="
+        }
+    ]
+}

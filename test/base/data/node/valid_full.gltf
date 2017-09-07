@@ -1,0 +1,81 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "camera": 0,
+            "mesh": 0,
+            "skin": 0,
+            "children": [1],
+            "matrix": [2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+            "weights": [0.5]
+        },
+        {
+            "scale": [1, 1, 1],
+            "rotation": [0, 0, 0, 1],
+            "translation": [0, 0, 0]
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "JOINTS_0": 2,
+                        "WEIGHTS_0": 3
+                    },
+                    "targets": [
+                        {
+                            "POSITION": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "cameras": [
+        {
+            "type": "perspective",
+            "perspective": {
+                "znear": 0.1,
+                "yfov": 1.5
+            }
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5123,
+            "count": 3
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 3
+        }
+    ],
+    "skins": [
+        {
+            "joints": [
+                1
+            ]
+        }
+    ]
+}

@@ -1,0 +1,70 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+
+        },
+        {
+            "primitives": {
+
+            }
+        },
+        {
+            "primitives": [
+
+            ]
+        },
+        {
+            "primitives": [
+                [
+
+                ]
+            ]
+        },
+        {
+            "primitives": [
+                {
+
+                },
+                {
+                    "attributes": [
+
+                    ],
+                    "targets": {
+
+                    }
+                },
+                {
+                    "attributes": {
+
+                    },
+                    "targets": [
+
+                    ]
+                },
+                {
+                    "attributes": {
+
+                    },
+                    "targets": [
+                        [
+
+                        ]
+                    ]
+                },
+                {
+                    "attributes": {
+
+                    },
+                    "targets": [
+                        {
+
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

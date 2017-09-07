@@ -1,0 +1,78 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "name": "regular accessor",
+            "bufferView": 0,
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 2
+        },
+        {
+            "name": "scalar float & vec2 ushort - 1",
+            "bufferView": 1,
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 2
+        },
+        {
+            "name": "scalar float & vec2 ushort - 2",
+            "bufferView": 1,
+            "type": "VEC2",
+            "componentType": 5123,
+            "count": 2,
+            "normalized": true,
+            "byteOffset": 4
+        },
+        {
+            "name": "vec3 byte & vec4 short - 1",
+            "bufferView": 2,
+            "type": "VEC3",
+            "componentType": 5120,
+            "normalized": true,
+            "count": 2
+        },
+        {
+            "name": "vec3 byte & vec4 short - 2",
+            "bufferView": 2,
+            "type": "VEC4",
+            "componentType": 5122,
+            "count": 2,
+            "normalized": true,
+            "byteOffset": 4
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 24
+        },
+        {
+            "buffer": 1,
+            "byteLength": 16,
+            "byteStride": 8
+        },
+        {
+            "buffer": 2,
+            "byteLength": 24,
+            "byteStride": 12
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 24,
+            "uri": "data:application/octet-stream;base64,AAAAAAAAoMAAANhBAAAAgAAAKEEAAAA/"
+        },
+        {
+            "byteLength": 16,
+            "uri": "data:application/octet-stream;base64,AAB6RDIALQAAAIA+OTAAAA=="
+        },
+        {
+            "byteLength": 24,
+            "uri": "data:application/octet-stream;base64,AX6BADIALQA5MAAAADKDAP//LQA5MAAA"
+        }
+
+    ]
+}

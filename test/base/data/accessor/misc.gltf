@@ -1,0 +1,66 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "byteOffset": 0,
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4
+        },
+        {
+            "type": "SCALAR",
+            "componentType": 5125,
+            "count": 1,
+            "min": [1.0]
+        },
+        {
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 1,
+            "normalized": true
+        },
+        {
+            "bufferView": 0,
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 1
+        },
+        {
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 1,
+            "sparse": {
+                "count": 2,
+                "indices": {
+                    "componentType": 5123,
+                    "bufferView": 1,
+                    "byteOffset": 4
+                },
+                "values": {
+                    "bufferView": 1
+                }
+            }
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 16,
+            "byteStride": 4
+        },
+        {
+            "buffer": 0,
+            "byteLength": 12,
+            "byteOffset": 16,
+            "byteStride": 4
+        }
+    ],
+    "buffers": [
+        {
+            "uri": "",
+            "byteLength": 28
+        }
+    ]
+}

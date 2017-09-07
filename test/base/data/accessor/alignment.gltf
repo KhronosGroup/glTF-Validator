@@ -1,0 +1,47 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 1,
+            "bufferView": 0,
+            "byteOffset": 1
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 1,
+            "bufferView": 0,
+            "byteOffset": 4
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 1,
+            "bufferView": 0,
+            "byteOffset": 32
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5122,
+            "count": 10,
+            "bufferView": 0
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 2,
+            "byteLength": 16
+        }
+    ],
+    "buffers": [
+        {
+            "uri": "",
+            "byteLength": 28
+        }
+    ]
+}
