@@ -53,7 +53,7 @@ void main() {
     test('Partially overridden', () async {
       final elements = result.gltf.accessors[2].getElements().toList();
 
-      expect(elements, orderedEquals(<int>[70000, 100001, 54321, 200002]));
+      expect(elements, orderedEquals(<int>[70000, 100001, 54321, 206791]));
     });
   });
 }
