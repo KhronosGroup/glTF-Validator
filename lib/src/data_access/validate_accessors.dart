@@ -238,6 +238,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
       var maxVertexIndex = -1;
       var modesMask = 0;
       var vertIndex = 0;
+      var degenerateTris = 0;
 
       if (accessor.usage == AccessorUsage.PrimitiveIndices) {
         // Find primitive modes and min number of vertices
@@ -302,8 +303,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
               if (triangle[0] == triangle[1] ||
                   triangle[1] == triangle[2] ||
                   triangle[2] == triangle[0]) {
-                context.addIssue(DataError.accessorIndexTriangleDegenerate,
-                    args: [triangle.toString(), index - 2]);
+                ++degenerateTris;
               }
             }
           }
@@ -344,6 +344,11 @@ void validateAccessorsData(Gltf gltf, Context context) {
                 name: MAX, args: [i, accessor.max[i], intMaxs[i]]);
           }
         }
+      }
+
+      if (degenerateTris > 0) {
+        context.addIssue(DataError.accessorIndexTriangleDegenerate,
+            args: [degenerateTris]);
       }
     }
 

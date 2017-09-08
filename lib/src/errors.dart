@@ -86,8 +86,7 @@ class DataError extends IssueType {
 
   static final DataError accessorIndexTriangleDegenerate = new DataError._(
       'ACCESSOR_INDEX_TRIANGLE_DEGENERATE',
-      (args) => 'Indices accessor contains degenerate triangle `${args[0]}` '
-          'at index `${args[1]}`.',
+      (args) => 'Indices accessor contains `${args[0]}` degenerate triangles.',
       Severity.Warning);
 
   static final DataError accessorAnimationInputNegative = new DataError._(
