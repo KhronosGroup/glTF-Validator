@@ -145,7 +145,7 @@ String getString(Map<String, Object> map, String name, Context context,
 Uri getUri(String uriString, Context context) {
   try {
     final uri = Uri.parse(uriString);
-    if (uri.hasAbsolutePath || uri.hasScheme) {
+    if (isNonRelativeUri(uri)) {
       context
           .addIssue(SemanticError.nonRelativeUri, name: URI, args: [uriString]);
     }
@@ -676,3 +676,10 @@ bool isTrsDecomposable(Matrix4 matrix) {
 }
 
 bool isPot(int value) => (value != 0) && (value & (value - 1) == 0);
+
+bool isNonRelativeUri(Uri uri) =>
+    uri.hasScheme ||
+    uri.hasAuthority ||
+    uri.hasAbsolutePath ||
+    uri.hasQuery ||
+    uri.hasFragment;

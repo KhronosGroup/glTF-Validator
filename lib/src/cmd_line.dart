@@ -23,6 +23,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
+import 'package:gltf/src/utils.dart';
 import 'package:path/path.dart' as path;
 
 ArgResults argResult;
@@ -180,13 +181,18 @@ void _writeIssues(List<Issue> issues, String title) {
 
 ResourcesLoader getFileResourceValidator(
         Context context, Uri absoluteUri, GltfReaderResult readerResult) =>
-    new ResourcesLoader(context, readerResult.gltf,
-        externalBytesFetch: (uri) {
-          if (uri == null) {
-            // GLB-stored buffer
-            return readerResult.buffer;
-          }
-          return new File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
-        },
-        externalStreamFetch: (uri) =>
-            new File.fromUri(absoluteUri.resolveUri(uri)).openRead());
+    new ResourcesLoader(context, readerResult.gltf, externalBytesFetch: (uri) {
+      if (uri == null) {
+        // GLB-stored buffer
+        return readerResult.buffer;
+      }
+      if (isNonRelativeUri(uri)) {
+        return null;
+      }
+      return new File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
+    }, externalStreamFetch: (uri) {
+      if (isNonRelativeUri(uri)) {
+        return null;
+      }
+      return new File.fromUri(absoluteUri.resolveUri(uri)).openRead();
+    });
