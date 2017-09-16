@@ -296,7 +296,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
                 args: [index, value, maxVertexIndex]);
           }
 
-          if (isTriangles(modesMask)) {
+          if (_isTriangles(modesMask)) {
             triangle[vertIndex] = value;
             if (++vertIndex == 3) {
               vertIndex = 0;
@@ -356,10 +356,10 @@ void validateAccessorsData(Gltf gltf, Context context) {
   });
 }
 
-bool isPoints(int mask) => mask & 1 == 1;
-bool isLines(int mask) => mask & 2 == 2;
-bool isLineLoop(int mask) => mask & 4 == 4;
-bool isLineStrip(int mask) => mask & 8 == 8;
-bool isTriangles(int mask) => mask & 16 == 16;
-bool isTriangleStrip(int mask) => mask & 32 == 32;
-bool isTriangleFan(int mask) => mask & 64 == 64;
+bool _isPoints(int mask) => mask & 1 == 1;
+bool _isLines(int mask) => mask & 2 == 2;
+bool _isLineLoop(int mask) => mask & 4 == 4;
+bool _isLineStrip(int mask) => mask & 8 == 8;
+bool _isTriangles(int mask) => mask & 16 == 16;
+bool _isTriangleStrip(int mask) => mask & 32 == 32;
+bool _isTriangleFan(int mask) => mask & 64 == 64;
