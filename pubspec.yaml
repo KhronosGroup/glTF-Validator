@@ -18,10 +18,10 @@ dev_dependencies:
   js: "^0.6.0"
   node_preamble: '^1.4.0'
   test: '>=0.12.0 <0.13.0'
-  yaml: "^2.0.0"
+  yaml: "^2.1.12"
 
 environment:
-  sdk: '>=1.24.0 <2.0.0-dev.infinity'
+  sdk: '>=2.0.0-dev.1.0 <2.0.0'
 
 executables:
   gltf_validator:
@@ -33,4 +33,4 @@ transformers:
 
 web:
   compiler:
-#    debug: dartdevc
+    debug: dartdevc
