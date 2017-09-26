@@ -22,20 +22,32 @@ import 'package:gltf/src/errors.dart';
 void main() {
   final sb = new StringBuffer('# glTF 2.0 Validation Issues\n');
 
+  String severityToMdString(Severity severity) {
+    switch (severity) {
+      case Severity.Error:
+        return 'Error';
+      case Severity.Warning:
+        return 'Warning';
+      default:
+        return null;
+    }
+  }
+
   var total = 0;
   void processErrorClass(Type type) {
     final errorClassMirror = reflectClass(type);
     sb
       ..writeln('## ${errorClassMirror.reflectedType}')
-      ..writeln('| No | Name | Message |')
-      ..writeln('|:---:|------------|-------------|');
+      ..writeln('| No | Name | Message | Severity |')
+      ..writeln('|:---:|-----|---------|----------|');
 
     var i = 0;
     final args = ['%1', '%2', '%3', '%4'];
     for (final symbol in errorClassMirror.staticMembers.keys) {
       final Object issueType = errorClassMirror.getField(symbol).reflectee;
       if (issueType is IssueType) {
-        sb.writeln('|${++i}|${issueType.code}|${issueType.message(args)}|');
+        sb.writeln('|${++i}|${issueType.code}|${issueType.message(args)}|'
+            '${severityToMdString(issueType.severity)}');
       }
     }
     total += i;
