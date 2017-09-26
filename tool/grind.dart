@@ -64,6 +64,7 @@ void npm() {
       outFile: destination, extraArgs: args);
   final text = destination.readAsStringSync();
   destination.writeAsStringSync('${preamble.getPreamble(minified: true)}$text');
+  delete(new File(p.join(destDir, 'gltf_validator.dart.js.deps')));
 
   final Map<String, dynamic> json = JSON
       .decode(new File(p.join(sourceDir, 'package.json')).readAsStringSync());
