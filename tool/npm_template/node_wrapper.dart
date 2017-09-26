@@ -38,6 +38,7 @@ abstract class Promise<T> {
 @JS()
 @anonymous
 abstract class Exports {
+  // ignore: avoid_setters_without_getters
   external set validate(
       Promise v(String filename, Uint8List data,
           GetResourceCallback getResourceCallback));
