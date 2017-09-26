@@ -25,35 +25,31 @@ import 'package:js/js_util.dart';
 
 import 'package:gltf/gltf.dart';
 
-typedef void ResolveCallback(dynamic report);
-typedef void RejectCallback(String error);
-
-typedef Promise GetResourceCallback(String uri);
-
-typedef Promise ValidateFunction(
-    String filename, Uint8List data, GetResourceCallback getResourceCallback);
-
-typedef void PromiseFunction(ResolveCallback resolve, RejectCallback reject);
+typedef Promise<Uint8List> GetResourceCallback(String filename);
 
 @JS()
-abstract class Promise {
-  external factory Promise(PromiseFunction function);
-  external Promise then(Function onFulfilled, [Function onRejected]);
+abstract class Promise<T> {
+  external factory Promise(
+      void executor(void resolve(T result), Function reject));
+
+  external Promise then(void onFulfilled(T result), [Function onRejected]);
 }
 
 @JS()
 @anonymous
 abstract class Exports {
-  external set validate(ValidateFunction v);
+  external set validate(
+      Promise v(String filename, Uint8List data,
+          GetResourceCallback getResourceCallback));
 }
 
 @JS()
 external Exports get exports;
 
 void main() {
-  exports.validate = allowInterop<ValidateFunction>(
+  exports.validate = allowInterop(
       (String filename, Uint8List data, GetResourceCallback getResource) =>
-          new Promise(allowInterop<PromiseFunction>((resolve, reject) {
+          new Promise<Object>(allowInterop((resolve, reject) {
             validate(filename, data, getResource).then((result) {
               resolve(jsify(result));
             }, onError: reject);
@@ -86,7 +82,7 @@ Future<Map<String, dynamic>> validate(
 ResourcesLoader getResourcesLoader(Context context,
     GltfReaderResult readerResult, GetResourceCallback getResource) {
   Future<List<int>> getBytes(Uri uri) {
-    final completer = new Completer<List<int>>();
+    final completer = new Completer<Uint8List>();
     getResource(uri.toString()).then(
         allowInterop(completer.complete),
         allowInterop((Object e) =>
