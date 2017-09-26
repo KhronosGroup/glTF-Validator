@@ -27,6 +27,6 @@ const validator = require('./gltf_validator.dart.js');
  * @param {string} name - URI or other ID.
  * @param {Uint8Array} data - Byte array containing glTF or GLB data.
  * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
- * @returns {Promise} Promise with validation result
+ * @returns {Promise} Promise with validation result in object form.
  */
 exports.validate = (name, data, loadExternalResource) => validator.validate(name, data, loadExternalResource);

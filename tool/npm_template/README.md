@@ -1,3 +1,10 @@
+# gltf-validator
+
+This is an npm package for the official [glTF Validator](https://github.com/KhronosGroup/glTF-Validator/) compiled from Dart to JS.
+
+Refer to [`index.js`](index.js) for API reference or see usage example below.
+
+```javascript
 const fs = require("fs");
 const path = require("path");
 const validator = require('./index.js');
@@ -20,9 +27,13 @@ validator.validate(filename, new Uint8Array(asset), (uri) =>
         }
     )
 ).then((result) => {
-    // Validation report in object form
+    // [result] will contain validation report in object form.
+    // You can convert it to JSON to see its internal structure. 
     console.log(JSON.stringify(result, null, '  '));
 }, (result) => {
-    // Validation exception
+    // Promise rejection means that validator was unable 
+    // to detect file format (glTF or GLB) or has encountered an internal error. 
+    // [result] will contain exception object.
     console.error(result.toString());
 });
+```

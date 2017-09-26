@@ -73,8 +73,8 @@ void npm() {
   new File(p.join(destDir, 'package.json'))
       .writeAsStringSync((const JsonEncoder.withIndent('    ')).convert(json));
 
-  copy(new File(p.join(sourceDir, 'demo.js')), dir);
   copy(new File(p.join(sourceDir, 'index.js')), dir);
+  copy(new File(p.join(sourceDir, 'README.md')), dir);
   copy(new File('LICENSE'), dir);
   copy(new File('3RD_PARTY'), dir);
 }
