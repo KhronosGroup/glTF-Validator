@@ -21,7 +21,7 @@ validator.validate(filename, new Uint8Array(asset), (uri) =>
     )
 ).then((result) => {
     // Validation report in object form
-    console.log(JSON.stringify(result));
+    console.log(JSON.stringify(result, null, '  '));
 }, (result) => {
     // Validation exception
     console.error(result.toString());

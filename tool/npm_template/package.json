@@ -1,6 +1,6 @@
 {
     "name": "gltf-validator",
-    "description": "Library for validating glTF 2.0 assets, compiled to JS.",
+    "description": "Library for validating glTF 2.0 assets, compiled from Dart to JS.",
     "license": "Apache-2.0",
     "bugs": "https://github.com/KhronosGroup/glTF-Validator/issues",
     "homepage": "https://github.com/KhronosGroup/glTF-Validator",
