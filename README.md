@@ -60,6 +60,26 @@ Shell return code will be non-zero if at least one error was found.
 -w, --[no-]warnings              Print warnings to plain text output.
 ```
 
+## Building
+
+### Dart Snapshot
+To build application snapshot for more convenient deployment, follow these steps after installation:
+1. Run `pub run grinder snapshot`.
+2. Snapshot will be written to `build/gltf_validator.snapshot`.
+
+It may be used like this:
+```
+$ dart gltf_validator.snapshot -r -p -w ./path_to_models/
+```
+Note, that you have to use the same Dart SDK version for building and running the snapshot. For deployment, you will need only two files: application snapshot and `dart` executable.
+
+### NPM Package
+To build an npm package for use in Node.js environment, follow these steps after installation:
+1. Run `pub run grinder npm`.
+2. `gltf-validator` npm package will be written to `build/npm`.
+
+Refer to [npm package README.md](tool/npm_template/README.md) for additional information.
+
 ## Known Issues
 
 - Web version can't differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
