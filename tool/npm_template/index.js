@@ -23,10 +23,19 @@ const validator = require('./gltf_validator.dart.js');
  */
 
 /**
- * Validates an asset.
+ * Validates an asset from bytes.
  * @param {string} name - URI or other ID.
  * @param {Uint8Array} data - Byte array containing glTF or GLB data.
  * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
  * @returns {Promise} Promise with validation result in object form.
  */
-exports.validate = (name, data, loadExternalResource) => validator.validate(name, data, loadExternalResource);
+exports.validateBytes = (name, data, loadExternalResource) => validator.validateBytes(name, data, loadExternalResource);
+
+/**
+ * Validates an asset from JSON string.
+ * @param {string} name - URI or other ID.
+ * @param {string} json - String containing glTF JSON.
+ * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
+ * @returns {Promise} Promise with validation result in object form.
+ */
+exports.validateString = (name, json, loadExternalResource) => validator.validateString(name, json, loadExternalResource);

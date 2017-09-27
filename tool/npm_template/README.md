@@ -12,7 +12,7 @@ const validator = require('./index.js');
 const filename = __dirname + '/Box.gltf';
 const asset = fs.readFileSync(filename);
 
-validator.validate(filename, new Uint8Array(asset), (uri) =>
+validator.validateBytes(filename, new Uint8Array(asset), (uri) =>
     new Promise((resolve, reject) => {
             uri = path.resolve(path.dirname(filename), uri);
             console.info("Loading external file: " + uri);

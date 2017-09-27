@@ -39,8 +39,13 @@ abstract class Promise<T> {
 @anonymous
 abstract class Exports {
   // ignore: avoid_setters_without_getters
-  external set validate(
+  external set validateBytes(
       Promise v(String filename, Uint8List data,
+          GetResourceCallback getResourceCallback));
+
+  // ignore: avoid_setters_without_getters
+  external set validateString(
+      Promise v(String filename, String json,
           GetResourceCallback getResourceCallback));
 }
 
@@ -48,16 +53,24 @@ abstract class Exports {
 external Exports get exports;
 
 void main() {
-  exports.validate = allowInterop(
+  exports.validateBytes = allowInterop(
       (String filename, Uint8List data, GetResourceCallback getResource) =>
           new Promise<Object>(allowInterop((resolve, reject) {
-            validate(filename, data, getResource).then((result) {
+            validateBytes(filename, data, getResource).then((result) {
+              resolve(jsify(result));
+            }, onError: reject);
+          })));
+
+  exports.validateString = allowInterop(
+      (String filename, String json, GetResourceCallback getResource) =>
+          new Promise<Object>(allowInterop((resolve, reject) {
+            validateString(filename, json, getResource).then((result) {
               resolve(jsify(result));
             }, onError: reject);
           })));
 }
 
-Future<Map<String, dynamic>> validate(
+Future<Map<String, dynamic>> validateBytes(
     String filename, Uint8List data, GetResourceCallback getResource) async {
   final context = new Context();
 
@@ -69,6 +82,22 @@ Future<Map<String, dynamic>> validate(
   } on GltfDataInvalid {
     rethrow;
   }
+
+  final validationResult =
+      new ValidationResult(new Uri(path: filename), context, readerResult);
+
+  if (readerResult?.gltf != null) {
+    await getResourcesLoader(context, readerResult, getResource).load();
+  }
+
+  return validationResult.toJson();
+}
+
+Future<Map<String, dynamic>> validateString(
+    String filename, String json, GetResourceCallback getResource) async {
+  final context = new Context();
+
+  final readerResult = GltfReader.readFromJsonString(json, context);
 
   final validationResult =
       new ValidationResult(new Uri(path: filename), context, readerResult);
