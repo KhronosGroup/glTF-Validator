@@ -86,7 +86,7 @@ Future<Null> run(List<String> args) async {
       final reportPath = '${path.withoutExtension(absolutePath)}_report.json';
 
       // ignore: unawaited_futures
-      new File(reportPath).writeAsString(kJsonEncoder.convert(result));
+      new File(reportPath).writeAsString(kJsonEncoder.convert(result.toMap()));
 
       if (plainText &&
           result != null &&

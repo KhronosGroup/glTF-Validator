@@ -30,7 +30,7 @@ class ValidationResult {
 
   ValidationResult(this.absoluteUri, this.context, this.readerResult);
 
-  Map<String, Object> toJson() {
+  Map<String, Object> toMap() {
     final reportMap = <String, Object>{
       URI: absoluteUri.toString(),
       MIME_TYPE: readerResult?.mimeType

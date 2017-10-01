@@ -52,7 +52,7 @@ void main() {
       ..remove('hover')
       ..add('drop');
 
-    final reports = <ValidationResult>[];
+    final reports = <Map<String, Object>>[];
 
     // Workaround for dart-sdk#26945
     final iterator = e.dataTransfer.files.iterator;
@@ -115,14 +115,14 @@ void main() {
                   externalStreamFetch: (uri) => null);
 
           resourcesLoader.load().then((_) {
-            reports.add(validationResult);
+            reports.add(validationResult.toMap());
             checkNext();
           }, onError: () {
-            reports.add(validationResult);
+            reports.add(validationResult.toMap());
             checkNext();
           });
         } else {
-          reports.add(validationResult);
+          reports.add(validationResult.toMap());
           checkNext();
         }
       });

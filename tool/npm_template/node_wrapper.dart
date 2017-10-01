@@ -90,14 +90,14 @@ Future<Map<String, dynamic>> validateBytes(
     await getResourcesLoader(context, readerResult, getResource).load();
   }
 
-  return validationResult.toJson();
+  return validationResult.toMap();
 }
 
 Future<Map<String, dynamic>> validateString(
     String filename, String json, GetResourceCallback getResource) async {
   final context = new Context();
 
-  final readerResult = GltfReader.readFromJsonString(json, context);
+  final readerResult = GltfJsonReader.readFromJsonString(json, context);
 
   final validationResult =
       new ValidationResult(new Uri(path: filename), context, readerResult);
@@ -106,7 +106,7 @@ Future<Map<String, dynamic>> validateString(
     await getResourcesLoader(context, readerResult, getResource).load();
   }
 
-  return validationResult.toJson();
+  return validationResult.toMap();
 }
 
 ResourcesLoader getResourcesLoader(Context context,

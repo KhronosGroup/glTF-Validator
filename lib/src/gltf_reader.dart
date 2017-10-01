@@ -85,23 +85,6 @@ abstract class GltfReader {
     return completer.future;
   }
 
-  static GltfReaderResult readFromJsonString(String json, Context context) {
-    Object parsedJson;
-    try {
-      parsedJson = JSON.decode(json);
-    } on FormatException catch (e) {
-      context.addIssue(SchemaError.invalidJson, args: [e]);
-    }
-    if (parsedJson is Map<String, Object>) {
-      final root = new Gltf.fromMap(parsedJson, context);
-      return new GltfReaderResult('model/gltf+json', root, null);
-    } else {
-      context.addIssue(SchemaError.typeMismatch,
-          args: [parsedJson, 'JSON object']);
-      return null;
-    }
-  }
-
   Future<GltfReaderResult> read();
 
   Context get context;
@@ -177,6 +160,23 @@ class GltfJsonReader implements GltfReader {
   void _abort() {
     _subscription.cancel();
     _completer.complete();
+  }
+
+  static GltfReaderResult readFromJsonString(String json, Context context) {
+    Object parsedJson;
+    try {
+      parsedJson = JSON.decode(json);
+    } on FormatException catch (e) {
+      context.addIssue(SchemaError.invalidJson, args: [e]);
+    }
+    if (parsedJson is Map<String, Object>) {
+      final root = new Gltf.fromMap(parsedJson, context);
+      return new GltfReaderResult('model/gltf+json', root, null);
+    } else {
+      context.addIssue(SchemaError.typeMismatch,
+          args: [parsedJson, 'JSON object']);
+      return null;
+    }
   }
 }
 
