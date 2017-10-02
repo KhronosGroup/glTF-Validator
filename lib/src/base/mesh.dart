@@ -403,8 +403,8 @@ class MeshPrimitive extends GltfProperty {
                   name: semantic);
             } else {
               if (context.validate) {
-                if (semantic == POSITION && (baseAccessor.min == null) ||
-                    baseAccessor.max == null) {
+                if (semantic == POSITION &&
+                    ((baseAccessor.min == null) || baseAccessor.max == null)) {
                   context.addIssue(
                       LinkError.meshPrimitivePositionAccessorWithoutBounds,
                       name: POSITION);
