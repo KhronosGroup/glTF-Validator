@@ -397,38 +397,13 @@ class MeshPrimitive extends GltfProperty {
             context.addIssue(LinkError.unresolvedReference,
                 name: semantic, args: [accessorIndex]);
           } else {
-            final baseAccessor = attributes[semantic];
-            if (baseAccessor == null) {
-              context.addIssue(LinkError.meshPrimitiveMorphTargetNoBaseAccessor,
-                  name: semantic);
-            } else {
-              if (context.validate) {
-                if (semantic == POSITION &&
-                    ((baseAccessor.min == null) || baseAccessor.max == null)) {
-                  context.addIssue(
-                      LinkError.meshPrimitivePositionAccessorWithoutBounds,
-                      name: POSITION);
-                }
-
-                final format = new AccessorFormat.fromAccessor(accessor);
-                final validFormats = MORPH_ATTRIBUTES_ACCESSORS[semantic];
-
-                if (validFormats != null && !validFormats.contains(format)) {
-                  context.addIssue(
-                      LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-                      name: semantic,
-                      args: [validFormats, format]);
-                }
-
-                if ((accessor.byteOffset != -1 &&
-                        accessor.byteOffset % 4 != 0) ||
-                    (accessor.elementLength % 4 != 0 &&
-                        accessor.bufferView != null &&
-                        accessor.bufferView.byteStride == -1)) {
-                  context.addIssue(LinkError.meshPrimitiveAccessorUnaligned,
-                      name: semantic);
-                }
-
+            if (context.validate) {
+              final baseAccessor = attributes[semantic];
+              if (baseAccessor == null) {
+                context.addIssue(
+                    LinkError.meshPrimitiveMorphTargetNoBaseAccessor,
+                    name: semantic);
+              } else {
                 if (baseAccessor.count != accessor.count) {
                   context.addIssue(
                       LinkError.meshPrimitiveMorphTargetInvalidAttributeCount,
@@ -436,19 +411,44 @@ class MeshPrimitive extends GltfProperty {
                 }
               }
 
+              if (semantic == POSITION &&
+                  ((accessor.min == null) || accessor.max == null)) {
+                context.addIssue(
+                    LinkError.meshPrimitivePositionAccessorWithoutBounds,
+                    name: POSITION);
+              }
+
+              final format = new AccessorFormat.fromAccessor(accessor);
+              final validFormats = MORPH_ATTRIBUTES_ACCESSORS[semantic];
+
+              if (validFormats != null && !validFormats.contains(format)) {
+                context.addIssue(
+                    LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
+                    name: semantic,
+                    args: [validFormats, format]);
+              }
+
+              if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
+                  (accessor.elementLength % 4 != 0 &&
+                      accessor.bufferView != null &&
+                      accessor.bufferView.byteStride == -1)) {
+                context.addIssue(LinkError.meshPrimitiveAccessorUnaligned,
+                    name: semantic);
+              }
+            }
+
               // Mandatory checks even with disabled
               // validation to always set `effectiveByteStride`
 
-              if (accessor.bufferView != null &&
-                  accessor.bufferView.byteStride == -1) {
-                if (accessor.bufferView.effectiveByteStride == -1) {
-                  accessor.bufferView.effectiveByteStride =
-                      accessor.elementLength;
-                }
-
-                accessor.bufferView
-                    .checkAccessorRefs(accessor, semantic, context);
+            if (accessor.bufferView != null &&
+                accessor.bufferView.byteStride == -1) {
+              if (accessor.bufferView.effectiveByteStride == -1) {
+                accessor.bufferView.effectiveByteStride =
+                    accessor.elementLength;
               }
+
+              accessor.bufferView
+                  .checkAccessorRefs(accessor, semantic, context);
             }
           }
 
