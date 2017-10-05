@@ -22,7 +22,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:mirrors';
 
+import 'package:gltf/src/errors.dart';
 import 'package:grinder/grinder.dart';
 import 'package:node_preamble/preamble.dart' as preamble;
 import 'package:path/path.dart' as p;
@@ -33,6 +35,52 @@ final String _version =
 
 Future main(List<String> args) => grind(args);
 
+@Task('Generate ISSUES.md')
+void issues() {
+  final sb = new StringBuffer('# glTF 2.0 Validation Issues\n');
+
+  String severityToMdString(Severity severity) {
+    switch (severity) {
+      case Severity.Error:
+        return 'Error';
+      case Severity.Warning:
+        return 'Warning';
+      default:
+        return null;
+    }
+  }
+
+  var total = 0;
+  void processErrorClass(Type type) {
+    final errorClassMirror = reflectClass(type);
+    sb
+      ..writeln('## ${errorClassMirror.reflectedType}')
+      ..writeln('| No | Name | Message | Severity |')
+      ..writeln('|:---:|-----|---------|----------|');
+
+    var i = 0;
+    final args = ['%1', '%2', '%3', '%4'];
+    for (final symbol in errorClassMirror.staticMembers.keys) {
+      final Object issueType = errorClassMirror.getField(symbol).reflectee;
+      if (issueType is IssueType) {
+        sb.writeln('|${++i}|${issueType.code}|${issueType.message(args)}|'
+            '${severityToMdString(issueType.severity)}');
+      }
+    }
+    total += i;
+  }
+
+  processErrorClass(IoError);
+  processErrorClass(SchemaError);
+  processErrorClass(SemanticError);
+  processErrorClass(LinkError);
+  processErrorClass(DataError);
+  processErrorClass(GlbError);
+
+  new File('ISSUES.md').writeAsStringSync(sb.toString(), flush: true);
+  log('Total number of issues: $total');
+}
+
 @Task('Build Dart snapshot.')
 void snapshot() {
   _ensureBuild();
@@ -40,6 +88,7 @@ void snapshot() {
       vmArgs: ['--snapshot=build/gltf_validator.snapshot']);
 }
 
+@Depends(issues)
 @Task('Build an npm package.')
 void npm() {
   _ensureBuild();
@@ -76,6 +125,7 @@ void npm() {
 
   copy(new File(p.join(sourceDir, 'index.js')), dir);
   copy(new File(p.join(sourceDir, 'README.md')), dir);
+  copy(new File('ISSUES.md'), dir);
   copy(new File('LICENSE'), dir);
   copy(new File('3RD_PARTY'), dir);
 }

@@ -80,6 +80,11 @@ To build an npm package for use in Node.js environment, follow these steps after
 
 Refer to [npm package README.md](tool/npm_template/README.md) for additional information.
 
+### Validation Issues List
+To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
+1. Run `pub run grinder issues`.
+2. `ISSUES.md` file will be written to the repo root.
+
 ## Known Issues
 
 - Web version can't differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
