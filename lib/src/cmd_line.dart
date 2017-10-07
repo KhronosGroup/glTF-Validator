@@ -125,6 +125,8 @@ Future<Null> run(List<String> args) async {
           if (hasErrors) {
             foundErrors = true;
           }
+        }).whenComplete(() {
+          spawn();
           if (--activeTasks == 0) {
             watch.stop();
             errPipe.write('Elapsed: ${watch.elapsedMilliseconds}ms\n');
@@ -132,7 +134,7 @@ Future<Null> run(List<String> args) async {
               exitCode = kErrorCode;
             }
           }
-        }).whenComplete(spawn);
+        });
       }
     }
 
