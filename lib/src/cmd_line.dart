@@ -24,31 +24,55 @@ import 'package:args/args.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart';
+import 'package:isolate/load_balancer.dart';
+import 'package:isolate/isolate_runner.dart';
 import 'package:path/path.dart' as path;
-
-ArgResults argResult;
 
 StringSink outPipe = stdout;
 StringSink errPipe = stderr;
 
-Future<Null> run(List<String> args) async {
-  const kWarnings = 'warnings';
-  const kValidateResources = 'validate-resources';
-  const kPlainText = 'plain-text';
+class ValidationOptions {
+  static const String kWarnings = 'warnings';
+  static const String kValidateResources = 'validate-resources';
+  static const String kPlainText = 'plain-text';
 
+  final bool validateResources;
+  final bool plainText;
+  final bool printWarnings;
+
+  ValidationOptions(
+      {this.validateResources: false,
+      this.plainText: false,
+      this.printWarnings: false});
+
+  factory ValidationOptions.fromArgs(ArgResults args) => new ValidationOptions(
+      validateResources: args[kValidateResources] == true,
+      plainText: args[kPlainText] == true,
+      printWarnings: args[kWarnings] == true);
+}
+
+class ValidationTask {
+  final String filename;
+  final ValidationOptions options;
+
+  ValidationTask(this.filename, this.options);
+}
+
+Future<Null> run(List<String> args) async {
   const kErrorCode = 1;
 
+  ArgResults argResult;
   final parser = new ArgParser()
-    ..addFlag(kValidateResources,
+    ..addFlag(ValidationOptions.kValidateResources,
         abbr: 'r',
         help: 'Validate contents of embedded and/or '
             'referenced resources (buffers, images).',
         defaultsTo: false)
-    ..addFlag(kPlainText,
+    ..addFlag(ValidationOptions.kPlainText,
         abbr: 'p',
         help: 'Print issues in plain text form to stderr.',
         defaultsTo: false)
-    ..addFlag(kWarnings,
+    ..addFlag(ValidationOptions.kWarnings,
         abbr: 'w',
         help: 'Print warnings to plain text output.',
         defaultsTo: false);
@@ -59,77 +83,102 @@ Future<Null> run(List<String> args) async {
 
   if (argResult?.rest?.length != 1) {
     errPipe
-      ..writeln('Usage: gltf_validator [<options>] <input>')
-      ..writeln()
-      ..writeln('Validation report will be written to '
-          '`<asset_filename>_report.json`.')
-      ..writeln('If <input> is a directory, '
-          'validation reports will be recursively created for each glTF asset.')
-      ..writeln()
-      ..writeln('Validation log will be printed to stderr.')
-      ..writeln()
-      ..writeln('Shell return code will be non-zero '
-          'if at least one error was found.')
+      ..write('Usage: gltf_validator [<options>] <input>\n\n'
+          'Validation report will be written to '
+          '`<asset_filename>_report.json`.\n'
+          'If <input> is a directory, '
+          'validation reports will be recursively created for each glTF asset.\n\n'
+          'Validation log will be printed to stderr.\n\n'
+          'Shell return code will be non-zero '
+          'if at least one error was found.\n')
       ..writeln(parser.usage);
     exitCode = kErrorCode;
-  } else {
-    final validateResources = argResult[kValidateResources] == true;
-    final plainText = argResult[kPlainText] == true;
-    final printWarnings = argResult[kWarnings] == true;
+    return;
+  }
 
-    const kJsonEncoder = const JsonEncoder.withIndent('    ');
+  final input = argResult.rest[0];
+  final options = new ValidationOptions.fromArgs(argResult);
 
-    Future<bool> _processFile(String absolutePath) async {
-      final result =
-          await _validate(absolutePath, validateResources: validateResources);
+  if (FileSystemEntity.isDirectorySync(input)) {
+    final balancer = await LoadBalancer.create(
+        Platform.numberOfProcessors, IsolateRunner.spawn);
 
-      final reportPath = '${path.withoutExtension(absolutePath)}_report.json';
-
-      // ignore: unawaited_futures
-      new File(reportPath).writeAsString(kJsonEncoder.convert(result.toMap()));
-
-      if (plainText &&
-          result != null &&
-          (result.context.errors.isNotEmpty ||
-              result.context.warnings.isNotEmpty)) {
-        _writeIssues(result.context.errors.toList(), 'Errors');
-        if (printWarnings) {
-          _writeIssues(result.context.warnings.toList(), 'Warnings');
-        }
-      }
-
-      return result.context.errors.isNotEmpty;
-    }
-
+    var activeTasks = 0;
     var foundErrors = false;
-    final input = argResult.rest[0];
-    if (FileSystemEntity.isDirectorySync(input)) {
-      final dir = new Directory(input);
+    final watch = new Stopwatch()..start();
 
-      final watch = new Stopwatch();
-      for (var entry in dir.listSync(recursive: true)) {
+    final it = new Directory(input).listSync(recursive: true).where((entry) {
+      if (entry is File) {
         final ext = path.extension(entry.path);
-        if ((ext == '.gltf') || (ext == '.glb')) {
-          watch.start();
-          if (await _processFile(entry.absolute.path)) {
+        return (ext == '.gltf') || (ext == '.glb');
+      }
+      return false;
+    }).iterator;
+
+    void spawn() {
+      if (it.moveNext()) {
+        ++activeTasks;
+        balancer
+            .run(_processFile,
+                new ValidationTask(it.current.absolute.path, options))
+            .then((hasErrors) {
+          if (hasErrors) {
             foundErrors = true;
           }
-          watch.stop();
-        }
+          if (--activeTasks == 0) {
+            watch.stop();
+            errPipe.write('Elapsed: ${watch.elapsedMilliseconds}ms\n');
+            if (foundErrors) {
+              exitCode = kErrorCode;
+            }
+          }
+        }).whenComplete(spawn);
       }
-      errPipe.write('Elapsed: ${watch.elapsedMilliseconds}ms\n');
-    } else if (FileSystemEntity.isFileSync(input)) {
-      if (await _processFile(input)) {
-        foundErrors = true;
-      }
-    } else {
-      errPipe.write('Can not open $input\n');
+    }
+
+    for (var i = 0; i < balancer.length; ++i) {
+      spawn();
+    }
+  } else if (FileSystemEntity.isFileSync(input)) {
+    if (await _processFile(new ValidationTask(input, options))) {
       exitCode = kErrorCode;
     }
-    if (foundErrors) {
-      exitCode = kErrorCode;
+  } else {
+    errPipe.write('Can not open $input\n');
+    exitCode = kErrorCode;
+  }
+}
+
+Future<bool> _processFile(ValidationTask task) async {
+  final result = await _validate(task.filename,
+      validateResources: task.options.validateResources);
+
+  if (result == null) {
+    return true;
+  }
+
+  final reportPath = '${path.withoutExtension(task.filename)}_report.json';
+
+  // ignore: unawaited_futures
+  new File(reportPath).writeAsString(
+      const JsonEncoder.withIndent('    ').convert(result.toMap()));
+
+  final errors = result.context.errors.toList(growable: false);
+
+  if (task.options.plainText) {
+    void writeIssues(List<Issue> issues, String title) {
+      if (issues.isNotEmpty) {
+        errPipe.write('\t$title:\n\t\t${issues.join('\n\t\t')}\n\n');
+      }
+    }
+
+    writeIssues(errors, 'Errors');
+    if (task.options.printWarnings) {
+      writeIssues(result.context.warnings.toList(growable: false), 'Warnings');
     }
   }
+
+  return errors.isNotEmpty;
 }
 
 Future<ValidationResult> _validate(String filename,
@@ -141,17 +190,17 @@ Future<ValidationResult> _validate(String filename,
 
   if (reader == null) {
     final ext = path.extension(filename).toLowerCase();
-    errPipe.write('Unknown file extension `$ext`.\n');
+    errPipe
+      ..write('Error while loading ${file.path}...\n')
+      ..write('Unknown file extension `$ext`.\n');
     return null;
-  } else {
-    errPipe.write('Loading ${file.path}...\n');
   }
 
   GltfReaderResult readerResult;
   try {
     readerResult = await reader.read();
   } on FileSystemException catch (e) {
-    errPipe.writeln(e);
+    errPipe.write('Error while loading ${file.path}...\n$e\n');
     return null;
   }
 
@@ -163,20 +212,11 @@ Future<ValidationResult> _validate(String filename,
         context, validationResult.absoluteUri, readerResult);
     await resourcesLoader.load();
   }
-
-  errPipe.write('Errors: ${context.errors.length}, '
+  errPipe.write('Loaded ${file.path}\n'
+      'Errors: ${context.errors.length}, '
       'Warnings: ${context.warnings.length}\n\n');
 
   return validationResult;
-}
-
-void _writeIssues(List<Issue> issues, String title) {
-  if (issues.isNotEmpty) {
-    errPipe
-      ..write('\t$title:\n\t\t')
-      ..writeAll(issues, '\n\t\t')
-      ..write('\n\n');
-  }
 }
 
 ResourcesLoader getFileResourceValidator(
