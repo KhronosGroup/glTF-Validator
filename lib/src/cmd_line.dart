@@ -152,50 +152,17 @@ Future<Null> run(List<String> args) async {
 }
 
 Future<bool> _processFile(ValidationTask task) async {
-  final result = await _validate(task.filename,
-      validateResources: task.options.validateResources);
-
-  if (result == null) {
-    return true;
-  }
-
-  final reportPath = '${path.withoutExtension(task.filename)}_report.json';
-
-  // ignore: unawaited_futures
-  new File(reportPath).writeAsString(
-      const JsonEncoder.withIndent('    ').convert(result.toMap()));
-
-  final errors = result.context.errors.toList(growable: false);
-
-  if (task.options.plainText) {
-    void writeIssues(List<Issue> issues, String title) {
-      if (issues.isNotEmpty) {
-        errPipe.write('\t$title:\n\t\t${issues.join('\n\t\t')}\n\n');
-      }
-    }
-
-    writeIssues(errors, 'Errors');
-    if (task.options.printWarnings) {
-      writeIssues(result.context.warnings.toList(growable: false), 'Warnings');
-    }
-  }
-
-  return errors.isNotEmpty;
-}
-
-Future<ValidationResult> _validate(String filename,
-    {bool validateResources: false}) async {
-  final file = new File(filename);
+  final file = new File(task.filename);
 
   final context = new Context();
-  final reader = new GltfReader.filename(file.openRead(), filename, context);
+  final reader =
+      new GltfReader.filename(file.openRead(), task.filename, context);
 
   if (reader == null) {
-    final ext = path.extension(filename).toLowerCase();
-    errPipe
-      ..write('Error while loading ${file.path}...\n')
-      ..write('Unknown file extension `$ext`.\n');
-    return null;
+    final ext = path.extension(task.filename).toLowerCase();
+    errPipe.write('Error while loading ${file.path}...\n'
+        'Unknown file extension `$ext`.\n');
+    return true;
   }
 
   GltfReaderResult readerResult;
@@ -203,22 +170,47 @@ Future<ValidationResult> _validate(String filename,
     readerResult = await reader.read();
   } on FileSystemException catch (e) {
     errPipe.write('Error while loading ${file.path}...\n$e\n');
-    return null;
+    return true;
   }
 
   final validationResult =
-      new ValidationResult(new Uri.file(filename), context, readerResult);
+      new ValidationResult(new Uri.file(task.filename), context, readerResult);
 
-  if (readerResult?.gltf != null && validateResources) {
+  if (readerResult?.gltf != null && task.options.validateResources) {
     final resourcesLoader = getFileResourceValidator(
         context, validationResult.absoluteUri, readerResult);
     await resourcesLoader.load();
   }
-  errPipe.write('Loaded ${file.path}\n'
-      'Errors: ${context.errors.length}, '
-      'Warnings: ${context.warnings.length}\n\n');
 
-  return validationResult;
+  final sb = new StringBuffer()
+    ..write('Loaded ${file.path}\n'
+        'Errors: ${context.errors.length}, '
+        'Warnings: ${context.warnings.length}\n\n');
+
+  final reportPath = '${path.withoutExtension(task.filename)}_report.json';
+
+  // ignore: unawaited_futures
+  new File(reportPath).writeAsString(
+      const JsonEncoder.withIndent('    ').convert(validationResult.toMap()));
+
+  final errors = validationResult.context.errors.toList(growable: false);
+
+  if (task.options.plainText) {
+    void writeIssues(List<Issue> issues, String title) {
+      if (issues.isNotEmpty) {
+        sb.write('\t$title:\n\t\t${issues.join('\n\t\t')}\n\n');
+      }
+    }
+
+    writeIssues(errors, 'Errors');
+    if (task.options.printWarnings) {
+      writeIssues(validationResult.context.warnings.toList(growable: false),
+          'Warnings');
+    }
+  }
+  errPipe.write(sb.toString());
+
+  return errors.isNotEmpty;
 }
 
 ResourcesLoader getFileResourceValidator(
