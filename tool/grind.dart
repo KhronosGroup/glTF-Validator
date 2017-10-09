@@ -130,6 +130,12 @@ void npm() {
   copy(new File('3RD_PARTY'), dir);
 }
 
+@Depends(npm)
+@Task('Publish package to npm.')
+void npmPublish() {
+  log(run('npm', arguments: ['publish'], workingDirectory: 'build/npm'));
+}
+
 /// Ensure that the `build/` directory exists.
 void _ensureBuild() {
   new Directory('build').createSync(recursive: true);

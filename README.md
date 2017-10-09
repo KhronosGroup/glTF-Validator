@@ -80,6 +80,11 @@ To build an npm package for use in Node.js environment, follow these steps after
 
 Refer to [npm package README.md](tool/npm_template/README.md) for additional information.
 
+#### Publishing
+To publish an npm package, follow these steps after installation:
+1. Run `pub run grinder npm-publish`.
+2. `gltf-validator` npm package will be built to `build/npm` and published to npm registry using `npm publish`.
+
 ### Validation Issues List
 To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
 1. Run `pub run grinder issues`.
