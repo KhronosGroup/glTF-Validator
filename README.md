@@ -45,6 +45,18 @@ You can use hosted [web front-end tool](http://github.khronos.org/glTF-Validator
 2. From the repository root folder, run `pub get` to get dependencies.
 3. Run `pub global activate --source path ./` to add `gltf_validator` executable to your PATH.
 
+##### Installing from behind corporate firewall
+`pub get` downloads dependencies from Google's `pub.dartlang.org` server over HTTPS. If you need to specify a proxy, follow these steps:
+1. Set `https_proxy` environment variable in form `hostname:port`.
+2. If the proxy requires credentials, use this syntax: `username:password@hostname:port`.
+
+`pub get` validates server's SSL certificate. If your corporate network interferes with SSL connections, follow these steps to get `pub` running.
+1. Save your corporate self-signed root certificate as X.509 file.
+2. (Linux only) Try to add your cert to `/etc/pki/tls/certs/ca-bundle.crt` or `/etc/ssl/certs`.
+3. If that doesn't work or if you're on Windows, add environmental variable `DART_VM_OPTIONS` with value `--root-certs-file=<cert_file>`.
+
+After doing this, `pub get` should be able to download dependencies successfully.
+
 #### Usage
 ```
 Usage: gltf_validator [<options>] <input>
