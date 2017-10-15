@@ -25,14 +25,25 @@ import 'ext/extensions.dart';
 
 class Context {
   final bool validate;
+  final int maxIssues;
+  final Set<String> ignoredIssues = new Set<String>();
+  final Map<String, Severity> severityOverrides;
 
   final List<String> path = <String>[];
 
-  Context({this.validate: true}) {
+  Context(
+      {this.validate: true,
+      this.maxIssues: 0,
+      List<String> ignoredIssues,
+      this.severityOverrides}) {
     _extensionsLoadedView = new UnmodifiableListView(_extensionsLoaded);
     _extensionsUsedView = new UnmodifiableListView(_extensionsUsed);
     _extensionsFunctionsView = new UnmodifiableMapView(_extensionsFunctions);
     _resourcesView = new UnmodifiableListView(_resources);
+
+    if (ignoredIssues != null) {
+      this.ignoredIssues.addAll(ignoredIssues);
+    }
   }
 
   final Map<ExtensionTuple, ExtFuncs> _extensionsFunctions =
@@ -57,13 +68,41 @@ class Context {
 
   final List<Issue> _issues = <Issue>[];
 
-  Iterable<Issue> get errors =>
-      _issues.where((issue) => issue.type.severity == Severity.Error);
+  List<Issue> get issues => _issues;
 
-  Iterable<Issue> get warnings =>
-      _issues.where((issue) => issue.type.severity == Severity.Warning);
+  Iterable<Issue> get errors => getErrors();
 
-  String get pathString => (['#']..addAll(path)).join('/');
+  List<Issue> getErrors() =>
+      _issues.where((issue) => issue.severity == Severity.Error).toList();
+
+  Iterable<Issue> get warnings => getWarnings();
+
+  List<Issue> getWarnings() =>
+      _issues.where((issue) => issue.severity == Severity.Warning).toList();
+
+  List<Issue> getInfos() =>
+      _issues.where((issue) => issue.severity == Severity.Information).toList();
+
+  List<Issue> getHints() =>
+      _issues.where((issue) => issue.severity == Severity.Hint).toList();
+
+  String getPointerString([String token]) {
+    if (path.isEmpty) {
+      return token == null ? '/' : '/$token';
+    }
+
+    var i = 0;
+    final sb = new StringBuffer('/')..write(path[0]);
+    while (++i < path.length) {
+      sb..write('/')..write(path[i]);
+    }
+
+    if (token != null) {
+      sb..write('/')..write(token);
+    }
+
+    return sb.toString();
+  }
 
   void registerExtensions(List<Extension> userExtensions) {
     _userExtensions.addAll(userExtensions);
@@ -94,13 +133,31 @@ class Context {
 
   void addIssue(IssueType issueType,
       {String name, List<Object> args, int offset, int index}) {
-    final token = index != null ? index.toString() : name;
-    final path = offset != null
-        ? '@$offset'
-        : token != null ? '$pathString/$token' : pathString;
+    if (ignoredIssues.contains(issueType.code)) {
+      return;
+    }
 
-    _issues.add(new Issue(issueType, path, args));
+    if (maxIssues > 0 && _issues.length == maxIssues) {
+      throw const IssuesLimitExceededException();
+    }
+
+    final severityOverride =
+        (severityOverrides != null) ? severityOverrides[issueType.code] : null;
+
+    if (offset != null) {
+      _issues.add(new Issue(issueType, args,
+          offset: offset, severityOverride: severityOverride));
+    } else {
+      final token = index != null ? index.toString() : name;
+      _issues.add(new Issue(issueType, args,
+          pointer: getPointerString(token),
+          severityOverride: severityOverride));
+    }
   }
 
   void addResource(Map<String, Object> info) => _resources.add(info);
+}
+
+class IssuesLimitExceededException implements Exception {
+  const IssuesLimitExceededException();
 }

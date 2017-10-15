@@ -94,8 +94,8 @@ class Skin extends GltfChildOfRootProperty {
             context.addIssue(LinkError.skinIbmInvalidFormat,
                 name: INVERSE_BIND_MATRICES,
                 args: [
-                  [SKIN_IBM_FORMAT],
-                  format
+                  format,
+                  [SKIN_IBM_FORMAT]
                 ]);
           }
 

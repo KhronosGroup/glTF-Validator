@@ -24,18 +24,26 @@ const validator = require('./gltf_validator.dart.js');
 
 /**
  * Validates an asset from bytes.
- * @param {string} name - URI or other ID.
+ * @param {string} name - URI or other ID. Will appear as `uri` in validation report.
  * @param {Uint8Array} data - Byte array containing glTF or GLB data.
  * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
+ * @param {number} maxIssues - Max number of reported issues. Use `0` for unlimited output.
+ * @param {string[]} ignoredIssues - Array of ignored issue codes
+ * @param {Object} severityOverrides - Object with overridden severities for issue codes
  * @returns {Promise} Promise with validation result in object form.
  */
-exports.validateBytes = (name, data, loadExternalResource) => validator.validateBytes(name, data, loadExternalResource);
+exports.validateBytes = (name, data, loadExternalResource, maxIssues, ignoredIssues, severityOverrides) =>
+    validator.validateBytes(name, data, loadExternalResource, maxIssues, ignoredIssues, severityOverrides);
 
 /**
  * Validates an asset from JSON string.
- * @param {string} name - URI or other ID.
+ * @param {string} name - URI or other ID. Will appear as `uri` in validation report.
  * @param {string} json - String containing glTF JSON.
  * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
+ * @param {number} maxIssues - Max number of reported issues. Use `0` for unlimited output.
+ * @param {string[]} ignoredIssues - Array of ignored issue codes
+ * @param {Object} severityOverrides - Object with overridden severities for issue codes
  * @returns {Promise} Promise with validation result in object form.
  */
-exports.validateString = (name, json, loadExternalResource) => validator.validateString(name, json, loadExternalResource);
+exports.validateString = (name, json, loadExternalResource, maxIssues, ignoredIssues, severityOverrides) =>
+    validator.validateString(name, json, loadExternalResource, maxIssues, ignoredIssues, severityOverrides);

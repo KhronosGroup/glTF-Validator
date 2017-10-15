@@ -295,7 +295,7 @@ class MeshPrimitive extends GltfProperty {
               context.addIssue(
                   LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
                   name: semantic,
-                  args: [validFormats, format]);
+                  args: [format, validFormats]);
             }
 
             if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
@@ -357,7 +357,7 @@ class MeshPrimitive extends GltfProperty {
             context.addIssue(
                 LinkError.meshPrimitiveIndicesAccessorInvalidFormat,
                 name: INDICES,
-                args: [MESH_PRIMITIVE_INDICES_FORMATS, format]);
+                args: [format, MESH_PRIMITIVE_INDICES_FORMATS]);
           }
         }
       }
@@ -425,7 +425,7 @@ class MeshPrimitive extends GltfProperty {
                 context.addIssue(
                     LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
                     name: semantic,
-                    args: [validFormats, format]);
+                    args: [format, validFormats]);
               }
 
               if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
@@ -437,8 +437,8 @@ class MeshPrimitive extends GltfProperty {
               }
             }
 
-              // Mandatory checks even with disabled
-              // validation to always set `effectiveByteStride`
+            // Mandatory checks even with disabled
+            // validation to always set `effectiveByteStride`
 
             if (accessor.bufferView != null &&
                 accessor.bufferView.byteStride == -1) {

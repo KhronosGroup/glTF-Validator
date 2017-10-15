@@ -82,7 +82,10 @@ void main() {
         ..path.add('0')
         ..addIssue(LinkError.skinIbmInvalidFormat,
             name: 'inverseBindMatrices',
-            args: ['[{MAT4, FLOAT}]', '{MAT3, FLOAT}'])
+            args: [
+              '{MAT3, FLOAT}',
+              ['{MAT4, FLOAT}']
+            ])
         ..addIssue(LinkError.invalidIbmAccessorCount,
             name: 'inverseBindMatrices', args: [2, 3]);
 

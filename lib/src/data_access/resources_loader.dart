@@ -27,6 +27,41 @@ import 'package:meta/meta.dart';
 typedef Stream<List<int>> SequentialFetchFunction(Uri uri);
 typedef FutureOr<List<int>> BytesFetchFunction(Uri uri);
 
+enum _Storage { Base64, BufferView, GLB, External }
+
+class ResourceInfo {
+  final String pointer;
+  String mimeType;
+  _Storage storage;
+  int byteLength;
+  String uri;
+  ImageInfo image;
+
+  ResourceInfo(this.pointer);
+
+  Map<String, Object> toMap() {
+    assert(pointer != null && storage != null);
+    const storageString = const <String>[
+      'base64',
+      'bufferView',
+      'glb',
+      'external'
+    ];
+
+    final map = <String, Object>{
+      'pointer': pointer,
+      'mimeType': mimeType,
+      'storage': storageString[storage.index]
+    };
+
+    addToMapIfNotNull(map, 'uri', uri);
+    addToMapIfNotNull(map, 'byteLength', byteLength);
+    addToMapIfNotNull(map, 'image', image?.toMap());
+
+    return map;
+  }
+}
+
 class ResourcesLoader {
   final Gltf gltf;
   final Context context;
@@ -38,10 +73,14 @@ class ResourcesLoader {
       {@required this.externalBytesFetch, @required this.externalStreamFetch});
 
   Future<Null> load() async {
-    await _loadBuffers();
-    await _loadImages();
-    if (context.validate) {
-      validateAccessorsData(gltf, context);
+    try {
+      await _loadBuffers();
+      await _loadImages();
+      if (context.validate) {
+        validateAccessorsData(gltf, context);
+      }
+    } on IssuesLimitExceededException catch (_) {
+      return null;
     }
   }
 
@@ -54,22 +93,24 @@ class ResourcesLoader {
       final buffer = gltf.buffers[i];
       context.path.add(i.toString());
 
-      final infoMap = <String, Object>{
-        'id': context.pathString,
-        MIME_TYPE: 'application/octet-stream'
-      };
+      final info = new ResourceInfo(context.getPointerString())
+        ..mimeType = APPLICATION_GLTF_BUFFER;
 
       FutureOr<List<int>> _fetchBuffer(Buffer buffer) {
         if (buffer.extensions.isEmpty) {
           if (buffer.uri != null) {
             // External fetch
+            info
+              ..storage = _Storage.External
+              ..uri = buffer.uri.toString();
             return externalBytesFetch(buffer.uri);
           } else if (buffer.data != null) {
             // Data URI
+            info.storage = _Storage.Base64;
             return buffer.data;
           } else {
             // GLB Buffer
-            infoMap['GLB'] = true;
+            info.storage = _Storage.GLB;
             return externalBytesFetch(null);
           }
         } else {
@@ -86,7 +127,7 @@ class ResourcesLoader {
       }
 
       if (data != null) {
-        infoMap[BYTE_LENGTH] = data.length;
+        info.byteLength = data.length;
         if (data.length < buffer.byteLength) {
           context.addIssue(DataError.bufferExternalBytelengthMismatch,
               args: [data.length, buffer.byteLength]);
@@ -95,7 +136,7 @@ class ResourcesLoader {
           buffer.data ??= data;
         }
       }
-      context.addResource(infoMap);
+      context.addResource(info.toMap());
       context.path.removeLast();
     }
   }
@@ -109,18 +150,23 @@ class ResourcesLoader {
       final image = gltf.images[i];
       context.path.add(i.toString());
 
-      final infoMap = <String, Object>{'id': context.pathString};
+      final resourceInfo = new ResourceInfo(context.getPointerString());
 
       Stream<List<int>> _fetchImageData(Image image) {
         if (image.extensions.isEmpty) {
           if (image.uri != null) {
             // External fetch
+            resourceInfo
+              ..storage = _Storage.External
+              ..uri = image.uri.toString();
             return externalStreamFetch(image.uri);
           } else if (image.data != null && image.mimeType != null) {
             // Data URI, preloaded on phase 2 of GltfLoader
+            resourceInfo.storage = _Storage.Base64;
             return new Stream.fromIterable([image.data]);
           } else if (image.bufferView != null) {
             // BufferView
+            resourceInfo.storage = _Storage.BufferView;
             image.tryLoadFromBufferView();
             if (image.data != null) {
               return new Stream.fromIterable([image.data]);
@@ -149,6 +195,8 @@ class ResourcesLoader {
           context.addIssue(IoError.fileNotFound, args: [e]);
         }
         if (imageInfo != null) {
+          resourceInfo.mimeType = imageInfo.mimeType;
+
           if (context.validate) {
             if (image.mimeType != null &&
                 (image.mimeType != imageInfo.mimeType)) {
@@ -161,12 +209,15 @@ class ResourcesLoader {
                   args: [imageInfo.width, imageInfo.height]);
             }
           }
-          infoMap.addAll(imageInfo.toMap());
 
+          // Store image metadata in glTF image object
           image.info = imageInfo;
+
+          // Store image metadata in ResourceInfo
+          resourceInfo.image = imageInfo;
         }
       }
-      context.addResource(infoMap);
+      context.addResource(resourceInfo.toMap());
       context.path.removeLast();
     }
   }

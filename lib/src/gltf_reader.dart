@@ -116,8 +116,12 @@ class GltfJsonReader implements GltfReader {
     final outSink = new ChunkedConversionSink<Object>.withCallback((json) {
       final result = json[0];
       if (result is Map<String, Object>) {
-        final root = new Gltf.fromMap(result, _context);
-        _completer.complete(new GltfReaderResult(mimeType, root, null));
+        try {
+          final root = new Gltf.fromMap(result, _context);
+          _completer.complete(new GltfReaderResult(mimeType, root, null));
+        } on IssuesLimitExceededException catch (_) {
+          _abort();
+        }
       } else {
         _context
             .addIssue(SchemaError.typeMismatch, args: [result, 'JSON object']);

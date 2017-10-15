@@ -14,18 +14,20 @@ const asset = fs.readFileSync(filename);
 
 validator.validateBytes(filename, new Uint8Array(asset), (uri) =>
     new Promise((resolve, reject) => {
-            uri = path.resolve(path.dirname(filename), uri);
-            console.info("Loading external file: " + uri);
-            fs.readFile(uri, (err, data) => {
-                if (err) {
-                    console.error(err.toString());
-                    reject(err.toString());
-                    return;
-                }
-                resolve(data);
-            });
-        }
-    )
+        uri = path.resolve(path.dirname(filename), uri);
+        console.info("Loading external file: " + uri);
+        fs.readFile(uri, (err, data) => {
+            if (err) {
+                console.error(err.toString());
+                reject(err.toString());
+                return;
+            }
+            resolve(data);
+        });
+    }),
+    10, // limit max number of output issues to 10
+    ['UNSUPPORTED_EXTENSION'], // mute UNSUPPORTED_EXTENSION issue
+    { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 } // treat degenerate triangles as errors 
 ).then((result) => {
     // [result] will contain validation report in object form.
     // You can convert it to JSON to see its internal structure. 

@@ -104,7 +104,11 @@ void main() {
         ..path.add('samplers')
         ..path.add('0')
         ..addIssue(LinkError.animationSamplerInputAccessorInvalidFormat,
-            name: 'input', args: ['[{SCALAR, FLOAT}]', '{VEC2, FLOAT}'])
+            name: 'input',
+            args: [
+              '{VEC2, FLOAT}',
+              ['{SCALAR, FLOAT}']
+            ])
         ..addIssue(LinkError.animationSamplerInputAccessorWithoutBounds,
             name: 'input')
         ..addIssue(LinkError.accessorUsageOverride,
@@ -116,7 +120,11 @@ void main() {
         ..addIssue(LinkError.animationChannelTargetNodeMatrix, name: 'target')
         ..addIssue(LinkError.animationSamplerOutputAccessorInvalidFormat,
             name: 'sampler',
-            args: ['scale', '[{VEC3, FLOAT}]', '{SCALAR, FLOAT}'])
+            args: [
+              '{SCALAR, FLOAT}',
+              ['{VEC3, FLOAT}'],
+              'scale'
+            ])
         ..addIssue(LinkError.animationSamplerOutputAccessorInvalidCount,
             name: 'sampler', args: [6, 2])
         ..path.removeLast()

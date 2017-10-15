@@ -38,17 +38,17 @@ class ValidationOptions {
 
   final bool validateResources;
   final bool plainText;
-  final bool printWarnings;
+  final bool printNonErrors;
 
   ValidationOptions(
       {this.validateResources: false,
       this.plainText: false,
-      this.printWarnings: false});
+      this.printNonErrors: false});
 
   factory ValidationOptions.fromArgs(ArgResults args) => new ValidationOptions(
       validateResources: args[kValidateResources] == true,
       plainText: args[kPlainText] == true,
-      printWarnings: args[kWarnings] == true);
+      printNonErrors: args[kWarnings] == true);
 }
 
 class ValidationTask {
@@ -73,8 +73,8 @@ Future<Null> run(List<String> args) async {
         help: 'Print issues in plain text form to stderr.',
         defaultsTo: false)
     ..addFlag(ValidationOptions.kWarnings,
-        abbr: 'w',
-        help: 'Print warnings to plain text output.',
+        abbr: 'a',
+        help: 'Print all issues to plain text output.',
         defaultsTo: false);
 
   try {
@@ -83,6 +83,7 @@ Future<Null> run(List<String> args) async {
 
   if (argResult?.rest?.length != 1) {
     errPipe
+      ..write('glTF 2.0 Validator, version $kGltfValidatorVersion\n')
       ..write('Usage: gltf_validator [<options>] <input>\n\n'
           'Validation report will be written to '
           '`<asset_filename>_report.json`.\n'
@@ -182,30 +183,41 @@ Future<bool> _processFile(ValidationTask task) async {
     await resourcesLoader.load();
   }
 
-  final sb = new StringBuffer()
-    ..write('Loaded ${file.path}\n'
-        'Errors: ${context.errors.length}, '
-        'Warnings: ${context.warnings.length}\n\n');
-
   final reportPath = '${path.withoutExtension(task.filename)}_report.json';
 
   // ignore: unawaited_futures
   new File(reportPath).writeAsString(
       const JsonEncoder.withIndent('    ').convert(validationResult.toMap()));
 
-  final errors = validationResult.context.errors.toList(growable: false);
+  final errors = validationResult.context.getErrors();
+  final warnings = validationResult.context.getWarnings();
+  final infos = validationResult.context.getInfos();
+  final hints = validationResult.context.getHints();
+
+  final sb = new StringBuffer()
+    ..write('Loaded ${file.path}\n'
+        'Errors: ${errors.length}, '
+        'Warnings: ${warnings.length}, '
+        'Infos: ${infos.length}, '
+        'Hints: ${hints.length}\n\n');
 
   if (task.options.plainText) {
     void writeIssues(List<Issue> issues, String title) {
-      if (issues.isNotEmpty) {
-        sb.write('\t$title:\n\t\t${issues.join('\n\t\t')}\n\n');
+      if (issues.isEmpty) {
+        return;
       }
+      sb.write('\t$title:\n\t\t${issues[0]}\n');
+      for (var i = 1; i < issues.length; i++) {
+        sb.write('\t\t${issues[i]}\n');
+      }
+      sb.write('\n');
     }
 
     writeIssues(errors, 'Errors');
-    if (task.options.printWarnings) {
-      writeIssues(validationResult.context.warnings.toList(growable: false),
-          'Warnings');
+    if (task.options.printNonErrors) {
+      writeIssues(warnings, 'Warnings');
+      writeIssues(infos, 'Infos');
+      writeIssues(hints, 'Hints');
     }
   }
   errPipe.write(sb.toString());

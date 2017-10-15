@@ -30,11 +30,17 @@ class ImageInfo {
 
   ImageInfo._(this.mimeType, this.bits, this.format, this.width, this.height);
 
+  static const _kFormats = const <int, String>{
+    gl.RGB: 'RGB',
+    gl.RGBA: 'RGBA',
+    gl.LUMINANCE: 'LUMINANCE',
+    gl.LUMINANCE_ALPHA: 'LUMINANCE_ALPHA'
+  };
+
   Map<String, Object> toMap() => <String, Object>{
-        'mimeType': mimeType,
         'width': width,
         'height': height,
-        'format': format,
+        'format': _kFormats[format],
         'bits': bits
       };
 

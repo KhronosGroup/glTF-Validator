@@ -340,7 +340,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     List<double> def,
     List<int> lengthsList}) {
   final value = map[name];
-  if (value is List) {
+  if (value is List<Object>) {
     if (lengthsList != null) {
       if (!checkEnum<int>(name, value.length, lengthsList, context,
           isLengthList: true)) {
@@ -350,32 +350,32 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
       context.addIssue(SchemaError.emptyEntity, name: name);
       return null;
     }
-    if (context.validate) {
-      var wrongMemberFound = false;
-      for (final v in value) {
-        if (v is num) {
-          if ((min != null && v < min) || (max != null && v > max)) {
-            context
-                .addIssue(SchemaError.valueNotInRange, name: name, args: [v]);
-            wrongMemberFound = true;
-          }
-        } else {
-          context.addIssue(SchemaError.arrayTypeMismatch,
-              name: name, args: [v, 'number']);
+
+    var wrongMemberFound = false;
+    final result = new List<double>(value.length);
+    for (var i = 0; i < value.length; ++i) {
+      final v = value[i];
+      if (v is num) {
+        if (context.validate &&
+            ((min != null && v < min) || (max != null && v > max))) {
+          context.addIssue(SchemaError.valueNotInRange, name: name, args: [v]);
           wrongMemberFound = true;
         }
-      }
-      if (wrongMemberFound) {
-        return null;
+        if (singlePrecision) {
+          result[i] = doubleToSingle(v.toDouble());
+        } else {
+          result[i] = v.toDouble();
+        }
+      } else {
+        context.addIssue(SchemaError.arrayTypeMismatch,
+            name: name, args: [v, 'number']);
+        wrongMemberFound = true;
       }
     }
-    if (singlePrecision) {
-      return value
-          .map<double>((num v) => doubleToSingle(v.toDouble()))
-          .toList(growable: false);
-    } else {
-      return value.map<double>((num v) => v.toDouble()).toList(growable: false);
+    if (wrongMemberFound) {
+      return null;
     }
+    return result;
   } else if (value == null) {
     if (!req) {
       return def;
@@ -438,7 +438,7 @@ List<String> getStringList(
   if (value is List<Object>) {
     if (value.isEmpty) {
       context.addIssue(SchemaError.emptyEntity, name: name);
-      return <String>[];
+      return null;
     }
     if (context.validate) {
       var wrongMemberFound = false;
@@ -599,11 +599,24 @@ void resolveNodeList(List<int> sourceList, List<Node> targetList,
   }
 }
 
-String mapToString([Map<String, Object> map]) =>
-    new Map<String, Object>.fromIterable(
-        map.keys.where((key) => key != null && map[key] != null),
-        key: (String key) => key,
-        value: (String key) => map[key]).toString();
+/// Adds a [value] to a [map] if that [value] isn't `null`.
+void addToMapIfNotNull(Map<String, Object> map, String key, Object value) {
+  if (value != null) {
+    map[key] = value;
+  }
+}
+
+/// Clones a map without `null` values and calls `toString` on it.
+String mapToString([Map<String, Object> map]) {
+  final result = <String, Object>{};
+  for (final key in map.keys) {
+    final value = map[key];
+    if (value != null) {
+      result[key] = value;
+    }
+  }
+  return result.toString();
+}
 
 class SafeList<T> extends ListBase<T> {
   List<T> _list;

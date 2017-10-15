@@ -1,0 +1,262 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "Validation Report",
+    "type": "object",
+    "description": "Output of glTF-Validator",
+    "definitions": {
+        "nonNegativeInteger": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "nonNegativeIntegerDefault0": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "positiveInteger": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+        }
+    },
+    "properties": {
+        "uri": {
+            "type": "string",
+            "format": "uri-reference",
+            "description": "URI of validated asset."
+        },
+        "mimeType": {
+            "description": "MIME type of validated asset.",
+            "oneOf": [
+                {
+                    "const": "model/gltf+json",
+                    "description": "glTF asset in plain text form."
+                },
+                {
+                    "const": "model/gltf-binary",
+                    "description": "glTF asset in GLB container."
+                },
+                {
+                    "const": null,
+                    "description": "Unrecognized file format."
+                }
+            ]
+        },
+        "validatorVersion": {
+            "type": "string",
+            "description": "Version string of glTF-Validator. Must follow semver syntax."
+        },
+        "validatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC timestamp of validation time."
+        },
+        "issues": {
+            "type": "object",
+            "properties": {
+                "numErrors": {
+                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                },
+                "numWarnings": {
+                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                },
+                "numInfos": {
+                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                },
+                "numHints": {
+                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "severity": {
+                                "oneOf": [
+                                    {
+                                        "const": 0,
+                                        "description": "Error"
+                                    },
+                                    {
+                                        "const": 1,
+                                        "description": "Warning"
+                                    },
+                                    {
+                                        "const": 2,
+                                        "description": "Information"
+                                    },
+                                    {
+                                        "const": 3,
+                                        "description": "Hint"
+                                    }
+                                ]
+                            },
+                            "pointer": {
+                                "description": "JSON Pointer to the object causing the issue.",
+                                "type": "string",
+                                "format": "json-pointer"
+                            },
+                            "offset": {
+                                "description": "Byte offset in GLB file. Applicable only to GLB issues.",
+                                "$ref": "#/definitions/nonNegativeInteger"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "code",
+                            "severity",
+                            "message"
+                        ],
+                        "oneOf": [
+                            {
+                                "required": [
+                                    "pointer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "offset"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "truncated": {
+                    "type": "boolean",
+                    "description": "Indicates that validation output is incomplete due to too many messages.",
+                    "default": false
+                }
+            }
+        },
+        "info": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "The glTF version that this asset targets.",
+                    "pattern": "^[0-9]+\\.[0-9]+$"
+                },
+                "minVersion": {
+                    "type": "string",
+                    "description": "The minimum glTF version that this asset targets.",
+                    "pattern": "^[0-9]+\\.[0-9]+$"
+                },
+                "generator": {
+                    "type": "string",
+                    "description": "Tool that generated this glTF model."
+                },
+                "extensionsUsed": {
+                    "type": "array",
+                    "description": "Names of glTF extensions used somewhere in this asset.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true,
+                    "minItems": 1
+                },
+                "extensionsRequired": {
+                    "type": "array",
+                    "description": "Names of glTF extensions required to properly load this asset.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true,
+                    "minItems": 1
+                },
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "pointer": {
+                                "type": "string",
+                                "format": "json-pointer"
+                            },
+                            "storage": {
+                                "oneOf": [
+                                    {
+                                        "const": "base64",
+                                        "description": "Resource is stored as Base 64 URI."
+                                    },
+                                    {
+                                        "const": "bufferView",
+                                        "description": "Resource is stored within glTF buffer and accessed via bufferView."
+                                    },
+                                    {
+                                        "const": "glb",
+                                        "description": "Resource is stored in binary chunk of GLB container."
+                                    },
+                                    {
+                                        "const": "external",
+                                        "description": "Resource is stored externally."
+                                    }
+                                ]
+                            },
+                            "mimeType": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "byteLength": {
+                                "$ref": "#/definitions/positiveInteger",
+                                "description": "Byte length of the resource. Undefined when the resource wasn't available."
+                            },
+                            "uri": {
+                                "type": "string",
+                                "format": "uri-reference",
+                                "description": "URI. Defined only for external resources."
+                            },
+                            "image": {
+                                "type": "object",
+                                "description": "Image-specific metadata.",
+                                "properties": {
+                                    "width": {
+                                        "$ref": "#/definitions/positiveInteger"
+                                    },
+                                    "height": {
+                                        "$ref": "#/definitions/positiveInteger"
+                                    },
+                                    "format": {
+                                        "enum": [
+                                            "RGB",
+                                            "RGBA",
+                                            "LUMINANCE",
+                                            "LUMINANCE_ALPHA"
+                                        ]
+                                    },
+                                    "bits": {
+                                        "$ref": "#/definitions/positiveInteger"
+                                    }
+                                },
+                                "required": [
+                                    "width",
+                                    "height",
+                                    "format",
+                                    "bits"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "pointer",
+                        "storage",
+                        "mimeType"
+                    ]
+                }
+            },
+            "required": [
+                "version"
+            ]
+        }
+    },
+    "required": [
+        "uri",
+        "mimeType",
+        "validatorVersion",
+        "validatedAt"
+    ]
+}

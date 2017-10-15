@@ -99,10 +99,12 @@ class Gltf extends GltfProperty {
       checkMembers(map, GLTF_MEMBERS, context);
     }
 
-    final extensionsUsed = getStringList(map, EXTENSIONS_USED, context);
+    final extensionsUsed =
+        getStringList(map, EXTENSIONS_USED, context) ?? <String>[];
     context.initExtensions(extensionsUsed);
 
-    final extensionsRequired = getStringList(map, EXTENSIONS_REQUIRED, context);
+    final extensionsRequired =
+        getStringList(map, EXTENSIONS_REQUIRED, context) ?? <String>[];
 
     if (context.validate) {
       // See https://github.com/KhronosGroup/glTF/pull/1025

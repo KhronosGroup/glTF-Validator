@@ -163,15 +163,23 @@ void main() {
         ..path.add('attributes')
         ..addIssue(SemanticError.meshPrimitiveNoPosition)
         ..addIssue(LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-            name: 'NORMAL', args: ['[{VEC3, FLOAT}]', '{VEC2, FLOAT}'])
+            name: 'NORMAL',
+            args: [
+              '{VEC2, FLOAT}',
+              ['{VEC3, FLOAT}']
+            ])
         ..addIssue(LinkError.meshPrimitiveAccessorUnaligned, name: 'TEXCOORD_0')
         ..addIssue(LinkError.meshPrimitiveUnequalAccessorsCount,
             name: 'TEXCOORD_0')
         ..addIssue(LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
             name: 'TEXCOORD_0',
             args: [
-              '[{VEC2, FLOAT}, {VEC2, UNSIGNED_BYTE normalized}, {VEC2, UNSIGNED_SHORT normalized}]',
-              '{VEC2, UNSIGNED_SHORT}'
+              '{VEC2, UNSIGNED_SHORT}',
+              [
+                '{VEC2, FLOAT}',
+                '{VEC2, UNSIGNED_BYTE normalized}',
+                '{VEC2, UNSIGNED_SHORT normalized}'
+              ]
             ])
         ..addIssue(LinkError.meshPrimitiveAccessorUnaligned, name: 'TEXCOORD_1')
         ..addIssue(LinkError.meshPrimitiveAccessorWithoutByteStride,
@@ -215,7 +223,8 @@ void main() {
         ..path.add('0')
         ..path.add('primitives')
         ..path.add('0')
-        ..addIssue(LinkError.meshPrimitiveIncompatibleMode, args: [4, 4])
+        ..addIssue(LinkError.meshPrimitiveIncompatibleMode,
+            args: [4, 'TRIANGLES'])
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(LinkError.bufferViewTargetOverride,
@@ -225,8 +234,12 @@ void main() {
         ..addIssue(LinkError.meshPrimitiveIndicesAccessorInvalidFormat,
             name: 'indices',
             args: [
-              '[{SCALAR, UNSIGNED_BYTE}, {SCALAR, UNSIGNED_SHORT}, {SCALAR, UNSIGNED_INT}]',
-              '{SCALAR, FLOAT}'
+              '{SCALAR, FLOAT}',
+              [
+                '{SCALAR, UNSIGNED_BYTE}',
+                '{SCALAR, UNSIGNED_SHORT}',
+                '{SCALAR, UNSIGNED_INT}'
+              ]
             ]);
 
       expect(reader.context.errors, unorderedMatches(context.errors));
@@ -255,7 +268,11 @@ void main() {
         ..addIssue(LinkError.meshPrimitivePositionAccessorWithoutBounds,
             name: 'POSITION')
         ..addIssue(LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-            name: 'POSITION', args: ['[{VEC3, FLOAT}]', '{VEC4, FLOAT}'])
+            name: 'POSITION',
+            args: [
+              '{VEC4, FLOAT}',
+              ['{VEC3, FLOAT}']
+            ])
         ..path.removeLast()
         ..path.removeLast()
         ..path.removeLast()

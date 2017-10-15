@@ -19,9 +19,10 @@ library gltf.validation_result;
 import 'dart:math';
 import 'package:gltf/src/base/members.dart';
 import 'package:gltf/src/context.dart';
-
+import 'package:gltf/gltf.dart' show kGltfValidatorVersion;
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/gltf_reader.dart';
+import 'package:gltf/src/utils.dart';
 
 class ValidationResult {
   final Uri absoluteUri;
@@ -31,84 +32,74 @@ class ValidationResult {
   ValidationResult(this.absoluteUri, this.context, this.readerResult);
 
   Map<String, Object> toMap() {
-    final reportMap = <String, Object>{
-      URI: absoluteUri.toString(),
-      MIME_TYPE: readerResult?.mimeType
+    final map = <String, Object>{
+      'uri': absoluteUri.toString(),
+      'mimeType': readerResult?.mimeType,
+      'validatorVersion': kGltfValidatorVersion,
+      'validatedAt': new DateTime.now().toUtc().toIso8601String()
     };
 
-    void flushIssues(String key, Iterable<Issue> issues) {
-      if (issues.isNotEmpty) {
-        final map = <String, List<Map<String, String>>>{};
+    if (context.issues.isNotEmpty) {
+      final issues = context.issues;
+      final issuesMap = <String, Object>{};
+      final numIssues = [0, 0, 0, 0];
 
-        for (final issue in issues.map((issue) => issue.toMap())) {
-          map.putIfAbsent(issue['type'], () => <Map<String, String>>[]);
-          map[issue['type']].add(issue);
-        }
-
-        reportMap[key] = map;
+      final messages = new List<Map<String, Object>>(issues.length);
+      for (var i = 0; i < messages.length; ++i) {
+        final issue = issues[i];
+        ++numIssues[issue.severity.index];
+        messages[i] = issue.toMap();
       }
+
+      issuesMap['numErrors'] = numIssues[Severity.Error.index];
+      issuesMap['numWarnings'] = numIssues[Severity.Warning.index];
+      issuesMap['numInfos'] = numIssues[Severity.Information.index];
+      issuesMap['numHints'] = numIssues[Severity.Hint.index];
+
+      issuesMap['messages'] = messages;
+
+      map['issues'] = issuesMap;
     }
 
-    flushIssues('errors', context.errors);
-    flushIssues('warnings', context.warnings);
+    map['info'] = _getGltfInfoMap();
 
-    if (context.resources.isNotEmpty) {
-      reportMap['resources'] = context.resources;
-    }
-
-    reportMap['info'] = _getGltfInfo();
-
-    return reportMap;
+    return map;
   }
 
-  Map<String, Object> _getGltfInfo() {
+  Map<String, Object> _getGltfInfoMap() {
     final root = readerResult?.gltf;
-    if (root == null) {
+    if (root?.asset?.version == null) {
       return null;
     }
 
-    final info = <String, Object>{};
+    final map = <String, Object>{};
 
-    info[VERSION] = root.asset?.version;
-    info[GENERATOR] = root.asset?.generator;
-    if (root.extensionsUsed.isNotEmpty)
-      info[EXTENSIONS_USED] = root.extensionsUsed;
+    map[VERSION] = root.asset.version;
+
+    addToMapIfNotNull(map, MIN_VERSION, root.asset.minVersion);
+
+    addToMapIfNotNull(map, GENERATOR, root.asset.generator);
+
+    if (root.extensionsUsed.isNotEmpty) {
+      map[EXTENSIONS_USED] = root.extensionsUsed;
+    }
+
     if (root.extensionsRequired.isNotEmpty) {
-      info[EXTENSIONS_REQUIRED] = root.extensionsRequired;
+      map[EXTENSIONS_REQUIRED] = root.extensionsRequired;
     }
 
-    final externalResources = <String, Map<String, String>>{};
-
-    final externalBuffers = <String, String>{};
-    root.buffers.forEachWithIndices((index, buffer) {
-      if (buffer.uri != null)
-        externalBuffers['#/buffers/$index'] = buffer.uri.toString();
-    });
-
-    if (externalBuffers.isNotEmpty)
-      externalResources[BUFFERS] = externalBuffers;
-
-    final externalImages = <String, String>{};
-    root.images.forEachWithIndices((index, image) {
-      if (image.uri != null)
-        externalImages['#/images/$index'] = image.uri.toString();
-    });
-    if (externalImages.isNotEmpty) {
-      externalResources[IMAGES] = externalImages;
+    if (context.resources.isNotEmpty) {
+      map['resources'] = context.resources;
     }
 
-    if (externalResources.isNotEmpty) {
-      info['externalResources'] = externalResources;
-    }
-
-    info['hasAnimations'] = root.animations.isNotEmpty;
-    info['hasMaterials'] = root.materials.isNotEmpty;
-    info['hasMorphTargets'] = root.meshes.any((mesh) =>
+    map['hasAnimations'] = root.animations.isNotEmpty;
+    map['hasMaterials'] = root.materials.isNotEmpty;
+    map['hasMorphTargets'] = root.meshes.any((mesh) =>
         mesh.primitives != null &&
         mesh.primitives.any((primitive) => primitive.targets != null));
-    info['hasSkins'] = root.skins.isNotEmpty;
-    info['hasTextures'] = root.textures.isNotEmpty;
-    info['hasDefaultScene'] = root.scene != null;
+    map['hasSkins'] = root.skins.isNotEmpty;
+    map['hasTextures'] = root.textures.isNotEmpty;
+    map['hasDefaultScene'] = root.scene != null;
 
     var primitivesCount = 0;
     var maxAttributesUsed = 0;
@@ -121,9 +112,9 @@ class ValidationResult {
         }
       }
     }
-    info['primitivesCount'] = primitivesCount;
-    info['maxAttributesUsed'] = maxAttributesUsed;
+    map['primitivesCount'] = primitivesCount;
+    map['maxAttributesUsed'] = maxAttributesUsed;
 
-    return info;
+    return map;
   }
 }
