@@ -27,18 +27,30 @@ import 'package:gltf/src/utils.dart';
 import 'package:isolate/load_balancer.dart';
 import 'package:isolate/isolate_runner.dart';
 import 'package:path/path.dart' as path;
+import 'package:yaml/yaml.dart';
+
+const int kErrorCode = 1;
 
 StringSink outPipe = stdout;
 StringSink errPipe = stderr;
 
 class ValidationOptions {
-  static const String kWarnings = 'warnings';
+  static const String kAllIssues = 'all-issues';
   static const String kValidateResources = 'validate-resources';
   static const String kPlainText = 'plain-text';
+
+  static const String kConfig = 'config';
+  static const String kMaxIssues = 'max-issues';
+  static const String kIgnore = 'ignore';
+  static const String kOverride = 'override';
 
   final bool validateResources;
   final bool plainText;
   final bool printNonErrors;
+
+  int maxIssues = 0;
+  List<String> ignoredIssues;
+  Map<String, Severity> severityOverrides;
 
   ValidationOptions(
       {this.validateResources: false,
@@ -48,7 +60,41 @@ class ValidationOptions {
   factory ValidationOptions.fromArgs(ArgResults args) => new ValidationOptions(
       validateResources: args[kValidateResources] == true,
       plainText: args[kPlainText] == true,
-      printNonErrors: args[kWarnings] == true);
+      printNonErrors: args[kAllIssues] == true);
+
+  void setOptionsFromConfig(String fileName) {
+    String configYaml;
+    try {
+      configYaml = new File(fileName).readAsStringSync();
+    } on FileSystemException catch (e) {
+      stderr.write(e);
+      exit(kErrorCode);
+    }
+
+    final yaml =
+        // ignore: avoid_as
+        loadYaml(configYaml) as Map<String, Object>;
+
+    // ignore: avoid_as
+    maxIssues = yaml[kMaxIssues] as int;
+    // ignore: avoid_as
+    ignoredIssues = new List.unmodifiable(yaml[kIgnore] as List<String>);
+
+    // ignore: avoid_as
+    final severitiesMap = yaml[kOverride] as Map<String, Object>;
+    if (severitiesMap == null) {
+      return;
+    }
+
+    severityOverrides = <String, Severity>{};
+
+    for (var key in severitiesMap.keys) {
+      final value = severitiesMap[key];
+      if (value is int && value >= 0 && value <= 3) {
+        severityOverrides[key] = Severity.values[value];
+      }
+    }
+  }
 }
 
 class ValidationTask {
@@ -59,8 +105,6 @@ class ValidationTask {
 }
 
 Future<Null> run(List<String> args) async {
-  const kErrorCode = 1;
-
   ArgResults argResult;
   final parser = new ArgParser()
     ..addFlag(ValidationOptions.kValidateResources,
@@ -72,10 +116,14 @@ Future<Null> run(List<String> args) async {
         abbr: 'p',
         help: 'Print issues in plain text form to stderr.',
         defaultsTo: false)
-    ..addFlag(ValidationOptions.kWarnings,
+    ..addFlag(ValidationOptions.kAllIssues,
         abbr: 'a',
         help: 'Print all issues to plain text output.',
-        defaultsTo: false);
+        defaultsTo: false)
+    ..addOption(ValidationOptions.kConfig,
+        abbr: 'c',
+        help: 'YAML configuration file with validation options. '
+            'See docs/config-example.yaml for details.');
 
   try {
     argResult = parser.parse(args);
@@ -99,6 +147,11 @@ Future<Null> run(List<String> args) async {
 
   final input = argResult.rest[0];
   final options = new ValidationOptions.fromArgs(argResult);
+
+  final Object configFile = argResult[ValidationOptions.kConfig];
+  if (configFile is String) {
+    options.setOptionsFromConfig(configFile);
+  }
 
   if (FileSystemEntity.isDirectorySync(input)) {
     final balancer = await LoadBalancer.create(
@@ -155,7 +208,12 @@ Future<Null> run(List<String> args) async {
 Future<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
-  final context = new Context();
+  final opts = task.options;
+  final context = new Context(
+      maxIssues: opts.maxIssues,
+      ignoredIssues: opts.ignoredIssues,
+      severityOverrides: opts.severityOverrides);
+
   final reader =
       new GltfReader.filename(file.openRead(), task.filename, context);
 
