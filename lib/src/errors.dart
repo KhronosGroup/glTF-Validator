@@ -40,6 +40,12 @@ class DataError extends IssueType {
       (args) => 'Actual data length ${args[0]} is less than '
           'the declared buffer byteLength ${args[1]}.');
 
+  static final DataError bufferGlbChunkTooBig = new DataError._(
+      'BUFFER_GLB_CHUNK_TOO_BIG',
+      (args) =>
+          'GLB-stored BIN chunk contains ${args[0]} extra padding byte(s).',
+      Severity.Warning);
+
   static final DataError accessorMinMismatch = new DataError._(
       'ACCESSOR_MIN_MISMATCH',
       (args) => 'Declared minimum value for component ${args[0]} '

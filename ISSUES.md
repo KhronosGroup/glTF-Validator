@@ -95,25 +95,26 @@
 |:---:|-----|---------|----------|
 |1|BUFFER_EMBEDDED_BYTELENGTH_MISMATCH|Actual data length `%1` is not equal to the declared buffer byteLength `%2`.|Error|
 |2|BUFFER_EXTERNAL_BYTELENGTH_MISMATCH|Actual data length `%1` is less than the declared buffer byteLength `%2`.|Error|
-|3|ACCESSOR_MIN_MISMATCH|Declared minimum value for component `%1` (`%2`) does not match actual one (`%3`).|Error|
-|4|ACCESSOR_MAX_MISMATCH|Declared maximum value for component `%1` (`%2`) does not match actual one (`%3`).|Error|
-|5|ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor element `%1` at index `%2` is less than declared minimum value `%3`.|Error|
-|6|ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND|Accessor element `%1` at index `%2` is greater than declared maximum value `%3`.|Error|
-|7|ACCESSOR_NON_UNIT|Accessor element at index `%1` is not of unit length: `%2`.|Error|
-|8|ACCESSOR_INVALID_SIGN|Accessor element at index `%1` has not a proper sign value in w component: `%2`.|Error|
-|9|ACCESSOR_INVALID_FLOAT|Accessor element at index `%1` is NaN or Infinity.|Error|
-|10|ACCESSOR_INDEX_OOB|Indices accessor element at index `%1` has vertex index `%2` that exceeds number of available vertices `%3`.|Error|
-|11|ACCESSOR_INDEX_TRIANGLE_DEGENERATE|Indices accessor contains `%1` degenerate triangles.|Information|
-|12|ACCESSOR_ANIMATION_INPUT_NEGATIVE|Animation input accessor element at index `%1` is negative: `%2`.|Error|
-|13|ACCESSOR_ANIMATION_INPUT_NON_INCREASING|Animation input accessor element at index `%1` is less than or equals to previous: `%2` <= `%3`.|Error|
-|14|ACCESSOR_SPARSE_INDICES_NON_INCREASING|Accessor sparse indices element at index `%1` is less than or equals to previous: `%2` <= `%3`.|Error|
-|15|ACCESSOR_SPARSE_INDEX_OOB|Accessor sparse indices element at index `%1` is greater than or equal to the number of accessor elements: `%2` >= `%3`.|Error|
-|16|ACCESSOR_INDECOMPOSABLE_MATRIX|Matrix element at index `%1` is not decomposable to TRS.|Error|
-|17|IMAGE_DATA_INVALID|Image data is invalid. `%1`|Error|
-|18|IMAGE_MIME_TYPE_INVALID|Recognized image format '`%1`' does not match declared image format '`%2`'.|Error|
-|19|IMAGE_UNEXPECTED_EOS|Unexpected end of image stream.|Error|
-|20|IMAGE_UNRECOGNIZED_FORMAT|Image format has not been recognized.|Error|
-|21|IMAGE_NPOT_DIMENSIONS|Image has non-power-of-two dimensions: `%1`x`%2`.|Information|
+|3|BUFFER_GLB_CHUNK_TOO_BIG|GLB-stored BIN chunk contains `%1` extra padding byte(s).|Warning|
+|4|ACCESSOR_MIN_MISMATCH|Declared minimum value for component `%1` (`%2`) does not match actual one (`%3`).|Error|
+|5|ACCESSOR_MAX_MISMATCH|Declared maximum value for component `%1` (`%2`) does not match actual one (`%3`).|Error|
+|6|ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor element `%1` at index `%2` is less than declared minimum value `%3`.|Error|
+|7|ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND|Accessor element `%1` at index `%2` is greater than declared maximum value `%3`.|Error|
+|8|ACCESSOR_NON_UNIT|Accessor element at index `%1` is not of unit length: `%2`.|Error|
+|9|ACCESSOR_INVALID_SIGN|Accessor element at index `%1` has not a proper sign value in w component: `%2`.|Error|
+|10|ACCESSOR_INVALID_FLOAT|Accessor element at index `%1` is NaN or Infinity.|Error|
+|11|ACCESSOR_INDEX_OOB|Indices accessor element at index `%1` has vertex index `%2` that exceeds number of available vertices `%3`.|Error|
+|12|ACCESSOR_INDEX_TRIANGLE_DEGENERATE|Indices accessor contains `%1` degenerate triangles.|Information|
+|13|ACCESSOR_ANIMATION_INPUT_NEGATIVE|Animation input accessor element at index `%1` is negative: `%2`.|Error|
+|14|ACCESSOR_ANIMATION_INPUT_NON_INCREASING|Animation input accessor element at index `%1` is less than or equals to previous: `%2` <= `%3`.|Error|
+|15|ACCESSOR_SPARSE_INDICES_NON_INCREASING|Accessor sparse indices element at index `%1` is less than or equals to previous: `%2` <= `%3`.|Error|
+|16|ACCESSOR_SPARSE_INDEX_OOB|Accessor sparse indices element at index `%1` is greater than or equal to the number of accessor elements: `%2` >= `%3`.|Error|
+|17|ACCESSOR_INDECOMPOSABLE_MATRIX|Matrix element at index `%1` is not decomposable to TRS.|Error|
+|18|IMAGE_DATA_INVALID|Image data is invalid. `%1`|Error|
+|19|IMAGE_MIME_TYPE_INVALID|Recognized image format '`%1`' does not match declared image format '`%2`'.|Error|
+|20|IMAGE_UNEXPECTED_EOS|Unexpected end of image stream.|Error|
+|21|IMAGE_UNRECOGNIZED_FORMAT|Image format has not been recognized.|Error|
+|22|IMAGE_NPOT_DIMENSIONS|Image has non-power-of-two dimensions: `%1`x`%2`.|Information|
 ## GlbError
 | No | Code | Message | Severity |
 |:---:|-----|---------|----------|

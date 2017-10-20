@@ -696,3 +696,5 @@ bool isNonRelativeUri(Uri uri) =>
     uri.hasAbsolutePath ||
     uri.hasQuery ||
     uri.hasFragment;
+
+int padLength(int length) => length + ((4 - (length & 3)) & 3);

@@ -132,6 +132,13 @@ class ResourcesLoader {
           context.addIssue(DataError.bufferExternalBytelengthMismatch,
               args: [data.length, buffer.byteLength]);
         } else {
+          if (buffer.uri == null) {
+            final paddedLength = padLength(buffer.byteLength);
+            if (data.length > paddedLength) {
+              context.addIssue(DataError.bufferGlbChunkTooBig,
+                  args: [data.length - paddedLength]);
+            }
+          }
           // ignore: invalid_assignment
           buffer.data ??= data;
         }
