@@ -39,27 +39,25 @@ class ValidationResult {
       'validatedAt': new DateTime.now().toUtc().toIso8601String()
     };
 
-    if (context.issues.isNotEmpty) {
-      final issues = context.issues;
-      final issuesMap = <String, Object>{};
-      final numIssues = [0, 0, 0, 0];
+    final issues = context.issues;
+    final issuesMap = <String, Object>{};
+    final numIssues = [0, 0, 0, 0];
 
-      final messages = new List<Map<String, Object>>(issues.length);
-      for (var i = 0; i < messages.length; ++i) {
-        final issue = issues[i];
-        ++numIssues[issue.severity.index];
-        messages[i] = issue.toMap();
-      }
-
-      issuesMap['numErrors'] = numIssues[Severity.Error.index];
-      issuesMap['numWarnings'] = numIssues[Severity.Warning.index];
-      issuesMap['numInfos'] = numIssues[Severity.Information.index];
-      issuesMap['numHints'] = numIssues[Severity.Hint.index];
-
-      issuesMap['messages'] = messages;
-
-      map['issues'] = issuesMap;
+    final messages = new List<Map<String, Object>>(issues.length);
+    for (var i = 0; i < messages.length; ++i) {
+      final issue = issues[i];
+      ++numIssues[issue.severity.index];
+      messages[i] = issue.toMap();
     }
+
+    issuesMap['numErrors'] = numIssues[Severity.Error.index];
+    issuesMap['numWarnings'] = numIssues[Severity.Warning.index];
+    issuesMap['numInfos'] = numIssues[Severity.Information.index];
+    issuesMap['numHints'] = numIssues[Severity.Hint.index];
+    issuesMap['messages'] = messages;
+    issuesMap['truncated'] = context.isTruncated;
+
+    map['issues'] = issuesMap;
 
     map['info'] = _getGltfInfoMap();
 

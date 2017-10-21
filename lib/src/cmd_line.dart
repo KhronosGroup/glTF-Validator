@@ -63,36 +63,67 @@ class ValidationOptions {
       printNonErrors: args[kAllIssues] == true);
 
   void setOptionsFromConfig(String fileName) {
-    String configYaml;
-    try {
-      configYaml = new File(fileName).readAsStringSync();
-    } on FileSystemException catch (e) {
+    void abort(Object e) {
       stderr.write(e);
       exit(kErrorCode);
     }
 
-    final yaml =
-        // ignore: avoid_as
-        loadYaml(configYaml) as Map<String, Object>;
-
-    // ignore: avoid_as
-    maxIssues = yaml[kMaxIssues] as int;
-    // ignore: avoid_as
-    ignoredIssues = new List.unmodifiable(yaml[kIgnore] as List<String>);
-
-    // ignore: avoid_as
-    final severitiesMap = yaml[kOverride] as Map<String, Object>;
-    if (severitiesMap == null) {
-      return;
+    String configYaml;
+    try {
+      configYaml = new File(fileName).readAsStringSync();
+    } on FileSystemException catch (e) {
+      abort(e);
     }
 
-    severityOverrides = <String, Severity>{};
+    const kYamlError = 'Invalid configuration file format:';
 
-    for (var key in severitiesMap.keys) {
-      final value = severitiesMap[key];
-      if (value is int && value >= 0 && value <= 3) {
-        severityOverrides[key] = Severity.values[value];
+    Object yaml;
+    try {
+      yaml = loadYaml(configYaml);
+    } on YamlException catch (e) {
+      abort(e);
+    }
+
+    if (yaml is Map) {
+      final Object yamlMaxIssues = yaml[kMaxIssues];
+      if (yamlMaxIssues is int && yamlMaxIssues >= 0) {
+        maxIssues = yamlMaxIssues;
+      } else if (yamlMaxIssues != null) {
+        abort("$kYamlError '$kMaxIssues' must be a non-negative integer.");
       }
+
+      final Object yamlIgnoredIssues = yaml[kIgnore];
+      if (yamlIgnoredIssues is List) {
+        ignoredIssues = new List.generate(yamlIgnoredIssues.length, (i) {
+          final Object entry = yamlIgnoredIssues[i];
+          if (entry is String) {
+            return entry;
+          } else {
+            abort("$kYamlError each entry in '$kIgnore' must be a string.");
+          }
+        }, growable: false);
+      } else if (yamlIgnoredIssues != null) {
+        abort("$kYamlError 'ignored' must be a sequence.");
+      }
+
+      final Object yamlSeveritiesMap = yaml[kOverride];
+      if (yamlSeveritiesMap is Map) {
+        severityOverrides = <String, Severity>{};
+
+        for (var key in yamlSeveritiesMap.keys) {
+          final Object value = yamlSeveritiesMap[key];
+          if (key is String && value is int && value >= 0 && value <= 3) {
+            severityOverrides[key] = Severity.values[value];
+          } else {
+            abort("$kYamlError each entry in '$kOverride' must "
+                "have a string key and an integer value.");
+          }
+        }
+      } else if (yamlSeveritiesMap != null) {
+        abort("$kYamlError '$kOverride' must be a map.");
+      }
+    } else {
+      abort("$kYamlError document must be a map.");
     }
   }
 }

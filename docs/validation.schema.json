@@ -8,11 +8,6 @@
             "type": "integer",
             "minimum": 0
         },
-        "nonNegativeIntegerDefault0": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
         "positiveInteger": {
             "type": "integer",
             "exclusiveMinimum": 0
@@ -54,16 +49,16 @@
             "type": "object",
             "properties": {
                 "numErrors": {
-                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    "$ref": "#/definitions/nonNegativeInteger"
                 },
                 "numWarnings": {
-                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    "$ref": "#/definitions/nonNegativeInteger"
                 },
                 "numInfos": {
-                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    "$ref": "#/definitions/nonNegativeInteger"
                 },
                 "numHints": {
-                    "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    "$ref": "#/definitions/nonNegativeInteger"
                 },
                 "messages": {
                     "type": "array",
@@ -126,10 +121,17 @@
                 },
                 "truncated": {
                     "type": "boolean",
-                    "description": "Indicates that validation output is incomplete due to too many messages.",
-                    "default": false
+                    "description": "Indicates that validation output is incomplete due to too many messages."
                 }
-            }
+            },
+            "required": [
+                "numErrors",
+                "numWarnings",
+                "numInfos",
+                "numHints",
+                "messages",
+                "truncated"
+            ]
         },
         "info": {
             "type": "object",

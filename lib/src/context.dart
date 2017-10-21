@@ -25,6 +25,7 @@ import 'ext/extensions.dart';
 
 class Context {
   final bool validate;
+
   final int maxIssues;
   final Set<String> ignoredIssues = new Set<String>();
   final Map<String, Severity> severityOverrides;
@@ -45,6 +46,9 @@ class Context {
       this.ignoredIssues.addAll(ignoredIssues);
     }
   }
+
+  bool _isTruncated = false;
+  bool get isTruncated => _isTruncated;
 
   final Map<ExtensionTuple, ExtFuncs> _extensionsFunctions =
       <ExtensionTuple, ExtFuncs>{};
@@ -138,6 +142,7 @@ class Context {
     }
 
     if (maxIssues > 0 && _issues.length == maxIssues) {
+      _isTruncated = true;
       throw const IssuesLimitExceededException();
     }
 
