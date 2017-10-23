@@ -523,7 +523,7 @@ class LinkError extends IssueType {
 
   static final LinkError unexpectedExtensionObject = new LinkError._(
       'UNEXPECTED_EXTENSION_OBJECT',
-      (args) => 'Unexpected extension object for this extension.');
+      (args) => 'Unexpected location for this extension.');
 
   static final LinkError unresolvedReference = new LinkError._(
       'UNRESOLVED_REFERENCE', (args) => 'Unresolved reference: ${args[0]}.');
