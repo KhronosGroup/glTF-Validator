@@ -49,12 +49,12 @@ class DataError extends IssueType {
   static final DataError accessorMinMismatch = new DataError._(
       'ACCESSOR_MIN_MISMATCH',
       (args) => 'Declared minimum value for component ${args[0]} '
-          '(${args[1]}) does not match actual one (${args[2]}).');
+          '(${args[1]}) does not match actual minimum (${args[2]}).');
 
   static final DataError accessorMaxMismatch = new DataError._(
       'ACCESSOR_MAX_MISMATCH',
       (args) => 'Declared maximum value for component ${args[0]} '
-          '(${args[1]}) does not match actual one (${args[2]}).');
+          '(${args[1]}) does not match actual maximum (${args[2]}).');
 
   static final DataError accessorElementOutOfMinBound = new DataError._(
       'ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND',
@@ -74,7 +74,7 @@ class DataError extends IssueType {
   static final DataError accessorInvalidSign = new DataError._(
       'ACCESSOR_INVALID_SIGN',
       (args) => 'Accessor element at index ${args[0]} '
-          'has not a proper sign value in w component: ${args[1]}.');
+          'has w component with invalid sign: ${args[1]}.');
 
   static final DataError accessorInvalidFloat = new DataError._(
       'ACCESSOR_INVALID_FLOAT',
@@ -100,12 +100,12 @@ class DataError extends IssueType {
   static final DataError accessorAnimationInputNonIncreasing = new DataError._(
       'ACCESSOR_ANIMATION_INPUT_NON_INCREASING',
       (args) => 'Animation input accessor element at index ${args[0]} '
-          'is less than or equals to previous: ${args[1]} <= ${args[2]}.');
+          'is less than or equal to previous: ${args[1]} <= ${args[2]}.');
 
   static final DataError accessorSparseIndicesNonIncreasing = new DataError._(
       'ACCESSOR_SPARSE_INDICES_NON_INCREASING',
       (args) => 'Accessor sparse indices element at index ${args[0]} '
-          'is less than or equals to previous: ${args[1]} <= ${args[2]}.');
+          'is less than or equal to previous: ${args[1]} <= ${args[2]}.');
 
   static final DataError accessorSparseIndexOob = new DataError._(
       'ACCESSOR_SPARSE_INDEX_OOB',
@@ -131,7 +131,7 @@ class DataError extends IssueType {
 
   static final DataError imageUnrecognizedFormat = new DataError._(
       'IMAGE_UNRECOGNIZED_FORMAT',
-      (args) => 'Image format has not been recognized.');
+      (args) => 'Image format not recognized.');
 
   static final DataError imageNonPowerOfTwoDimensions = new DataError._(
       'IMAGE_NPOT_DIMENSIONS',
@@ -177,7 +177,7 @@ class SchemaError extends IssueType {
       (args) => 'Invalid URI ${args[0]}. Parser output: ${args[1]}');
 
   static final SchemaError emptyEntity =
-      new SchemaError._('EMPTY_ENTITY', (args) => 'Entity can not be empty.');
+      new SchemaError._('EMPTY_ENTITY', (args) => 'Entity cannot be empty.');
 
   static final SchemaError oneOfMismatch = new SchemaError._('ONE_OF_MISMATCH',
       (args) => 'Exactly one of ${args.map(_q)} properties must be defined.');
@@ -235,7 +235,7 @@ class SemanticError extends IssueType {
   static final SemanticError minVersionGreaterThanVersion = new SemanticError._(
       'ASSET_MIN_VERSION_GREATER_THAN_VERSION',
       (args) => 'Asset minVersion ${_q(args[0])} is greater '
-          'then version ${_q(args[1])}.',
+          'than version ${_q(args[1])}.',
       Severity.Warning);
 
   static final SemanticError invalidGlValue = new SemanticError._(
@@ -243,7 +243,7 @@ class SemanticError extends IssueType {
       (args) => 'Invalid value ${args[0]} for GL type ${_q(args[1])}.');
 
   static final SemanticError integerWrittenAsFloat = new SemanticError._(
-      'INTEGER_WRITEN_AS_FLOAT',
+      'INTEGER_WRITTEN_AS_FLOAT',
       (args) => 'Integer value is written with fractional part: ${args[0]}.');
 
   static final SemanticError accessorNormalizedInvalid = new SemanticError._(
@@ -269,7 +269,7 @@ class SemanticError extends IssueType {
       'BUFFER_DATA_URI_MIME_TYPE_INVALID',
       (args) =>
           "Buffer's Data URI MIME-Type must be 'application/octet-stream' "
-          "or 'application/gltf-buffer'. Got ${_q(args[0])} instead.");
+          "or 'application/gltf-buffer'. Found ${_q(args[0])} instead.");
 
   static final SemanticError bufferViewTooBigByteStride = new SemanticError._(
       'BUFFER_VIEW_TOO_BIG_BYTE_STRIDE',
@@ -337,11 +337,11 @@ class SemanticError extends IssueType {
       'NODE_MATRIX_NON_TRS', (args) => 'Matrix must be decomposable to TRS.');
 
   static final SemanticError nodeRotationNonUnit = new SemanticError._(
-      'NODE_ROTATION_NON_UNIT', (args) => 'Rotation quaternion must be unit.');
+      'NODE_ROTATION_NON_UNIT', (args) => 'Rotation quaternion must be normalized.');
 
   static final SemanticError unusedExtensionRequired = new SemanticError._(
       'UNUSED_EXTENSION_REQUIRED',
-      (args) => 'Unused extension ${_q(args[0])} can not be required.');
+      (args) => 'Unused extension ${_q(args[0])} cannot be required.');
 
   static final SemanticError nodeEmpty = new SemanticError._(
       'NODE_EMPTY', (args) => 'Empty node encountered.', Severity.Information);
@@ -385,13 +385,13 @@ class LinkError extends IssueType {
 
   static final LinkError animationChannelTargetNodeMatrix = new LinkError._(
       'ANIMATION_CHANNEL_TARGET_NODE_MATRIX',
-      (args) => 'Animation channel can not target TRS properties '
+      (args) => 'Animation channel cannot target TRS properties '
           'of node with defined matrix.');
 
   static final LinkError animationChannelTargetNodeWeightsNoMorphs =
       new LinkError._(
           'ANIMATION_CHANNEL_TARGET_NODE_WEIGHTS_NO_MORPHS',
-          (args) => 'Animation channel can not target WEIGHTS when mesh '
+          (args) => 'Animation channel cannot target WEIGHTS when mesh '
               'does not have morph targets.');
 
   static final LinkError animationSamplerInputAccessorWithoutBounds =
@@ -420,7 +420,7 @@ class LinkError extends IssueType {
       new LinkError._(
           'ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT',
           (args) => 'Animation sampler output accessor of count '
-              '${args[0]} expected. Got ${args[1]}.');
+              '${args[0]} expected. Found ${args[1]}.');
 
   static final LinkError bufferViewTooLong = new LinkError._(
       'BUFFER_VIEW_TOO_LONG',
@@ -434,7 +434,7 @@ class LinkError extends IssueType {
 
   static final LinkError invalidIbmAccessorCount = new LinkError._(
       'INVALID_IBM_ACCESSOR_COUNT',
-      (args) => 'Accessor of count ${args[0]} expected. Got ${args[1]}.');
+      (args) => 'Accessor of count ${args[0]} expected. Found ${args[1]}.');
 
   static final LinkError meshPrimitiveAttributesAccessorInvalidFormat =
       new LinkError._(
@@ -564,10 +564,10 @@ class GlbError extends IssueType {
           'total GLB length.');
 
   static final GlbError emptyChunk = new GlbError._('GLB_EMPTY_CHUNK',
-      (args) => 'Chunk (${args[0]}) can not have zero length.');
+      (args) => 'Chunk (${args[0]}) cannot have zero length.');
 
   static final GlbError duplicateChunk = new GlbError._('GLB_DUPLICATE_CHUNK',
-      (args) => 'Chunk of type ${args[0]} has already been seen.');
+      (args) => 'Chunk of type ${args[0]} has already been used.');
 
   static final GlbError unexpectedEndOfChunkHeader = new GlbError._(
       'GLB_UNEXPECTED_END_OF_CHUNK_HEADER',
@@ -582,7 +582,7 @@ class GlbError extends IssueType {
 
   static final GlbError unexpectedFirstChunk = new GlbError._(
       'GLB_UNEXPECTED_FIRST_CHUNK',
-      (args) => 'First chunk must be of JSON type. Got ${args[0]} instead.');
+      (args) => 'First chunk must be of JSON type. Found ${args[0]} instead.');
 
   static final GlbError unknownChunkType = new GlbError._(
       'GLB_UNKNOWN_CHUNK_TYPE',
