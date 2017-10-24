@@ -300,6 +300,12 @@ class SemanticError extends IssueType {
   static final SemanticError meshPrimitiveNoPosition = new SemanticError._(
       'MESH_PRIMITIVE_NO_POSITION', (args) => 'No POSITION attribute found.');
 
+  static final SemanticError meshPrimitiveIndexedSemanticContinuity =
+      new SemanticError._(
+          'MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY',
+          (args) => 'Indices for indexed attribute semantic ${_q(args[0])} '
+              'must start with 0 and be continuous.');
+
   static final SemanticError meshPrimitiveTangentWithoutNormal =
       new SemanticError._(
           'MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL',
