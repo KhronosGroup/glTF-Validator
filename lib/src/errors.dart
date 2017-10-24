@@ -74,7 +74,7 @@ class DataError extends IssueType {
   static final DataError accessorInvalidSign = new DataError._(
       'ACCESSOR_INVALID_SIGN',
       (args) => 'Accessor element at index ${args[0]} '
-          'has w component with invalid sign: ${args[1]}.');
+          'has invalid w component: ${args[1]}. Must be 1.0 or -1.0.');
 
   static final DataError accessorInvalidFloat = new DataError._(
       'ACCESSOR_INVALID_FLOAT',
@@ -130,8 +130,7 @@ class DataError extends IssueType {
       'IMAGE_UNEXPECTED_EOS', (args) => 'Unexpected end of image stream.');
 
   static final DataError imageUnrecognizedFormat = new DataError._(
-      'IMAGE_UNRECOGNIZED_FORMAT',
-      (args) => 'Image format not recognized.');
+      'IMAGE_UNRECOGNIZED_FORMAT', (args) => 'Image format not recognized.');
 
   static final DataError imageNonPowerOfTwoDimensions = new DataError._(
       'IMAGE_NPOT_DIMENSIONS',
@@ -337,7 +336,8 @@ class SemanticError extends IssueType {
       'NODE_MATRIX_NON_TRS', (args) => 'Matrix must be decomposable to TRS.');
 
   static final SemanticError nodeRotationNonUnit = new SemanticError._(
-      'NODE_ROTATION_NON_UNIT', (args) => 'Rotation quaternion must be normalized.');
+      'NODE_ROTATION_NON_UNIT',
+      (args) => 'Rotation quaternion must be normalized.');
 
   static final SemanticError unusedExtensionRequired = new SemanticError._(
       'UNUSED_EXTENSION_REQUIRED',
