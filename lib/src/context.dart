@@ -90,22 +90,27 @@ class Context {
   List<Issue> getHints() =>
       _issues.where((issue) => issue.severity == Severity.Hint).toList();
 
+  final StringBuffer _sb = new StringBuffer();
+
   String getPointerString([String token]) {
     if (path.isEmpty) {
       return token == null ? '/' : '/$token';
     }
 
     var i = 0;
-    final sb = new StringBuffer('/')..write(path[0]);
+    _sb..write('/')..write(path[0]);
+
     while (++i < path.length) {
-      sb..write('/')..write(path[i]);
+      _sb..write('/')..write(path[i]);
     }
 
     if (token != null) {
-      sb..write('/')..write(token);
+      _sb..write('/')..write(token);
     }
 
-    return sb.toString();
+    final result = _sb.toString();
+    _sb.clear();
+    return result;
   }
 
   void registerExtensions(List<Extension> userExtensions) {
