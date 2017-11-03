@@ -273,13 +273,6 @@ class MeshPrimitive extends GltfProperty {
 
   @override
   void link(Gltf gltf, Context context) {
-    _material = gltf.materials[_materialIndex];
-
-    if (context.validate && material == null && _materialIndex != -1) {
-      context.addIssue(LinkError.unresolvedReference,
-          name: MATERIAL, args: [_materialIndex]);
-    }
-
     if (_attributesIndices != null) {
       context.path.add(ATTRIBUTES);
       _attributesIndices.forEach((semantic, accessorIndex) {
@@ -401,6 +394,22 @@ class MeshPrimitive extends GltfProperty {
             ((mode == 5 || mode == 6) && _count < 3))) {
       context.addIssue(LinkError.meshPrimitiveIncompatibleMode,
           args: [_count, gl.MODES_NAMES[mode]]);
+    }
+
+    _material = gltf.materials[_materialIndex];
+
+    if (context.validate) {
+      if (_material != null) {
+        _material.texCoordIndices.forEach((pointer, texCoord) {
+          if (texCoord != -1 && texCoord + 1 > texcoordCount) {
+            context.addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+                name: MATERIAL, args: [pointer, texCoord]);
+          }
+        });
+      } else if (_materialIndex != -1) {
+        context.addIssue(LinkError.unresolvedReference,
+            name: MATERIAL, args: [_materialIndex]);
+      }
     }
 
     if (_targetsIndices != null) {

@@ -288,6 +288,47 @@ void main() {
       expect(reader.context.warnings, unorderedMatches(context.warnings));
     });
 
+    test('UV Bindings', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/mesh/uv.gltf').openRead());
+
+      final context = new Context()
+        ..path.add('meshes')
+        ..path.add('0')
+        ..path.add('primitives')
+        ..path.add('1')
+        ..addIssue(SemanticError.meshPrimitiveIndexedSemanticContinuity,
+            name: 'attributes', args: ['TEXCOORD'])
+        ..path.removeLast()
+        ..path.add('0')
+        ..path.add('material')
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/pbrMetallicRoughness/baseColorTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
+          '/materials/0/pbrMetallicRoughness/metallicRoughnessTexture',
+          1
+        ])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/normalTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/occlusionTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/emissiveTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
+          '/materials/0/extensions/KHR_materials_pbrSpecularGlossiness/diffuseTexture',
+          1
+        ])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
+          '/materials/0/extensions/KHR_materials_pbrSpecularGlossiness/specularGlossinessTexture',
+          1
+        ]);
+
+      await reader.read();
+
+      expect(reader.context.errors, unorderedMatches(context.errors));
+      expect(reader.context.warnings, unorderedMatches(context.warnings));
+    });
+
     test('Valid', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/mesh/valid_full.gltf').openRead());

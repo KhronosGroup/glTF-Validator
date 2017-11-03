@@ -485,6 +485,11 @@ class LinkError extends IssueType {
           'is not compatible with used drawing mode (${_q(args[1])}).',
       Severity.Warning);
 
+  static final LinkError meshPrimitiveTooFewTexcoords = new LinkError._(
+      'MESH_PRIMITIVE_TOO_FEW_TEXCOORDS',
+      (args) => 'Material is incompatible with mesh primitive: '
+          'Texture binding ${_q(args[0])} needs \'TEXCOORD_${args[1]}\' attribute.');
+
   static final LinkError meshPrimitiveUnequalAccessorsCount = new LinkError._(
       'MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT',
       (args) =>

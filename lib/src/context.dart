@@ -47,6 +47,14 @@ class Context {
     }
   }
 
+  final Map<Object, Object> owners = <Object, Object>{};
+
+  void registerObjectsOwner(Object owner, Iterable<Object> objects) {
+    for (final o in objects) {
+      owners[o] = owner;
+    }
+  }
+
   bool _isTruncated = false;
   bool get isTruncated => _isTruncated;
 
