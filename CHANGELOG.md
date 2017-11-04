@@ -2,11 +2,13 @@
 
 * New validation report format. See [JSON Schema](docs/validation.schema.json) for details.
 
+* New validation checks: `MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY` and `MESH_PRIMITIVE_TOO_FEW_TEXCOORDS`.
+
 * Users can now set max number of reported issues.
 
-* Users can now mute validation issues or override their severity.
+* Users can now mute validation issues and/or override their severity.
 
-* Default severities of certain validation issues were refined.
+* Language and default severities of certain validation issues were refined.
 
 * Cmd-line version uses multiple threads when validating multiple assets.
 
