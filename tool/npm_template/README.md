@@ -25,9 +25,11 @@ validator.validateBytes(filename, new Uint8Array(asset), (uri) =>
             resolve(data);
         });
     }),
-    10, // limit max number of output issues to 10
-    ['UNSUPPORTED_EXTENSION'], // mute UNSUPPORTED_EXTENSION issue
-    { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 } // treat degenerate triangles as errors 
+    { 
+        maxIssues: 10, // limit max number of output issues to 10
+        ignoredIssues: [ 'UNSUPPORTED_EXTENSION' ], // mute UNSUPPORTED_EXTENSION issue
+        severityOverrides: { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 } // treat degenerate triangles as errors 
+    }
 ).then((result) => {
     // [result] will contain validation report in object form.
     // You can convert it to JSON to see its internal structure. 
