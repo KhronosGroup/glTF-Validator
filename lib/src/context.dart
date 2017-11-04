@@ -23,28 +23,31 @@ import 'base/gltf_property.dart';
 import 'errors.dart';
 import 'ext/extensions.dart';
 
-class Context {
-  final bool validate;
-
+class ValidationOptions {
   final int maxIssues;
   final Set<String> ignoredIssues = new Set<String>();
   final Map<String, Severity> severityOverrides;
 
+  ValidationOptions(
+      {this.maxIssues: 0, List<String> ignoredIssues, this.severityOverrides}) {
+    if (ignoredIssues != null) {
+      this.ignoredIssues.addAll(ignoredIssues);
+    }
+  }
+}
+
+class Context {
+  final bool validate;
+
+  final ValidationOptions options;
   final List<String> path = <String>[];
 
-  Context(
-      {this.validate: true,
-      this.maxIssues: 0,
-      List<String> ignoredIssues,
-      this.severityOverrides}) {
+  Context({this.validate: true, ValidationOptions options})
+      : options = options ?? new ValidationOptions() {
     _extensionsLoadedView = new UnmodifiableListView(_extensionsLoaded);
     _extensionsUsedView = new UnmodifiableListView(_extensionsUsed);
     _extensionsFunctionsView = new UnmodifiableMapView(_extensionsFunctions);
     _resourcesView = new UnmodifiableListView(_resources);
-
-    if (ignoredIssues != null) {
-      this.ignoredIssues.addAll(ignoredIssues);
-    }
   }
 
   final Map<Object, Object> owners = <Object, Object>{};
@@ -150,17 +153,18 @@ class Context {
 
   void addIssue(IssueType issueType,
       {String name, List<Object> args, int offset, int index}) {
-    if (ignoredIssues.contains(issueType.code)) {
+    if (options.ignoredIssues.contains(issueType.code)) {
       return;
     }
 
-    if (maxIssues > 0 && _issues.length == maxIssues) {
+    if (options.maxIssues > 0 && _issues.length == options.maxIssues) {
       _isTruncated = true;
       throw const IssuesLimitExceededException();
     }
 
-    final severityOverride =
-        (severityOverrides != null) ? severityOverrides[issueType.code] : null;
+    final severityOverride = (options.severityOverrides != null)
+        ? options.severityOverrides[issueType.code]
+        : null;
 
     if (offset != null) {
       _issues.add(new Issue(issueType, args,

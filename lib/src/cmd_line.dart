@@ -34,124 +34,132 @@ const int kErrorCode = 1;
 StringSink outPipe = stdout;
 StringSink errPipe = stderr;
 
-class ValidationOptions {
+class ValidatorOptions {
   static const String kAllIssues = 'all-issues';
   static const String kValidateResources = 'validate-resources';
   static const String kPlainText = 'plain-text';
 
   static const String kConfig = 'config';
-  static const String kMaxIssues = 'max-issues';
-  static const String kIgnore = 'ignore';
-  static const String kOverride = 'override';
 
   final bool validateResources;
   final bool plainText;
   final bool printNonErrors;
 
-  int maxIssues = 0;
-  List<String> ignoredIssues;
-  Map<String, Severity> severityOverrides;
-
-  ValidationOptions(
+  ValidatorOptions(
       {this.validateResources: false,
       this.plainText: false,
       this.printNonErrors: false});
 
-  factory ValidationOptions.fromArgs(ArgResults args) => new ValidationOptions(
+  factory ValidatorOptions.fromArgs(ArgResults args) => new ValidatorOptions(
       validateResources: args[kValidateResources] == true,
       plainText: args[kPlainText] == true,
       printNonErrors: args[kAllIssues] == true);
-
-  void setOptionsFromConfig(String fileName) {
-    void abort(Object e) {
-      stderr.write(e);
-      exit(kErrorCode);
-    }
-
-    String configYaml;
-    try {
-      configYaml = new File(fileName).readAsStringSync();
-    } on FileSystemException catch (e) {
-      abort(e);
-    }
-
-    const kYamlError = 'Invalid configuration file format:';
-
-    Object yaml;
-    try {
-      yaml = loadYaml(configYaml);
-    } on YamlException catch (e) {
-      abort(e);
-    }
-
-    if (yaml is Map) {
-      final Object yamlMaxIssues = yaml[kMaxIssues];
-      if (yamlMaxIssues is int && yamlMaxIssues >= 0) {
-        maxIssues = yamlMaxIssues;
-      } else if (yamlMaxIssues != null) {
-        abort("$kYamlError '$kMaxIssues' must be a non-negative integer.");
-      }
-
-      final Object yamlIgnoredIssues = yaml[kIgnore];
-      if (yamlIgnoredIssues is List) {
-        ignoredIssues = new List.generate(yamlIgnoredIssues.length, (i) {
-          final Object entry = yamlIgnoredIssues[i];
-          if (entry is String) {
-            return entry;
-          } else {
-            abort("$kYamlError each entry in '$kIgnore' must be a string.");
-          }
-        }, growable: false);
-      } else if (yamlIgnoredIssues != null) {
-        abort("$kYamlError 'ignored' must be a sequence.");
-      }
-
-      final Object yamlSeveritiesMap = yaml[kOverride];
-      if (yamlSeveritiesMap is Map) {
-        severityOverrides = <String, Severity>{};
-
-        for (var key in yamlSeveritiesMap.keys) {
-          final Object value = yamlSeveritiesMap[key];
-          if (key is String && value is int && value >= 0 && value <= 3) {
-            severityOverrides[key] = Severity.values[value];
-          } else {
-            abort("$kYamlError each entry in '$kOverride' must "
-                "have a string key and an integer value.");
-          }
-        }
-      } else if (yamlSeveritiesMap != null) {
-        abort("$kYamlError '$kOverride' must be a map.");
-      }
-    } else {
-      abort("$kYamlError document must be a map.");
-    }
-  }
 }
 
 class ValidationTask {
   final String filename;
-  final ValidationOptions options;
+  final ValidatorOptions validatorOptions;
+  final ValidationOptions validationOptions;
 
-  ValidationTask(this.filename, this.options);
+  ValidationTask(this.filename, this.validatorOptions, this.validationOptions);
+}
+
+ValidationOptions _getValidationOptionsFromYaml(String fileName) {
+  const kMaxIssues = 'max-issues';
+  const kIgnore = 'ignore';
+  const kOverride = 'override';
+
+  void abort(Object e) {
+    stderr.write(e);
+    exit(kErrorCode);
+  }
+
+  String configYaml;
+  try {
+    configYaml = new File(fileName).readAsStringSync();
+  } on FileSystemException catch (e) {
+    abort(e);
+  }
+
+  const kYamlError = 'Invalid configuration file format:';
+
+  Object yaml;
+  try {
+    yaml = loadYaml(configYaml);
+  } on YamlException catch (e) {
+    abort(e);
+  }
+
+  var maxIssues = 0;
+  List<String> ignoredIssues;
+  Map<String, Severity> severityOverrides;
+
+  if (yaml is Map) {
+    final Object yamlMaxIssues = yaml[kMaxIssues];
+    if (yamlMaxIssues is int && yamlMaxIssues >= 0) {
+      maxIssues = yamlMaxIssues;
+    } else if (yamlMaxIssues != null) {
+      abort("$kYamlError '$kMaxIssues' must be a non-negative integer.");
+    }
+
+    final Object yamlIgnoredIssues = yaml[kIgnore];
+    if (yamlIgnoredIssues is List) {
+      ignoredIssues = new List.generate(yamlIgnoredIssues.length, (i) {
+        final Object entry = yamlIgnoredIssues[i];
+        if (entry is String) {
+          return entry;
+        } else {
+          abort("$kYamlError each entry in '$kIgnore' must be a string.");
+        }
+      }, growable: false);
+    } else if (yamlIgnoredIssues != null) {
+      abort("$kYamlError 'ignored' must be a sequence.");
+    }
+
+    final Object yamlSeveritiesMap = yaml[kOverride];
+    if (yamlSeveritiesMap is Map) {
+      severityOverrides = <String, Severity>{};
+
+      for (var key in yamlSeveritiesMap.keys) {
+        final Object value = yamlSeveritiesMap[key];
+        if (key is String && value is int && value >= 0 && value <= 3) {
+          severityOverrides[key] = Severity.values[value];
+        } else {
+          abort("$kYamlError each entry in '$kOverride' must "
+              "have a string key and an integer value.");
+        }
+      }
+    } else if (yamlSeveritiesMap != null) {
+      abort("$kYamlError '$kOverride' must be a map.");
+    }
+
+    return new ValidationOptions(
+        maxIssues: maxIssues,
+        ignoredIssues: ignoredIssues,
+        severityOverrides: severityOverrides);
+  } else {
+    abort("$kYamlError document must be a map.");
+  }
+  return null;
 }
 
 Future<Null> run(List<String> args) async {
   ArgResults argResult;
   final parser = new ArgParser()
-    ..addFlag(ValidationOptions.kValidateResources,
+    ..addFlag(ValidatorOptions.kValidateResources,
         abbr: 'r',
         help: 'Validate contents of embedded and/or '
             'referenced resources (buffers, images).',
         defaultsTo: false)
-    ..addFlag(ValidationOptions.kPlainText,
+    ..addFlag(ValidatorOptions.kPlainText,
         abbr: 'p',
         help: 'Print issues in plain text form to stderr.',
         defaultsTo: false)
-    ..addFlag(ValidationOptions.kAllIssues,
+    ..addFlag(ValidatorOptions.kAllIssues,
         abbr: 'a',
         help: 'Print all issues to plain text output.',
         defaultsTo: false)
-    ..addOption(ValidationOptions.kConfig,
+    ..addOption(ValidatorOptions.kConfig,
         abbr: 'c',
         help: 'YAML configuration file with validation options. '
             'See docs/config-example.yaml for details.');
@@ -177,11 +185,12 @@ Future<Null> run(List<String> args) async {
   }
 
   final input = argResult.rest[0];
-  final options = new ValidationOptions.fromArgs(argResult);
+  ValidationOptions validationOptions;
+  final validatorOptions = new ValidatorOptions.fromArgs(argResult);
 
-  final Object configFile = argResult[ValidationOptions.kConfig];
+  final Object configFile = argResult[ValidatorOptions.kConfig];
   if (configFile is String) {
-    options.setOptionsFromConfig(configFile);
+    validationOptions = _getValidationOptionsFromYaml(configFile);
   }
 
   if (FileSystemEntity.isDirectorySync(input)) {
@@ -204,8 +213,10 @@ Future<Null> run(List<String> args) async {
       if (it.moveNext()) {
         ++activeTasks;
         balancer
-            .run(_processFile,
-                new ValidationTask(it.current.absolute.path, options))
+            .run(
+                _processFile,
+                new ValidationTask(it.current.absolute.path, validatorOptions,
+                    validationOptions))
             .then((hasErrors) {
           if (hasErrors) {
             foundErrors = true;
@@ -227,7 +238,8 @@ Future<Null> run(List<String> args) async {
       spawn();
     }
   } else if (FileSystemEntity.isFileSync(input)) {
-    if (await _processFile(new ValidationTask(input, options))) {
+    if (await _processFile(
+        new ValidationTask(input, validatorOptions, validationOptions))) {
       exitCode = kErrorCode;
     }
   } else {
@@ -239,11 +251,8 @@ Future<Null> run(List<String> args) async {
 Future<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
-  final opts = task.options;
-  final context = new Context(
-      maxIssues: opts.maxIssues,
-      ignoredIssues: opts.ignoredIssues,
-      severityOverrides: opts.severityOverrides);
+  final opts = task.validatorOptions;
+  final context = new Context(options: task.validationOptions);
 
   final reader =
       new GltfReader.filename(file.openRead(), task.filename, context);
@@ -266,7 +275,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final validationResult =
       new ValidationResult(new Uri.file(task.filename), context, readerResult);
 
-  if (readerResult?.gltf != null && task.options.validateResources) {
+  if (readerResult?.gltf != null && opts.validateResources) {
     final resourcesLoader = getFileResourceValidator(
         context, validationResult.absoluteUri, readerResult);
     await resourcesLoader.load();
@@ -290,7 +299,7 @@ Future<bool> _processFile(ValidationTask task) async {
         'Infos: ${infos.length}, '
         'Hints: ${hints.length}\n\n');
 
-  if (task.options.plainText) {
+  if (opts.plainText) {
     void writeIssues(List<Issue> issues, String title) {
       if (issues.isEmpty) {
         return;
@@ -303,7 +312,7 @@ Future<bool> _processFile(ValidationTask task) async {
     }
 
     writeIssues(errors, 'Errors');
-    if (task.options.printNonErrors) {
+    if (opts.printNonErrors) {
       writeIssues(warnings, 'Warnings');
       writeIssues(infos, 'Infos');
       writeIssues(hints, 'Hints');

@@ -45,9 +45,7 @@ abstract class Exports {
           String filename,
           Uint8List data,
           GetResourceCallback getResourceCallback,
-          int maxIssues,
-          List<String> ignoredIssues,
-          Object severityOverrides));
+          JSValidationOptions options));
 
   // ignore: avoid_setters_without_getters
   external set validateString(
@@ -55,9 +53,15 @@ abstract class Exports {
           String filename,
           String json,
           GetResourceCallback getResourceCallback,
-          int maxIssues,
-          List<String> ignoredIssues,
-          Object severityOverrides));
+          JSValidationOptions options));
+}
+
+@JS()
+@anonymous
+abstract class JSValidationOptions {
+  external int get maxIssues;
+  external List<String> get ignoredIssues;
+  external Object get severityOverrides;
 }
 
 @JS()
@@ -67,45 +71,26 @@ external Exports get exports;
 external List<String> getKeys(Object value);
 
 void main() {
-  exports.validateBytes = allowInterop((String filename,
-          Uint8List data,
-          GetResourceCallback getResource,
-          int maxIssues,
-          List<String> ignoredIssues,
-          Object severityOverrides) =>
+  exports.validateBytes = allowInterop((String filename, Uint8List data,
+          GetResourceCallback getResource, JSValidationOptions options) =>
       new Promise<Object>(allowInterop((resolve, reject) {
-        validateBytes(filename, data, getResource, maxIssues, ignoredIssues,
-            severityOverrides).then((result) {
+        validateBytes(filename, data, getResource, options).then((result) {
           resolve(jsify(result));
         }, onError: reject);
       })));
 
-  exports.validateString = allowInterop((String filename,
-          String json,
-          GetResourceCallback getResource,
-          int maxIssues,
-          List<String> ignoredIssues,
-          Object severityOverrides) =>
+  exports.validateString = allowInterop((String filename, String json,
+          GetResourceCallback getResource, JSValidationOptions options) =>
       new Promise<Object>(allowInterop((resolve, reject) {
-        validateString(filename, json, getResource, maxIssues, ignoredIssues,
-            severityOverrides).then((result) {
+        validateString(filename, json, getResource, options).then((result) {
           resolve(jsify(result));
         }, onError: reject);
       })));
 }
 
-Future<Map<String, dynamic>> validateBytes(
-    String filename,
-    Uint8List data,
-    GetResourceCallback getResource,
-    int maxIssues,
-    List<String> ignoredIssues,
-    Object severityOverrides) async {
-  final context = new Context(
-      maxIssues: maxIssues,
-      ignoredIssues: ignoredIssues,
-      severityOverrides: _getSeverityMap(severityOverrides));
-
+Future<Map<String, dynamic>> validateBytes(String filename, Uint8List data,
+    GetResourceCallback getResource, JSValidationOptions options) async {
+  final context = _getContextFromOptions(options);
   GltfReaderResult readerResult;
   try {
     final reader =
@@ -125,17 +110,9 @@ Future<Map<String, dynamic>> validateBytes(
   return validationResult.toMap();
 }
 
-Future<Map<String, dynamic>> validateString(
-    String filename,
-    String json,
-    GetResourceCallback getResource,
-    int maxIssues,
-    List<String> ignoredIssues,
-    Object severityOverrides) async {
-  final context = new Context(
-      maxIssues: maxIssues,
-      ignoredIssues: ignoredIssues,
-      severityOverrides: _getSeverityMap(severityOverrides));
+Future<Map<String, dynamic>> validateString(String filename, String json,
+    GetResourceCallback getResource, JSValidationOptions options) async {
+  final context = _getContextFromOptions(options);
 
   final readerResult = GltfJsonReader.readFromJsonString(json, context);
 
@@ -148,6 +125,12 @@ Future<Map<String, dynamic>> validateString(
 
   return validationResult.toMap();
 }
+
+Context _getContextFromOptions(JSValidationOptions options) => new Context(
+    options: new ValidationOptions(
+        maxIssues: options.maxIssues,
+        ignoredIssues: options.ignoredIssues,
+        severityOverrides: _getSeverityMap(options.severityOverrides)));
 
 Map<String, Severity> _getSeverityMap(Object severityOverrides) {
   if (severityOverrides == null) {
