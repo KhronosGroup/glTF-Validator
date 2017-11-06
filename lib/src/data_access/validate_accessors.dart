@@ -180,7 +180,8 @@ void validateAccessorsData(Gltf gltf, Context context) {
             }
           } else if (accessor.usage == AccessorUsage.IBM) {
             matrix.storage[componentIndex] = value;
-          } else if (accessor.isUnit) {
+          } else if (accessor.isUnit &&
+              !(accessor.isXyzSign && componentIndex == 3)) {
             sum += value * value;
           }
         }
@@ -191,10 +192,6 @@ void validateAccessorsData(Gltf gltf, Context context) {
               context.addIssue(DataError.indecomposableMatrix, args: [index]);
             }
           } else if (accessor.isUnit) {
-            if (accessor.isXyzSign) {
-              sum -= value * value;
-            }
-
             if ((sum - 1.0).abs() > 0.0005) {
               context.addIssue(DataError.accessorNonUnit,
                   args: [index, sqrt(sum)]);
