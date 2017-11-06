@@ -26,9 +26,25 @@ import 'base/gltf_property.dart';
 import 'ext/extensions.dart';
 import 'gl.dart' as gl;
 
+const _kArray = 'array';
+const _kBoolean = 'boolean';
+const _kInteger = 'integer';
+const _kNumber = 'number';
+const _kObject = 'object';
+const _kString = 'string';
+
+Object _getGuarded(
+    Map<String, Object> map, String name, String type, Context context) {
+  final value = map[name];
+  if (value == null && map.containsKey(name)) {
+    context.addIssue(SchemaError.typeMismatch, name: name, args: [null, type]);
+  }
+  return value;
+}
+
 int getIndex(Map<String, Object> map, String name, Context context,
     {bool req: true}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kInteger, context);
   if (value is int) {
     if (value >= 0) {
       return value;
@@ -40,13 +56,13 @@ int getIndex(Map<String, Object> map, String name, Context context,
     }
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'integer']);
+        name: name, args: [value, _kInteger]);
   }
   return -1;
 }
 
 bool getBool(Map<String, Object> map, String name, Context context) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kBoolean, context);
   if (value == null) {
     return false;
   }
@@ -54,14 +70,14 @@ bool getBool(Map<String, Object> map, String name, Context context) {
     return value;
   }
   context
-      .addIssue(SchemaError.typeMismatch, name: name, args: [value, 'boolean']);
+      .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kBoolean]);
   return false;
 }
 
 int getUint(Map<String, Object> map, String name, Context context,
     {bool req: false, int min, int max, int def: -1, Iterable<int> list}) {
   assert(min == null || min >= 0);
-  final value = map[name];
+  final value = _getGuarded(map, name, _kInteger, context);
   if (value is int) {
     if (list != null) {
       if (!checkEnum<int>(name, value, list, context)) {
@@ -79,7 +95,7 @@ int getUint(Map<String, Object> map, String name, Context context,
     context.addIssue(SchemaError.undefinedProperty, name: name);
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'integer']);
+        name: name, args: [value, _kInteger]);
   }
   return -1;
 }
@@ -91,7 +107,7 @@ double getFloat(Map<String, Object> map, String name, Context context,
     double max,
     double def: double.NAN,
     Iterable<double> list}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
     if (list != null) {
       if (!checkEnum<num>(name, value, list, context)) {
@@ -111,14 +127,14 @@ double getFloat(Map<String, Object> map, String name, Context context,
     context.addIssue(SchemaError.undefinedProperty, name: name);
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'number']);
+        name: name, args: [value, _kNumber]);
   }
   return double.NAN;
 }
 
 String getString(Map<String, Object> map, String name, Context context,
     {bool req: false, Iterable<String> list, String def, RegExp regexp}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kString, context);
   if (value is String) {
     if (list != null) {
       if (!checkEnum<String>(name, value, list, context)) {
@@ -137,7 +153,7 @@ String getString(Map<String, Object> map, String name, Context context,
     context.addIssue(SchemaError.undefinedProperty, name: name);
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'string']);
+        name: name, args: [value, _kString]);
   }
   return null;
 }
@@ -159,7 +175,7 @@ Uri getUri(String uriString, Context context) {
 Map<String, Object> getMap(
     Map<String, Object> map, String name, Context context,
     {bool req: false}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kObject, context);
   if (value is Map<String, Object>) {
     // JSON mandates all keys to be string
     return value;
@@ -170,7 +186,7 @@ Map<String, Object> getMap(
     }
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'JSON object']);
+        name: name, args: [value, _kObject]);
     if (req) {
       return null;
     }
@@ -181,7 +197,7 @@ Map<String, Object> getMap(
 T getObjectFromInnerMap<T>(Map<String, Object> map, String name,
     Context context, FromMapFunction<T> fromMap,
     {bool req: false}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kObject, context);
   if (value is Map<String, Object>) {
     // JSON mandates all keys to be string
     context.path.add(name);
@@ -194,14 +210,14 @@ T getObjectFromInnerMap<T>(Map<String, Object> map, String name,
     }
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'JSON object']);
+        name: name, args: [value, _kObject]);
   }
   return null;
 }
 
 List<int> getIndicesList(Map<String, Object> map, String name, Context context,
     {bool req: false}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
     if (context.validate) {
       if (value.isEmpty) {
@@ -221,7 +237,7 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
         } else {
           value[i] = -1;
           context.addIssue(SchemaError.typeMismatch,
-              index: i, args: [v, 'integer']);
+              index: i, args: [v, _kInteger]);
         }
       }
       context.path.removeLast();
@@ -233,15 +249,15 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
       context.addIssue(SchemaError.undefinedProperty, name: name);
     }
   } else {
-    context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'JSON array']);
+    context
+        .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
   }
   return null;
 }
 
 Map<String, int> getIndicesMap(Map<String, Object> map, String name,
     Context context, _CheckKeyFunction checkKey) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kObject, context);
   if (value is Map<String, Object>) {
     if (value.isEmpty) {
       context.addIssue(SchemaError.emptyEntity, name: name);
@@ -260,7 +276,7 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
         // Sanitize value
         value[k] = -1;
         context
-            .addIssue(SchemaError.typeMismatch, name: k, args: [v, 'integer']);
+            .addIssue(SchemaError.typeMismatch, name: k, args: [v, _kInteger]);
       }
     });
     context.path.removeLast();
@@ -270,14 +286,14 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
     context.addIssue(SchemaError.undefinedProperty, name: name);
   } else {
     context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'JSON object']);
+        name: name, args: [value, _kObject]);
   }
   return null;
 }
 
 List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
     Context context, _CheckKeyFunction checkKey) {
-  final list = map[name];
+  final list = _getGuarded(map, name, _kArray, context);
   if (list is List<Object>) {
     if (context.validate) {
       if (list.isEmpty) {
@@ -305,7 +321,7 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
                   }
                 } else {
                   context.addIssue(SchemaError.typeMismatch,
-                      name: k, args: [v, 'integer']);
+                      name: k, args: [v, _kInteger]);
                   // Sanitize value
                   innerMap[k] = -1;
                 }
@@ -314,7 +330,7 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
             }
           } else {
             context.addIssue(SchemaError.arrayTypeMismatch,
-                args: [innerMap, 'JSON object']);
+                args: [innerMap, _kObject]);
             invalidElementFound = true;
           }
         }
@@ -326,8 +342,8 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
     }
     return list; // ignore: return_of_invalid_type
   } else if (list != null) {
-    context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [list, 'JSON array']);
+    context
+        .addIssue(SchemaError.typeMismatch, name: name, args: [list, _kArray]);
   }
   return null;
 }
@@ -339,7 +355,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     double max,
     List<double> def,
     List<int> lengthsList}) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
     if (lengthsList != null) {
       if (!checkEnum<int>(name, value.length, lengthsList, context,
@@ -368,7 +384,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
         }
       } else {
         context.addIssue(SchemaError.arrayTypeMismatch,
-            name: name, args: [v, 'number']);
+            name: name, args: [v, _kNumber]);
         wrongMemberFound = true;
       }
     }
@@ -382,15 +398,15 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     }
     context.addIssue(SchemaError.undefinedProperty, name: name);
   } else {
-    context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'number[]']);
+    context
+        .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
   }
   return null;
 }
 
 List<num> getGlIntList(Map<String, Object> map, String name, Context context,
     int type, int length) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kArray, context);
   if (value is List) {
     if (value.length != length) {
       context.addIssue(SchemaError.arrayLengthNotInList, name: name, args: [
@@ -417,7 +433,7 @@ List<num> getGlIntList(Map<String, Object> map, String name, Context context,
         }
       } else {
         context.addIssue(SchemaError.arrayTypeMismatch,
-            name: name, args: [v, 'integer']);
+            name: name, args: [v, _kInteger]);
         wrongMemberFound = true;
       }
     }
@@ -426,15 +442,15 @@ List<num> getGlIntList(Map<String, Object> map, String name, Context context,
     }
     return value; // ignore: return_of_invalid_type
   } else if (value != null) {
-    context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'number[]']);
+    context
+        .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
   }
   return null;
 }
 
 List<String> getStringList(
     Map<String, Object> map, String name, Context context) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
     if (value.isEmpty) {
       context.addIssue(SchemaError.emptyEntity, name: name);
@@ -452,7 +468,7 @@ List<String> getStringList(
           }
         } else {
           context.addIssue(SchemaError.arrayTypeMismatch,
-              index: i, args: [v, 'string']);
+              index: i, args: [v, _kString]);
           wrongMemberFound = true;
         }
       }
@@ -465,15 +481,15 @@ List<String> getStringList(
     }
     return value; // ignore: return_of_invalid_type
   } else if (value != null) {
-    context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'string[]']);
+    context
+        .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
   }
   return <String>[];
 }
 
 List<Map<String, Object>> getMapList(
     Map<String, Object> map, String name, Context context) {
-  final value = map[name];
+  final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
     if (value.isEmpty) {
       context.addIssue(SchemaError.emptyEntity, name: name);
@@ -483,7 +499,7 @@ List<Map<String, Object>> getMapList(
       for (final v in value) {
         if (v is! Map) {
           context.addIssue(SchemaError.arrayTypeMismatch,
-              name: name, args: [v, 'JSON object']);
+              name: name, args: [v, _kObject]);
           invalidElementFound = true;
         }
       }
@@ -495,8 +511,8 @@ List<Map<String, Object>> getMapList(
   } else if (value == null) {
     context.addIssue(SchemaError.undefinedProperty, name: name);
   } else {
-    context.addIssue(SchemaError.typeMismatch,
-        name: name, args: [value, 'JSON array']);
+    context
+        .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
   }
   return null;
 }
