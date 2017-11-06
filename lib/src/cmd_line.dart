@@ -27,55 +27,142 @@ import 'package:gltf/src/utils.dart';
 import 'package:isolate/load_balancer.dart';
 import 'package:isolate/isolate_runner.dart';
 import 'package:path/path.dart' as path;
+import 'package:yaml/yaml.dart';
+
+const int kErrorCode = 1;
 
 StringSink outPipe = stdout;
 StringSink errPipe = stderr;
 
-class ValidationOptions {
-  static const String kWarnings = 'warnings';
+class ValidatorOptions {
+  static const String kAllIssues = 'all-issues';
   static const String kValidateResources = 'validate-resources';
   static const String kPlainText = 'plain-text';
 
+  static const String kConfig = 'config';
+
   final bool validateResources;
   final bool plainText;
-  final bool printWarnings;
+  final bool printNonErrors;
 
-  ValidationOptions(
+  ValidatorOptions(
       {this.validateResources: false,
       this.plainText: false,
-      this.printWarnings: false});
+      this.printNonErrors: false});
 
-  factory ValidationOptions.fromArgs(ArgResults args) => new ValidationOptions(
+  factory ValidatorOptions.fromArgs(ArgResults args) => new ValidatorOptions(
       validateResources: args[kValidateResources] == true,
       plainText: args[kPlainText] == true,
-      printWarnings: args[kWarnings] == true);
+      printNonErrors: args[kAllIssues] == true);
 }
 
 class ValidationTask {
   final String filename;
-  final ValidationOptions options;
+  final ValidatorOptions validatorOptions;
+  final ValidationOptions validationOptions;
 
-  ValidationTask(this.filename, this.options);
+  ValidationTask(this.filename, this.validatorOptions, this.validationOptions);
+}
+
+ValidationOptions _getValidationOptionsFromYaml(String fileName) {
+  const kMaxIssues = 'max-issues';
+  const kIgnore = 'ignore';
+  const kOverride = 'override';
+
+  void abort(Object e) {
+    stderr.write(e);
+    exit(kErrorCode);
+  }
+
+  String configYaml;
+  try {
+    configYaml = new File(fileName).readAsStringSync();
+  } on FileSystemException catch (e) {
+    abort(e);
+  }
+
+  const kYamlError = 'Invalid configuration file format:';
+
+  Object yaml;
+  try {
+    yaml = loadYaml(configYaml);
+  } on YamlException catch (e) {
+    abort(e);
+  }
+
+  var maxIssues = 0;
+  List<String> ignoredIssues;
+  Map<String, Severity> severityOverrides;
+
+  if (yaml is Map) {
+    final Object yamlMaxIssues = yaml[kMaxIssues];
+    if (yamlMaxIssues is int && yamlMaxIssues >= 0) {
+      maxIssues = yamlMaxIssues;
+    } else if (yamlMaxIssues != null) {
+      abort("$kYamlError '$kMaxIssues' must be a non-negative integer.");
+    }
+
+    final Object yamlIgnoredIssues = yaml[kIgnore];
+    if (yamlIgnoredIssues is List) {
+      ignoredIssues = new List.generate(yamlIgnoredIssues.length, (i) {
+        final Object entry = yamlIgnoredIssues[i];
+        if (entry is String) {
+          return entry;
+        } else {
+          abort("$kYamlError each entry in '$kIgnore' must be a string.");
+        }
+      }, growable: false);
+    } else if (yamlIgnoredIssues != null) {
+      abort("$kYamlError 'ignored' must be a sequence.");
+    }
+
+    final Object yamlSeveritiesMap = yaml[kOverride];
+    if (yamlSeveritiesMap is Map) {
+      severityOverrides = <String, Severity>{};
+
+      for (var key in yamlSeveritiesMap.keys) {
+        final Object value = yamlSeveritiesMap[key];
+        if (key is String && value is int && value >= 0 && value <= 3) {
+          severityOverrides[key] = Severity.values[value];
+        } else {
+          abort("$kYamlError each entry in '$kOverride' must "
+              "have a string key and an integer value.");
+        }
+      }
+    } else if (yamlSeveritiesMap != null) {
+      abort("$kYamlError '$kOverride' must be a map.");
+    }
+
+    return new ValidationOptions(
+        maxIssues: maxIssues,
+        ignoredIssues: ignoredIssues,
+        severityOverrides: severityOverrides);
+  } else {
+    abort("$kYamlError document must be a map.");
+  }
+  return null;
 }
 
 Future<Null> run(List<String> args) async {
-  const kErrorCode = 1;
-
   ArgResults argResult;
   final parser = new ArgParser()
-    ..addFlag(ValidationOptions.kValidateResources,
+    ..addFlag(ValidatorOptions.kValidateResources,
         abbr: 'r',
         help: 'Validate contents of embedded and/or '
             'referenced resources (buffers, images).',
         defaultsTo: false)
-    ..addFlag(ValidationOptions.kPlainText,
+    ..addFlag(ValidatorOptions.kPlainText,
         abbr: 'p',
         help: 'Print issues in plain text form to stderr.',
         defaultsTo: false)
-    ..addFlag(ValidationOptions.kWarnings,
-        abbr: 'w',
-        help: 'Print warnings to plain text output.',
-        defaultsTo: false);
+    ..addFlag(ValidatorOptions.kAllIssues,
+        abbr: 'a',
+        help: 'Print all issues to plain text output.',
+        defaultsTo: false)
+    ..addOption(ValidatorOptions.kConfig,
+        abbr: 'c',
+        help: 'YAML configuration file with validation options. '
+            'See docs/config-example.yaml for details.');
 
   try {
     argResult = parser.parse(args);
@@ -83,6 +170,7 @@ Future<Null> run(List<String> args) async {
 
   if (argResult?.rest?.length != 1) {
     errPipe
+      ..write('glTF 2.0 Validator, version $kGltfValidatorVersion\n')
       ..write('Usage: gltf_validator [<options>] <input>\n\n'
           'Validation report will be written to '
           '`<asset_filename>_report.json`.\n'
@@ -97,7 +185,13 @@ Future<Null> run(List<String> args) async {
   }
 
   final input = argResult.rest[0];
-  final options = new ValidationOptions.fromArgs(argResult);
+  ValidationOptions validationOptions;
+  final validatorOptions = new ValidatorOptions.fromArgs(argResult);
+
+  final Object configFile = argResult[ValidatorOptions.kConfig];
+  if (configFile is String) {
+    validationOptions = _getValidationOptionsFromYaml(configFile);
+  }
 
   if (FileSystemEntity.isDirectorySync(input)) {
     final balancer = await LoadBalancer.create(
@@ -119,8 +213,10 @@ Future<Null> run(List<String> args) async {
       if (it.moveNext()) {
         ++activeTasks;
         balancer
-            .run(_processFile,
-                new ValidationTask(it.current.absolute.path, options))
+            .run(
+                _processFile,
+                new ValidationTask(it.current.absolute.path, validatorOptions,
+                    validationOptions))
             .then((hasErrors) {
           if (hasErrors) {
             foundErrors = true;
@@ -142,7 +238,8 @@ Future<Null> run(List<String> args) async {
       spawn();
     }
   } else if (FileSystemEntity.isFileSync(input)) {
-    if (await _processFile(new ValidationTask(input, options))) {
+    if (await _processFile(
+        new ValidationTask(input, validatorOptions, validationOptions))) {
       exitCode = kErrorCode;
     }
   } else {
@@ -154,7 +251,9 @@ Future<Null> run(List<String> args) async {
 Future<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
-  final context = new Context();
+  final opts = task.validatorOptions;
+  final context = new Context(options: task.validationOptions);
+
   final reader =
       new GltfReader.filename(file.openRead(), task.filename, context);
 
@@ -176,16 +275,11 @@ Future<bool> _processFile(ValidationTask task) async {
   final validationResult =
       new ValidationResult(new Uri.file(task.filename), context, readerResult);
 
-  if (readerResult?.gltf != null && task.options.validateResources) {
+  if (readerResult?.gltf != null && opts.validateResources) {
     final resourcesLoader = getFileResourceValidator(
         context, validationResult.absoluteUri, readerResult);
     await resourcesLoader.load();
   }
-
-  final sb = new StringBuffer()
-    ..write('Loaded ${file.path}\n'
-        'Errors: ${context.errors.length}, '
-        'Warnings: ${context.warnings.length}\n\n');
 
   final reportPath = '${path.withoutExtension(task.filename)}_report.json';
 
@@ -193,19 +287,35 @@ Future<bool> _processFile(ValidationTask task) async {
   new File(reportPath).writeAsString(
       const JsonEncoder.withIndent('    ').convert(validationResult.toMap()));
 
-  final errors = validationResult.context.errors.toList(growable: false);
+  final errors = validationResult.context.getErrors();
+  final warnings = validationResult.context.getWarnings();
+  final infos = validationResult.context.getInfos();
+  final hints = validationResult.context.getHints();
 
-  if (task.options.plainText) {
+  final sb = new StringBuffer()
+    ..write('Loaded ${file.path}\n'
+        'Errors: ${errors.length}, '
+        'Warnings: ${warnings.length}, '
+        'Infos: ${infos.length}, '
+        'Hints: ${hints.length}\n\n');
+
+  if (opts.plainText) {
     void writeIssues(List<Issue> issues, String title) {
-      if (issues.isNotEmpty) {
-        sb.write('\t$title:\n\t\t${issues.join('\n\t\t')}\n\n');
+      if (issues.isEmpty) {
+        return;
       }
+      sb.write('\t$title:\n\t\t${issues[0]}\n');
+      for (var i = 1; i < issues.length; i++) {
+        sb.write('\t\t${issues[i]}\n');
+      }
+      sb.write('\n');
     }
 
     writeIssues(errors, 'Errors');
-    if (task.options.printWarnings) {
-      writeIssues(validationResult.context.warnings.toList(growable: false),
-          'Warnings');
+    if (opts.printNonErrors) {
+      writeIssues(warnings, 'Warnings');
+      writeIssues(infos, 'Infos');
+      writeIssues(hints, 'Hints');
     }
   }
   errPipe.write(sb.toString());

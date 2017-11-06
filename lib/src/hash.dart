@@ -51,17 +51,13 @@ int hash4(Object a, Object b, Object c, Object d) => _finish(_combine(
 // Jenkins hash functions
 
 int _combine(int hash, int value) {
-  // ignore: parameter_assignments
-  hash = 0x1fffffff & (hash + value);
-  // ignore: parameter_assignments
-  hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-  return hash ^ (hash >> 6);
+  var _hash = 0x1fffffff & (hash + value);
+  _hash = 0x1fffffff & (_hash + ((0x0007ffff & _hash) << 10));
+  return _hash ^ (_hash >> 6);
 }
 
 int _finish(int hash) {
-  // ignore: parameter_assignments
-  hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-  // ignore: parameter_assignments
-  hash = hash ^ (hash >> 11);
-  return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  var _hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+  _hash = _hash ^ (_hash >> 11);
+  return 0x1fffffff & (_hash + ((0x00003fff & _hash) << 15));
 }

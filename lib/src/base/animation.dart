@@ -99,8 +99,8 @@ class Animation extends GltfChildOfRootProperty {
                   LinkError.animationSamplerInputAccessorInvalidFormat,
                   name: INPUT,
                   args: [
-                    [ANIMATION_SAMPLER_INPUT_FORMAT],
-                    inputFormat
+                    inputFormat,
+                    [ANIMATION_SAMPLER_INPUT_FORMAT]
                   ]);
             }
 
@@ -186,7 +186,7 @@ class Animation extends GltfChildOfRootProperty {
                 context.addIssue(
                     LinkError.animationSamplerOutputAccessorInvalidFormat,
                     name: SAMPLER,
-                    args: [channel.target.path, validFormats, outputFormat]);
+                    args: [outputFormat, validFormats, channel.target.path]);
               }
 
               if (channel._sampler._input?.count != -1 &&

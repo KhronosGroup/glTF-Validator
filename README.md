@@ -69,7 +69,8 @@ Validation log will be printed to stderr.
 Shell return code will be non-zero if at least one error was found.
 -r, --[no-]validate-resources    Validate contents of embedded and/or referenced resources (buffers, images).
 -p, --[no-]plain-text            Print issues in plain text form to stderr.
--w, --[no-]warnings              Print warnings to plain text output.
+-a, --[no-]all-issues            Print all issues to plain text output.
+-c, --config                     YAML configuration file with validation options. See docs/config-example.yaml for details.
 ```
 
 ## Building
@@ -106,4 +107,3 @@ To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
 
 - Web version can't differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
 - JSON charset encoding restrictions are not enforced.
-- Explicit `null` values are not allowed by JSON-Schemas but could sometimes pass validation as if property was undefined.

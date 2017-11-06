@@ -1,0 +1,10 @@
+# Maximum number of issues, 0 means unlimited
+max-issues: 10
+
+# List of ignored issues
+ignore:
+ - UNEXPECTED_PROPERTY
+
+# Map of overridden severities. 0 - Error, 1 - Warning, 2 - Info, 3 - Hint
+override:
+ ACCESSOR_INDEX_TRIANGLE_DEGENERATE: 0

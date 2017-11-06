@@ -35,36 +35,53 @@ final String _version =
 
 Future main(List<String> args) => grind(args);
 
+void _replaceVersion() {
+  final f = new File('lib/gltf.dart');
+  f.writeAsStringSync(
+      f.readAsStringSync().replaceAll('GLTF_VALIDATOR_VERSION', _version));
+}
+
+void _restoreVersion() {
+  final f = new File('lib/gltf.dart');
+  f.writeAsStringSync(
+      f.readAsStringSync().replaceAll(_version, 'GLTF_VALIDATOR_VERSION'));
+}
+
 @Task('Generate ISSUES.md')
 void issues() {
   final sb = new StringBuffer('# glTF 2.0 Validation Issues\n');
 
-  String severityToMdString(Severity severity) {
-    switch (severity) {
-      case Severity.Error:
-        return 'Error';
-      case Severity.Warning:
-        return 'Warning';
-      default:
-        return null;
-    }
-  }
+  String severityToMdString(Severity severity) =>
+      const ['Error', 'Warning', 'Information', 'Hint'][severity.index];
 
   var total = 0;
   void processErrorClass(Type type) {
     final errorClassMirror = reflectClass(type);
     sb
       ..writeln('## ${errorClassMirror.reflectedType}')
-      ..writeln('| No | Name | Message | Severity |')
+      ..writeln('| No | Code | Message | Severity |')
       ..writeln('|:---:|-----|---------|----------|');
 
     var i = 0;
-    final args = ['%1', '%2', '%3', '%4'];
+    final args = ['`%1`', '`%2`', '`%3`', '`%4`'];
+    final argsWithArray = [
+      '`%1`',
+      ['`%a`', '`%b`', '`%c`'],
+      '`%3`',
+      '`%4`'
+    ];
     for (final symbol in errorClassMirror.staticMembers.keys) {
       final Object issueType = errorClassMirror.getField(symbol).reflectee;
       if (issueType is IssueType) {
-        sb.writeln('|${++i}|${issueType.code}|${issueType.message(args)}|'
-            '${severityToMdString(issueType.severity)}');
+        String message;
+        try {
+          message = issueType.message(args);
+          // ignore: avoid_catching_errors
+        } on CastError catch (_) {
+          message = issueType.message(argsWithArray);
+        }
+        sb.writeln('|${++i}|${issueType.code}|$message|'
+            '${severityToMdString(issueType.severity)}|');
       }
     }
     total += i;
@@ -84,8 +101,18 @@ void issues() {
 @Task('Build Dart snapshot.')
 void snapshot() {
   _ensureBuild();
+
+  _replaceVersion();
   Dart.run('bin/gltf_validator.dart',
       vmArgs: ['--snapshot=build/gltf_validator.snapshot']);
+  _restoreVersion();
+}
+
+@Task('Build web drag-n-drop version.')
+void web() {
+  _replaceVersion();
+  Pub.build();
+  _restoreVersion();
 }
 
 @Depends(issues)
@@ -109,8 +136,13 @@ void npm() {
     '--minify'
   ];
 
+  _replaceVersion();
+
   Dart2js.compile(new File(p.join(sourceDir, 'node_wrapper.dart')),
       outFile: destination, extraArgs: args);
+
+  _restoreVersion();
+
   final text = destination.readAsStringSync();
   destination.writeAsStringSync('${preamble.getPreamble(minified: true)}$text');
   delete(new File(p.join(destDir, 'gltf_validator.dart.js.deps')));
@@ -128,6 +160,7 @@ void npm() {
   copy(new File('ISSUES.md'), dir);
   copy(new File('LICENSE'), dir);
   copy(new File('3RD_PARTY'), dir);
+  copy(new File(p.join('docs', 'validation.schema.json')), dir);
 }
 
 @Depends(npm)

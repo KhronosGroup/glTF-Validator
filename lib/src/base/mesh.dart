@@ -136,10 +136,15 @@ class MeshPrimitive extends GltfProperty {
     var hasPosition = false;
     var hasNormal = false;
     var hasTangent = false;
+
     var colorCount = 0;
+    var maxColor = -1;
     var jointsCount = 0;
+    var maxJoints = -1;
     var weightsCount = 0;
+    var maxWeights = -1;
     var texcoordCount = 0;
+    var maxTexcoord = -1;
 
     void checkAttributeSemanticName(String semantic) {
       // Skip on custom semantics
@@ -157,34 +162,38 @@ class MeshPrimitive extends GltfProperty {
         case TANGENT:
           hasTangent = true;
           break;
-      }
+        default:
+          final semParts = semantic.split('_');
+          final arraySemantic = semParts[0];
 
-      if (!ATTRIBUTE_SEMANTIC_MEMBERS.contains(semantic)) {
-        final semParts = semantic.split('_');
-        final arraySemantic = semParts[0];
-        if (!ATTRIBUTE_SEMANTIC_ARRAY_MEMBERS.contains(arraySemantic) ||
-            semParts.length != 2 ||
-            semParts[1].length != 1 ||
-            semParts[1].codeUnitAt(0) < 48 /* 0 */ ||
-            semParts[1].codeUnitAt(0) > 57) /* 9 */ {
-          context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-              args: [semantic]);
-        } else {
-          switch (arraySemantic) {
-            case COLOR_:
-              colorCount++;
-              break;
-            case JOINTS_:
-              jointsCount++;
-              break;
-            case TEXCOORD_:
-              texcoordCount++;
-              break;
-            case WEIGHTS_:
-              weightsCount++;
-              break;
+          if (!ATTRIBUTE_SEMANTIC_ARRAY_MEMBERS.contains(arraySemantic) ||
+              semParts.length != 2 ||
+              semParts[1].length != 1 ||
+              semParts[1].codeUnitAt(0) < 48 /* 0 */ ||
+              semParts[1].codeUnitAt(0) > 57) /* 9 */ {
+            context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
+                args: [semantic]);
+          } else {
+            final index = semParts[1].codeUnitAt(0) - 48;
+            switch (arraySemantic) {
+              case COLOR_:
+                colorCount++;
+                maxColor = index > maxColor ? index : maxColor;
+                break;
+              case JOINTS_:
+                jointsCount++;
+                maxJoints = index > maxJoints ? index : maxJoints;
+                break;
+              case TEXCOORD_:
+                texcoordCount++;
+                maxTexcoord = index > maxTexcoord ? index : maxTexcoord;
+                break;
+              case WEIGHTS_:
+                weightsCount++;
+                maxWeights = index > maxWeights ? index : maxWeights;
+                break;
+            }
           }
-        }
       }
     }
 
@@ -211,6 +220,19 @@ class MeshPrimitive extends GltfProperty {
       if (jointsCount != weightsCount) {
         context.addIssue(SemanticError.meshPrimitiveJointsWeightsMismatch);
       }
+
+      void checkContinuity(int maxIndex, int count, String name) {
+        if (maxIndex + 1 != count) {
+          context.addIssue(SemanticError.meshPrimitiveIndexedSemanticContinuity,
+              args: [name]);
+        }
+      }
+
+      checkContinuity(maxColor, colorCount, COLOR_);
+      checkContinuity(maxJoints, jointsCount, JOINTS_);
+      checkContinuity(maxWeights, weightsCount, WEIGHTS_);
+      checkContinuity(maxTexcoord, texcoordCount, TEXCOORD_);
+
       context.path.removeLast();
     }
 
@@ -251,13 +273,6 @@ class MeshPrimitive extends GltfProperty {
 
   @override
   void link(Gltf gltf, Context context) {
-    _material = gltf.materials[_materialIndex];
-
-    if (context.validate && material == null && _materialIndex != -1) {
-      context.addIssue(LinkError.unresolvedReference,
-          name: MATERIAL, args: [_materialIndex]);
-    }
-
     if (_attributesIndices != null) {
       context.path.add(ATTRIBUTES);
       _attributesIndices.forEach((semantic, accessorIndex) {
@@ -295,7 +310,7 @@ class MeshPrimitive extends GltfProperty {
               context.addIssue(
                   LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
                   name: semantic,
-                  args: [validFormats, format]);
+                  args: [format, validFormats]);
             }
 
             if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
@@ -357,7 +372,7 @@ class MeshPrimitive extends GltfProperty {
             context.addIssue(
                 LinkError.meshPrimitiveIndicesAccessorInvalidFormat,
                 name: INDICES,
-                args: [MESH_PRIMITIVE_INDICES_FORMATS, format]);
+                args: [format, MESH_PRIMITIVE_INDICES_FORMATS]);
           }
         }
       }
@@ -379,6 +394,22 @@ class MeshPrimitive extends GltfProperty {
             ((mode == 5 || mode == 6) && _count < 3))) {
       context.addIssue(LinkError.meshPrimitiveIncompatibleMode,
           args: [_count, gl.MODES_NAMES[mode]]);
+    }
+
+    _material = gltf.materials[_materialIndex];
+
+    if (context.validate) {
+      if (_material != null) {
+        _material.texCoordIndices.forEach((pointer, texCoord) {
+          if (texCoord != -1 && texCoord + 1 > texcoordCount) {
+            context.addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+                name: MATERIAL, args: [pointer, texCoord]);
+          }
+        });
+      } else if (_materialIndex != -1) {
+        context.addIssue(LinkError.unresolvedReference,
+            name: MATERIAL, args: [_materialIndex]);
+      }
     }
 
     if (_targetsIndices != null) {
@@ -425,7 +456,7 @@ class MeshPrimitive extends GltfProperty {
                 context.addIssue(
                     LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
                     name: semantic,
-                    args: [validFormats, format]);
+                    args: [format, validFormats]);
               }
 
               if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
@@ -437,8 +468,8 @@ class MeshPrimitive extends GltfProperty {
               }
             }
 
-              // Mandatory checks even with disabled
-              // validation to always set `effectiveByteStride`
+            // Mandatory checks even with disabled
+            // validation to always set `effectiveByteStride`
 
             if (accessor.bufferView != null &&
                 accessor.bufferView.byteStride == -1) {

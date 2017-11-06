@@ -48,14 +48,14 @@ void main() {
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.typeMismatch,
-            name: 'primitives', args: ['{}', 'JSON array'])
+            name: 'primitives', args: [<Object, Object>{}, 'array'])
         ..path.removeLast()
         ..path.add('2')
         ..addIssue(SchemaError.emptyEntity, name: 'primitives')
         ..path.removeLast()
         ..path.add('3')
         ..addIssue(SchemaError.arrayTypeMismatch,
-            name: 'primitives', args: ['[]', 'JSON object'])
+            name: 'primitives', args: [<Object>[], 'object'])
         ..path.removeLast()
         ..path.add('4')
         ..path.add('primitives')
@@ -64,9 +64,9 @@ void main() {
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.typeMismatch,
-            name: 'attributes', args: ['[]', 'JSON object'])
+            name: 'attributes', args: [<Object>[], 'object'])
         ..addIssue(SchemaError.typeMismatch,
-            name: 'targets', args: ['{}', 'JSON array'])
+            name: 'targets', args: [<Object, Object>{}, 'array'])
         ..path.removeLast()
         ..path.add('2')
         ..addIssue(SchemaError.emptyEntity, name: 'attributes')
@@ -75,7 +75,7 @@ void main() {
         ..path.add('3')
         ..addIssue(SchemaError.emptyEntity, name: 'attributes')
         ..addIssue(SchemaError.arrayTypeMismatch,
-            name: 'targets', args: ['[]', 'JSON object'])
+            name: 'targets', args: [<Object>[], 'object'])
         ..path.removeLast()
         ..path.add('4')
         ..addIssue(SchemaError.emptyEntity, name: 'attributes')
@@ -163,15 +163,23 @@ void main() {
         ..path.add('attributes')
         ..addIssue(SemanticError.meshPrimitiveNoPosition)
         ..addIssue(LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-            name: 'NORMAL', args: ['[{VEC3, FLOAT}]', '{VEC2, FLOAT}'])
+            name: 'NORMAL',
+            args: [
+              '{VEC2, FLOAT}',
+              ['{VEC3, FLOAT}']
+            ])
         ..addIssue(LinkError.meshPrimitiveAccessorUnaligned, name: 'TEXCOORD_0')
         ..addIssue(LinkError.meshPrimitiveUnequalAccessorsCount,
             name: 'TEXCOORD_0')
         ..addIssue(LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
             name: 'TEXCOORD_0',
             args: [
-              '[{VEC2, FLOAT}, {VEC2, UNSIGNED_BYTE normalized}, {VEC2, UNSIGNED_SHORT normalized}]',
-              '{VEC2, UNSIGNED_SHORT}'
+              '{VEC2, UNSIGNED_SHORT}',
+              [
+                '{VEC2, FLOAT}',
+                '{VEC2, UNSIGNED_BYTE normalized}',
+                '{VEC2, UNSIGNED_SHORT normalized}'
+              ]
             ])
         ..addIssue(LinkError.meshPrimitiveAccessorUnaligned, name: 'TEXCOORD_1')
         ..addIssue(LinkError.meshPrimitiveAccessorWithoutByteStride,
@@ -215,7 +223,8 @@ void main() {
         ..path.add('0')
         ..path.add('primitives')
         ..path.add('0')
-        ..addIssue(LinkError.meshPrimitiveIncompatibleMode, args: [4, 4])
+        ..addIssue(LinkError.meshPrimitiveIncompatibleMode,
+            args: [4, 'TRIANGLES'])
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(LinkError.bufferViewTargetOverride,
@@ -225,8 +234,12 @@ void main() {
         ..addIssue(LinkError.meshPrimitiveIndicesAccessorInvalidFormat,
             name: 'indices',
             args: [
-              '[{SCALAR, UNSIGNED_BYTE}, {SCALAR, UNSIGNED_SHORT}, {SCALAR, UNSIGNED_INT}]',
-              '{SCALAR, FLOAT}'
+              '{SCALAR, FLOAT}',
+              [
+                '{SCALAR, UNSIGNED_BYTE}',
+                '{SCALAR, UNSIGNED_SHORT}',
+                '{SCALAR, UNSIGNED_INT}'
+              ]
             ]);
 
       expect(reader.context.errors, unorderedMatches(context.errors));
@@ -255,7 +268,11 @@ void main() {
         ..addIssue(LinkError.meshPrimitivePositionAccessorWithoutBounds,
             name: 'POSITION')
         ..addIssue(LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-            name: 'POSITION', args: ['[{VEC3, FLOAT}]', '{VEC4, FLOAT}'])
+            name: 'POSITION',
+            args: [
+              '{VEC4, FLOAT}',
+              ['{VEC3, FLOAT}']
+            ])
         ..path.removeLast()
         ..path.removeLast()
         ..path.removeLast()
@@ -266,6 +283,47 @@ void main() {
             name: 'NORMAL')
         ..addIssue(LinkError.meshPrimitiveMorphTargetInvalidAttributeCount,
             name: 'POSITION');
+
+      expect(reader.context.errors, unorderedMatches(context.errors));
+      expect(reader.context.warnings, unorderedMatches(context.warnings));
+    });
+
+    test('UV Bindings', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/mesh/uv.gltf').openRead());
+
+      final context = new Context()
+        ..path.add('meshes')
+        ..path.add('0')
+        ..path.add('primitives')
+        ..path.add('1')
+        ..addIssue(SemanticError.meshPrimitiveIndexedSemanticContinuity,
+            name: 'attributes', args: ['TEXCOORD'])
+        ..path.removeLast()
+        ..path.add('0')
+        ..path.add('material')
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/pbrMetallicRoughness/baseColorTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
+          '/materials/0/pbrMetallicRoughness/metallicRoughnessTexture',
+          1
+        ])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/normalTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/occlusionTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+            args: ['/materials/0/emissiveTexture', 1])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
+          '/materials/0/extensions/KHR_materials_pbrSpecularGlossiness/diffuseTexture',
+          1
+        ])
+        ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
+          '/materials/0/extensions/KHR_materials_pbrSpecularGlossiness/specularGlossinessTexture',
+          1
+        ]);
+
+      await reader.read();
 
       expect(reader.context.errors, unorderedMatches(context.errors));
       expect(reader.context.warnings, unorderedMatches(context.warnings));

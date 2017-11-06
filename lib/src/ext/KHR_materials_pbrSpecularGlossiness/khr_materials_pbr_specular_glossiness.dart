@@ -81,14 +81,22 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
     final specularGlossinessTexture = getObjectFromInnerMap<TextureInfo>(
         map, SPECULAR_GLOSSINESS_TEXTURE, context, TextureInfo.fromMap);
 
-    return new KhrMaterialsPbrSpecularGlossiness._(
+    final extensions =
+        getExtensions(map, KhrMaterialsPbrSpecularGlossiness, context);
+
+    final pbrSg = new KhrMaterialsPbrSpecularGlossiness._(
         diffuseFactor,
         diffuseTexture,
         specularFactor,
         glossinessFactor,
         specularGlossinessTexture,
-        getExtensions(map, KhrMaterialsPbrSpecularGlossiness, context),
+        extensions,
         getExtras(map));
+
+    context.registerObjectsOwner(pbrSg,
+        [diffuseTexture, specularGlossinessTexture]..addAll(extensions.values));
+
+    return pbrSg;
   }
 
   @override

@@ -69,6 +69,19 @@ void main() {
       expect(validationResult.context.errors, unorderedMatches(context.errors));
     });
 
+    test('GLB & Extra Padding', () async {
+      final validationResult = await getValidationResult(
+          'test/data_access/buffer/extra_padding.glb');
+
+      final context = new Context()
+        ..path.add('buffers')
+        ..path.add('0')
+        ..addIssue(DataError.bufferGlbChunkTooBig, args: [4]);
+
+      expect(validationResult.context.warnings,
+          unorderedMatches(context.warnings));
+    });
+
     test('External file', () async {
       final validationResult = await getValidationResult(
           'test/data_access/buffer/valid_external.gltf');

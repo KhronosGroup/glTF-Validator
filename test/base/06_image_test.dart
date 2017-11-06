@@ -105,8 +105,10 @@ void main() {
         ])
         ..path.removeLast()
         ..path.add('3')
-        ..addIssue(SchemaError.valueNotInList,
-            name: 'mimeType', args: ['image/gif', '[image/jpeg, image/png]'])
+        ..addIssue(SchemaError.valueNotInList, name: 'mimeType', args: [
+          'image/gif',
+          ['image/jpeg', 'image/png']
+        ])
         ..path.removeLast();
 
       await reader.read();

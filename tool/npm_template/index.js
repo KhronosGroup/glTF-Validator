@@ -23,19 +23,30 @@ const validator = require('./gltf_validator.dart.js');
  */
 
 /**
+ @typedef {Object} ValidationOptions
+ @property {number} maxIssues - Max number of reported issues. Use `0` for unlimited output.
+ @property {string[]} ignoredIssues - Array of ignored issue codes
+ @property {Object} severityOverrides - Object with overridden severities for issue codes
+ */
+
+/**
  * Validates an asset from bytes.
- * @param {string} name - URI or other ID.
+ * @param {string} name - URI or other ID. Will appear as `uri` in validation report.
  * @param {Uint8Array} data - Byte array containing glTF or GLB data.
  * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
+ * @param {ValidationOptions} options - Object with validation options.
  * @returns {Promise} Promise with validation result in object form.
  */
-exports.validateBytes = (name, data, loadExternalResource) => validator.validateBytes(name, data, loadExternalResource);
+exports.validateBytes = (name, data, loadExternalResource, options) =>
+    validator.validateBytes(name, data, loadExternalResource, options);
 
 /**
  * Validates an asset from JSON string.
- * @param {string} name - URI or other ID.
+ * @param {string} name - URI or other ID. Will appear as `uri` in validation report.
  * @param {string} json - String containing glTF JSON.
  * @param {loadExternalResourceCallback} loadExternalResource - Function for loading external resources
+ * @param {ValidationOptions} options - Object with validation options.
  * @returns {Promise} Promise with validation result in object form.
  */
-exports.validateString = (name, json, loadExternalResource) => validator.validateString(name, json, loadExternalResource);
+exports.validateString = (name, json, loadExternalResource, options) =>
+    validator.validateString(name, json, loadExternalResource, options);

@@ -29,6 +29,8 @@ class Material extends GltfChildOfRootProperty {
   final double alphaCutoff;
   final bool doubleSided;
 
+  final Map<String, int> texCoordIndices = <String, int>{};
+
   Material._(
       this.pbrMetallicRoughness,
       this.normalTexture,
@@ -44,7 +46,7 @@ class Material extends GltfChildOfRootProperty {
       : super(name, extensions, extras);
 
   @override
-  String toString([_]) => super.toString({
+  String toString([Object _]) => super.toString({
         PBR_METALLIC_ROUGHNESS: pbrMetallicRoughness,
         NORMAL_TEXTURE: normalTexture,
         OCCLUSION_TEXTURE: occlusionTexture,
@@ -76,7 +78,9 @@ class Material extends GltfChildOfRootProperty {
         getFloat(map, ALPHA_CUTOFF, context, min: 0.0, def: 0.5);
     final doubleSided = getBool(map, DOUBLE_SIDED, context);
 
-    return new Material._(
+    final extensions = getExtensions(map, Material, context);
+
+    final material = new Material._(
         pbrMetallicRoughness,
         normalTexture,
         occlusionTexture,
@@ -86,8 +90,20 @@ class Material extends GltfChildOfRootProperty {
         alphaCutoff,
         doubleSided,
         getName(map, context),
-        getExtensions(map, Material, context),
+        extensions,
         getExtras(map));
+
+    context
+      ..registerObjectsOwner(
+          material,
+          [
+            pbrMetallicRoughness,
+            normalTexture,
+            occlusionTexture,
+            emissiveTexture
+          ]..addAll(extensions.values));
+
+    return material;
   }
 
   @override
@@ -126,7 +142,7 @@ class PbrMetallicRoughness extends GltfProperty {
       : super(extensions, extras);
 
   @override
-  String toString([_]) => super.toString({
+  String toString([Object _]) => super.toString({
         BASE_COLOR_FACTOR: baseColorFactor,
         BASE_COLOR_TEXTURE: baseColorTexture,
         METALLIC_FACTOR: metallicFactor,
@@ -150,14 +166,23 @@ class PbrMetallicRoughness extends GltfProperty {
     final metallicRoughnessTexture = getObjectFromInnerMap<TextureInfo>(
         map, METALLIC_ROUGHNESS_TEXTURE, context, TextureInfo.fromMap);
 
-    return new PbrMetallicRoughness._(
+    final extensions = getExtensions(map, PbrMetallicRoughness, context);
+
+    final pbrMr = new PbrMetallicRoughness._(
         baseColorFactor,
         baseColorTexture,
         metallicFactor,
         roughnessFactor,
         metallicRoughnessTexture,
-        getExtensions(map, PbrMetallicRoughness, context),
+        extensions,
         getExtras(map));
+
+    context.registerObjectsOwner(
+        pbrMr,
+        [baseColorTexture, metallicRoughnessTexture]
+          ..addAll(extensions.values));
+
+    return pbrMr;
   }
 
   @override
@@ -265,6 +290,15 @@ class TextureInfo extends GltfProperty {
     if (context.validate && _index != -1 && _texture == null) {
       context
           .addIssue(LinkError.unresolvedReference, name: INDEX, args: [_index]);
+    }
+
+    Object o = this;
+    while (o != null) {
+      o = context.owners[o];
+      if (o is Material) {
+        o.texCoordIndices[context.getPointerString()] = texCoord;
+        break;
+      }
     }
   }
 }
