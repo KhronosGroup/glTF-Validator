@@ -660,4 +660,4 @@ class Issue {
 
 String _q(Object o) => "'$o'";
 
-String _mbq(Object o) => o is num ? o.toString() : "'$o'";
+String _mbq(Object o) => o is String ? "'$o'" : o.toString();

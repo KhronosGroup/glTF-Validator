@@ -107,4 +107,3 @@ To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
 
 - Web version can't differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
 - JSON charset encoding restrictions are not enforced.
-- Explicit `null` values are not allowed by JSON-Schemas but could sometimes pass validation as if property was undefined.

@@ -48,14 +48,14 @@ void main() {
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.typeMismatch,
-            name: 'primitives', args: ['{}', 'array'])
+            name: 'primitives', args: [<Object, Object>{}, 'array'])
         ..path.removeLast()
         ..path.add('2')
         ..addIssue(SchemaError.emptyEntity, name: 'primitives')
         ..path.removeLast()
         ..path.add('3')
         ..addIssue(SchemaError.arrayTypeMismatch,
-            name: 'primitives', args: ['[]', 'object'])
+            name: 'primitives', args: [<Object>[], 'object'])
         ..path.removeLast()
         ..path.add('4')
         ..path.add('primitives')
@@ -64,9 +64,9 @@ void main() {
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.typeMismatch,
-            name: 'attributes', args: ['[]', 'object'])
+            name: 'attributes', args: [<Object>[], 'object'])
         ..addIssue(SchemaError.typeMismatch,
-            name: 'targets', args: ['{}', 'array'])
+            name: 'targets', args: [<Object, Object>{}, 'array'])
         ..path.removeLast()
         ..path.add('2')
         ..addIssue(SchemaError.emptyEntity, name: 'attributes')
@@ -75,7 +75,7 @@ void main() {
         ..path.add('3')
         ..addIssue(SchemaError.emptyEntity, name: 'attributes')
         ..addIssue(SchemaError.arrayTypeMismatch,
-            name: 'targets', args: ['[]', 'object'])
+            name: 'targets', args: [<Object>[], 'object'])
         ..path.removeLast()
         ..path.add('4')
         ..addIssue(SchemaError.emptyEntity, name: 'attributes')

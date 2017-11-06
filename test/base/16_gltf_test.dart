@@ -31,7 +31,7 @@ void main() {
 
       final context = new Context()
         ..addIssue(SchemaError.typeMismatch,
-            name: 'samplers', args: ['{}', 'JSON array']);
+            name: 'samplers', args: [<Object, Object>{}, 'array']);
 
       await reader.read();
 
@@ -47,9 +47,8 @@ void main() {
       final context = new Context()
         ..path.add('samplers')
         ..addIssue(SchemaError.typeMismatch,
-            index: 0, args: ['[]', 'JSON object'])
-        ..addIssue(SchemaError.typeMismatch,
-            index: 1, args: ['null', 'JSON object']);
+            index: 0, args: [<Object>[], 'object'])
+        ..addIssue(SchemaError.typeMismatch, index: 1, args: [null, 'object']);
 
       await reader.read();
 

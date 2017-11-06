@@ -82,7 +82,7 @@ void main() {
           new Stream<List<int>>.fromIterable(['[]'.codeUnits]));
 
       final context = new Context()
-        ..addIssue(SchemaError.typeMismatch, args: ['[]', 'JSON object']);
+        ..addIssue(SchemaError.typeMismatch, args: [<Object>[], 'object']);
 
       await reader.read();
       expect(reader.context.errors, unorderedMatches(context.errors));

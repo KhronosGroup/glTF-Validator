@@ -144,7 +144,7 @@ class Gltf extends GltfProperty {
               context.path.removeLast();
             } else {
               context.addIssue(SchemaError.typeMismatch,
-                  index: i, args: [itemMap, 'JSON object']);
+                  index: i, args: [itemMap, 'object']);
             }
           }
           return items;
@@ -154,7 +154,7 @@ class Gltf extends GltfProperty {
         }
       } else {
         context.addIssue(SchemaError.typeMismatch,
-            name: name, args: [itemsList, 'JSON array']);
+            name: name, args: [itemsList, 'array']);
         return new SafeList<T>.empty();
       }
     }
