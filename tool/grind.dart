@@ -115,6 +115,20 @@ void web() {
   _restoreVersion();
 }
 
+final _dart2jsArgs = [
+  '--minify',
+  '--no-source-maps',
+  '--trust-primitives',
+  '--trust-type-annotations'
+];
+
+@Depends(issues)
+@Task('Build non-minified npm package with source map.')
+void npmDebug() {
+  _dart2jsArgs.clear();
+  npm();
+}
+
 @Depends(issues)
 @Task('Build an npm package.')
 void npm() {
@@ -129,17 +143,11 @@ void npm() {
   dir.createSync(recursive: true);
 
   final destination = new File(p.join(destDir, 'gltf_validator.dart.js'));
-  final args = [
-    '--no-source-maps',
-    '--trust-type-annotations',
-    '--trust-primitives',
-    '--minify'
-  ];
 
   _replaceVersion();
 
   Dart2js.compile(new File(p.join(sourceDir, 'node_wrapper.dart')),
-      outFile: destination, extraArgs: args);
+      outFile: destination, extraArgs: _dart2jsArgs);
 
   _restoreVersion();
 
@@ -166,7 +174,8 @@ void npm() {
 @Depends(npm)
 @Task('Publish package to npm.')
 void npmPublish() {
-  log(run('npm', arguments: ['publish'], workingDirectory: 'build/npm'));
+  run(Platform.isWindows ? 'npm.cmd' : 'npm',
+      arguments: ['publish'], workingDirectory: 'build/npm');
 }
 
 /// Ensure that the `build/` directory exists.
