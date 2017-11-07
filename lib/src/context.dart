@@ -29,7 +29,8 @@ class ValidationOptions {
   final Map<String, Severity> severityOverrides;
 
   ValidationOptions(
-      {this.maxIssues: 0, List<String> ignoredIssues, this.severityOverrides}) {
+      {int maxIssues, List<String> ignoredIssues, this.severityOverrides})
+      : maxIssues = maxIssues ?? 0 {
     if (ignoredIssues != null) {
       this.ignoredIssues.addAll(ignoredIssues);
     }

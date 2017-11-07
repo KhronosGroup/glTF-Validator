@@ -127,10 +127,12 @@ Future<Map<String, dynamic>> validateString(String filename, String json,
 }
 
 Context _getContextFromOptions(JSValidationOptions options) => new Context(
-    options: new ValidationOptions(
-        maxIssues: options.maxIssues,
-        ignoredIssues: options.ignoredIssues,
-        severityOverrides: _getSeverityMap(options.severityOverrides)));
+    options: options != null
+        ? new ValidationOptions(
+            maxIssues: options.maxIssues,
+            ignoredIssues: options.ignoredIssues,
+            severityOverrides: _getSeverityMap(options.severityOverrides))
+        : null);
 
 Map<String, Severity> _getSeverityMap(Object severityOverrides) {
   if (severityOverrides == null) {
