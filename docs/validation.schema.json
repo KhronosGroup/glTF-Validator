@@ -15,9 +15,16 @@
     },
     "properties": {
         "uri": {
-            "type": "string",
-            "format": "uri-reference",
-            "description": "URI of validated asset."
+            "oneOf": [
+                {
+                    "const": null
+                },
+                {
+                    "type": "string",
+                    "format": "uri-reference",
+                    "description": "URI of validated asset."
+                }
+            ]
         },
         "mimeType": {
             "description": "MIME type of validated asset.",
