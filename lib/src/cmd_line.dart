@@ -120,7 +120,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
     if (yamlSeveritiesMap is Map) {
       severityOverrides = <String, Severity>{};
 
-      for (var key in yamlSeveritiesMap.keys) {
+      for (final key in yamlSeveritiesMap.keys) {
         final Object value = yamlSeveritiesMap[key];
         if (key is String && value is int && value >= 0 && value <= 3) {
           severityOverrides[key] = Severity.values[value];

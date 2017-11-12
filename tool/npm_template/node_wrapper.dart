@@ -88,7 +88,7 @@ void main() {
       })));
 }
 
-Future<Map<String, dynamic>> validateBytes(String filename, Uint8List data,
+Future<Map<String, Object>> validateBytes(String filename, Uint8List data,
     GetResourceCallback getResource, JSValidationOptions options) async {
   final context = _getContextFromOptions(options);
   GltfReaderResult readerResult;
@@ -110,7 +110,7 @@ Future<Map<String, dynamic>> validateBytes(String filename, Uint8List data,
   return validationResult.toMap();
 }
 
-Future<Map<String, dynamic>> validateString(String filename, String json,
+Future<Map<String, Object>> validateString(String filename, String json,
     GetResourceCallback getResource, JSValidationOptions options) async {
   final context = _getContextFromOptions(options);
 
