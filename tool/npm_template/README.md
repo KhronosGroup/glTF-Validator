@@ -17,7 +17,7 @@ validator.validateBytes(new Uint8Array(asset), {
     uri: filename,
     maxIssues: 10, // limit max number of output issues to 10
     ignoredIssues: ['UNSUPPORTED_EXTENSION'], // mute UNSUPPORTED_EXTENSION issue
-    severityOverrides: { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': '0' }, // treat degenerate triangles as errors 
+    severityOverrides: { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 }, // treat degenerate triangles as errors
     externalResourceFunction: (uri) =>
         new Promise((resolve, reject) => {
             uri = path.resolve(path.dirname(fullpath), uri);
