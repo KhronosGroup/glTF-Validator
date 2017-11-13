@@ -2,12 +2,45 @@
 
 This is an npm package for the official [glTF Validator](https://github.com/KhronosGroup/glTF-Validator/) compiled from Dart to JS.
 
-Refer to [`index.js`](index.js) for API reference or see usage example below.
+## Installation
+
+```
+npm install --save gltf-validator
+```
+
+## Examples
+
+### Basic usage (Node.js)
+
+```javascript
+const fs = require('fs');
+const validator = require('gltf-validator');
+
+const asset = fs.readFileSync('./Box.gltf');
+
+validator.validateBytes(new Uint8Array(asset))
+    .then((report) => console.info('Validation succeeded: ', report))
+    .catch((error) => console.error('Validation failed: ', error));
+```
+
+### Basic usage (Browser)
+
+```javascript
+const validator = require('gltf-validator');
+
+fetch('Box.gltf')
+    .then((response) => response.arrayBuffer())
+    .then((asset) => validator.validateBytes(new Uint8Array(asset)))
+    .then((report) => console.info('Validation succeeded: ', report))
+    .catch((error) => console.error('Validation failed: ', error));
+```
+
+### Full usage
 
 ```javascript
 const fs = require("fs");
 const path = require("path");
-const validator = require('./index.js');
+const validator = require('gltf-validator');
 
 const filename = 'Box.gltf';
 const fullpath = __dirname + '/' + filename;
@@ -42,3 +75,9 @@ validator.validateBytes(new Uint8Array(asset), {
     console.error(result);
 });
 ```
+
+## API
+
+<!--- API BEGIN --->
+
+<!--- API END --->

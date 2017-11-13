@@ -93,7 +93,7 @@ To build an npm package for use in Node.js environment, follow these steps after
 1. Run `pub run grinder npm`.
 2. `gltf-validator` npm package will be written to `build/npm`.
 
-Refer to [npm package README.md](tool/npm_template/README.md) or the [npm page](https://www.npmjs.com/package/gltf-validator) for additional information.
+Refer to the [npm package documentation](https://www.npmjs.com/package/gltf-validator) for additional information.
 
 #### Publishing
 To publish an npm package, follow these steps after installation:
