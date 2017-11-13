@@ -41,68 +41,70 @@ void main() {
     e.preventDefault();
   });
 
-  dropZone.onDrop.listen((e) async {
+  dropZone.onDrop.listen((e) {
     e.preventDefault();
     output.text = "";
     dropZone.classes
       ..remove('hover')
       ..add('drop');
 
-    final files = e.dataTransfer.files;
-
-    File gltfFile;
-    GltfReader reader;
-
-    final context = new Context();
-
-    for (gltfFile in files) {
-      final lowerCaseName = gltfFile.name.toLowerCase();
-      if (lowerCaseName.endsWith('.gltf')) {
-        reader = new GltfJsonReader(_getFileStream(gltfFile), context);
-        break;
-      }
-      if (lowerCaseName.endsWith('.glb')) {
-        reader = new GlbReader(_getFileStream(gltfFile), context);
-        break;
-      }
-    }
-
-    if (reader == null) {
+    _validate(e.dataTransfer.files).then((_) {
       dropZone.classes.remove('drop');
-      return;
-    }
-
-    final readerResult = await reader.read();
-
-    if (readerResult?.gltf != null) {
-      final resourcesLoader = new ResourcesLoader(context, readerResult.gltf,
-          externalBytesFetch: (uri) {
-        if (uri != null) {
-          final file = _getFileByUri(files, uri);
-          if (file != null) {
-            return _getFile(file);
-          }
-          return null;
-        } else {
-          return readerResult.buffer;
-        }
-      }, externalStreamFetch: (uri) {
-        if (uri != null) {
-          final file = _getFileByUri(files, uri);
-          if (file != null) {
-            return _getFileStream(file);
-          }
-          return null;
-        }
-      });
-
-      await resourcesLoader.load();
-    }
-    final validationResult =
-        new ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
-    _writeMap(validationResult.toMap());
-    dropZone.classes.remove('drop');
+    });
   });
+}
+
+Future<Null> _validate(List<File> files) async {
+  File gltfFile;
+  GltfReader reader;
+
+  final context = new Context();
+
+  for (gltfFile in files) {
+    final lowerCaseName = gltfFile.name.toLowerCase();
+    if (lowerCaseName.endsWith('.gltf')) {
+      reader = new GltfJsonReader(_getFileStream(gltfFile), context);
+      break;
+    }
+    if (lowerCaseName.endsWith('.glb')) {
+      reader = new GlbReader(_getFileStream(gltfFile), context);
+      break;
+    }
+  }
+
+  if (reader == null) {
+    return;
+  }
+
+  final readerResult = await reader.read();
+
+  if (readerResult?.gltf != null) {
+    final resourcesLoader = new ResourcesLoader(context, readerResult.gltf,
+        externalBytesFetch: (uri) {
+      if (uri != null) {
+        final file = _getFileByUri(files, uri);
+        if (file != null) {
+          return _getFile(file);
+        }
+        return null;
+      } else {
+        return readerResult.buffer;
+      }
+    }, externalStreamFetch: (uri) {
+      if (uri != null) {
+        final file = _getFileByUri(files, uri);
+        if (file != null) {
+          return _getFileStream(file);
+        }
+        return null;
+      }
+    });
+
+    await resourcesLoader.load();
+  }
+  final validationResult =
+      new ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
+  _writeMap(validationResult.toMap());
 }
 
 File _getFileByUri(List<File> files, Uri uri) =>
