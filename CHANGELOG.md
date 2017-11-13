@@ -1,3 +1,11 @@
+## 2.0.0-dev.1.2
+
+* Updated JS API. See [README.md](tool/npm_template/README.md) for details.
+
+* Added external resources support for drag-n-drop web frontend.
+
+* Internal fixes.
+
 ## 2.0.0-dev.1
 
 * New validation report format. See [JSON Schema](docs/validation.schema.json) for details.
