@@ -179,16 +179,21 @@ void npm() {
   copy(new File('LICENSE'), dir);
   copy(new File('3RD_PARTY'), dir);
   copy(new File(p.join('docs', 'validation.schema.json')), dir);
+
+  log("Trying to generate npm docs...");
+  run(npmExecutable, arguments: ['install'], workingDirectory: 'build/npm');
+  run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: 'build/npm');
 }
 
 @Depends(npm)
 @Task('Publish package to npm.')
 void npmPublish() {
-  run(Platform.isWindows ? 'npm.cmd' : 'npm',
-      arguments: ['publish'], workingDirectory: 'build/npm');
+  run(npmExecutable, arguments: ['publish'], workingDirectory: 'build/npm');
 }
 
 /// Ensure that the `build/` directory exists.
 void _ensureBuild() {
   new Directory('build').createSync(recursive: true);
 }
+
+String get npmExecutable => Platform.isWindows ? 'npm.cmd' : 'npm';
