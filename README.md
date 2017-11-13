@@ -10,7 +10,9 @@ Validation is performed against [glTF 2.0](https://github.com/KhronosGroup/glTF/
 Validator writes a validation report (in JSON-format) with all found issues and asset stats.
 
 Live drag-n-drop tool: http://github.khronos.org/glTF-Validator
- 
+
+NPM package: https://www.npmjs.com/package/gltf-validator
+
 ## Implemented features
 
 - JSON syntax check and [GLBv2](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#glb-file-format-specification) file format correctness.
@@ -91,7 +93,7 @@ To build an npm package for use in Node.js environment, follow these steps after
 1. Run `pub run grinder npm`.
 2. `gltf-validator` npm package will be written to `build/npm`.
 
-Refer to [npm package README.md](tool/npm_template/README.md) for additional information.
+Refer to [npm package README.md](tool/npm_template/README.md) or the [npm page](https://www.npmjs.com/package/gltf-validator) for additional information.
 
 #### Publishing
 To publish an npm package, follow these steps after installation:
