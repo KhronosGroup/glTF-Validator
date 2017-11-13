@@ -125,7 +125,9 @@ final _dart2jsArgs = [
 @Depends(issues)
 @Task('Build non-minified npm package with source map.')
 void npmDebug() {
-  _dart2jsArgs.clear();
+  _dart2jsArgs
+    ..clear()
+    ..add('-DGLTF_VALIDATOR_DEBUG=true');
   npm();
 }
 

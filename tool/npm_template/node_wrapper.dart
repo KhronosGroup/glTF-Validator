@@ -66,18 +66,24 @@ external Exports get exports;
 external List<String> _getKeys(Object value);
 
 void main() {
+  const kDebug =
+      const bool.fromEnvironment('GLTF_VALIDATOR_DEBUG', defaultValue: false);
+
+  void onError(Object e, StackTrace st, Function reject) =>
+      kDebug ? reject(st.toString()) : reject(e.toString());
+
   exports.validateBytes = allowInterop((Uint8List data, Object options) =>
       new Promise<Object>(allowInterop((resolve, reject) {
         validateBytes(data, options).then((result) {
           resolve(jsify(result));
-        }, onError: (Object e) => reject(e.toString()));
+        }, onError: (Object e, StackTrace st) => onError(e, st, reject));
       })));
 
   exports.validateString = allowInterop((String json, Object options) =>
       new Promise<Object>(allowInterop((resolve, reject) {
         validateString(json, options).then((result) {
           resolve(jsify(result));
-        }, onError: (Object e) => reject(e.toString()));
+        }, onError: (Object e, StackTrace st) => onError(e, st, reject));
       })));
 }
 
