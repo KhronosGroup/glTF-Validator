@@ -2,6 +2,12 @@
 
 This is an npm package for the official [glTF Validator](https://github.com/KhronosGroup/glTF-Validator/) compiled from Dart to JS.
 
+## Installation
+
+```
+npm install --save gltf-validator
+```
+
 ## Examples
 
 ### Basic usage (Node.js)
