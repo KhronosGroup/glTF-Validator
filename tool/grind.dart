@@ -125,7 +125,9 @@ final _dart2jsArgs = [
 @Depends(issues)
 @Task('Build non-minified npm package with source map.')
 void npmDebug() {
-  _dart2jsArgs.clear();
+  _dart2jsArgs
+    ..clear()
+    ..add('-DGLTF_VALIDATOR_DEBUG=true');
   npm();
 }
 
@@ -151,8 +153,16 @@ void npm() {
 
   _restoreVersion();
 
-  final text = destination.readAsStringSync();
-  destination.writeAsStringSync('${preamble.getPreamble(minified: true)}$text');
+  final compiledJs = destination.readAsStringSync();
+
+  // Node.js detector adopted from https://github.com/iliakan/detect-node
+  const kDetector =
+      "let _isNode=false;try{_isNode=Object.prototype.toString.call(global.process)==='[object process]'}catch(_){}";
+  final preambleJs =
+      '${kDetector}if(_isNode){${preamble.getPreamble(minified: true)}}else{var self=Object.create(global);self.exports=exports}';
+
+  destination.writeAsStringSync('$preambleJs\n$compiledJs');
+
   delete(new File(p.join(destDir, 'gltf_validator.dart.js.deps')));
 
   final Map<String, dynamic> json = JSON

@@ -25,14 +25,10 @@ import 'dart:typed_data';
 import 'package:gltf/gltf.dart';
 
 const int CHUNK_SIZE = 1024 * 1024;
+const JsonEncoder kJsonEncoder = const JsonEncoder.withIndent('    ');
 
 final Element dropZone = querySelector('#dropZone');
 final Element output = querySelector('#output');
-
-void write(String text) {
-  output.appendText('$text\n');
-  context['Prism'].callMethod('highlightAll', [true]);
-}
 
 void main() {
   dropZone.onDragOver.listen((e) {
@@ -52,85 +48,113 @@ void main() {
       ..remove('hover')
       ..add('drop');
 
-    final reports = <Map<String, Object>>[];
+    _validate(e.dataTransfer.files).then((_) {
+      dropZone.classes.remove('drop');
+    });
+  });
+}
 
-    // Workaround for dart-sdk#26945
-    final iterator = e.dataTransfer.files.iterator;
+Future<Null> _validate(List<File> files) async {
+  File gltfFile;
+  GltfReader reader;
 
-    void handleFile(File file) {
-      final controller = new StreamController<List<int>>();
-      final context = new Context();
+  final context = new Context();
 
-      final reader =
-          new GltfReader.filename(controller.stream, file.name, context);
+  for (gltfFile in files) {
+    final lowerCaseName = gltfFile.name.toLowerCase();
+    if (lowerCaseName.endsWith('.gltf')) {
+      reader = new GltfJsonReader(_getFileStream(gltfFile), context);
+      break;
+    }
+    if (lowerCaseName.endsWith('.glb')) {
+      reader = new GlbReader(_getFileStream(gltfFile), context);
+      break;
+    }
+  }
 
-      if (reader == null) {
-        if (iterator.moveNext()) {
-          handleFile(iterator.current);
+  if (reader == null) {
+    return;
+  }
+
+  final readerResult = await reader.read();
+
+  if (readerResult?.gltf != null) {
+    final resourcesLoader = new ResourcesLoader(context, readerResult.gltf,
+        externalBytesFetch: (uri) {
+      if (uri != null) {
+        final file = _getFileByUri(files, uri);
+        if (file != null) {
+          return _getFile(file);
         }
+        return null;
+      } else {
+        return readerResult.buffer;
+      }
+    }, externalStreamFetch: (uri) {
+      if (uri != null) {
+        final file = _getFileByUri(files, uri);
+        if (file != null) {
+          return _getFileStream(file);
+        }
+        return null;
+      }
+    });
+
+    await resourcesLoader.load();
+  }
+  final validationResult =
+      new ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
+  _writeMap(validationResult.toMap());
+}
+
+File _getFileByUri(List<File> files, Uri uri) =>
+    files.firstWhere((file) => file.name == uri.path, orElse: () => null);
+
+Stream<List<int>> _getFileStream(File file) {
+  var isCanceled = false;
+  final controller = new StreamController<List<int>>(onCancel: () {
+    isCanceled = true;
+  });
+
+  controller.onListen = () {
+    var index = 0;
+    final fileReader = new FileReader();
+    fileReader.onLoadEnd.listen((_) {
+      if (isCanceled) {
         return;
       }
 
-      void checkNext() {
-        if (iterator.moveNext())
-          handleFile(iterator.current);
-        else
-          write(const JsonEncoder.withIndent('    ').convert(reports));
+      final result = fileReader.result;
+      if (result is Uint8List) {
+        controller.add(result);
       }
 
-      var index = 0;
-
-      void handleNextChunk(File file) {
-        final fileReader = new FileReader();
-        fileReader.onLoadEnd.listen((event) {
-          if (fileReader.result is Uint8List) {
-            // ignore: argument_type_not_assignable
-            controller.add(fileReader.result);
-          }
-          if (index < file.size)
-            handleNextChunk(file);
-          else
-            controller.close();
-        });
+      if (index < file.size) {
         final length = min(CHUNK_SIZE, file.size - index);
         fileReader.readAsArrayBuffer(file.slice(index, index += length));
+      } else {
+        controller.close();
       }
+    });
 
-      handleNextChunk(file);
+    final length = min(CHUNK_SIZE, file.size);
+    fileReader.readAsArrayBuffer(file.slice(0, index += length));
+  };
 
-      reader.read().then((readerResult) {
-        final validationResult =
-            new ValidationResult(Uri.parse(file.name), context, readerResult);
+  return controller.stream;
+}
 
-        if (readerResult?.gltf != null) {
-          final resourcesLoader =
-              new ResourcesLoader(context, readerResult.gltf,
-                  externalBytesFetch: (uri) {
-                    if (uri != null) {
-                      return null;
-                    } else {
-                      return readerResult.buffer;
-                    }
-                  },
-                  externalStreamFetch: (uri) => null);
+Future<List<int>> _getFile(File file) async {
+  final fileReader = new FileReader()..readAsArrayBuffer(file);
+  await fileReader.onLoadEnd.first;
+  final result = fileReader.result;
+  if (result is Uint8List) {
+    return result;
+  }
+  return null;
+}
 
-          resourcesLoader.load().then((_) {
-            reports.add(validationResult.toMap());
-            checkNext();
-          }, onError: () {
-            reports.add(validationResult.toMap());
-            checkNext();
-          });
-        } else {
-          reports.add(validationResult.toMap());
-          checkNext();
-        }
-      });
-    }
-
-    if (iterator.moveNext()) {
-      handleFile(iterator.current);
-    }
-    dropZone.classes.remove('drop');
-  });
+void _writeMap(Map<String, Object> json) {
+  output.text = kJsonEncoder.convert(json);
+  context['Prism'].callMethod('highlightAll', [true]);
 }
