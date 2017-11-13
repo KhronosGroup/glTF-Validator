@@ -1,3 +1,7 @@
+## 2.0.0-dev.1.3
+
+* JS docs update.
+
 ## 2.0.0-dev.1.2
 
 * Updated JS API. See [README.md](tool/npm_template/README.md) for details.
