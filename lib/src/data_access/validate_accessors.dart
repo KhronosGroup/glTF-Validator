@@ -144,7 +144,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
           if (accessor.min != null) {
             if (value < accessor.min[componentIndex]) {
               context.addIssue(DataError.accessorElementOutOfMinBound,
-                  name: MIN,
+                  name: '$MIN/$componentIndex',
                   args: [value, index, accessor.min[componentIndex]]);
             }
 
@@ -157,7 +157,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
           if (accessor.max != null) {
             if (value > accessor.max[componentIndex]) {
               context.addIssue(DataError.accessorElementOutOfMaxBound,
-                  name: MAX,
+                  name: '$MAX/$componentIndex',
                   args: [value, index, accessor.max[componentIndex]]);
             }
 
@@ -268,7 +268,8 @@ void validateAccessorsData(Gltf gltf, Context context) {
         if (accessor.min != null) {
           if (value < accessor.min[componentIndex]) {
             context.addIssue(DataError.accessorElementOutOfMinBound,
-                name: MIN, args: [value, index, accessor.min[componentIndex]]);
+                name: '$MIN/$componentIndex',
+                args: [value, index, accessor.min[componentIndex]]);
           }
 
           if (index < components || intMins[componentIndex] > value) {
@@ -279,7 +280,8 @@ void validateAccessorsData(Gltf gltf, Context context) {
         if (accessor.max != null) {
           if (value > accessor.max[componentIndex]) {
             context.addIssue(DataError.accessorElementOutOfMaxBound,
-                name: MAX, args: [value, index, accessor.max[componentIndex]]);
+                name: '$MAX/$componentIndex',
+                args: [value, index, accessor.max[componentIndex]]);
           }
 
           if (index < components || intMaxs[componentIndex] < value) {
