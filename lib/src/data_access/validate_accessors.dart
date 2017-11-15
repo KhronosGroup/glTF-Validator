@@ -215,7 +215,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
         for (var i = 0; i < components; ++i) {
           if (accessor.min[i] != doubleMins[i]) {
             context.addIssue(DataError.accessorMinMismatch,
-                name: MIN, args: [i, accessor.min[i], doubleMins[i]]);
+                name: '$MIN/$i', args: [accessor.min[i], doubleMins[i]]);
           }
         }
       }
@@ -224,7 +224,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
         for (var i = 0; i < components; ++i) {
           if (accessor.max[i] != doubleMaxs[i]) {
             context.addIssue(DataError.accessorMaxMismatch,
-                name: MAX, args: [i, accessor.max[i], doubleMaxs[i]]);
+                name: '$MAX/$i', args: [accessor.max[i], doubleMaxs[i]]);
           }
         }
       }
@@ -331,7 +331,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
         for (var i = 0; i < components; ++i) {
           if (accessor.min[i] != intMins[i]) {
             context.addIssue(DataError.accessorMinMismatch,
-                name: MIN, args: [i, accessor.min[i], intMins[i]]);
+                name: '$MIN/$i', args: [accessor.min[i], intMins[i]]);
           }
         }
       }
@@ -340,7 +340,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
         for (var i = 0; i < components; ++i) {
           if (accessor.max[i] != intMaxs[i]) {
             context.addIssue(DataError.accessorMaxMismatch,
-                name: MAX, args: [i, accessor.max[i], intMaxs[i]]);
+                name: '$MAX/$i', args: [accessor.max[i], intMaxs[i]]);
           }
         }
       }
