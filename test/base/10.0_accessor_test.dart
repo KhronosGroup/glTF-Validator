@@ -44,9 +44,9 @@ void main() {
       final context = new Context()
         ..path.add('accessors')
         ..path.add('0')
-        ..addIssue(SchemaError.undefinedProperty, name: 'componentType')
-        ..addIssue(SchemaError.undefinedProperty, name: 'count')
-        ..addIssue(SchemaError.undefinedProperty, name: 'type');
+        ..addIssue(SchemaError.undefinedProperty, args: ['componentType'])
+        ..addIssue(SchemaError.undefinedProperty, args: ['count'])
+        ..addIssue(SchemaError.undefinedProperty, args: ['type']);
 
       await reader.read();
 

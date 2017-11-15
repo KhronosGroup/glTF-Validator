@@ -45,7 +45,7 @@ void main() {
         ..path.add('skins')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
-        ..addIssue(SchemaError.undefinedProperty, name: 'joints');
+        ..addIssue(SchemaError.undefinedProperty, args: ['joints']);
 
       await reader.read();
 

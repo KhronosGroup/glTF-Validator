@@ -48,13 +48,13 @@ class DataError extends IssueType {
 
   static final DataError accessorMinMismatch = new DataError._(
       'ACCESSOR_MIN_MISMATCH',
-      (args) => 'Declared minimum value for component ${args[0]} '
-          '(${args[1]}) does not match actual minimum (${args[2]}).');
+      (args) => 'Declared minimum value for this component '
+          '(${args[0]}) does not match actual minimum (${args[1]}).');
 
   static final DataError accessorMaxMismatch = new DataError._(
       'ACCESSOR_MAX_MISMATCH',
-      (args) => 'Declared maximum value for component ${args[0]} '
-          '(${args[1]}) does not match actual maximum (${args[2]}).');
+      (args) => 'Declared maximum value for this component '
+          '(${args[0]}) does not match actual maximum (${args[1]}).');
 
   static final DataError accessorElementOutOfMinBound = new DataError._(
       'ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND',
@@ -205,7 +205,8 @@ class SchemaError extends IssueType {
       (args) => 'Value ${args[0]} is not a multiple of ${args[1]}.');
 
   static final SchemaError undefinedProperty = new SchemaError._(
-      'UNDEFINED_PROPERTY', (args) => 'Property must be defined.');
+      'UNDEFINED_PROPERTY',
+      (args) => 'Property ${_q(args[0])} must be defined.');
 
   static final SchemaError unexpectedProperty = new SchemaError._(
       'UNEXPECTED_PROPERTY',

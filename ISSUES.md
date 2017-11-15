@@ -19,7 +19,7 @@
 |11|VALUE_NOT_IN_LIST|Invalid value '`%1`'. Valid values are ('`%a`', '`%b`', '`%c`').|Error|
 |12|VALUE_NOT_IN_RANGE|Value `%1` is out of range.|Error|
 |13|VALUE_MULTIPLE_OF|Value `%1` is not a multiple of `%2`.|Error|
-|14|UNDEFINED_PROPERTY|Property must be defined.|Error|
+|14|UNDEFINED_PROPERTY|Property '`%1`' must be defined.|Error|
 |15|UNEXPECTED_PROPERTY|Unexpected property.|Warning|
 |16|UNSATISFIED_DEPENDENCY|Dependency failed. '`%1`' must be defined.|Error|
 ## SemanticError
@@ -98,8 +98,8 @@
 |1|BUFFER_EMBEDDED_BYTELENGTH_MISMATCH|Actual data length `%1` is not equal to the declared buffer byteLength `%2`.|Error|
 |2|BUFFER_EXTERNAL_BYTELENGTH_MISMATCH|Actual data length `%1` is less than the declared buffer byteLength `%2`.|Error|
 |3|BUFFER_GLB_CHUNK_TOO_BIG|GLB-stored BIN chunk contains `%1` extra padding byte(s).|Warning|
-|4|ACCESSOR_MIN_MISMATCH|Declared minimum value for component `%1` (`%2`) does not match actual minimum (`%3`).|Error|
-|5|ACCESSOR_MAX_MISMATCH|Declared maximum value for component `%1` (`%2`) does not match actual maximum (`%3`).|Error|
+|4|ACCESSOR_MIN_MISMATCH|Declared minimum value for this component (`%1`) does not match actual minimum (`%2`).|Error|
+|5|ACCESSOR_MAX_MISMATCH|Declared maximum value for this component (`%1`) does not match actual maximum (`%2`).|Error|
 |6|ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor element `%1` at index `%2` is less than declared minimum value `%3`.|Error|
 |7|ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND|Accessor element `%1` at index `%2` is greater than declared maximum value `%3`.|Error|
 |8|ACCESSOR_NON_UNIT|Accessor element at index `%1` is not of unit length: `%2`.|Error|

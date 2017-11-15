@@ -29,7 +29,7 @@ void main() {
 
       final context = new Context()
         ..path.add('asset')
-        ..addIssue(SchemaError.undefinedProperty, name: 'version')
+        ..addIssue(SchemaError.undefinedProperty, args: ['version'])
         ..addIssue(SemanticError.unknownAssetMajorVersion, args: [0]);
 
       await reader.read();

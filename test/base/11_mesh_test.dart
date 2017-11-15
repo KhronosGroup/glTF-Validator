@@ -44,7 +44,7 @@ void main() {
       final context = new Context()
         ..path.add('meshes')
         ..path.add('0')
-        ..addIssue(SchemaError.undefinedProperty, name: 'primitives')
+        ..addIssue(SchemaError.undefinedProperty, args: ['primitives'])
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.typeMismatch,
@@ -60,7 +60,7 @@ void main() {
         ..path.add('4')
         ..path.add('primitives')
         ..path.add('0')
-        ..addIssue(SchemaError.undefinedProperty, name: 'attributes')
+        ..addIssue(SchemaError.undefinedProperty, args: ['attributes'])
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.typeMismatch,

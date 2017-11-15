@@ -169,7 +169,7 @@ void main() {
           new File('test/base/data/glb/empty_json_object.glb').openRead());
 
       final context = new Context()
-        ..addIssue(SchemaError.undefinedProperty, name: 'asset');
+        ..addIssue(SchemaError.undefinedProperty, args: ['asset']);
 
       await glbReader.read();
 

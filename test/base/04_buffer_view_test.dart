@@ -44,12 +44,12 @@ void main() {
       final context = new Context()
         ..path.add('bufferViews')
         ..path.add('0')
-        ..addIssue(SchemaError.undefinedProperty, name: 'byteLength')
-        ..addIssue(SchemaError.undefinedProperty, name: 'buffer')
+        ..addIssue(SchemaError.undefinedProperty, args: ['byteLength'])
+        ..addIssue(SchemaError.undefinedProperty, args: ['buffer'])
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.valueNotInRange, name: 'byteLength', args: [0])
-        ..addIssue(SchemaError.undefinedProperty, name: 'buffer');
+        ..addIssue(SchemaError.undefinedProperty, args: ['buffer']);
 
       await reader.read();
 

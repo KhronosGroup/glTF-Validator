@@ -48,17 +48,17 @@ void main() {
         ..path.add('channels')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
-        ..addIssue(SchemaError.undefinedProperty, name: 'sampler')
+        ..addIssue(SchemaError.undefinedProperty, args: ['sampler'])
         ..path.add('target')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
-        ..addIssue(SchemaError.undefinedProperty, name: 'path')
+        ..addIssue(SchemaError.undefinedProperty, args: ['path'])
         ..path.removeLast()
         ..path.removeLast()
         ..path.removeLast()
         ..path.add('samplers')
         ..path.add('0')
-        ..addIssue(SchemaError.undefinedProperty, name: 'input')
-        ..addIssue(SchemaError.undefinedProperty, name: 'output')
+        ..addIssue(SchemaError.undefinedProperty, args: ['input'])
+        ..addIssue(SchemaError.undefinedProperty, args: ['output'])
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
 
       await reader.read();
