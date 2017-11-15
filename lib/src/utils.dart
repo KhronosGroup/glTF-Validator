@@ -52,7 +52,7 @@ int getIndex(Map<String, Object> map, String name, Context context,
     context.addIssue(SchemaError.invalidIndex, name: name);
   } else if (value == null) {
     if (req) {
-      context.addIssue(SchemaError.undefinedProperty, name: name);
+      context.addIssue(SchemaError.undefinedProperty, args: [name]);
     }
   } else {
     context.addIssue(SchemaError.typeMismatch,
@@ -92,7 +92,7 @@ int getUint(Map<String, Object> map, String name, Context context,
     if (!req) {
       return def;
     }
-    context.addIssue(SchemaError.undefinedProperty, name: name);
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
     context.addIssue(SchemaError.typeMismatch,
         name: name, args: [value, _kInteger]);
@@ -124,7 +124,7 @@ double getFloat(Map<String, Object> map, String name, Context context,
     if (!req) {
       return def;
     }
-    context.addIssue(SchemaError.undefinedProperty, name: name);
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
     context.addIssue(SchemaError.typeMismatch,
         name: name, args: [value, _kNumber]);
@@ -150,7 +150,7 @@ String getString(Map<String, Object> map, String name, Context context,
     if (!req) {
       return def;
     }
-    context.addIssue(SchemaError.undefinedProperty, name: name);
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
     context.addIssue(SchemaError.typeMismatch,
         name: name, args: [value, _kString]);
@@ -181,7 +181,7 @@ Map<String, Object> getMap(
     return value;
   } else if (value == null) {
     if (req) {
-      context.addIssue(SchemaError.undefinedProperty, name: name);
+      context.addIssue(SchemaError.undefinedProperty, args: [name]);
       return null;
     }
   } else {
@@ -206,7 +206,7 @@ T getObjectFromInnerMap<T>(Map<String, Object> map, String name,
     return object;
   } else if (value == null) {
     if (req) {
-      context.addIssue(SchemaError.undefinedProperty, name: name);
+      context.addIssue(SchemaError.undefinedProperty, args: [name]);
     }
   } else {
     context.addIssue(SchemaError.typeMismatch,
@@ -246,7 +246,7 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
     return value; // ignore: return_of_invalid_type
   } else if (value == null) {
     if (req) {
-      context.addIssue(SchemaError.undefinedProperty, name: name);
+      context.addIssue(SchemaError.undefinedProperty, args: [name]);
     }
   } else {
     context
@@ -283,7 +283,7 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
 
     return value; // ignore: return_of_invalid_type
   } else if (value == null) {
-    context.addIssue(SchemaError.undefinedProperty, name: name);
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
     context.addIssue(SchemaError.typeMismatch,
         name: name, args: [value, _kObject]);
@@ -396,7 +396,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     if (!req) {
       return def;
     }
-    context.addIssue(SchemaError.undefinedProperty, name: name);
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
@@ -509,7 +509,7 @@ List<Map<String, Object>> getMapList(
     }
     return value; // ignore: return_of_invalid_type
   } else if (value == null) {
-    context.addIssue(SchemaError.undefinedProperty, name: name);
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);

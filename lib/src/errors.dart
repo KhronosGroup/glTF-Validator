@@ -205,7 +205,8 @@ class SchemaError extends IssueType {
       (args) => 'Value ${args[0]} is not a multiple of ${args[1]}.');
 
   static final SchemaError undefinedProperty = new SchemaError._(
-      'UNDEFINED_PROPERTY', (args) => 'Property must be defined.');
+      'UNDEFINED_PROPERTY',
+      (args) => 'Property ${_q(args[0])} must be defined.');
 
   static final SchemaError unexpectedProperty = new SchemaError._(
       'UNEXPECTED_PROPERTY',

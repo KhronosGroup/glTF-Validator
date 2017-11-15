@@ -93,7 +93,7 @@ void main() {
           new Stream<List<int>>.fromIterable(['{}'.codeUnits]));
 
       final context = new Context()
-        ..addIssue(SchemaError.undefinedProperty, name: 'asset');
+        ..addIssue(SchemaError.undefinedProperty, args: ['asset']);
 
       await reader.read();
       expect(reader.context.errors, unorderedMatches(context.errors));

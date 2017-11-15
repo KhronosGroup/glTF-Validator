@@ -44,7 +44,7 @@ void main() {
       final context = new Context()
         ..path.add('buffers')
         ..path.add('0')
-        ..addIssue(SchemaError.undefinedProperty, name: 'byteLength')
+        ..addIssue(SchemaError.undefinedProperty, args: ['byteLength'])
         ..path.removeLast()
         ..path.add('1')
         ..addIssue(SchemaError.valueNotInRange, name: 'byteLength', args: [0]);
