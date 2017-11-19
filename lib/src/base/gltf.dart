@@ -97,30 +97,22 @@ class Gltf extends GltfProperty {
     resetPath();
     if (context.validate) {
       checkMembers(map, GLTF_MEMBERS, context);
-    }
 
-    final extensionsUsed =
-        getStringList(map, EXTENSIONS_USED, context) ?? <String>[];
-    context.initExtensions(extensionsUsed);
-
-    final extensionsRequired =
-        getStringList(map, EXTENSIONS_REQUIRED, context) ?? <String>[];
-
-    if (context.validate) {
       // See https://github.com/KhronosGroup/glTF/pull/1025
       if (map.containsKey(EXTENSIONS_REQUIRED) &&
           !map.containsKey(EXTENSIONS_USED)) {
         context.addIssue(SchemaError.unsatisfiedDependency,
             name: EXTENSIONS_REQUIRED, args: [EXTENSIONS_USED]);
       }
-
-      for (final value in extensionsRequired) {
-        if (!extensionsUsed.contains(value)) {
-          context.addIssue(SemanticError.unusedExtensionRequired,
-              name: EXTENSIONS_REQUIRED, args: [value]);
-        }
-      }
     }
+
+    final extensionsUsed =
+        getStringList(map, EXTENSIONS_USED, context) ?? <String>[];
+
+    final extensionsRequired =
+        getStringList(map, EXTENSIONS_REQUIRED, context) ?? <String>[];
+
+    context.initExtensions(extensionsUsed, extensionsRequired);
 
     // Helper function for converting JSON array to List of proper glTF objects
     SafeList<T> toSafeList<T>(String name, FromMapFunction<T> fromMap) {

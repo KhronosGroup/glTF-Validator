@@ -86,12 +86,8 @@ class Context {
 
   List<Issue> get issues => _issues;
 
-  Iterable<Issue> get errors => getErrors();
-
   List<Issue> getErrors() =>
       _issues.where((issue) => issue.severity == Severity.Error).toList();
-
-  Iterable<Issue> get warnings => getWarnings();
 
   List<Issue> getWarnings() =>
       _issues.where((issue) => issue.severity == Severity.Warning).toList();
@@ -129,10 +125,18 @@ class Context {
     _userExtensions.addAll(userExtensions);
   }
 
-  void initExtensions(List<String> extensionsUsed) {
+  void initExtensions(
+      List<String> extensionsUsed, List<String> extensionsRequired) {
     _extensionsUsed.addAll(extensionsUsed);
 
-    for (final extensionName in extensionsUsed) {
+    for (var i = 0; i < extensionsUsed.length; ++i) {
+      final extensionName = extensionsUsed[i];
+
+      if (!kReservedPrefixes.any(extensionName.startsWith)) {
+        addIssue(SemanticError.unreservedExtensionPrefix,
+            name: '$EXTENSIONS_USED/$i', args: [extensionName.split('_')[0]]);
+      }
+
       final extension = _userExtensions.firstWhere(
           (extension) => extension.name == extensionName,
           orElse: () => defaultExtensions.firstWhere(
@@ -141,7 +145,7 @@ class Context {
 
       if (extension == null) {
         addIssue(LinkError.unsupportedExtension,
-            name: EXTENSIONS_USED, args: [extensionName]);
+            name: '$EXTENSIONS_USED/$i', args: [extensionName]);
         continue;
       }
 
@@ -149,6 +153,16 @@ class Context {
         _extensionsFunctions[new ExtensionTuple(type, extension.name)] = funcs;
       });
       _extensionsLoaded.add(extensionName);
+    }
+
+    if (validate) {
+      for (var i = 0; i < extensionsRequired.length; ++i) {
+        final value = extensionsRequired[i];
+        if (!extensionsUsed.contains(value)) {
+          addIssue(SemanticError.unusedExtensionRequired,
+              name: '$EXTENSIONS_REQUIRED/$i', args: [value]);
+        }
+      }
     }
   }
 

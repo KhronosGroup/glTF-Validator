@@ -52,8 +52,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Unexpected end of header', () async {
@@ -65,8 +64,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid magic', () async {
@@ -78,8 +76,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid version', () async {
@@ -91,8 +88,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Zero total length', () async {
@@ -105,8 +101,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Only header present', () async {
@@ -118,8 +113,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Zero chunk header', () async {
@@ -133,8 +127,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Unaligned chunk', () async {
@@ -147,8 +140,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty JSON chunk', () async {
@@ -160,8 +152,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty JSON object', () async {
@@ -173,8 +164,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid JSON chunk', () async {
@@ -187,8 +177,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Two valid JSON chunks', () async {
@@ -200,8 +189,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Two empty JSON chunks', () async {
@@ -217,8 +205,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Only BIN chunk', () async {
@@ -231,8 +218,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Two BIN chunks', () async {
@@ -246,8 +232,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Two empty BIN chunks', () async {
@@ -261,8 +246,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('JSON and two buffers', () async {
@@ -274,8 +258,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Unknown chunk', () async {
@@ -289,8 +272,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Chunk bigger than GLB', () async {
@@ -303,8 +285,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Truncated chunk header', () async {
@@ -316,8 +297,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Truncated chunk data', () async {
@@ -329,8 +309,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Total length mismatch', () async {
@@ -342,8 +321,7 @@ void main() {
 
       await glbReader.read();
 
-      expect(glbReader.context.errors, unorderedMatches(context.errors));
-      expect(glbReader.context.warnings, unorderedMatches(context.warnings));
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Minimal valid GLB', () async {
@@ -352,8 +330,7 @@ void main() {
 
       final result = await glbReader.read();
 
-      expect(glbReader.context.errors, isEmpty);
-      expect(glbReader.context.warnings, isEmpty);
+      expect(glbReader.context.issues, isEmpty);
 
       expect(result.mimeType, 'model/gltf-binary');
       expect(result.gltf, const isInstanceOf<Gltf>());
@@ -366,8 +343,7 @@ void main() {
 
       final result = await glbReader.read();
 
-      expect(glbReader.context.errors, isEmpty);
-      expect(glbReader.context.warnings, isEmpty);
+      expect(glbReader.context.issues, isEmpty);
 
       expect(result.mimeType, 'model/gltf-binary');
       expect(result.gltf, const isInstanceOf<Gltf>());

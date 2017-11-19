@@ -33,8 +33,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Custom Property', () async {
@@ -63,8 +62,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Unresolved references', () async {
@@ -90,8 +88,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Misc', () async {
@@ -153,8 +150,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid', () async {
@@ -168,8 +164,7 @@ void main() {
         ..path.add('0')
         ..addIssue(SemanticError.nodeEmpty);
 
-      expect(reader.context.errors, context.errors);
-      expect(reader.context.warnings, context.warnings);
+      expect(reader.context.issues, unorderedMatches(context.issues));
 
       expect(result.gltf.animations.toString(),
           '[{channels: [{sampler: 0, target: {node: 0, path: scale, extensions: {}}, extensions: {}}], samplers: [{input: 0, interpolation: LINEAR, output: 1, extensions: {}}], extensions: {}}]');

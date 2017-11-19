@@ -8,7 +8,7 @@
 |:---:|-----|---------|----------|
 |1|ARRAY_LENGTH_NOT_IN_LIST|Invalid array length `%1`. Valid lengths are: ('`%a`', '`%b`', '`%c`').|Error|
 |2|ARRAY_TYPE_MISMATCH|Type mismatch. Array element '`%1`' is not a '`%2`'.|Error|
-|3|DUPLICATE_ELEMENTS|Duplicate element at `%1`.|Error|
+|3|DUPLICATE_ELEMENTS|Duplicate element.|Error|
 |4|INVALID_INDEX|Index must be a non-negative integer.|Error|
 |5|INVALID_JSON|Invalid JSON data. Parser output: `%1`|Error|
 |6|INVALID_URI|Invalid URI `%1`. Parser output: `%2`|Error|
@@ -52,8 +52,9 @@
 |25|NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
 |26|NODE_ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
 |27|UNUSED_EXTENSION_REQUIRED|Unused extension '`%1`' cannot be required.|Error|
-|28|NODE_EMPTY|Empty node encountered.|Information|
-|29|NON_RELATIVE_URI|Non-relative URI found: `%1`.|Warning|
+|28|UNRESERVED_EXTENSION_PREFIX|Extension uses unreserved extension prefix '`%1`'.|Warning|
+|29|NODE_EMPTY|Empty node encountered.|Information|
+|30|NON_RELATIVE_URI|Non-relative URI found: `%1`.|Warning|
 ## LinkError
 | No | Code | Message | Severity |
 |:---:|-----|---------|----------|

@@ -38,8 +38,7 @@ void main() {
             name: 'KHR_materials_pbrSpecularGlossiness')
         ..path.add('KHR_materials_pbrSpecularGlossiness');
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Custom Property', () async {
@@ -56,8 +55,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid', () async {
@@ -67,8 +65,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.gltf.materials.toString(),
           '[{emissiveFactor: [0.0, 0.0, 0.0], alphaMode: OPAQUE, alphaCutoff: 0.5, doubleSided: false, extensions: {KHR_materials_pbrSpecularGlossiness: {diffuseFactor: [0.5, 0.5, 0.5, 0.5], diffuseTexture: {index: 0, texCoord: 0, extensions: {}}, specularFactor: [0.0, 0.0, 0.0], glossinessFactor: 0.5, specularGlossinessTexture: {index: 1, texCoord: 0, extensions: {}}, extensions: {}}}}]');

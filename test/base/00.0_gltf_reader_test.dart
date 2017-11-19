@@ -62,7 +62,7 @@ void main() {
             args: ['FormatException: Unexpected end of input (at offset 0)']);
 
       await reader.read();
-      expect(reader.context.errors, unorderedMatches(context.errors));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid stream', () async {
@@ -74,7 +74,7 @@ void main() {
             args: ['FormatException: Unexpected character (at offset 1)']);
 
       await reader.read();
-      expect(reader.context.errors, unorderedMatches(context.errors));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid root type', () async {
@@ -85,7 +85,7 @@ void main() {
         ..addIssue(SchemaError.typeMismatch, args: [<Object>[], 'object']);
 
       await reader.read();
-      expect(reader.context.errors, unorderedMatches(context.errors));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty root object', () async {
@@ -96,7 +96,7 @@ void main() {
         ..addIssue(SchemaError.undefinedProperty, args: ['asset']);
 
       await reader.read();
-      expect(reader.context.errors, unorderedMatches(context.errors));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Smallest possible asset', () async {
@@ -105,8 +105,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.mimeType, 'model/gltf+json');
       expect(result.gltf, const isInstanceOf<Gltf>());

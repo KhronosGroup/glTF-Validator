@@ -33,8 +33,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty object', () async {
@@ -84,8 +83,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Custom Property', () async {
@@ -99,8 +97,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Unresolved references', () async {
@@ -124,8 +121,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Misc', () async {
@@ -208,8 +204,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Indices', () async {
@@ -242,8 +237,7 @@ void main() {
               ]
             ]);
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
       expect(result.gltf.meshes.first.primitives[0].count, 4);
       expect(result.gltf.meshes.first.primitives[1].count, 6);
     });
@@ -284,8 +278,7 @@ void main() {
         ..addIssue(LinkError.meshPrimitiveMorphTargetInvalidAttributeCount,
             name: 'POSITION');
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('UV Bindings', () async {
@@ -325,8 +318,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid', () async {
@@ -335,8 +327,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.gltf.meshes.toString(),
           '[{primitives: [{attributes: {POSITION: 1}, indices: 0, material: 0, mode: 4, targets: [{POSITION: 2}, {POSITION: 3}], extensions: {}}], weights: [0.7, 0.2], extensions: {}}]');

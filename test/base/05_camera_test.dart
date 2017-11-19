@@ -33,8 +33,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty object & empty nested objects', () async {
@@ -71,8 +70,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Custom Property', () async {
@@ -93,8 +91,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid', () async {
@@ -103,8 +100,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.gltf.cameras.toString(),
           '[{type: perspective, perspective: {aspectRatio: 1.0, yfov: 1.0, zfar: 10.0, znear: 1.0, extensions: {}}, extensions: {}}, {type: orthographic, orthographic: {xmag: 1.0, ymag: 1.0, zfar: 10.0, znear: 1.0, extensions: {}}, extensions: {}}]');
@@ -139,8 +135,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
   });
 }

@@ -46,8 +46,8 @@ void main() {
       final validationResult =
           await getValidationResult('test/data_access/image/not_found.gltf');
 
-      expect(validationResult.context.errors, hasLength(1));
-      expect(validationResult.context.errors.first.type.code, 'FILE_NOT_FOUND');
+      expect(validationResult.context.issues, hasLength(1));
+      expect(validationResult.context.issues.first.type.code, 'FILE_NOT_FOUND');
     });
 
     test('Data URI & Invalid MIME', () async {
@@ -60,14 +60,14 @@ void main() {
         ..addIssue(DataError.imageMimeTypeInvalid,
             args: ['image/png', 'image/jpeg']);
 
-      expect(validationResult.context.errors, unorderedMatches(context.errors));
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
 
     test('From BufferView', () async {
       final validationResult =
           await getValidationResult('test/data_access/image/yellow.glb');
 
-      expect(validationResult.context.errors, isEmpty);
+      expect(validationResult.context.issues, isEmpty);
 
       final image = validationResult.readerResult.gltf.images.first;
       expect(image.info.mimeType, 'image/png');
@@ -81,7 +81,7 @@ void main() {
       final validationResult = await getValidationResult(
           'test/data_access/image/valid_external.gltf');
 
-      expect(validationResult.context.errors, isEmpty);
+      expect(validationResult.context.issues, isEmpty);
 
       var image = validationResult.readerResult.gltf.images[0];
       expect(image.info.mimeType, 'image/png');
@@ -111,9 +111,7 @@ void main() {
         ..addIssue(DataError.imageNonPowerOfTwoDimensions,
             index: 3, args: [5, 3]);
 
-      expect(validationResult.context.errors, unorderedMatches(context.errors));
-      expect(validationResult.context.warnings,
-          unorderedMatches(context.warnings));
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
   });
 }

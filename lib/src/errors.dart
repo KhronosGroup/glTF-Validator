@@ -163,8 +163,8 @@ class SchemaError extends IssueType {
       (args) =>
           'Type mismatch. Array element ${_mbq(args[0])} is not a ${_q(args[1])}.');
 
-  static final SchemaError arrayDuplicateElements = new SchemaError._(
-      'DUPLICATE_ELEMENTS', (args) => 'Duplicate element at ${args[0]}.');
+  static final SchemaError arrayDuplicateElements =
+      new SchemaError._('DUPLICATE_ELEMENTS', (args) => 'Duplicate element.');
 
   static final SchemaError invalidIndex = new SchemaError._(
       'INVALID_INDEX', (_) => 'Index must be a non-negative integer.');
@@ -349,6 +349,11 @@ class SemanticError extends IssueType {
   static final SemanticError unusedExtensionRequired = new SemanticError._(
       'UNUSED_EXTENSION_REQUIRED',
       (args) => 'Unused extension ${_q(args[0])} cannot be required.');
+
+  static final SemanticError unreservedExtensionPrefix = new SemanticError._(
+      'UNRESERVED_EXTENSION_PREFIX',
+      (args) => 'Extension uses unreserved extension prefix ${_q(args[0])}.',
+      Severity.Warning);
 
   static final SemanticError nodeEmpty = new SemanticError._(
       'NODE_EMPTY', (args) => 'Empty node encountered.', Severity.Information);

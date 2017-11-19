@@ -31,8 +31,7 @@ void main() {
 
       result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       // All buffers are loaded
       expect(result.gltf.buffers.every((buffer) => buffer.data != null), true);

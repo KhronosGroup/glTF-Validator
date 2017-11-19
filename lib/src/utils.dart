@@ -232,7 +232,7 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
           if (v < 0) {
             context.addIssue(SchemaError.invalidIndex, index: i);
           } else if (!uniqueItems.add(v)) {
-            context.addIssue(SchemaError.arrayDuplicateElements, args: [i]);
+            context.addIssue(SchemaError.arrayDuplicateElements, index: i);
           }
         } else {
           value[i] = -1;
@@ -464,7 +464,7 @@ List<String> getStringList(
         final v = value[i];
         if (v is String) {
           if (!uniqueItems.add(v)) {
-            context.addIssue(SchemaError.arrayDuplicateElements, args: [i]);
+            context.addIssue(SchemaError.arrayDuplicateElements, index: i);
           }
         } else {
           context.addIssue(SchemaError.arrayTypeMismatch,
@@ -474,9 +474,9 @@ List<String> getStringList(
       }
       context.path.removeLast();
       if (wrongMemberFound) {
-        return <String>[];
+        return null;
       } else {
-        return uniqueItems.toList(growable: false);
+        return value; // ignore: return_of_invalid_type
       }
     }
     return value; // ignore: return_of_invalid_type
@@ -484,7 +484,7 @@ List<String> getStringList(
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
   }
-  return <String>[];
+  return null;
 }
 
 List<Map<String, Object>> getMapList(

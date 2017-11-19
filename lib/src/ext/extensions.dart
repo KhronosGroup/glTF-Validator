@@ -33,15 +33,8 @@ abstract class Extension {
 
   Map<Type, ExtFuncs> get functions;
 
-  Map<String, ErrorFunction> get errors => const <String, ErrorFunction>{};
-  Map<String, ErrorFunction> get warnings => const <String, ErrorFunction>{};
-
   // Sub-classes should be singletons instead of consts because of
   // https://github.com/dart-lang/sdk/issues/17207
-}
-
-abstract class ExtensionOptions {
-  Extension get extension;
 }
 
 class ExtFuncs {
@@ -67,4 +60,17 @@ final List<Extension> defaultExtensions = <Extension>[
   new KhrMaterialsPbrSpecularGlossinessExtension(),
   new CesiumRtcExtension(),
   new Web3dQuantizedAttributesExtension()
+];
+
+// https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md
+const List<String> kReservedPrefixes = const <String>[
+  'KHR_',
+  'EXT_',
+  'AVR_',
+  'BLENDER_',
+  'CESIUM_',
+  'FB_',
+  'GOOGLE_',
+  'OWLII_',
+  'WEB3D_'
 ];

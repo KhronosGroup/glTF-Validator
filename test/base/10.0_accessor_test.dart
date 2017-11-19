@@ -33,8 +33,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty object', () async {
@@ -50,8 +49,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, context.errors);
-      expect(reader.context.warnings, context.warnings);
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Custom Property', () async {
@@ -65,8 +63,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid', () async {
@@ -75,8 +72,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.gltf.accessors.toString(),
           '[{bufferView: 0, byteOffset: 0, componentType: 5126, count: 4, type: VEC3, normalized: false, max: [1.0, 1.0, 1.0], min: [0.0, 0.0, 0.0], sparse: {count: 2, indices: {bufferView: 1, byteOffset: 24, componentType: 5121, extensions: {}}, values: {bufferView: 1, byteOffset: 0, extensions: {}}, extensions: {}}, extensions: {}}]');
@@ -101,8 +97,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, context.errors);
-      expect(reader.context.warnings, context.warnings);
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Alignment', () async {
@@ -132,8 +127,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, context.errors);
-      expect(reader.context.warnings, context.warnings);
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Misc', () async {
@@ -170,8 +164,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, context.errors);
-      expect(reader.context.warnings, context.warnings);
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Matrix Alignment', () async {
@@ -202,8 +195,7 @@ void main() {
         ..addIssue(SemanticError.accessorMatrixAlignment, name: 'byteOffset')
         ..addIssue(LinkError.accessorTooLong, args: [2, 64, 0, 14]);
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
   });
 }
