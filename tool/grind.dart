@@ -122,18 +122,16 @@ final _dart2jsArgs = [
   '--trust-type-annotations'
 ];
 
-@Depends(issues)
 @Task('Build non-minified npm package with source map.')
 void npmDebug() {
   _dart2jsArgs
     ..clear()
     ..add('-DGLTF_VALIDATOR_DEBUG=true');
-  npm();
+  npmRelease();
 }
 
-@Depends(issues)
-@Task('Build an npm package.')
-void npm() {
+@Task('Build minified npm package.')
+void npmRelease() {
   _ensureBuild();
   final destDir = 'build/npm/';
   final sourceDir = 'tool/npm_template';
@@ -159,7 +157,7 @@ void npm() {
   const kDetector =
       "let _isNode=false;try{_isNode=Object.prototype.toString.call(global.process)==='[object process]'}catch(_){}";
   final preambleJs =
-      '${kDetector}if(_isNode){${preamble.getPreamble(minified: true)}}else{var self=Object.create(global);self.exports=exports}';
+      '${kDetector}if(_isNode){${preamble.getPreamble(minified: true)}}else{var self=global.self;self.exports=exports}';
 
   destination.writeAsStringSync('$preambleJs\n$compiledJs');
 
@@ -179,7 +177,11 @@ void npm() {
   copy(new File('LICENSE'), dir);
   copy(new File('3RD_PARTY'), dir);
   copy(new File(p.join('docs', 'validation.schema.json')), dir);
+}
 
+@Depends(issues, npmRelease)
+@Task('Build an npm package.')
+void npm() {
   log("Trying to generate npm docs...");
   run(npmExecutable, arguments: ['install'], workingDirectory: 'build/npm');
   run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: 'build/npm');
