@@ -288,6 +288,12 @@ class SemanticError extends IssueType {
   static final SemanticError cameraZfarLequalZnear = new SemanticError._(
       'CAMERA_ZFAR_LEQUAL_ZNEAR', (args) => 'zfar must be greater than znear.');
 
+  static final SemanticError materialAlphaCutoffInvalidMode =
+      new SemanticError._(
+          'MATERIAL_ALPHA_CUTOFF_INVALID_MODE',
+          (args) => "Alpha cutoff is supported only for 'MASK' alpha mode.",
+          Severity.Warning);
+
   static final SemanticError meshPrimitiveInvalidAttribute =
       new SemanticError._('MESH_PRIMITIVE_INVALID_ATTRIBUTE',
           (args) => 'Invalid attribute name ${_q(args[0])}.');

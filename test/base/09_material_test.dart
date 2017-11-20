@@ -59,6 +59,21 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Alpha cutoff', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/material/alpha_cutoff.gltf').openRead());
+
+      await reader.read();
+
+      final context = new Context()
+        ..path.add('materials')
+        ..path.add('1')
+        ..addIssue(SemanticError.materialAlphaCutoffInvalidMode,
+            name: 'alphaCutoff');
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/material/valid_full.gltf').openRead());

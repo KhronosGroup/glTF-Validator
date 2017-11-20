@@ -76,6 +76,14 @@ class Material extends GltfChildOfRootProperty {
         def: OPAQUE, list: MATERIAL_ALPHA_MODES);
     final alphaCutoff =
         getFloat(map, ALPHA_CUTOFF, context, min: 0.0, def: 0.5);
+
+    if (context.validate &&
+        alphaMode != MASK &&
+        map.containsKey(ALPHA_CUTOFF)) {
+      context.addIssue(SemanticError.materialAlphaCutoffInvalidMode,
+          name: ALPHA_CUTOFF);
+    }
+
     final doubleSided = getBool(map, DOUBLE_SIDED, context);
 
     final extensions = getExtensions(map, Material, context);

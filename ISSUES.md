@@ -39,22 +39,23 @@
 |12|BUFFER_VIEW_INVALID_BYTE_STRIDE|Only buffer views with raw vertex data can have byteStride.|Error|
 |13|CAMERA_XMAG_YMAG_ZERO|xmag and ymag must not be zero.|Warning|
 |14|CAMERA_ZFAR_LEQUAL_ZNEAR|zfar must be greater than znear.|Error|
-|15|MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
-|16|MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|
-|17|MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Error|
-|18|MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
-|19|MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL|TANGENT attribute without NORMAL found.|Warning|
-|20|MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH|Number of JOINTS attribute semantics must match number of WEIGHTS.|Error|
-|21|MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
-|22|MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
-|23|NODE_MATRIX_TRS|A node can have either a matrix or any combination of translation/rotation/scale (TRS) properties.|Error|
-|24|NODE_MATRIX_DEFAULT|Do not specify default transform matrix.|Information|
-|25|NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
-|26|NODE_ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
-|27|UNUSED_EXTENSION_REQUIRED|Unused extension '`%1`' cannot be required.|Error|
-|28|UNRESERVED_EXTENSION_PREFIX|Extension uses unreserved extension prefix '`%1`'.|Warning|
-|29|NODE_EMPTY|Empty node encountered.|Information|
-|30|NON_RELATIVE_URI|Non-relative URI found: `%1`.|Warning|
+|15|MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
+|16|MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
+|17|MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|
+|18|MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Error|
+|19|MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
+|20|MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL|TANGENT attribute without NORMAL found.|Warning|
+|21|MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH|Number of JOINTS attribute semantics must match number of WEIGHTS.|Error|
+|22|MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
+|23|MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
+|24|NODE_MATRIX_TRS|A node can have either a matrix or any combination of translation/rotation/scale (TRS) properties.|Error|
+|25|NODE_MATRIX_DEFAULT|Do not specify default transform matrix.|Information|
+|26|NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
+|27|NODE_ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
+|28|UNUSED_EXTENSION_REQUIRED|Unused extension '`%1`' cannot be required.|Error|
+|29|UNRESERVED_EXTENSION_PREFIX|Extension uses unreserved extension prefix '`%1`'.|Warning|
+|30|NODE_EMPTY|Empty node encountered.|Information|
+|31|NON_RELATIVE_URI|Non-relative URI found: `%1`.|Warning|
 ## LinkError
 | No | Code | Message | Severity |
 |:---:|-----|---------|----------|
