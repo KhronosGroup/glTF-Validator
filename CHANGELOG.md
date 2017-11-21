@@ -4,6 +4,8 @@
 
 * Refined JSON-Pointers for `DUPLICATE_ELEMENTS`, `UNSUPPORTED_EXTENSION`, `UNUSED_EXTENSION_REQUIRED`, `UNDEFINED_PROPERTY`, `ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND`, `ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND`, `ACCESSOR_MIN_MISMATCH`, and `ACCESSOR_MAX_MISMATCH`.
 
+* Web front-end supports files selection in addition to drag-n-drop.
+
 ## 2.0.0-dev.1.3
 
 * JS docs update.

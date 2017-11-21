@@ -24,33 +24,45 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:gltf/gltf.dart';
 
-const int CHUNK_SIZE = 1024 * 1024;
-const JsonEncoder kJsonEncoder = const JsonEncoder.withIndent('    ');
+const _CHUNK_SIZE = 1024 * 1024;
+const _kJsonEncoder = const JsonEncoder.withIndent('    ');
 
-final Element dropZone = querySelector('#dropZone');
-final Element output = querySelector('#output');
+final _dropZone = querySelector('#dropZone');
+final _output = querySelector('#output');
+final InputElement _input = querySelector('#input');
+final _inputLink = querySelector('#inputLink');
 
 void main() {
-  dropZone.onDragOver.listen((e) {
-    dropZone.classes.add('hover');
+  _dropZone.onDragOver.listen((e) {
+    _dropZone.classes.add('hover');
     e.preventDefault();
   });
 
-  dropZone.onDragLeave.listen((e) {
-    dropZone.classes.remove('hover');
+  _dropZone.onDragLeave.listen((e) {
+    _dropZone.classes.remove('hover');
     e.preventDefault();
   });
 
-  dropZone.onDrop.listen((e) {
+  _dropZone.onDrop.listen((e) {
     e.preventDefault();
-    output.text = "";
-    dropZone.classes
+    _output.text = "";
+    _dropZone.classes
       ..remove('hover')
       ..add('drop');
 
     _validate(e.dataTransfer.files).then((_) {
-      dropZone.classes.remove('drop');
+      _dropZone.classes.remove('drop');
     });
+  });
+
+  _inputLink.onClick.listen((e) {
+    e.preventDefault();
+    _input.click();
+  });
+
+  _input.onChange.listen((e) {
+    e.preventDefault();
+    _validate(_input.files);
   });
 }
 
@@ -130,14 +142,14 @@ Stream<List<int>> _getFileStream(File file) {
       }
 
       if (index < file.size) {
-        final length = min(CHUNK_SIZE, file.size - index);
+        final length = min(_CHUNK_SIZE, file.size - index);
         fileReader.readAsArrayBuffer(file.slice(index, index += length));
       } else {
         controller.close();
       }
     });
 
-    final length = min(CHUNK_SIZE, file.size);
+    final length = min(_CHUNK_SIZE, file.size);
     fileReader.readAsArrayBuffer(file.slice(0, index += length));
   };
 
@@ -155,6 +167,6 @@ Future<List<int>> _getFile(File file) async {
 }
 
 void _writeMap(Map<String, Object> json) {
-  output.text = kJsonEncoder.convert(json);
+  _output.text = _kJsonEncoder.convert(json);
   context['Prism'].callMethod('highlightAll', [true]);
 }
