@@ -59,10 +59,9 @@ void issues() {
     final errorClassMirror = reflectClass(type);
     sb
       ..writeln('## ${errorClassMirror.reflectedType}')
-      ..writeln('| No | Code | Message | Severity |')
-      ..writeln('|:---:|-----|---------|----------|');
+      ..writeln('| Code | Message | Severity |')
+      ..writeln('|------|---------|----------|');
 
-    var i = 0;
     final args = ['`%1`', '`%2`', '`%3`', '`%4`'];
     final argsWithArray = [
       '`%1`',
@@ -70,21 +69,27 @@ void issues() {
       '`%3`',
       '`%4`'
     ];
-    for (final symbol in errorClassMirror.staticMembers.keys) {
-      final Object issueType = errorClassMirror.getField(symbol).reflectee;
-      if (issueType is IssueType) {
-        String message;
-        try {
-          message = issueType.message(args);
-          // ignore: avoid_catching_errors
-        } on CastError catch (_) {
-          message = issueType.message(argsWithArray);
-        }
-        sb.writeln('|${++i}|${issueType.code}|$message|'
-            '${severityToMdString(issueType.severity)}|');
+
+    final issuesList = new List<IssueType>.from(
+        errorClassMirror.staticMembers.keys
+            .map<Object>(
+                (symbol) => errorClassMirror.getField(symbol).reflectee)
+            .where((reflectee) => reflectee is IssueType),
+        growable: false)
+      ..sort((a, b) => a.code.compareTo(b.code));
+
+    for (final issueType in issuesList) {
+      String message;
+      try {
+        message = issueType.message(args);
+        // ignore: avoid_catching_errors
+      } on CastError catch (_) {
+        message = issueType.message(argsWithArray);
       }
+      sb.writeln('|${issueType.code}|$message|'
+          '${severityToMdString(issueType.severity)}|');
     }
-    total += i;
+    total += issuesList.length;
   }
 
   processErrorClass(IoError);
