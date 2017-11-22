@@ -35,8 +35,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid Collection Element', () async {
@@ -52,8 +51,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid Extensions', () async {
@@ -62,19 +60,25 @@ void main() {
               .openRead());
 
       final context = new Context()
+        ..addIssue(SchemaError.arrayDuplicateElements, name: 'extensionsUsed/1')
         ..addIssue(SchemaError.arrayDuplicateElements,
-            name: 'extensionsUsed', args: [1])
-        ..addIssue(SchemaError.arrayDuplicateElements,
-            name: 'extensionsRequired', args: [1])
-        ..addIssue(SemanticError.unusedExtensionRequired,
-            name: 'extensionsRequired', args: ['_test_extension2'])
+            name: 'extensionsRequired/1')
+        ..addIssue(SemanticError.unreservedExtensionPrefix,
+            name: 'extensionsUsed/0', args: [''])
         ..addIssue(LinkError.unsupportedExtension,
-            name: 'extensionsUsed', args: ['_test_extension']);
+            name: 'extensionsUsed/0', args: ['_test_extension'])
+        ..addIssue(SemanticError.unreservedExtensionPrefix,
+            name: 'extensionsUsed/1', args: [''])
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/1', args: ['_test_extension'])
+        ..addIssue(SemanticError.unusedExtensionRequired,
+            name: 'extensionsRequired/0', args: ['_test_extension2'])
+        ..addIssue(SemanticError.unusedExtensionRequired,
+            name: 'extensionsRequired/1', args: ['_test_extension2']);
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Invalid Extensions Deps', () async {
@@ -86,12 +90,11 @@ void main() {
         ..addIssue(SchemaError.unsatisfiedDependency,
             name: 'extensionsRequired', args: ['extensionsUsed'])
         ..addIssue(SemanticError.unusedExtensionRequired,
-            name: 'extensionsRequired', args: ['_test_extension2']);
+            name: 'extensionsRequired/0', args: ['_test_extension2']);
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid Full', () async {
@@ -100,8 +103,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.gltf.toString(),
           '{asset: {version: 2.0, extensions: {}}, accessors: [], animations: [], buffers: [], bufferViews: [], cameras: [], images: [], materials: [], meshes: [], nodes: [], samplers: [], scenes: [], scene: -1, skins: [], textures: [], extensionsRequired: [], extensionsUsed: [], extensions: {}}');

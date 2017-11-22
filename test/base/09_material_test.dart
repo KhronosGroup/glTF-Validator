@@ -33,8 +33,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Empty object', () async {
@@ -43,8 +42,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
     });
 
     test('Custom Property', () async {
@@ -58,8 +56,22 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, unorderedMatches(context.errors));
-      expect(reader.context.warnings, unorderedMatches(context.warnings));
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Alpha cutoff', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/material/alpha_cutoff.gltf').openRead());
+
+      await reader.read();
+
+      final context = new Context()
+        ..path.add('materials')
+        ..path.add('1')
+        ..addIssue(SemanticError.materialAlphaCutoffInvalidMode,
+            name: 'alphaCutoff');
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
     test('Valid', () async {
@@ -68,8 +80,7 @@ void main() {
 
       final result = await reader.read();
 
-      expect(reader.context.errors, isEmpty);
-      expect(reader.context.warnings, isEmpty);
+      expect(reader.context.issues, isEmpty);
 
       expect(result.gltf.materials.toString(),
           '[{pbrMetallicRoughness: {baseColorFactor: [1.0, 0.0, 1.0, 1.0], baseColorTexture: {index: 0, texCoord: 0, extensions: {}}, metallicFactor: 0.5, roughnessFactor: 0.5, metallicRoughnessTexture: {index: 1, texCoord: 1, extensions: {}}, extensions: {}}, normalTexture: {scale: 2.1, index: 2, texCoord: 2, extensions: {}}, occlusionTexture: {strength: 0.5, index: 3, texCoord: 3, extensions: {}}, emissiveTexture: {index: 4, texCoord: 4, extensions: {}}, emissiveFactor: [0.0, 1.0, 0.0], alphaMode: MASK, alphaCutoff: 0.4, doubleSided: true, extensions: {}}]');
@@ -103,8 +114,7 @@ void main() {
 
       await reader.read();
 
-      expect(reader.context.errors, context.errors);
-      expect(reader.context.warnings, context.warnings);
+      expect(reader.context.issues, unorderedMatches(context.issues));
     });
   });
 }

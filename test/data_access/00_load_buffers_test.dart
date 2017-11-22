@@ -46,15 +46,15 @@ void main() {
       final validationResult =
           await getValidationResult('test/data_access/buffer/not_found.gltf');
 
-      expect(validationResult.context.errors, hasLength(1));
-      expect(validationResult.context.errors.first.type.code, 'FILE_NOT_FOUND');
+      expect(validationResult.context.issues, hasLength(1));
+      expect(validationResult.context.issues.first.type.code, 'FILE_NOT_FOUND');
     });
 
     test('Data URI', () async {
       final validationResult =
           await getValidationResult('test/data_access/buffer/data_uri.gltf');
 
-      expect(validationResult.context.errors, isEmpty);
+      expect(validationResult.context.issues, isEmpty);
     });
 
     test('GLB & Wrong length', () async {
@@ -66,7 +66,7 @@ void main() {
         ..path.add('0')
         ..addIssue(DataError.bufferExternalBytelengthMismatch, args: [16, 17]);
 
-      expect(validationResult.context.errors, unorderedMatches(context.errors));
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
 
     test('GLB & Extra Padding', () async {
@@ -78,15 +78,14 @@ void main() {
         ..path.add('0')
         ..addIssue(DataError.bufferGlbChunkTooBig, args: [4]);
 
-      expect(validationResult.context.warnings,
-          unorderedMatches(context.warnings));
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
 
     test('External file', () async {
       final validationResult = await getValidationResult(
           'test/data_access/buffer/valid_external.gltf');
 
-      expect(validationResult.context.errors, isEmpty);
+      expect(validationResult.context.issues, isEmpty);
 
       expect(
           validationResult.readerResult.gltf.buffers.first.data,

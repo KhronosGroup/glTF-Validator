@@ -41,10 +41,11 @@
 </header>
 
 <div id="dropZone">
-    Drop glTF or GLB here.
+    <input id="input" type="file" style="display: none" multiple/>
+    <a id="inputLink">Select</a> glTF or GLB asset or drop it here.
 </div>
-
 <div id="outputZone">
+    <p><em>Validation is performed locally in your browser. Submitted assets are not uploaded.</em></p>
     <pre><code class="language-json" id="output"></code></pre>
 </div>
 

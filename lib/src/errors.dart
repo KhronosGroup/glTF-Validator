@@ -163,8 +163,8 @@ class SchemaError extends IssueType {
       (args) =>
           'Type mismatch. Array element ${_mbq(args[0])} is not a ${_q(args[1])}.');
 
-  static final SchemaError arrayDuplicateElements = new SchemaError._(
-      'DUPLICATE_ELEMENTS', (args) => 'Duplicate element at ${args[0]}.');
+  static final SchemaError arrayDuplicateElements =
+      new SchemaError._('DUPLICATE_ELEMENTS', (args) => 'Duplicate element.');
 
   static final SchemaError invalidIndex = new SchemaError._(
       'INVALID_INDEX', (_) => 'Index must be a non-negative integer.');
@@ -288,6 +288,12 @@ class SemanticError extends IssueType {
   static final SemanticError cameraZfarLequalZnear = new SemanticError._(
       'CAMERA_ZFAR_LEQUAL_ZNEAR', (args) => 'zfar must be greater than znear.');
 
+  static final SemanticError materialAlphaCutoffInvalidMode =
+      new SemanticError._(
+          'MATERIAL_ALPHA_CUTOFF_INVALID_MODE',
+          (args) => "Alpha cutoff is supported only for 'MASK' alpha mode.",
+          Severity.Warning);
+
   static final SemanticError meshPrimitiveInvalidAttribute =
       new SemanticError._('MESH_PRIMITIVE_INVALID_ATTRIBUTE',
           (args) => 'Invalid attribute name ${_q(args[0])}.');
@@ -349,6 +355,11 @@ class SemanticError extends IssueType {
   static final SemanticError unusedExtensionRequired = new SemanticError._(
       'UNUSED_EXTENSION_REQUIRED',
       (args) => 'Unused extension ${_q(args[0])} cannot be required.');
+
+  static final SemanticError unreservedExtensionPrefix = new SemanticError._(
+      'UNRESERVED_EXTENSION_PREFIX',
+      (args) => 'Extension uses unreserved extension prefix ${_q(args[0])}.',
+      Severity.Warning);
 
   static final SemanticError nodeEmpty = new SemanticError._(
       'NODE_EMPTY', (args) => 'Empty node encountered.', Severity.Information);

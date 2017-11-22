@@ -80,3 +80,8 @@ html, body {
     background: #afa;
     border-color: #0f0;
 }
+
+#inputLink {
+    border-bottom: 2px #555 dashed;
+    cursor: pointer;
+}

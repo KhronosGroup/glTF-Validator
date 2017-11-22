@@ -1,5 +1,5 @@
 name: gltf
-version: 2.0.0-dev.1.3
+version: 2.0.0-dev.1.4
 description: Library for loading and validating glTF 2.0 assets
 author: The Khronos Group Inc.
 homepage: https://github.com/KhronosGroup/glTF-Validator
@@ -10,7 +10,7 @@ dependencies:
   dart_to_js_script_rewriter: '^1.0.3'
   isolate: '^1.1.0'
   meta: '^1.1.2'
-  path: '^1.4.2'
+  path: '^1.5.0'
   vector_math: '^2.0.5'
   yaml: '^2.1.13'
 
@@ -22,7 +22,7 @@ dev_dependencies:
   test: '>=0.12.0 <0.13.0'
 
 environment:
-  sdk: '>=2.0.0-dev.6.0 <2.0.0'
+  sdk: '>=2.0.0-dev.8.0 <2.0.0'
 
 executables:
   gltf_validator:
