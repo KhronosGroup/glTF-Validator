@@ -1,3 +1,7 @@
+## 2.0.0-dev.1.5
+
+* Users can now skip accessors data validation.
+
 ## 2.0.0-dev.1.4
 
 * Added new validation checks `UNRESERVED_EXTENSION_PREFIX` and `MATERIAL_ALPHA_CUTOFF_INVALID_MODE`.
