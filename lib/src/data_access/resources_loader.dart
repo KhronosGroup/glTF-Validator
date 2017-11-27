@@ -72,11 +72,11 @@ class ResourcesLoader {
   ResourcesLoader(this.context, this.gltf,
       {@required this.externalBytesFetch, @required this.externalStreamFetch});
 
-  Future<Null> load() async {
+  Future<Null> load({bool mustValidateAccessorData}) async {
     try {
       await _loadBuffers();
       await _loadImages();
-      if (context.validate) {
+      if (context.validate && (mustValidateAccessorData != false)) {
         validateAccessorsData(gltf, context);
       }
     } on IssuesLimitExceededException catch (_) {

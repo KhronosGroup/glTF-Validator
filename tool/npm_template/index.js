@@ -36,6 +36,7 @@ exports.validateString = (json, options) => validator.validateString(json, optio
  @typedef {Object} ValidationOptions
  @property {string} uri - Absolute or relative asset URI that will be copied to validation report.
  @property {ExternalResourceFunction} externalResourceFunction - Function for loading external resources. If omitted, external resources are not validated.
+ @property {boolean} validateAccessorData - Set to `false` to skip reading of accessor data.
  @property {number} maxIssues - Max number of reported issues. Use `0` for unlimited output.
  @property {string[]} ignoredIssues - Array of ignored issue codes.
  @property {Object} severityOverrides - Object with overridden severities for issue codes.

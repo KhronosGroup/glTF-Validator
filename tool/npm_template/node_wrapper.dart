@@ -26,7 +26,7 @@ import 'package:js/js_util.dart';
 
 import 'package:gltf/gltf.dart';
 
-typedef Promise<Uint8List> ExternalResourceFunction(String filename);
+typedef Promise<Object> ExternalResourceFunction(String filename);
 
 @JS()
 abstract class Promise<T> {
@@ -54,6 +54,7 @@ abstract class _JSValidationOptions {
   external Object get uri;
   external ExternalResourceFunction get externalResourceFunction;
 
+  external bool get validateAccessorData;
   external int get maxIssues;
   external List<String> get ignoredIssues;
   external Object get severityOverrides;
@@ -135,20 +136,33 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
     Context context,
     GltfReaderResult result) async {
   Uri uri;
+  ExternalResourceFunction externalResourceFunction;
+  bool validateAccessorData;
+
   if (options != null) {
     uri = _getUri(options.uri);
-    if (options.externalResourceFunction != null) {
-      if (options.externalResourceFunction is! Function) {
-        throw new ArgumentError(
-            'options.externalResourceFunction: Value must be a function.');
-      }
 
-      if (result?.gltf != null) {
-        final loader = _getResourcesLoader(
-            context, result, options.externalResourceFunction);
-        await loader.load();
-      }
+    if (options.externalResourceFunction != null &&
+        options.externalResourceFunction is! Function) {
+      throw new ArgumentError(
+          'options.externalResourceFunction: Value must be a function.');
+    } else {
+      externalResourceFunction = options.externalResourceFunction;
     }
+
+    if (options.validateAccessorData != null &&
+        options.validateAccessorData is! bool) {
+      throw new ArgumentError(
+          'options.validateAccessorData: Value must be a boolean.');
+    } else {
+      validateAccessorData = options.validateAccessorData;
+    }
+  }
+
+  if (result?.gltf != null) {
+    final loader =
+        _getResourcesLoader(context, result, externalResourceFunction);
+    await loader.load(mustValidateAccessorData: validateAccessorData);
   }
   return new ValidationResult(uri, context, result).toMap();
 }
@@ -217,9 +231,20 @@ Context _getContextFromOptions(_JSValidationOptions options) {
 ResourcesLoader _getResourcesLoader(Context context,
     GltfReaderResult readerResult, ExternalResourceFunction getResource) {
   Future<List<int>> getBytes(Uri uri) {
+    if (getResource == null) {
+      return null;
+    }
+
     final completer = new Completer<Uint8List>();
-    getResource(uri.toString()).then(
-        allowInterop(completer.complete),
+    getResource(uri.toString()).then(allowInterop((Object o) {
+      if (o is Uint8List) {
+        completer.complete(o);
+      } else {
+        completer.completeError(
+            new ArgumentError('options.externalResourceFunction: '
+                'Promise must be fulfilled with Uint8Array.'));
+      }
+    }),
         allowInterop((Object e) =>
             completer.completeError(new NodeException(e.toString()))));
 
