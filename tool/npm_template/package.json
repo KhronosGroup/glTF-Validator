@@ -22,6 +22,6 @@
         "replace-between": "0.0.8"
     },
     "scripts": {
-        "docs": "documentation build index.js --shallow -f md | replace-between --target README.md --token API"
+        "docs": "documentation build index.js --shallow -f md | replace-between --target ../../build/npm/README.md --token API"
     }
 }
