@@ -177,20 +177,19 @@ void npmRelease() {
       .writeAsStringSync((const JsonEncoder.withIndent('    ')).convert(json));
 
   copy(new File(p.join(sourceDir, 'index.js')), dir);
+  copy(new File(p.join(sourceDir, 'README.md')), dir);
   copy(new File('ISSUES.md'), dir);
   copy(new File('LICENSE'), dir);
   copy(new File('3RD_PARTY'), dir);
   copy(new File(p.join('docs', 'validation.schema.json')), dir);
-
-  log("Building npm README...");
-  run(npmExecutable, arguments: ['install'], workingDirectory: 'tool/npm_template');
-  copy(new File(p.join(sourceDir, 'README.md')), dir);
-  run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: 'tool/npm_template');
 }
 
 @Depends(issues, npmRelease)
 @Task('Build an npm package.')
 void npm() {
+  log("Building npm README...");
+  run(npmExecutable, arguments: ['install'], workingDirectory: 'tool/npm_template');
+  run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: 'tool/npm_template');
 }
 
 @Depends(npm)
