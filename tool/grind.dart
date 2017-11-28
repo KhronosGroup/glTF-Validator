@@ -105,7 +105,7 @@ void issues() {
 
 @Task('Build Dart snapshot.')
 void snapshot() {
-  _ensureBuild();
+  new Directory('build').createSync();
 
   _replaceVersion();
   Dart.run('bin/gltf_validator.dart',
@@ -127,6 +127,10 @@ final _dart2jsArgs = [
   '--trust-type-annotations'
 ];
 
+final _sourceDir = 'tool/npm_template';
+final _destDir = 'build/npm/';
+final _dir = new Directory(_destDir);
+
 @Task('Build non-minified npm package with source map.')
 void npmDebug() {
   _dart2jsArgs
@@ -137,21 +141,16 @@ void npmDebug() {
 
 @Task('Build minified npm package.')
 void npmRelease() {
-  _ensureBuild();
-  final destDir = 'build/npm/';
-  final sourceDir = 'tool/npm_template';
-
-  final dir = new Directory(destDir);
-  if (dir.existsSync()) {
-    dir.deleteSync(recursive: true);
+  if (_dir.existsSync()) {
+    _dir.deleteSync(recursive: true);
   }
-  dir.createSync(recursive: true);
+  _dir.createSync(recursive: true);
 
-  final destination = new File(p.join(destDir, 'gltf_validator.dart.js'));
+  final destination = new File(p.join(_destDir, 'gltf_validator.dart.js'));
 
   _replaceVersion();
 
-  Dart2js.compile(new File(p.join(sourceDir, 'node_wrapper.dart')),
+  Dart2js.compile(new File(p.join(_sourceDir, 'node_wrapper.dart')),
       outFile: destination, extraArgs: _dart2jsArgs);
 
   _restoreVersion();
@@ -166,41 +165,39 @@ void npmRelease() {
 
   destination.writeAsStringSync('$preambleJs\n$compiledJs');
 
-  delete(new File(p.join(destDir, 'gltf_validator.dart.js.deps')));
+  delete(new File(p.join(_destDir, 'gltf_validator.dart.js.deps')));
 
-  final Map<String, dynamic> json = JSON
-      .decode(new File(p.join(sourceDir, 'package.json')).readAsStringSync());
+  final Map<String, Object> json = JSON
+      .decode(new File(p.join(_sourceDir, 'package.json')).readAsStringSync());
   json['version'] = _version;
 
-  log("copying package.json to $destDir");
-  new File(p.join(destDir, 'package.json'))
+  log("copying package.json to $_destDir");
+  new File(p.join(_destDir, 'package.json'))
       .writeAsStringSync((const JsonEncoder.withIndent('    ')).convert(json));
 
-  copy(new File(p.join(sourceDir, 'index.js')), dir);
-  copy(new File(p.join(sourceDir, 'README.md')), dir);
-  copy(new File('ISSUES.md'), dir);
-  copy(new File('LICENSE'), dir);
-  copy(new File('3RD_PARTY'), dir);
-  copy(new File(p.join('docs', 'validation.schema.json')), dir);
+  copy(new File(p.join(_sourceDir, 'index.js')), _dir);
 }
 
 @Depends(issues, npmRelease)
 @Task('Build an npm package.')
 void npm() {
   log("Building npm README...");
-  run(npmExecutable, arguments: ['install'], workingDirectory: 'tool/npm_template');
-  run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: 'tool/npm_template');
+  copy(new File(p.join(_sourceDir, 'README.md')), _dir);
+  run(npmExecutable,
+      arguments: ['install'], workingDirectory: 'tool/npm_template');
+  run(npmExecutable,
+      arguments: ['run', 'docs'], workingDirectory: 'tool/npm_template');
+
+  copy(new File('ISSUES.md'), _dir);
+  copy(new File('LICENSE'), _dir);
+  copy(new File('3RD_PARTY'), _dir);
+  copy(new File(p.join('docs', 'validation.schema.json')), _dir);
 }
 
 @Depends(npm)
 @Task('Publish package to npm.')
 void npmPublish() {
   run(npmExecutable, arguments: ['publish'], workingDirectory: 'build/npm');
-}
-
-/// Ensure that the `build/` directory exists.
-void _ensureBuild() {
-  new Directory('build').createSync(recursive: true);
 }
 
 String get npmExecutable => Platform.isWindows ? 'npm.cmd' : 'npm';
