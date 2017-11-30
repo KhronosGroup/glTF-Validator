@@ -1,3 +1,9 @@
+## 2.0.0-dev.1.6
+
+* Fixed a crash when validating an asset from a string source with `maxIssues` option set.
+
+* Updated JS usage example to reflect that external resource callback should expect URI-encoded string.
+
 ## 2.0.0-dev.1.5
 
 * Users can now skip accessors data validation.
