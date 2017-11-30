@@ -53,7 +53,7 @@ validator.validateBytes(new Uint8Array(asset), {
     severityOverrides: { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 }, // treat degenerate triangles as errors
     externalResourceFunction: (uri) =>
         new Promise((resolve, reject) => {
-            uri = path.resolve(path.dirname(fullpath), uri);
+            uri = path.resolve(path.dirname(fullpath), decodeURIComponent(uri));
             console.info("Loading external file: " + uri);
             fs.readFile(uri, (err, data) => {
                 if (err) {
