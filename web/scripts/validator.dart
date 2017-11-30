@@ -119,8 +119,10 @@ Future<Null> _validate(List<File> files) async {
   _writeMap(validationResult.toMap());
 }
 
-File _getFileByUri(List<File> files, Uri uri) =>
-    files.firstWhere((file) => file.name == uri.path, orElse: () => null);
+File _getFileByUri(List<File> files, Uri uri) {
+  final fileName = Uri.decodeComponent(uri.path);
+  return files.firstWhere((file) => file.name == fileName, orElse: () => null);
+}
 
 Stream<List<int>> _getFileStream(File file) {
   var isCanceled = false;

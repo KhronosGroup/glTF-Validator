@@ -173,8 +173,12 @@ class GltfJsonReader implements GltfReader {
       context.addIssue(SchemaError.invalidJson, args: [e]);
     }
     if (parsedJson is Map<String, Object>) {
-      final root = new Gltf.fromMap(parsedJson, context);
-      return new GltfReaderResult('model/gltf+json', root, null);
+      try {
+        final root = new Gltf.fromMap(parsedJson, context);
+        return new GltfReaderResult('model/gltf+json', root, null);
+      } on IssuesLimitExceededException catch (_) {
+        return null;
+      }
     } else {
       context.addIssue(SchemaError.typeMismatch, args: [parsedJson, 'object']);
       return null;
