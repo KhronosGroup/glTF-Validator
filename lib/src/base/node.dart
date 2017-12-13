@@ -196,7 +196,7 @@ class Node extends GltfChildOfRootProperty {
           }
 
           if (_skin != null &&
-              !mesh.primitives.any((primitive) => primitive.jointsCount > 0)) {
+              mesh.primitives.any((primitive) => primitive.jointsCount == 0)) {
             context.addIssue(LinkError.nodeSkinWithNonSkinnedMesh);
           }
         }
