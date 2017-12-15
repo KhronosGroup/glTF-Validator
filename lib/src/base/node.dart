@@ -186,18 +186,24 @@ class Node extends GltfChildOfRootProperty {
         if (_mesh == null) {
           context.addIssue(LinkError.unresolvedReference,
               name: MESH, args: [_meshIndex]);
-        } else {
+        } else if (mesh.primitives != null) {
           if (weights != null &&
-              _mesh.primitives != null &&
               _mesh.primitives[0].targets?.length != weights.length) {
             context.addIssue(LinkError.nodeWeightsInvalid,
                 name: WEIGHTS,
                 args: [weights.length, mesh.primitives[0].targets?.length]);
           }
 
-          if (_skin != null &&
-              mesh.primitives.any((primitive) => primitive.jointsCount == 0)) {
-            context.addIssue(LinkError.nodeSkinWithNonSkinnedMesh);
+          if (_skin != null) {
+            if (mesh.primitives
+                .any((primitive) => primitive.jointsCount == 0)) {
+              context.addIssue(LinkError.nodeSkinWithNonSkinnedMesh);
+            }
+          } else {
+            if (mesh.primitives
+                .any((primitive) => primitive.jointsCount != 0)) {
+              context.addIssue(LinkError.nodeSkinnedMeshWithoutSkin);
+            }
           }
         }
       }

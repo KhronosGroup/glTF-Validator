@@ -21,6 +21,9 @@
         },
         {
             "children": [2]
+        },
+        {
+            "mesh": 1
         }
     ],
     "meshes": [
@@ -29,6 +32,17 @@
                 {
                     "attributes": {
                         "POSITION": 0
+                    }
+                }
+            ]
+        },
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "JOINTS_0": 1,
+                        "WEIGHTS_0": 2
                     }
                 }
             ]
@@ -41,6 +55,16 @@
             "count": 3,
             "min": [0, 0, 0],
             "max": [1, 1, 1]
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5123,
+            "count": 3
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 3
         }
     ],
     "skins": [
