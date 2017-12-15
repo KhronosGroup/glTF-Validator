@@ -528,8 +528,13 @@ class LinkError extends IssueType {
           'the number of morph targets (${args[1] ?? 0}).');
 
   static final LinkError nodeSkinWithNonSkinnedMesh = new LinkError._(
-      'NODE_WITH_NON_SKINNED_MESH',
+      'NODE_SKIN_WITH_NON_SKINNED_MESH',
       (args) => 'Node has skin defined, but mesh has no joints data.');
+
+  static final LinkError nodeSkinnedMeshWithoutSkin = new LinkError._(
+      'NODE_SKINNED_MESH_WITHOUT_SKIN',
+      (args) => 'Node uses skinned mesh, but has no skin defined.',
+      Severity.Warning);
 
   static final LinkError sceneNonRootNode = new LinkError._(
       'SCENE_NON_ROOT_NODE', (args) => 'Node ${args[0]} is not a root node.');
