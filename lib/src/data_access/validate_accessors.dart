@@ -88,7 +88,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
       if (view != null) {
         var index = 0;
         var lastValue = -1;
-        for (var value in view) {
+        for (final value in view) {
           if (lastValue != -1 && value <= lastValue) {
             context.addIssue(DataError.accessorSparseIndicesNonIncreasing,
                 args: [index, value, lastValue]);
