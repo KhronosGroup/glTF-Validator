@@ -196,8 +196,6 @@ class Animation extends GltfChildOfRootProperty {
 
                 if (channel._sampler.interpolation == CUBICSPLINE) {
                   outputCount *= 3;
-                } else if (channel._sampler.interpolation == CATMULLROMSPLINE) {
-                  outputCount += 2;
                 }
 
                 if (channel.target.path == WEIGHTS) {

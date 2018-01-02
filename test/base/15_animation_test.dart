@@ -133,13 +133,13 @@ void main() {
         ..path.removeLast()
         ..path.add('2')
         ..addIssue(LinkError.animationSamplerOutputAccessorInvalidCount,
-            name: 'sampler', args: [4, 3])
+            name: 'sampler', args: [6, 3])
         ..addIssue(LinkError.animationDuplicateTargets,
             name: 'target', args: [3])
         ..path.removeLast()
         ..path.add('3')
         ..addIssue(LinkError.animationSamplerOutputAccessorInvalidCount,
-            name: 'sampler', args: [4, 3])
+            name: 'sampler', args: [6, 3])
         ..path.removeLast()
         ..path.removeLast()
         ..path.removeLast()
