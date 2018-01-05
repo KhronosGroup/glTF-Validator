@@ -24,13 +24,16 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:gltf/gltf.dart';
 
-const _CHUNK_SIZE = 1024 * 1024;
+const _kChunkSize = 1024 * 1024;
+const _kMaxReportLength = 5 * 1024 * 1024;
 const _kJsonEncoder = const JsonEncoder.withIndent('    ');
 
 final _dropZone = querySelector('#dropZone');
 final _output = querySelector('#output');
 final InputElement _input = querySelector('#input');
 final _inputLink = querySelector('#inputLink');
+
+final _sw = new Stopwatch();
 
 void main() {
   _dropZone.onDragOver.listen((e) {
@@ -62,11 +65,18 @@ void main() {
 
   _input.onChange.listen((e) {
     e.preventDefault();
-    _validate(_input.files);
+    _dropZone.classes.add('drop');
+
+    _validate(_input.files).then((_) {
+      _dropZone.classes.remove('drop');
+    });
   });
 }
 
 Future<Null> _validate(List<File> files) async {
+  _sw
+    ..reset()
+    ..start();
   File gltfFile;
   GltfReader reader;
 
@@ -116,7 +126,15 @@ Future<Null> _validate(List<File> files) async {
   }
   final validationResult =
       new ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
+
+  _sw.stop();
+  print('Validation: ${_sw.elapsedMilliseconds}ms.');
+  _sw
+    ..reset()
+    ..start();
   _writeMap(validationResult.toMap());
+  _sw.stop();
+  print('Writing report: ${_sw.elapsedMilliseconds}ms.');
 }
 
 File _getFileByUri(List<File> files, Uri uri) {
@@ -144,14 +162,14 @@ Stream<List<int>> _getFileStream(File file) {
       }
 
       if (index < file.size) {
-        final length = min(_CHUNK_SIZE, file.size - index);
+        final length = min(_kChunkSize, file.size - index);
         fileReader.readAsArrayBuffer(file.slice(index, index += length));
       } else {
         controller.close();
       }
     });
 
-    final length = min(_CHUNK_SIZE, file.size);
+    final length = min(_kChunkSize, file.size);
     fileReader.readAsArrayBuffer(file.slice(0, index += length));
   };
 
@@ -169,6 +187,12 @@ Future<List<int>> _getFile(File file) async {
 }
 
 void _writeMap(Map<String, Object> json) {
-  _output.text = _kJsonEncoder.convert(json);
-  context['Prism'].callMethod('highlightAll', [true]);
+  final report = _kJsonEncoder.convert(json);
+  _output.text = report;
+  if (report.length < _kMaxReportLength) {
+    context['Prism'].callMethod('highlightAll', [true]);
+  } else {
+    print('Report is too big: ${report.length} bytes. '
+        'Syntax highlighting disabled.');
+  }
 }
