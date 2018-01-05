@@ -112,7 +112,10 @@ void validateAccessorsData(Gltf gltf, Context context) {
     final iterator = gltf.accessors[i].getElements().iterator;
 
     var hasNext = iterator.moveNext();
+
+    // Empty accessor
     if (!hasNext) {
+      context.path.removeLast();
       return;
     }
 
