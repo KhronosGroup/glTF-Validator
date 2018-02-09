@@ -238,6 +238,11 @@ class Gltf extends GltfProperty {
     void linkCollection(String key, SafeList<GltfProperty> list) {
       context.path.add(key);
       list.forEachWithIndices((i, item) {
+        // Skip broken objects
+        if (item == null) {
+          return;
+        }
+
         context.path.add(i.toString());
         item.link(gltf, context);
 
