@@ -39,6 +39,7 @@
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
+|MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT|All primitives must contain the same number of 'JOINTS' and 'WEIGHTS' attribute sets.|Error|
 |MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|
 |MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
 |MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
@@ -86,8 +87,9 @@
 |MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT|All accessors of the same primitive must have the same count.|Error|
 |NODE_LOOP|Node is a part of a node loop.|Error|
 |NODE_PARENT_OVERRIDE|Value overrides parent of node `%1`.|Error|
+|NODE_SKINNED_MESH_WITHOUT_SKIN|Node uses skinned mesh, but has no skin defined.|Warning|
+|NODE_SKIN_WITH_NON_SKINNED_MESH|Node has skin defined, but mesh has no joints data.|Error|
 |NODE_WEIGHTS_INVALID|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
-|NODE_WITH_NON_SKINNED_MESH|Node has skin defined, but mesh has no joints data.|Error|
 |SCENE_NON_ROOT_NODE|Node `%1` is not a root node.|Error|
 |SKIN_IBM_INVALID_FORMAT|Invalid IBM accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`'). |Error|
 |UNDECLARED_EXTENSION|Extension was not declared in extensionsUsed.|Error|
