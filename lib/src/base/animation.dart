@@ -196,6 +196,7 @@ class Animation extends GltfChildOfRootProperty {
 
                 if (channel._sampler.interpolation == CUBICSPLINE) {
                   outputCount *= 3;
+                  channel._sampler._output.setCubicSpline();
                 }
 
                 if (channel.target.path == WEIGHTS) {

@@ -38,6 +38,7 @@ class Accessor extends GltfChildOfRootProperty {
   int _componentLength = -1;
   bool _isUnit = false;
   bool _isXyzSign = false;
+  bool _isCubicSpline = false;
   AccessorUsage _usage;
 
   Accessor._(
@@ -115,6 +116,7 @@ class Accessor extends GltfChildOfRootProperty {
 
   bool get isUnit => _isUnit;
   bool get isXyzSign => _isXyzSign;
+  bool get isCubicSpline => _isCubicSpline;
 
   AccessorUsage get usage => _usage;
 
@@ -339,6 +341,8 @@ class Accessor extends GltfChildOfRootProperty {
 
   void setXyzSign() => _isXyzSign = true;
 
+  void setCubicSpline() => _isCubicSpline = true;
+
   Iterable<num> getElements({bool normalize: false}) sync* {
     // Ensure required fields to not check for them each time
     if (componentType == -1 || count == -1 || type == null) {
@@ -533,7 +537,7 @@ class Accessor extends GltfChildOfRootProperty {
       return false;
     }
 
-    if (byteOffset % componentLength != 0) {
+    if (byteOffset.remainder(componentLength) != 0) {
       if (context != null) {
         context.addIssue(SemanticError.accessorOffsetAlignment,
             name: BYTE_OFFSET, args: [byteOffset, componentLength]);
@@ -548,7 +552,7 @@ class Accessor extends GltfChildOfRootProperty {
     }
 
     final totalOffset = bufferView.byteOffset + byteOffset;
-    if (totalOffset % componentLength != 0) {
+    if (totalOffset.remainder(componentLength) != 0) {
       if (context != null) {
         context.addIssue(LinkError.accessorTotalOffsetAlignment,
             name: BYTE_OFFSET, args: [totalOffset, componentLength]);

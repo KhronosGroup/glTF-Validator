@@ -75,6 +75,10 @@ void validateAccessorsData(Gltf gltf, Context context) {
       return;
     }
 
+    if (accessor.isCubicSpline && accessor.count.remainder(3) != 0) {
+      return;
+    }
+
     // Skip empty accessors
     if (accessor.bufferView == null && accessor.sparse == null) {
       return;
@@ -108,6 +112,9 @@ void validateAccessorsData(Gltf gltf, Context context) {
     var sum = 0.0;
     var index = 0;
     var componentIndex = 0;
+
+    // 0: in; 1: value; 2: out
+    var cubicSplineState = 0;
 
     final iterator = gltf.accessors[i].getElements().iterator;
 
@@ -184,7 +191,8 @@ void validateAccessorsData(Gltf gltf, Context context) {
           } else if (accessor.usage == AccessorUsage.IBM) {
             matrix.storage[componentIndex] = value;
           } else if (accessor.isUnit &&
-              !(accessor.isXyzSign && componentIndex == 3)) {
+              !(accessor.isXyzSign && componentIndex == 3) &&
+              !(accessor.isCubicSpline && cubicSplineState != 1)) {
             sum += value * value;
           }
         }
@@ -194,7 +202,8 @@ void validateAccessorsData(Gltf gltf, Context context) {
             if (!isTrsDecomposable(matrix)) {
               context.addIssue(DataError.indecomposableMatrix, args: [index]);
             }
-          } else if (accessor.isUnit) {
+          } else if (accessor.isUnit &&
+              !(accessor.isCubicSpline && cubicSplineState != 1)) {
             if ((sum - 1.0).abs() > 0.0005) {
               context.addIssue(DataError.accessorNonUnit,
                   args: [index, sqrt(sum)]);
@@ -205,6 +214,10 @@ void validateAccessorsData(Gltf gltf, Context context) {
               context.addIssue(DataError.accessorInvalidSign,
                   args: [index, value]);
             }
+          }
+
+          if (accessor.isCubicSpline && ++cubicSplineState == 3) {
+            cubicSplineState = 0;
           }
 
           componentIndex = 0;

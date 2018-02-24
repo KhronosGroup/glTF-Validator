@@ -93,7 +93,7 @@ class BufferView extends GltfChildOfRootProperty {
             name: BYTE_STRIDE, args: [byteStride, byteLength]);
       }
 
-      if (byteStride % 4 != 0) {
+      if (byteStride.remainder(4) != 0) {
         context.addIssue(SchemaError.valueMultipleOf,
             name: BYTE_STRIDE, args: [byteStride, 4]);
       }
