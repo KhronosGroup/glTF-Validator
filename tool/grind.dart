@@ -127,8 +127,8 @@ final _dart2jsArgs = [
   '--trust-type-annotations'
 ];
 
-final _sourceDir = 'tool/npm_template';
-final _destDir = 'build/npm/';
+const _sourceDir = 'tool/npm_template';
+const _destDir = 'build/npm/';
 final _dir = new Directory(_destDir);
 
 @Task('Build non-minified npm package with source map.')
@@ -171,7 +171,7 @@ void npmRelease() {
       .decode(new File(p.join(_sourceDir, 'package.json')).readAsStringSync());
   json['version'] = _version;
 
-  log("copying package.json to $_destDir");
+  log('copying package.json to $_destDir');
   new File(p.join(_destDir, 'package.json'))
       .writeAsStringSync((const JsonEncoder.withIndent('    ')).convert(json));
 
@@ -181,7 +181,7 @@ void npmRelease() {
 @Depends(issues, npmRelease)
 @Task('Build an npm package.')
 void npm() {
-  log("Building npm README...");
+  log('Building npm README...');
   copy(new File(p.join(_sourceDir, 'README.md')), _dir);
   run(npmExecutable,
       arguments: ['install'], workingDirectory: 'tool/npm_template');

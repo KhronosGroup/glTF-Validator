@@ -126,7 +126,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
           severityOverrides[key] = Severity.values[value];
         } else {
           abort("$kYamlError each entry in '$kOverride' must "
-              "have a string key and an integer value.");
+              'have a string key and an integer value.');
         }
       }
     } else if (yamlSeveritiesMap != null) {
@@ -138,7 +138,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
         ignoredIssues: ignoredIssues,
         severityOverrides: severityOverrides);
   } else {
-    abort("$kYamlError document must be a map.");
+    abort('$kYamlError document must be a map.');
   }
   return null;
 }

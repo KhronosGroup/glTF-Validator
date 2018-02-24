@@ -63,7 +63,7 @@ abstract class _JSValidationOptions {
 @JS()
 external Exports get exports;
 
-@JS("Object.keys")
+@JS('Object.keys')
 external List<String> _getKeys(Object value);
 
 void main() {

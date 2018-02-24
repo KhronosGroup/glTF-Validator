@@ -48,7 +48,7 @@ void main() {
 
   _dropZone.onDrop.listen((e) {
     e.preventDefault();
-    _output.text = "";
+    _output.text = '';
     _dropZone.classes
       ..remove('hover')
       ..add('drop');

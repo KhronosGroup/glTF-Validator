@@ -5,7 +5,7 @@ author: The Khronos Group Inc.
 homepage: https://github.com/KhronosGroup/glTF-Validator
 
 dependencies:
-  args:
+  args: '^1.4.0'
   browser: '^0.10.0+2'
   dart_to_js_script_rewriter: '^1.0.3'
   isolate: '^1.1.0'
@@ -22,7 +22,7 @@ dev_dependencies:
   test: '>=0.12.0 <0.13.0'
 
 environment:
-  sdk: '>=2.0.0-dev.22.0 <2.0.0'
+  sdk: '>=2.0.0-dev.30.0 <2.0.0'
 
 executables:
   gltf_validator:

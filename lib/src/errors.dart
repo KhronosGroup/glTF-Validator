@@ -274,7 +274,7 @@ class SemanticError extends IssueType {
   static final SemanticError bufferViewTooBigByteStride = new SemanticError._(
       'BUFFER_VIEW_TOO_BIG_BYTE_STRIDE',
       (args) => "Buffer view's byteStride (${args[0]}) is "
-          "smaller than byteLength (${args[1]}).");
+          'smaller than byteLength (${args[1]}).');
 
   static final SemanticError bufferViewInvalidByteStride = new SemanticError._(
       'BUFFER_VIEW_INVALID_BYTE_STRIDE',
@@ -384,7 +384,7 @@ class LinkError extends IssueType {
   static final LinkError accessorTotalOffsetAlignment = new LinkError._(
       'ACCESSOR_TOTAL_OFFSET_ALIGNMENT',
       (args) => "Accessor's total byteOffset ${args[0]} isn't a multiple of "
-          "componentType length ${args[1]}.");
+          'componentType length ${args[1]}.');
 
   static final LinkError accessorSmallStride = new LinkError._(
       'ACCESSOR_SMALL_BYTESTRIDE',
