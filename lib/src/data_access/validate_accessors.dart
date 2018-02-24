@@ -322,18 +322,24 @@ void validateAccessorsData(Gltf gltf, Context context) {
               }
             }
           }
-        } else if (accessor.isUnit) {
+        } else if (accessor.isUnit &&
+            !(accessor.isCubicSpline && cubicSplineState != 1)) {
           final normalizedValue = accessor.getNormalizedValue(value);
           sum += normalizedValue * normalizedValue;
         }
 
         if (++componentIndex == components) {
-          if (accessor.isUnit) {
+          if (accessor.isUnit &&
+              !(accessor.isCubicSpline && cubicSplineState != 1)) {
             if ((sum - 1.0).abs() > 0.0005) {
               context.addIssue(DataError.accessorNonUnit,
                   args: [index, sqrt(sum)]);
             }
             sum = 0.0;
+          }
+
+          if (accessor.isCubicSpline && ++cubicSplineState == 3) {
+            cubicSplineState = 0;
           }
 
           componentIndex = 0;

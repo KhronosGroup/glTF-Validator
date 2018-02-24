@@ -515,6 +515,10 @@ class Accessor extends GltfChildOfRootProperty {
   }
 
   double getNormalizedValue(num value) {
+    if (!normalized) {
+      return value.toDouble();
+    }
+
     final width = _componentLength * 8;
     if (componentType == gl.BYTE ||
         componentType == gl.SHORT ||
