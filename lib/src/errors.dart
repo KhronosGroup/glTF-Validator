@@ -453,6 +453,14 @@ class LinkError extends IssueType {
           (args) => 'Animation sampler output accessor of count '
               '${args[0]} expected. Found ${args[1]}.');
 
+  static final LinkError bufferNonFirstGlb = new LinkError._(
+      'BUFFER_NON_FIRST_GLB',
+          (args) => 'Buffer referring to GLB binary chunk must be the first.');
+
+  static final LinkError bufferMissingGlbData = new LinkError._(
+      'BUFFER_MISSING_GLB_DATA',
+      (args) => 'Buffer refers to an unresolved GLB binary chunk.');
+
   static final LinkError bufferViewTooLong = new LinkError._(
       'BUFFER_VIEW_TOO_LONG',
       (args) => 'BufferView does not fit buffer '
@@ -624,6 +632,10 @@ class GlbError extends IssueType {
   static final GlbError unexpectedFirstChunk = new GlbError._(
       'GLB_UNEXPECTED_FIRST_CHUNK',
       (args) => 'First chunk must be of JSON type. Found ${args[0]} instead.');
+
+  static final GlbError unexpectedBinChunk = new GlbError._(
+      'GLB_UNEXPECTED_BIN_CHUNK',
+      (args) => 'BIN chunk must be the second chunk.');
 
   static final GlbError unknownChunkType = new GlbError._(
       'GLB_UNKNOWN_CHUNK_TYPE',

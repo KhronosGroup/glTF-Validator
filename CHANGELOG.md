@@ -1,3 +1,25 @@
+## 2.0.0-dev.1.7
+
+* Added `NODE_SKINNED_MESH_WITHOUT_SKIN`, `MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT` issues.
+
+* Removed Catmull-Rom as valid spline interpolation mode.
+
+* Fixed issue pointer corruption on empty accessors.
+
+* Improved drag-n-drop validator UX when assets contain many issues (#60, #65). 
+
+* Fixed crash on malformed JSON (#66).
+
+* Fixed cubic splines unit length check (#70).
+
+* Added support for `KHR_materials_unlit` extension.
+
+* Added `MULTIPLE_EXTENSIONS` warning.
+
+* Updated the list of reserved extension prefixes.
+
+* Added `GLB_UNEXPECTED_BIN_CHUNK`, `BUFFER_NON_FIRST_GLB`, and `BUFFER_MISSING_GLB_DATA` (#67).
+
 ## 2.0.0-dev.1.6
 
 * Fixed a crash when validating an asset from a string source with `maxIssues` option set.

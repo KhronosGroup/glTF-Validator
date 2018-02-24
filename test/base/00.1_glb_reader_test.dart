@@ -221,6 +221,19 @@ void main() {
       expect(glbReader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Misplaced BIN chunk', () async {
+      final glbReader = new GlbReader(
+          new File('test/base/data/glb/misplaced_bin_chunk.glb').openRead());
+
+      final context = new Context()
+        ..addIssue(GlbError.unknownChunkType, offset: 76, args: ['0x004b4e55'])
+        ..addIssue(GlbError.unexpectedBinChunk, offset: 88);
+
+      await glbReader.read();
+
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Two BIN chunks', () async {
       final glbReader = new GlbReader(
           new File('test/base/data/glb/two_bin_chunks.glb').openRead());

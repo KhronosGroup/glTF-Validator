@@ -111,7 +111,17 @@ class ResourcesLoader {
           } else {
             // GLB Buffer
             info.storage = _Storage.GLB;
-            return externalBytesFetch(null);
+            final data = externalBytesFetch(null);
+            if (context.validate) {
+              if (i != 0) {
+                context.addIssue(LinkError.bufferNonFirstGlb);
+              }
+
+              if (data == null) {
+                context.addIssue(LinkError.bufferMissingGlbData);
+              }
+            }
+            return data;
           }
         } else {
           throw new UnimplementedError();

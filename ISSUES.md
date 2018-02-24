@@ -72,6 +72,8 @@
 |ANIMATION_SAMPLER_INPUT_ACCESSOR_WITHOUT_BOUNDS|accessor.min and accessor.max must be defined for animation input accessor.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT|Animation sampler output accessor of count `%1` expected. Found `%2`.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_FORMAT|Invalid animation sampler output accessor format '`%1`' for path '`%3`'. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|BUFFER_MISSING_GLB_DATA|Buffer refers to an unresolved GLB binary chunk.|Error|
+|BUFFER_NON_FIRST_GLB|Buffer referring to GLB binary chunk must be the first.|Error|
 |BUFFER_VIEW_TARGET_OVERRIDE|Override of previously set bufferView target or usage. Initial: '`%1`', new: '`%2`'.|Error|
 |BUFFER_VIEW_TOO_LONG|BufferView does not fit buffer (`%1`) byteLength (`%2`).|Error|
 |INVALID_IBM_ACCESSOR_COUNT|Accessor of count `%1` expected. Found `%2`.|Error|
@@ -133,6 +135,7 @@
 |GLB_INVALID_VERSION|Invalid GLB version value `%1`.|Error|
 |GLB_LENGTH_MISMATCH|Declared length (`%1`) does not match GLB length (`%2`).|Error|
 |GLB_LENGTH_TOO_SMALL|Declared GLB length (`%1`) is too small.|Error|
+|GLB_UNEXPECTED_BIN_CHUNK|BIN chunk must be the second chunk.|Error|
 |GLB_UNEXPECTED_END_OF_CHUNK_DATA|Unexpected end of chunk data.|Error|
 |GLB_UNEXPECTED_END_OF_CHUNK_HEADER|Unexpected end of chunk header.|Error|
 |GLB_UNEXPECTED_END_OF_HEADER|Unexpected end of header.|Error|
