@@ -21,12 +21,14 @@ import 'package:gltf/src/hash.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
+import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 import 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
 import 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
 
 export 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
 export 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
+export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 
 abstract class Extension {
   String get name;
@@ -58,6 +60,7 @@ class ExtensionTuple {
 
 final List<Extension> defaultExtensions = <Extension>[
   new KhrMaterialsPbrSpecularGlossinessExtension(),
+  new KhrMaterialsUnlitExtension(),
   new CesiumRtcExtension(),
   new Web3dQuantizedAttributesExtension()
 ];
@@ -66,11 +69,17 @@ final List<Extension> defaultExtensions = <Extension>[
 const List<String> kReservedPrefixes = const <String>[
   'KHR_',
   'EXT_',
+  'ALI_',
+  'AMZN_',
   'AVR_',
   'BLENDER_',
   'CESIUM_',
   'FB_',
   'GOOGLE_',
+  'MSFT_',
+  'NV_',
   'OWLII_',
+  'S8S_',
+  'SKFB_',
   'WEB3D_'
 ];

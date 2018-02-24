@@ -47,6 +47,7 @@
 |MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Error|
 |MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
 |MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL|TANGENT attribute without NORMAL found.|Warning|
+|MULTIPLE_EXTENSIONS|Multiple extensions are defined for this object: ('`%a`', '`%b`', '`%c`').|Warning|
 |NODE_EMPTY|Empty node encountered.|Information|
 |NODE_MATRIX_DEFAULT|Do not specify default transform matrix.|Information|
 |NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|

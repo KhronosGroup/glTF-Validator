@@ -521,7 +521,8 @@ String getName(Map<String, Object> map, Context context) =>
     getString(map, NAME, context);
 
 Map<String, Object> getExtensions(
-    Map<String, Object> map, Type type, Context context) {
+    Map<String, Object> map, Type type, Context context,
+    {bool warnOnMultipleExtensions: false}) {
   final extensions = <String, Object>{};
   final extensionMaps = getMap(map, EXTENSIONS, context);
 
@@ -530,6 +531,12 @@ Map<String, Object> getExtensions(
   }
 
   context.path.add(EXTENSIONS);
+
+  if (warnOnMultipleExtensions && extensionMaps.length > 1) {
+    context.addIssue(SemanticError.multipleExtensions,
+        args: [null, extensionMaps.keys]);
+  }
+
   for (final extension in extensionMaps.keys) {
     if (!context.extensionsLoaded.contains(extension)) {
       extensions[extension] = null;

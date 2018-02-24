@@ -375,6 +375,13 @@ class SemanticError extends IssueType {
       (args) => 'Non-relative URI found: ${args[0]}.',
       Severity.Warning);
 
+  static final SemanticError multipleExtensions = new SemanticError._(
+      'MULTIPLE_EXTENSIONS',
+      (args) => 'Multiple extensions are defined for this object: '
+          // ignore: avoid_as
+          '${(args[1] as Iterable).map(_q)}.',
+      Severity.Warning);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);
