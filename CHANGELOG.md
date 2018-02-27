@@ -20,6 +20,8 @@
 
 * Added `GLB_UNEXPECTED_BIN_CHUNK`, `BUFFER_NON_FIRST_GLB`, and `BUFFER_MISSING_GLB_DATA` (#67).
 
+* Added `ANIMATION_SAMPLER_INPUT_ACCESSOR_TOO_FEW_ELEMENTS` and `ANIMATION_SAMPLER_OUTPUT_INTERPOLATION` issues.
+
 ## 2.0.0-dev.1.6
 
 * Fixed a crash when validating an asset from a string source with `maxIssues` option set.

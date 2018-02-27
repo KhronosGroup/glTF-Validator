@@ -447,6 +447,18 @@ class LinkError extends IssueType {
               // ignore: avoid_as
               'Must be one of ${(args[1] as Iterable).map(_q)}.');
 
+  static final LinkError animationSamplerInputAccessorTooFewElements =
+      new LinkError._(
+          'ANIMATION_SAMPLER_INPUT_ACCESSOR_TOO_FEW_ELEMENTS',
+          (args) => 'Animation sampler output accessor with ${_q(args[0])} '
+              'interpolation must have at least ${args[1]} elements. '
+              'Got ${args[2]}.');
+
+  static final LinkError animationSamplerOutputInterpolation = new LinkError._(
+      'ANIMATION_SAMPLER_OUTPUT_INTERPOLATION',
+      (args) => 'The same output accessor cannot be used '
+          'both for spline and linear data.');
+
   static final LinkError animationSamplerOutputAccessorInvalidCount =
       new LinkError._(
           'ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT',
@@ -455,7 +467,7 @@ class LinkError extends IssueType {
 
   static final LinkError bufferNonFirstGlb = new LinkError._(
       'BUFFER_NON_FIRST_GLB',
-          (args) => 'Buffer referring to GLB binary chunk must be the first.');
+      (args) => 'Buffer referring to GLB binary chunk must be the first.');
 
   static final LinkError bufferMissingGlbData = new LinkError._(
       'BUFFER_MISSING_GLB_DATA',

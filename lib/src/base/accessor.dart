@@ -38,7 +38,7 @@ class Accessor extends GltfChildOfRootProperty {
   int _componentLength = -1;
   bool _isUnit = false;
   bool _isXyzSign = false;
-  bool _isCubicSpline = false;
+  bool _isCubicSpline;
   AccessorUsage _usage;
 
   Accessor._(
@@ -116,7 +116,7 @@ class Accessor extends GltfChildOfRootProperty {
 
   bool get isUnit => _isUnit;
   bool get isXyzSign => _isXyzSign;
-  bool get isCubicSpline => _isCubicSpline;
+  bool get isCubicSpline => _isCubicSpline == true;
 
   AccessorUsage get usage => _usage;
 
@@ -341,7 +341,15 @@ class Accessor extends GltfChildOfRootProperty {
 
   void setXyzSign() => _isXyzSign = true;
 
-  void setCubicSpline() => _isCubicSpline = true;
+  // ignore: avoid_positional_boolean_parameters
+  void setCubicSpline(bool isCubicSpline, Context context) {
+    if (_isCubicSpline == null) {
+      _isCubicSpline = isCubicSpline;
+    } else if (context.validate && _isCubicSpline != isCubicSpline) {
+      context.addIssue(LinkError.animationSamplerOutputInterpolation,
+          name: OUTPUT);
+    }
+  }
 
   Iterable<num> getElements({bool normalize: false}) sync* {
     // Ensure required fields to not check for them each time

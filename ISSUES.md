@@ -69,9 +69,11 @@
 |ANIMATION_CHANNEL_TARGET_NODE_WEIGHTS_NO_MORPHS|Animation channel cannot target WEIGHTS when mesh does not have morph targets.|Error|
 |ANIMATION_DUPLICATE_TARGETS|Animation channel has the same target as channel `%1`.|Error|
 |ANIMATION_SAMPLER_INPUT_ACCESSOR_INVALID_FORMAT|Invalid Animation sampler input accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|ANIMATION_SAMPLER_INPUT_ACCESSOR_TOO_FEW_ELEMENTS|Animation sampler output accessor with '`%1`' interpolation must have at least `%2` elements. Got `%3`.|Error|
 |ANIMATION_SAMPLER_INPUT_ACCESSOR_WITHOUT_BOUNDS|accessor.min and accessor.max must be defined for animation input accessor.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT|Animation sampler output accessor of count `%1` expected. Found `%2`.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_FORMAT|Invalid animation sampler output accessor format '`%1`' for path '`%3`'. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|ANIMATION_SAMPLER_OUTPUT_INTERPOLATION|The same output accessor cannot be used both for spline and linear data.|Error|
 |BUFFER_MISSING_GLB_DATA|Buffer refers to an unresolved GLB binary chunk.|Error|
 |BUFFER_NON_FIRST_GLB|Buffer referring to GLB binary chunk must be the first.|Error|
 |BUFFER_VIEW_TARGET_OVERRIDE|Override of previously set bufferView target or usage. Initial: '`%1`', new: '`%2`'.|Error|
