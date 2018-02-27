@@ -316,7 +316,7 @@ class GlbReader implements GltfReader {
           }
 
           if (_jsonReaderResult != null) {
-            _jsonReaderResult.then<Null>((result) {
+            _jsonReaderResult.then((result) {
               _completer.complete(
                   new GltfReaderResult(mimeType, result?.gltf, _binaryBuffer));
             }, onError: _onError);

@@ -241,9 +241,8 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
         }
       }
       context.path.removeLast();
-      return uniqueItems.toList(growable: false);
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value == null) {
     if (req) {
       context.addIssue(SchemaError.undefinedProperty, args: [name]);
@@ -281,7 +280,7 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
     });
     context.path.removeLast();
 
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value == null) {
     context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
@@ -340,7 +339,10 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
         }
       }
     }
-    return list; // ignore: return_of_invalid_type
+    return list
+        .cast<Map>()
+        .map((m) => m.cast<String, int>())
+        .toList(growable: false);
   } else if (list != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [list, _kArray]);
@@ -440,7 +442,7 @@ List<num> getGlIntList(Map<String, Object> map, String name, Context context,
     if (wrongMemberFound) {
       return null;
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
@@ -476,10 +478,10 @@ List<String> getStringList(
       if (wrongMemberFound) {
         return null;
       } else {
-        return value; // ignore: return_of_invalid_type
+        return value.cast();
       }
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
@@ -507,7 +509,7 @@ List<Map<String, Object>> getMapList(
         return null;
       }
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value == null) {
     context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {

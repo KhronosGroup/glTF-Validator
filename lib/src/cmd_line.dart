@@ -143,7 +143,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
   return null;
 }
 
-Future<Null> run(List<String> args) async {
+Future run(List<String> args) async {
   ArgResults argResult;
   final parser = new ArgParser()
     ..addFlag(ValidatorOptions.kValidateResources,
@@ -248,7 +248,7 @@ Future<Null> run(List<String> args) async {
   }
 }
 
-Future<bool> _processFile(ValidationTask task) async {
+FutureOr<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
   final opts = task.validatorOptions;
