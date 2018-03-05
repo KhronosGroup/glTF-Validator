@@ -33,7 +33,7 @@ import 'package:yaml/yaml.dart';
 final String _version =
     loadYaml(new File('pubspec.yaml').readAsStringSync())['version'];
 
-Future main(List<String> args) => grind(args);
+Future<void> main(List<String> args) => grind(args);
 
 void _replaceVersion() {
   final f = new File('lib/gltf.dart');

@@ -72,7 +72,7 @@ class ResourcesLoader {
   ResourcesLoader(this.context, this.gltf,
       {@required this.externalBytesFetch, @required this.externalStreamFetch});
 
-  Future load({bool mustValidateAccessorData}) async {
+  Future<void> load({bool mustValidateAccessorData}) async {
     try {
       await _loadBuffers();
       await _loadImages();
@@ -84,7 +84,7 @@ class ResourcesLoader {
     }
   }
 
-  Future _loadBuffers() async {
+  Future<void> _loadBuffers() async {
     context.path
       ..clear()
       ..add(BUFFERS);
@@ -158,7 +158,7 @@ class ResourcesLoader {
     }
   }
 
-  Future _loadImages() async {
+  Future<void> _loadImages() async {
     context.path
       ..clear()
       ..add(IMAGES);

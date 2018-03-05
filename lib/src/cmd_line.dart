@@ -143,7 +143,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
   return null;
 }
 
-Future run(List<String> args) async {
+Future<void> run(List<String> args) async {
   ArgResults argResult;
   final parser = new ArgParser()
     ..addFlag(ValidatorOptions.kValidateResources,
@@ -181,7 +181,7 @@ Future run(List<String> args) async {
           'if at least one error was found.\n')
       ..writeln(parser.usage);
     exitCode = kErrorCode;
-    return;
+    return null;
   }
 
   final input = argResult.rest[0];

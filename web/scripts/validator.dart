@@ -152,9 +152,9 @@ File _getFileByUri(List<File> files, Uri uri) {
   return files.firstWhere((file) => file.name == fileName, orElse: () => null);
 }
 
-Stream<List<int>> _getFileStream(File file) {
+Stream<Uint8List> _getFileStream(File file) {
   var isCanceled = false;
-  final controller = new StreamController<List<int>>(onCancel: () {
+  final controller = new StreamController<Uint8List>(onCancel: () {
     isCanceled = true;
   });
 
@@ -186,7 +186,7 @@ Stream<List<int>> _getFileStream(File file) {
   return controller.stream;
 }
 
-Future<List<int>> _getFile(File file) async {
+Future<Uint8List> _getFile(File file) async {
   final fileReader = new FileReader()..readAsArrayBuffer(file);
   await fileReader.onLoadEnd.first;
   final result = fileReader.result;
