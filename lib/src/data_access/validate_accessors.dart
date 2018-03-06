@@ -75,7 +75,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
       return;
     }
 
-    if (accessor.isCubicSpline && accessor.count.remainder(3) != 0) {
+    if (accessor.containsCubicSpline && accessor.count.remainder(3) != 0) {
       return;
     }
 
@@ -192,7 +192,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
             matrix.storage[componentIndex] = value;
           } else if (accessor.isUnit &&
               !(accessor.isXyzSign && componentIndex == 3) &&
-              !(accessor.isCubicSpline && cubicSplineState != 1)) {
+              !(accessor.containsCubicSpline && cubicSplineState != 1)) {
             sum += value * value;
           }
         }
@@ -203,7 +203,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
               context.addIssue(DataError.indecomposableMatrix, args: [index]);
             }
           } else if (accessor.isUnit &&
-              !(accessor.isCubicSpline && cubicSplineState != 1)) {
+              !(accessor.containsCubicSpline && cubicSplineState != 1)) {
             if ((sum - 1.0).abs() > 0.0005) {
               context.addIssue(DataError.accessorNonUnit,
                   args: [index, sqrt(sum)]);
@@ -216,7 +216,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
             }
           }
 
-          if (accessor.isCubicSpline && ++cubicSplineState == 3) {
+          if (accessor.containsCubicSpline && ++cubicSplineState == 3) {
             cubicSplineState = 0;
           }
 
@@ -323,14 +323,14 @@ void validateAccessorsData(Gltf gltf, Context context) {
             }
           }
         } else if (accessor.isUnit &&
-            !(accessor.isCubicSpline && cubicSplineState != 1)) {
+            !(accessor.containsCubicSpline && cubicSplineState != 1)) {
           final normalizedValue = accessor.getNormalizedValue(value);
           sum += normalizedValue * normalizedValue;
         }
 
         if (++componentIndex == components) {
           if (accessor.isUnit &&
-              !(accessor.isCubicSpline && cubicSplineState != 1)) {
+              !(accessor.containsCubicSpline && cubicSplineState != 1)) {
             if ((sum - 1.0).abs() > 0.0005) {
               context.addIssue(DataError.accessorNonUnit,
                   args: [index, sqrt(sum)]);
@@ -338,7 +338,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
             sum = 0.0;
           }
 
-          if (accessor.isCubicSpline && ++cubicSplineState == 3) {
+          if (accessor.containsCubicSpline && ++cubicSplineState == 3) {
             cubicSplineState = 0;
           }
 

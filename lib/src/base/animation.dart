@@ -131,10 +131,11 @@ class Animation extends GltfChildOfRootProperty {
           sampler._output.bufferView
               ?.setUsage(BufferViewUsage.Other, OUTPUT, context);
 
-          if (sampler.interpolation == CUBICSPLINE) {
-            sampler._output.setCubicSpline(true, context);
-          } else {
-            sampler._output.setCubicSpline(false, context);
+          if (!sampler._output.trySetInterpolation(
+                  cubic: sampler.interpolation == CUBICSPLINE) &&
+              context.validate) {
+            context.addIssue(LinkError.animationSamplerOutputInterpolation,
+                name: OUTPUT);
           }
         }
       }

@@ -153,6 +153,43 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Override interpolation', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/animation/override_interpolation.gltf')
+              .openRead());
+
+      final context = new Context()
+        ..path.add('animations')
+        ..path.add('0')
+        ..path.add('samplers')
+        ..path.add('1')
+        ..path.add('output')
+        ..addIssue(LinkError.animationSamplerOutputInterpolation);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Too few cubic frames', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/animation/too_few_cubic_frames.gltf')
+              .openRead());
+
+      final context = new Context()
+        ..path.add('animations')
+        ..path.add('0')
+        ..path.add('samplers')
+        ..path.add('0')
+        ..path.add('input')
+        ..addIssue(LinkError.animationSamplerInputAccessorTooFewElements,
+            args: ['CUBICSPLINE', 2, 1]);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/animation/valid_full.gltf').openRead());
