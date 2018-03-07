@@ -219,11 +219,11 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
     {bool req: false}) {
   final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
+    if (value.isEmpty) {
+      context.addIssue(SchemaError.emptyEntity, name: name);
+      return null;
+    }
     if (context.validate) {
-      if (value.isEmpty) {
-        context.addIssue(SchemaError.emptyEntity, name: name);
-        return null;
-      }
       context.path.add(name);
       final uniqueItems = new Set<int>();
       for (var i = 0; i < value.length; i++) {
@@ -477,8 +477,6 @@ List<String> getStringList(
       context.path.removeLast();
       if (wrongMemberFound) {
         return null;
-      } else {
-        return value.cast();
       }
     }
     return value.cast();
