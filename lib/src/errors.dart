@@ -307,8 +307,9 @@ class SemanticError extends IssueType {
   static final SemanticError meshPrimitivesUnequalJointsCount =
       new SemanticError._(
           'MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT',
-          (args) => "All primitives must contain the same number of 'JOINTS' "
-              "and 'WEIGHTS' attribute sets.");
+          (args) => "All primitives should contain the same number of 'JOINTS' "
+              "and 'WEIGHTS' attribute sets.",
+          Severity.Warning);
 
   static final SemanticError meshPrimitiveNoPosition = new SemanticError._(
       'MESH_PRIMITIVE_NO_POSITION', (args) => 'No POSITION attribute found.');
