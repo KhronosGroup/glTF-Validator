@@ -274,7 +274,7 @@ class SemanticError extends IssueType {
   static final SemanticError bufferViewTooBigByteStride = new SemanticError._(
       'BUFFER_VIEW_TOO_BIG_BYTE_STRIDE',
       (args) => "Buffer view's byteStride (${args[0]}) is "
-          "smaller than byteLength (${args[1]}).");
+          'smaller than byteLength (${args[1]}).');
 
   static final SemanticError bufferViewInvalidByteStride = new SemanticError._(
       'BUFFER_VIEW_INVALID_BYTE_STRIDE',
@@ -303,6 +303,13 @@ class SemanticError extends IssueType {
           'MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT',
           (args) =>
               'All primitives must have the same number of morph targets.');
+
+  static final SemanticError meshPrimitivesUnequalJointsCount =
+      new SemanticError._(
+          'MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT',
+          (args) => "All primitives should contain the same number of 'JOINTS' "
+              "and 'WEIGHTS' attribute sets.",
+          Severity.Warning);
 
   static final SemanticError meshPrimitiveNoPosition = new SemanticError._(
       'MESH_PRIMITIVE_NO_POSITION', (args) => 'No POSITION attribute found.');
@@ -369,6 +376,13 @@ class SemanticError extends IssueType {
       (args) => 'Non-relative URI found: ${args[0]}.',
       Severity.Warning);
 
+  static final SemanticError multipleExtensions = new SemanticError._(
+      'MULTIPLE_EXTENSIONS',
+      (args) => 'Multiple extensions are defined for this object: '
+          // ignore: avoid_as
+          '${(args[1] as Iterable).map(_q)}.',
+      Severity.Warning);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);
@@ -378,7 +392,7 @@ class LinkError extends IssueType {
   static final LinkError accessorTotalOffsetAlignment = new LinkError._(
       'ACCESSOR_TOTAL_OFFSET_ALIGNMENT',
       (args) => "Accessor's total byteOffset ${args[0]} isn't a multiple of "
-          "componentType length ${args[1]}.");
+          'componentType length ${args[1]}.');
 
   static final LinkError accessorSmallStride = new LinkError._(
       'ACCESSOR_SMALL_BYTESTRIDE',
@@ -434,11 +448,31 @@ class LinkError extends IssueType {
               // ignore: avoid_as
               'Must be one of ${(args[1] as Iterable).map(_q)}.');
 
+  static final LinkError animationSamplerInputAccessorTooFewElements =
+      new LinkError._(
+          'ANIMATION_SAMPLER_INPUT_ACCESSOR_TOO_FEW_ELEMENTS',
+          (args) => 'Animation sampler output accessor with ${_q(args[0])} '
+              'interpolation must have at least ${args[1]} elements. '
+              'Got ${args[2]}.');
+
+  static final LinkError animationSamplerOutputInterpolation = new LinkError._(
+      'ANIMATION_SAMPLER_OUTPUT_INTERPOLATION',
+      (args) => 'The same output accessor cannot be used '
+          'both for spline and linear data.');
+
   static final LinkError animationSamplerOutputAccessorInvalidCount =
       new LinkError._(
           'ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT',
           (args) => 'Animation sampler output accessor of count '
               '${args[0]} expected. Found ${args[1]}.');
+
+  static final LinkError bufferNonFirstGlb = new LinkError._(
+      'BUFFER_NON_FIRST_GLB',
+      (args) => 'Buffer referring to GLB binary chunk must be the first.');
+
+  static final LinkError bufferMissingGlbData = new LinkError._(
+      'BUFFER_MISSING_GLB_DATA',
+      (args) => 'Buffer refers to an unresolved GLB binary chunk.');
 
   static final LinkError bufferViewTooLong = new LinkError._(
       'BUFFER_VIEW_TOO_LONG',
@@ -528,8 +562,13 @@ class LinkError extends IssueType {
           'the number of morph targets (${args[1] ?? 0}).');
 
   static final LinkError nodeSkinWithNonSkinnedMesh = new LinkError._(
-      'NODE_WITH_NON_SKINNED_MESH',
+      'NODE_SKIN_WITH_NON_SKINNED_MESH',
       (args) => 'Node has skin defined, but mesh has no joints data.');
+
+  static final LinkError nodeSkinnedMeshWithoutSkin = new LinkError._(
+      'NODE_SKINNED_MESH_WITHOUT_SKIN',
+      (args) => 'Node uses skinned mesh, but has no skin defined.',
+      Severity.Warning);
 
   static final LinkError sceneNonRootNode = new LinkError._(
       'SCENE_NON_ROOT_NODE', (args) => 'Node ${args[0]} is not a root node.');
@@ -606,6 +645,10 @@ class GlbError extends IssueType {
   static final GlbError unexpectedFirstChunk = new GlbError._(
       'GLB_UNEXPECTED_FIRST_CHUNK',
       (args) => 'First chunk must be of JSON type. Found ${args[0]} instead.');
+
+  static final GlbError unexpectedBinChunk = new GlbError._(
+      'GLB_UNEXPECTED_BIN_CHUNK',
+      (args) => 'BIN chunk must be the second chunk.');
 
   static final GlbError unknownChunkType = new GlbError._(
       'GLB_UNKNOWN_CHUNK_TYPE',

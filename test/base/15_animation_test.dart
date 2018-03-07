@@ -133,13 +133,13 @@ void main() {
         ..path.removeLast()
         ..path.add('2')
         ..addIssue(LinkError.animationSamplerOutputAccessorInvalidCount,
-            name: 'sampler', args: [4, 3])
+            name: 'sampler', args: [6, 3])
         ..addIssue(LinkError.animationDuplicateTargets,
             name: 'target', args: [3])
         ..path.removeLast()
         ..path.add('3')
         ..addIssue(LinkError.animationSamplerOutputAccessorInvalidCount,
-            name: 'sampler', args: [4, 3])
+            name: 'sampler', args: [6, 3])
         ..path.removeLast()
         ..path.removeLast()
         ..path.removeLast()
@@ -147,6 +147,43 @@ void main() {
         ..path.add('nodes')
         ..addIssue(SemanticError.nodeEmpty, index: 0)
         ..addIssue(SemanticError.nodeEmpty, index: 1);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Override interpolation', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/animation/override_interpolation.gltf')
+              .openRead());
+
+      final context = new Context()
+        ..path.add('animations')
+        ..path.add('0')
+        ..path.add('samplers')
+        ..path.add('1')
+        ..path.add('output')
+        ..addIssue(LinkError.animationSamplerOutputInterpolation);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Too few cubic frames', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/animation/too_few_cubic_frames.gltf')
+              .openRead());
+
+      final context = new Context()
+        ..path.add('animations')
+        ..path.add('0')
+        ..path.add('samplers')
+        ..path.add('0')
+        ..path.add('input')
+        ..addIssue(LinkError.animationSamplerInputAccessorTooFewElements,
+            args: ['CUBICSPLINE', 2, 1]);
 
       await reader.read();
 

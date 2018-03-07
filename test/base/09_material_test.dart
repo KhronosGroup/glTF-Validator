@@ -74,6 +74,26 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Multiple extensions', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/material/multiple_extensions.gltf')
+              .openRead());
+
+      await reader.read();
+
+      final context = new Context()
+        ..path.add('materials')
+        ..path.add('0')
+        ..addIssue(SemanticError.multipleExtensions,
+            args: [
+              null,
+              ['KHR_materials_unlit', 'KHR_materials_pbrSpecularGlossiness']
+            ],
+            name: 'extensions');
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/material/valid_full.gltf').openRead());

@@ -39,6 +39,7 @@
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
+|MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT|All primitives must contain the same number of 'JOINTS' and 'WEIGHTS' attribute sets.|Error|
 |MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|
 |MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
 |MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
@@ -46,6 +47,7 @@
 |MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Error|
 |MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
 |MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL|TANGENT attribute without NORMAL found.|Warning|
+|MULTIPLE_EXTENSIONS|Multiple extensions are defined for this object: ('`%a`', '`%b`', '`%c`').|Warning|
 |NODE_EMPTY|Empty node encountered.|Information|
 |NODE_MATRIX_DEFAULT|Do not specify default transform matrix.|Information|
 |NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
@@ -67,9 +69,13 @@
 |ANIMATION_CHANNEL_TARGET_NODE_WEIGHTS_NO_MORPHS|Animation channel cannot target WEIGHTS when mesh does not have morph targets.|Error|
 |ANIMATION_DUPLICATE_TARGETS|Animation channel has the same target as channel `%1`.|Error|
 |ANIMATION_SAMPLER_INPUT_ACCESSOR_INVALID_FORMAT|Invalid Animation sampler input accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|ANIMATION_SAMPLER_INPUT_ACCESSOR_TOO_FEW_ELEMENTS|Animation sampler output accessor with '`%1`' interpolation must have at least `%2` elements. Got `%3`.|Error|
 |ANIMATION_SAMPLER_INPUT_ACCESSOR_WITHOUT_BOUNDS|accessor.min and accessor.max must be defined for animation input accessor.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT|Animation sampler output accessor of count `%1` expected. Found `%2`.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_FORMAT|Invalid animation sampler output accessor format '`%1`' for path '`%3`'. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|ANIMATION_SAMPLER_OUTPUT_INTERPOLATION|The same output accessor cannot be used both for spline and linear data.|Error|
+|BUFFER_MISSING_GLB_DATA|Buffer refers to an unresolved GLB binary chunk.|Error|
+|BUFFER_NON_FIRST_GLB|Buffer referring to GLB binary chunk must be the first.|Error|
 |BUFFER_VIEW_TARGET_OVERRIDE|Override of previously set bufferView target or usage. Initial: '`%1`', new: '`%2`'.|Error|
 |BUFFER_VIEW_TOO_LONG|BufferView does not fit buffer (`%1`) byteLength (`%2`).|Error|
 |INVALID_IBM_ACCESSOR_COUNT|Accessor of count `%1` expected. Found `%2`.|Error|
@@ -86,8 +92,9 @@
 |MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT|All accessors of the same primitive must have the same count.|Error|
 |NODE_LOOP|Node is a part of a node loop.|Error|
 |NODE_PARENT_OVERRIDE|Value overrides parent of node `%1`.|Error|
+|NODE_SKINNED_MESH_WITHOUT_SKIN|Node uses skinned mesh, but has no skin defined.|Warning|
+|NODE_SKIN_WITH_NON_SKINNED_MESH|Node has skin defined, but mesh has no joints data.|Error|
 |NODE_WEIGHTS_INVALID|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
-|NODE_WITH_NON_SKINNED_MESH|Node has skin defined, but mesh has no joints data.|Error|
 |SCENE_NON_ROOT_NODE|Node `%1` is not a root node.|Error|
 |SKIN_IBM_INVALID_FORMAT|Invalid IBM accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`'). |Error|
 |UNDECLARED_EXTENSION|Extension was not declared in extensionsUsed.|Error|
@@ -130,6 +137,7 @@
 |GLB_INVALID_VERSION|Invalid GLB version value `%1`.|Error|
 |GLB_LENGTH_MISMATCH|Declared length (`%1`) does not match GLB length (`%2`).|Error|
 |GLB_LENGTH_TOO_SMALL|Declared GLB length (`%1`) is too small.|Error|
+|GLB_UNEXPECTED_BIN_CHUNK|BIN chunk must be the second chunk.|Error|
 |GLB_UNEXPECTED_END_OF_CHUNK_DATA|Unexpected end of chunk data.|Error|
 |GLB_UNEXPECTED_END_OF_CHUNK_HEADER|Unexpected end of chunk header.|Error|
 |GLB_UNEXPECTED_END_OF_HEADER|Unexpected end of header.|Error|

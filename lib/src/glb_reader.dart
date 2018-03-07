@@ -194,6 +194,12 @@ class GlbReader implements GltfReader {
                 offset: _offset - _CHUNK_HEADER_LENGTH);
           }
 
+          if (_chunkType == _CHUNK_BIN && _chunkNumber > 1 && !_hasBinChunk) {
+            context.addIssue(GlbError.unexpectedBinChunk,
+                args: [_getChunkString(_chunkType)],
+                offset: _offset - _CHUNK_HEADER_LENGTH);
+          }
+
           void updateState({@required bool seen}) {
             if (seen) {
               context.addIssue(GlbError.duplicateChunk,
@@ -310,7 +316,7 @@ class GlbReader implements GltfReader {
           }
 
           if (_jsonReaderResult != null) {
-            _jsonReaderResult.then<Null>((result) {
+            _jsonReaderResult.then((result) {
               _completer.complete(
                   new GltfReaderResult(mimeType, result?.gltf, _binaryBuffer));
             }, onError: _onError);

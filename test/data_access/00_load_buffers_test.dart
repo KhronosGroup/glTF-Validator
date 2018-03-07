@@ -92,5 +92,29 @@ void main() {
           orderedEquals(
               <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]));
     });
+
+    test('Non first buffer refers to GLB', () async {
+      final validationResult = await getValidationResult(
+          'test/data_access/buffer/non_first_buffer.glb');
+
+      final context = new Context()
+        ..path.add('buffers')
+        ..path.add('1')
+        ..addIssue(LinkError.bufferNonFirstGlb);
+
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Missing BIN chunk', () async {
+      final validationResult = await getValidationResult(
+          'test/data_access/buffer/json_missing_bin.glb');
+
+      final context = new Context()
+        ..path.add('buffers')
+        ..path.add('0')
+        ..addIssue(LinkError.bufferMissingGlbData);
+
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
+    });
   });
 }

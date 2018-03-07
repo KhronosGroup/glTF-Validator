@@ -63,7 +63,7 @@ abstract class _JSValidationOptions {
 @JS()
 external Exports get exports;
 
-@JS("Object.keys")
+@JS('Object.keys')
 external List<String> _getKeys(Object value);
 
 void main() {
@@ -208,7 +208,7 @@ Context _getContextFromOptions(_JSValidationOptions options) {
 
       severityOverrides = <String, Severity>{};
 
-      for (var key in _getKeys(options.severityOverrides)) {
+      for (final key in _getKeys(options.severityOverrides)) {
         final Object value = getProperty(options.severityOverrides, key);
         if (value is int && value >= 0 && value <= 3) {
           severityOverrides[key] = Severity.values[value];

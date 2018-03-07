@@ -126,7 +126,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
           severityOverrides[key] = Severity.values[value];
         } else {
           abort("$kYamlError each entry in '$kOverride' must "
-              "have a string key and an integer value.");
+              'have a string key and an integer value.');
         }
       }
     } else if (yamlSeveritiesMap != null) {
@@ -138,12 +138,12 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
         ignoredIssues: ignoredIssues,
         severityOverrides: severityOverrides);
   } else {
-    abort("$kYamlError document must be a map.");
+    abort('$kYamlError document must be a map.');
   }
   return null;
 }
 
-Future<Null> run(List<String> args) async {
+Future<void> run(List<String> args) async {
   ArgResults argResult;
   final parser = new ArgParser()
     ..addFlag(ValidatorOptions.kValidateResources,
@@ -181,7 +181,7 @@ Future<Null> run(List<String> args) async {
           'if at least one error was found.\n')
       ..writeln(parser.usage);
     exitCode = kErrorCode;
-    return;
+    return null;
   }
 
   final input = argResult.rest[0];
@@ -248,7 +248,7 @@ Future<Null> run(List<String> args) async {
   }
 }
 
-Future<bool> _processFile(ValidationTask task) async {
+FutureOr<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
   final opts = task.validatorOptions;

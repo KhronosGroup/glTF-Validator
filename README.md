@@ -3,6 +3,9 @@
 </p>
 
 # glTF-Validator
+
+[![Build Status](https://travis-ci.org/KhronosGroup/glTF-Validator.svg?branch=master)](https://travis-ci.org/KhronosGroup/glTF-Validator)
+
 Tool to validate [glTF](https://github.com/KhronosGroup/glTF) assets.
 
 Validation is performed against [glTF 2.0](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0) specification.
@@ -84,7 +87,7 @@ To build application snapshot for more convenient deployment, follow these steps
 
 It may be used like this:
 ```
-$ dart gltf_validator.snapshot -r -p -w ./path_to_models/
+$ dart gltf_validator.snapshot -r -p -a ./path_to_models/
 ```
 Note, that you have to use the same Dart SDK version for building and running the snapshot. For deployment, you will need only two files: application snapshot and `dart` executable.
 

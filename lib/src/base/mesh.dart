@@ -47,6 +47,7 @@ class Mesh extends GltfChildOfRootProperty {
 
       context.path.add(PRIMITIVES);
       int targetsCount;
+      var jointsCount = -1;
       for (var i = 0; i < primitivesMaps.length; i++) {
         context.path.add(i.toString());
         final primitive = new MeshPrimitive.fromMap(primitivesMaps[i], context);
@@ -56,6 +57,13 @@ class Mesh extends GltfChildOfRootProperty {
           } else if (targetsCount != primitive._targetsIndices?.length) {
             context.addIssue(SemanticError.meshPrimitivesUnequalTargetsCount,
                 name: TARGETS);
+          }
+
+          if (jointsCount == -1) {
+            jointsCount = primitive.jointsCount;
+          } else if (jointsCount != primitive.jointsCount) {
+            context.addIssue(SemanticError.meshPrimitivesUnequalJointsCount,
+                name: ATTRIBUTES);
           }
         }
         primitives[i] = primitive;
@@ -313,8 +321,9 @@ class MeshPrimitive extends GltfProperty {
                   args: [format, validFormats]);
             }
 
-            if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
-                (accessor.elementLength % 4 != 0 &&
+            if ((accessor.byteOffset != -1 &&
+                    accessor.byteOffset.remainder(4) != 0) ||
+                (accessor.elementLength.remainder(4) != 0 &&
                     accessor.bufferView != null &&
                     accessor.bufferView.byteStride == -1)) {
               context.addIssue(LinkError.meshPrimitiveAccessorUnaligned,
@@ -388,9 +397,9 @@ class MeshPrimitive extends GltfProperty {
     */
 
     if ((context.validate && _count != -1) &&
-        ((mode == 1 && _count % 2 != 0) ||
+        ((mode == 1 && _count.remainder(2) != 0) ||
             ((mode == 2 || mode == 3) && _count < 2) ||
-            (mode == 4 && _count % 3 != 0) ||
+            (mode == 4 && _count.remainder(3) != 0) ||
             ((mode == 5 || mode == 6) && _count < 3))) {
       context.addIssue(LinkError.meshPrimitiveIncompatibleMode,
           args: [_count, gl.MODES_NAMES[mode]]);
@@ -459,8 +468,9 @@ class MeshPrimitive extends GltfProperty {
                     args: [format, validFormats]);
               }
 
-              if ((accessor.byteOffset != -1 && accessor.byteOffset % 4 != 0) ||
-                  (accessor.elementLength % 4 != 0 &&
+              if ((accessor.byteOffset != -1 &&
+                      accessor.byteOffset.remainder(4) != 0) ||
+                  (accessor.elementLength.remainder(4) != 0 &&
                       accessor.bufferView != null &&
                       accessor.bufferView.byteStride == -1)) {
                 context.addIssue(LinkError.meshPrimitiveAccessorUnaligned,

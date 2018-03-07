@@ -132,7 +132,6 @@ const String OUTPUT = 'output';
 
 const String LINEAR = 'LINEAR';
 const String STEP = 'STEP';
-const String CATMULLROMSPLINE = 'CATMULLROMSPLINE';
 const String CUBICSPLINE = 'CUBICSPLINE';
 
 const List<String> ANIMATION_SAMPLER_MEMBERS = const <String>[
@@ -144,7 +143,6 @@ const List<String> ANIMATION_SAMPLER_MEMBERS = const <String>[
 const List<String> ANIMATION_SAMPLER_INTERPOLATIONS = const <String>[
   LINEAR,
   STEP,
-  CATMULLROMSPLINE,
   CUBICSPLINE
 ];
 

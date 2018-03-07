@@ -71,11 +71,6 @@ html, body {
     border-color: #aaa;
 }
 
-#dropZone.error {
-    background: #faa;
-    border-color: #f00;
-}
-
 #dropZone.drop {
     background: #afa;
     border-color: #0f0;
@@ -84,4 +79,8 @@ html, body {
 #inputLink {
     border-bottom: 2px #555 dashed;
     cursor: pointer;
+}
+
+#truncatedWarning {
+    color: #c92c2c;
 }

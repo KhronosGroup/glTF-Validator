@@ -219,11 +219,11 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
     {bool req: false}) {
   final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
+    if (value.isEmpty) {
+      context.addIssue(SchemaError.emptyEntity, name: name);
+      return null;
+    }
     if (context.validate) {
-      if (value.isEmpty) {
-        context.addIssue(SchemaError.emptyEntity, name: name);
-        return null;
-      }
       context.path.add(name);
       final uniqueItems = new Set<int>();
       for (var i = 0; i < value.length; i++) {
@@ -241,9 +241,8 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
         }
       }
       context.path.removeLast();
-      return uniqueItems.toList(growable: false);
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value == null) {
     if (req) {
       context.addIssue(SchemaError.undefinedProperty, args: [name]);
@@ -281,7 +280,7 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
     });
     context.path.removeLast();
 
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value == null) {
     context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
@@ -340,7 +339,10 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
         }
       }
     }
-    return list; // ignore: return_of_invalid_type
+    return list
+        .cast<Map>()
+        .map((m) => m.cast<String, int>())
+        .toList(growable: false);
   } else if (list != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [list, _kArray]);
@@ -440,7 +442,7 @@ List<num> getGlIntList(Map<String, Object> map, String name, Context context,
     if (wrongMemberFound) {
       return null;
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
@@ -475,11 +477,9 @@ List<String> getStringList(
       context.path.removeLast();
       if (wrongMemberFound) {
         return null;
-      } else {
-        return value; // ignore: return_of_invalid_type
       }
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
@@ -507,7 +507,7 @@ List<Map<String, Object>> getMapList(
         return null;
       }
     }
-    return value; // ignore: return_of_invalid_type
+    return value.cast();
   } else if (value == null) {
     context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
@@ -521,7 +521,8 @@ String getName(Map<String, Object> map, Context context) =>
     getString(map, NAME, context);
 
 Map<String, Object> getExtensions(
-    Map<String, Object> map, Type type, Context context) {
+    Map<String, Object> map, Type type, Context context,
+    {bool warnOnMultipleExtensions: false}) {
   final extensions = <String, Object>{};
   final extensionMaps = getMap(map, EXTENSIONS, context);
 
@@ -530,6 +531,12 @@ Map<String, Object> getExtensions(
   }
 
   context.path.add(EXTENSIONS);
+
+  if (warnOnMultipleExtensions && extensionMaps.length > 1) {
+    context.addIssue(SemanticError.multipleExtensions,
+        args: [null, extensionMaps.keys]);
+  }
+
   for (final extension in extensionMaps.keys) {
     if (!context.extensionsLoaded.contains(extension)) {
       extensions[extension] = null;

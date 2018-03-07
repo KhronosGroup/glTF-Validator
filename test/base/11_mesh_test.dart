@@ -86,6 +86,23 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Skins', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/mesh/skins.gltf').openRead());
+
+      final context = new Context()
+        ..path.add('meshes')
+        ..path.add('1')
+        ..path.add('primitives')
+        ..path.add('1')
+        ..addIssue(SemanticError.meshPrimitivesUnequalJointsCount,
+            name: 'attributes');
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/mesh/custom_property.gltf').openRead());

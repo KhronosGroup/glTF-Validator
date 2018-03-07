@@ -104,7 +104,8 @@ void main() {
         ..path.removeLast()
         ..path.removeLast()
         ..addIssue(LinkError.nodeLoop, index: 2)
-        ..addIssue(LinkError.nodeLoop, index: 3);
+        ..addIssue(LinkError.nodeLoop, index: 3)
+        ..addIssue(LinkError.nodeSkinnedMeshWithoutSkin, index: 4);
 
       await reader.read();
 

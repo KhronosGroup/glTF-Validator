@@ -37,12 +37,7 @@ void main() {
 
       final reader = new GlbReader(controller.stream);
 
-      try {
-        await reader.read();
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        expect(e, equals(ERROR_STRING));
-      }
+      expect(reader.read(), throwsA(ERROR_STRING));
     });
 
     test('Zero Stream', () async {
@@ -215,6 +210,19 @@ void main() {
       final context = new Context()
         ..addIssue(GlbError.unexpectedFirstChunk,
             offset: 12, args: ['0x004e4942']);
+
+      await glbReader.read();
+
+      expect(glbReader.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Misplaced BIN chunk', () async {
+      final glbReader = new GlbReader(
+          new File('test/base/data/glb/misplaced_bin_chunk.glb').openRead());
+
+      final context = new Context()
+        ..addIssue(GlbError.unknownChunkType, offset: 76, args: ['0x004b4e55'])
+        ..addIssue(GlbError.unexpectedBinChunk, offset: 88);
 
       await glbReader.read();
 

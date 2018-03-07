@@ -72,7 +72,7 @@ class ResourcesLoader {
   ResourcesLoader(this.context, this.gltf,
       {@required this.externalBytesFetch, @required this.externalStreamFetch});
 
-  Future<Null> load({bool mustValidateAccessorData}) async {
+  Future<void> load({bool mustValidateAccessorData}) async {
     try {
       await _loadBuffers();
       await _loadImages();
@@ -84,7 +84,7 @@ class ResourcesLoader {
     }
   }
 
-  Future<Null> _loadBuffers() async {
+  Future<void> _loadBuffers() async {
     context.path
       ..clear()
       ..add(BUFFERS);
@@ -111,7 +111,17 @@ class ResourcesLoader {
           } else {
             // GLB Buffer
             info.storage = _Storage.GLB;
-            return externalBytesFetch(null);
+            final data = externalBytesFetch(null);
+            if (context.validate) {
+              if (i != 0) {
+                context.addIssue(LinkError.bufferNonFirstGlb);
+              }
+
+              if (data == null) {
+                context.addIssue(LinkError.bufferMissingGlbData);
+              }
+            }
+            return data;
           }
         } else {
           throw new UnimplementedError();
@@ -148,7 +158,7 @@ class ResourcesLoader {
     }
   }
 
-  Future<Null> _loadImages() async {
+  Future<void> _loadImages() async {
     context.path
       ..clear()
       ..add(IMAGES);

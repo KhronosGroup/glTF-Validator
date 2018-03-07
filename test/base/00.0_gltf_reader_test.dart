@@ -45,12 +45,7 @@ void main() {
 
       final reader = new GltfJsonReader(controller.stream);
 
-      try {
-        await reader.read();
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        expect(e, equals(ERROR_STRING));
-      }
+      expect(reader.read(), throwsA(ERROR_STRING));
     });
 
     test('Empty stream', () async {

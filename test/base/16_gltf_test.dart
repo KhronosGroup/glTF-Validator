@@ -54,6 +54,22 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Invalid Linkable Collection Element', () async {
+      final json = '{"asset": {"version": "2.0"},"materials": [[], null]}';
+      final reader = new GltfJsonReader(
+          new Stream<List<int>>.fromIterable([json.codeUnits]));
+
+      final context = new Context()
+        ..path.add('materials')
+        ..addIssue(SchemaError.typeMismatch,
+            index: 0, args: [<Object>[], 'object'])
+        ..addIssue(SchemaError.typeMismatch, index: 1, args: [null, 'object']);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Invalid Extensions', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/gltf/invalid_extensions_arrays.gltf')

@@ -109,6 +109,14 @@ class Animation extends GltfChildOfRootProperty {
                   LinkError.animationSamplerInputAccessorWithoutBounds,
                   name: INPUT);
             }
+
+            if (sampler.interpolation == CUBICSPLINE &&
+                sampler._input.count < 2) {
+              context.addIssue(
+                  LinkError.animationSamplerInputAccessorTooFewElements,
+                  name: INPUT,
+                  args: [CUBICSPLINE, 2, sampler._input.count]);
+            }
           }
         }
       }
@@ -122,6 +130,13 @@ class Animation extends GltfChildOfRootProperty {
               .setUsage(AccessorUsage.AnimationOutput, OUTPUT, context);
           sampler._output.bufferView
               ?.setUsage(BufferViewUsage.Other, OUTPUT, context);
+
+          if (!sampler._output.trySetInterpolation(
+                  cubic: sampler.interpolation == CUBICSPLINE) &&
+              context.validate) {
+            context.addIssue(LinkError.animationSamplerOutputInterpolation,
+                name: OUTPUT);
+          }
         }
       }
 
@@ -196,8 +211,6 @@ class Animation extends GltfChildOfRootProperty {
 
                 if (channel._sampler.interpolation == CUBICSPLINE) {
                   outputCount *= 3;
-                } else if (channel._sampler.interpolation == CATMULLROMSPLINE) {
-                  outputCount += 2;
                 }
 
                 if (channel.target.path == WEIGHTS) {

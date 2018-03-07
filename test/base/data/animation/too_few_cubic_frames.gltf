@@ -1,0 +1,48 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 1,
+            "min": [
+                0
+            ],
+            "max": [
+                0
+            ]
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 3
+        }
+    ],
+    "animations": [
+        {
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1,
+                    "interpolation": "CUBICSPLINE"
+                }
+            ],
+            "channels": [
+                {
+                    "sampler": 0,
+                    "target": {
+                        "node": 0,
+                        "path": "rotation"
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "extras": "not empty"
+        }
+    ]
+}
