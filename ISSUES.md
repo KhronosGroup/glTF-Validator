@@ -39,7 +39,7 @@
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
-|MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT|All primitives must contain the same number of 'JOINTS' and 'WEIGHTS' attribute sets.|Error|
+|MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT|All primitives should contain the same number of 'JOINTS' and 'WEIGHTS' attribute sets.|Warning|
 |MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|
 |MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
 |MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
