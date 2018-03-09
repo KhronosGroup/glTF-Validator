@@ -133,11 +133,11 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
       // Clean min/max arrays to not re-use values from previous accessors
       if (accessor.min != null) {
-        doubleMins.fillRange(0, 16, double.NAN);
+        doubleMins.fillRange(0, 16, double.nan);
       }
 
       if (accessor.max != null) {
-        doubleMaxs.fillRange(0, 16, double.NAN);
+        doubleMaxs.fillRange(0, 16, double.nan);
       }
 
       while (hasNext) {

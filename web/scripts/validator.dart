@@ -196,8 +196,8 @@ Future<Uint8List> _getFile(File file) async {
   return null;
 }
 
-void _writeMap(Map<String, Object> json) {
-  final report = _kJsonEncoder.convert(json);
+void _writeMap(Map<String, Object> jsonMap) {
+  final report = _kJsonEncoder.convert(jsonMap);
   _output.text = report;
   if (report.length < _kMaxReportLength) {
     context['Prism'].callMethod('highlightAll', [true]);

@@ -167,13 +167,13 @@ void npmRelease() {
 
   delete(new File(p.join(_destDir, 'gltf_validator.dart.js.deps')));
 
-  final Map<String, Object> json = JSON
+  final Map<String, Object> jsonMap = json
       .decode(new File(p.join(_sourceDir, 'package.json')).readAsStringSync());
-  json['version'] = _version;
+  jsonMap['version'] = _version;
 
   log('copying package.json to $_destDir');
-  new File(p.join(_destDir, 'package.json'))
-      .writeAsStringSync((const JsonEncoder.withIndent('    ')).convert(json));
+  new File(p.join(_destDir, 'package.json')).writeAsStringSync(
+      (const JsonEncoder.withIndent('    ')).convert(jsonMap));
 
   copy(new File(p.join(_sourceDir, 'index.js')), _dir);
 }

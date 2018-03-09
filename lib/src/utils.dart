@@ -105,19 +105,19 @@ double getFloat(Map<String, Object> map, String name, Context context,
     double min,
     double exclMin,
     double max,
-    double def: double.NAN,
+    double def: double.nan,
     Iterable<double> list}) {
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
     if (list != null) {
       if (!checkEnum<num>(name, value, list, context)) {
-        return double.NAN;
+        return double.nan;
       }
     } else if ((min != null && value < min) ||
         (exclMin != null && value <= exclMin) ||
         (max != null && value > max)) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
-      return double.NAN;
+      return double.nan;
     }
     return value.toDouble();
   } else if (value == null) {
@@ -129,7 +129,7 @@ double getFloat(Map<String, Object> map, String name, Context context,
     context.addIssue(SchemaError.typeMismatch,
         name: name, args: [value, _kNumber]);
   }
-  return double.NAN;
+  return double.nan;
 }
 
 String getString(Map<String, Object> map, String name, Context context,
