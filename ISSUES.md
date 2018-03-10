@@ -106,8 +106,8 @@
 |------|---------|----------|
 |ACCESSOR_ANIMATION_INPUT_NEGATIVE|Animation input accessor element at index `%1` is negative: `%2`.|Error|
 |ACCESSOR_ANIMATION_INPUT_NON_INCREASING|Animation input accessor element at index `%1` is less than or equal to previous: `%2` <= `%3`.|Error|
-|ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND|Accessor element `%1` at index `%2` is greater than declared maximum value `%3`.|Error|
-|ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor element `%1` at index `%2` is less than declared minimum value `%3`.|Error|
+|ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND|Accessor contains `%1` element(s) greater than declared maximum value `%2`.|Error|
+|ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor contains `%1` element(s) less than declared minimum value `%2`.|Error|
 |ACCESSOR_INDECOMPOSABLE_MATRIX|Matrix element at index `%1` is not decomposable to TRS.|Error|
 |ACCESSOR_INDEX_OOB|Indices accessor element at index `%1` has vertex index `%2` that exceeds number of available vertices `%3`.|Error|
 |ACCESSOR_INDEX_TRIANGLE_DEGENERATE|Indices accessor contains `%1` degenerate triangles.|Information|

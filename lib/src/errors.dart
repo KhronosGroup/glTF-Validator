@@ -58,13 +58,15 @@ class DataError extends IssueType {
 
   static final DataError accessorElementOutOfMinBound = new DataError._(
       'ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND',
-      (args) => 'Accessor element ${args[0]} at index ${args[1]} '
-          'is less than declared minimum value ${args[2]}.');
+      (args) => 'Accessor contains ${args[0]} '
+          // ignore: avoid_as
+          'element(s) less than declared minimum value ${args[1]}.');
 
   static final DataError accessorElementOutOfMaxBound = new DataError._(
       'ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND',
-      (args) => 'Accessor element ${args[0]} at index ${args[1]} '
-          'is greater than declared maximum value ${args[2]}.');
+      (args) => 'Accessor contains ${args[0]} '
+          // ignore: avoid_as
+          'element(s) greater than declared maximum value ${args[1]}.');
 
   static final DataError accessorNonUnit = new DataError._(
       'ACCESSOR_NON_UNIT',
