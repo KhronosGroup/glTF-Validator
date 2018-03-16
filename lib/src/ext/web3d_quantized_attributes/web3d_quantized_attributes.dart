@@ -65,14 +65,7 @@ class Web3dQuantizedAttributes extends Stringable {
   }
 }
 
-class Web3dQuantizedAttributesExtension extends Extension {
-  @override
-  final String name = WEB3D_QUANTIZED_ATTRIBUTES;
-
-  const Web3dQuantizedAttributesExtension();
-
-  @override
-  Map<Type, ExtFuncs> get functions => const <Type, ExtFuncs>{
-        Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
-      };
-}
+const Extension web3dQuantizedAttributesExtension = const Extension(
+    WEB3D_QUANTIZED_ATTRIBUTES, const <Type, ExtFuncs>{
+  Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
+});

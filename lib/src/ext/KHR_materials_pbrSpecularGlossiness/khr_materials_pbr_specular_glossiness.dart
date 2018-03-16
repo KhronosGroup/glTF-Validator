@@ -115,15 +115,7 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
   }
 }
 
-class KhrMaterialsPbrSpecularGlossinessExtension extends Extension {
-  @override
-  final String name = KHR_MATERIALS_PBRSPECULARGLOSSINESS;
-
-  const KhrMaterialsPbrSpecularGlossinessExtension();
-
-  @override
-  Map<Type, ExtFuncs> get functions => const <Type, ExtFuncs>{
-        Material:
-            const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
-      };
-}
+const Extension khrMaterialsPbrSpecularGlossinessExtension = const Extension(
+    KHR_MATERIALS_PBRSPECULARGLOSSINESS, const <Type, ExtFuncs>{
+  Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
+});

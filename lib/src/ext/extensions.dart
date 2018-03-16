@@ -30,12 +30,11 @@ export 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attribut
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 
-abstract class Extension {
-  const Extension();
+class Extension {
+  const Extension(this.name, this.functions);
 
-  String get name;
-
-  Map<Type, ExtFuncs> get functions;
+  final String name;
+  final Map<Type, ExtFuncs> functions;
 }
 
 class ExtFuncs {
@@ -58,10 +57,10 @@ class ExtensionTuple {
 }
 
 const List<Extension> defaultExtensions = const <Extension>[
-  const KhrMaterialsPbrSpecularGlossinessExtension(),
-  const KhrMaterialsUnlitExtension(),
-  const CesiumRtcExtension(),
-  const Web3dQuantizedAttributesExtension()
+  khrMaterialsPbrSpecularGlossinessExtension,
+  khrMaterialsUnlitExtension,
+  cesiumRtcExtension,
+  web3dQuantizedAttributesExtension
 ];
 
 // https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md

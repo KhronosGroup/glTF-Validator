@@ -42,14 +42,7 @@ class KhrMaterialsUnlit extends GltfProperty {
   }
 }
 
-class KhrMaterialsUnlitExtension extends Extension {
-  @override
-  final String name = KHR_MATERIALS_UNLIT;
-
-  const KhrMaterialsUnlitExtension();
-
-  @override
-  Map<Type, ExtFuncs> get functions => const <Type, ExtFuncs>{
-        Material: const ExtFuncs(KhrMaterialsUnlit.fromMap, null)
-      };
-}
+const Extension khrMaterialsUnlitExtension = const Extension(
+    KHR_MATERIALS_UNLIT, const <Type, ExtFuncs>{
+  Material: const ExtFuncs(KhrMaterialsUnlit.fromMap, null)
+});

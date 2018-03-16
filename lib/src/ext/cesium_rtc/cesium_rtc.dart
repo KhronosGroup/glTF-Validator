@@ -46,17 +46,11 @@ class CesiumRtc extends Stringable {
   }
 }
 
-class CesiumRtcExtension extends Extension {
-  @override
-  final String name = CESIUM_RTC;
+const Extension cesiumRtcExtension = const Extension(CESIUM_RTC,
+    const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap, null)});
 
-  /*@override
+/*
+  @override
   final Map<String, Semantic> uniformParameterSemantics =
       const <String, Semantic>{CESIUM_RTC_MODELVIEW: const Semantic()};
 */
-  const CesiumRtcExtension();
-
-  @override
-  Map<Type, ExtFuncs> get functions =>
-      const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap, null)};
-}
