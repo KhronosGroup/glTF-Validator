@@ -31,12 +31,11 @@ export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_p
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 
 abstract class Extension {
+  const Extension();
+
   String get name;
 
   Map<Type, ExtFuncs> get functions;
-
-  // Sub-classes should be singletons instead of consts because of
-  // https://github.com/dart-lang/sdk/issues/17207
 }
 
 class ExtFuncs {
@@ -58,11 +57,11 @@ class ExtensionTuple {
       o is ExtensionTuple && name == o.name && type == o.type;
 }
 
-final List<Extension> defaultExtensions = <Extension>[
-  new KhrMaterialsPbrSpecularGlossinessExtension(),
-  new KhrMaterialsUnlitExtension(),
-  new CesiumRtcExtension(),
-  new Web3dQuantizedAttributesExtension()
+const List<Extension> defaultExtensions = const <Extension>[
+  const KhrMaterialsPbrSpecularGlossinessExtension(),
+  const KhrMaterialsUnlitExtension(),
+  const CesiumRtcExtension(),
+  const Web3dQuantizedAttributesExtension()
 ];
 
 // https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md

@@ -50,17 +50,13 @@ class CesiumRtcExtension extends Extension {
   @override
   final String name = CESIUM_RTC;
 
-  @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Gltf: const ExtFuncs(CesiumRtc.fromMap, null)
-  };
-
   /*@override
   final Map<String, Semantic> uniformParameterSemantics =
       const <String, Semantic>{CESIUM_RTC_MODELVIEW: const Semantic()};
 */
-  factory CesiumRtcExtension() => _singleton;
+  const CesiumRtcExtension();
 
-  static final CesiumRtcExtension _singleton = new CesiumRtcExtension._();
-  CesiumRtcExtension._();
+  @override
+  Map<Type, ExtFuncs> get functions =>
+      const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap, null)};
 }

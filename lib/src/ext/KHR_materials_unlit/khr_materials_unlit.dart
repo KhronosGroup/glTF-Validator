@@ -46,14 +46,10 @@ class KhrMaterialsUnlitExtension extends Extension {
   @override
   final String name = KHR_MATERIALS_UNLIT;
 
+  const KhrMaterialsUnlitExtension();
+
   @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Material: const ExtFuncs(KhrMaterialsUnlit.fromMap, null)
-  };
-
-  factory KhrMaterialsUnlitExtension() => _singleton;
-
-  static final KhrMaterialsUnlitExtension _singleton =
-      new KhrMaterialsUnlitExtension._();
-  KhrMaterialsUnlitExtension._();
+  Map<Type, ExtFuncs> get functions => const <Type, ExtFuncs>{
+        Material: const ExtFuncs(KhrMaterialsUnlit.fromMap, null)
+      };
 }

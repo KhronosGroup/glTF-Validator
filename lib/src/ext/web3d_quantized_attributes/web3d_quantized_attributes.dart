@@ -69,14 +69,10 @@ class Web3dQuantizedAttributesExtension extends Extension {
   @override
   final String name = WEB3D_QUANTIZED_ATTRIBUTES;
 
+  const Web3dQuantizedAttributesExtension();
+
   @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Gltf: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
-  };
-
-  factory Web3dQuantizedAttributesExtension() => _singleton;
-
-  static final Web3dQuantizedAttributesExtension _singleton =
-      new Web3dQuantizedAttributesExtension._();
-  Web3dQuantizedAttributesExtension._();
+  Map<Type, ExtFuncs> get functions => const <Type, ExtFuncs>{
+        Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
+      };
 }

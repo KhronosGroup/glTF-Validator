@@ -119,14 +119,11 @@ class KhrMaterialsPbrSpecularGlossinessExtension extends Extension {
   @override
   final String name = KHR_MATERIALS_PBRSPECULARGLOSSINESS;
 
+  const KhrMaterialsPbrSpecularGlossinessExtension();
+
   @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
-  };
-
-  factory KhrMaterialsPbrSpecularGlossinessExtension() => _singleton;
-
-  static final KhrMaterialsPbrSpecularGlossinessExtension _singleton =
-      new KhrMaterialsPbrSpecularGlossinessExtension._();
-  KhrMaterialsPbrSpecularGlossinessExtension._();
+  Map<Type, ExtFuncs> get functions => const <Type, ExtFuncs>{
+        Material:
+            const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
+      };
 }
