@@ -159,9 +159,9 @@ void npmRelease() {
 
   // Node.js detector adopted from https://github.com/iliakan/detect-node
   const kDetector =
-      "let _isNode=false;try{_isNode=Object.prototype.toString.call(global.process)==='[object process]'}catch(_){}";
+      "Object.prototype.toString.call(typeof process!=='undefined'?process:0)==='[object process]'";
   final preambleJs =
-      '${kDetector}if(_isNode){${preamble.getPreamble(minified: true)}}else{var self=global.self;self.exports=exports}';
+      'if($kDetector){${preamble.getPreamble(minified: true)}}else{var self=global.self;self.exports=exports}';
 
   destination.writeAsStringSync('$preambleJs\n$compiledJs');
 
