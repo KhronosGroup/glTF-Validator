@@ -230,7 +230,7 @@ Context _getContextFromOptions(_JSValidationOptions options) {
 
 ResourcesLoader _getResourcesLoader(Context context,
     GltfReaderResult readerResult, ExternalResourceFunction getResource) {
-  Future<List<int>> getBytes(Uri uri) {
+  Future<Uint8List> getBytes(Uri uri) {
     if (getResource == null) {
       return null;
     }

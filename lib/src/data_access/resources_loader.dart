@@ -18,14 +18,15 @@
 library gltf.data_access.resources_loader;
 
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:gltf/src/data_access/validate_accessors.dart';
 import 'package:meta/meta.dart';
 
-typedef Stream<List<int>> SequentialFetchFunction(Uri uri);
-typedef FutureOr<List<int>> BytesFetchFunction(Uri uri);
+typedef Stream<Uint8List> SequentialFetchFunction(Uri uri);
+typedef FutureOr<Uint8List> BytesFetchFunction(Uri uri);
 
 enum _Storage { Base64, BufferView, GLB, External }
 
@@ -96,7 +97,7 @@ class ResourcesLoader {
       final info = new ResourceInfo(context.getPointerString())
         ..mimeType = APPLICATION_GLTF_BUFFER;
 
-      FutureOr<List<int>> _fetchBuffer(Buffer buffer) {
+      FutureOr<Uint8List> _fetchBuffer(Buffer buffer) {
         if (buffer.extensions.isEmpty) {
           if (buffer.uri != null) {
             // External fetch
@@ -128,7 +129,7 @@ class ResourcesLoader {
         }
       }
 
-      List<int> data;
+      Uint8List data;
       try {
         data = await _fetchBuffer(buffer);
       } on Exception catch (e) {
@@ -149,7 +150,6 @@ class ResourcesLoader {
                   args: [data.length - paddedLength]);
             }
           }
-          // ignore: invalid_assignment
           buffer.data ??= data;
         }
       }

@@ -20,7 +20,7 @@ dev_dependencies:
   test: '>=0.12.0 <0.13.0'
 
 environment:
-  sdk: '>=2.0.0-dev.35.0 <2.0.0'
+  sdk: '>=2.0.0-dev.39.0 <2.0.0'
 
 executables:
   gltf_validator:

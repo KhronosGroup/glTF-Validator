@@ -248,7 +248,7 @@ Future<void> run(List<String> args) async {
   }
 }
 
-FutureOr<bool> _processFile(ValidationTask task) async {
+Future<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
   final opts = task.validatorOptions;
@@ -333,10 +333,12 @@ ResourcesLoader getFileResourceValidator(
       if (isNonRelativeUri(uri)) {
         return null;
       }
+      // ignore: return_of_invalid_type_from_closure
       return new File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
     }, externalStreamFetch: (uri) {
       if (isNonRelativeUri(uri)) {
         return null;
       }
+      // ignore: return_of_invalid_type_from_closure
       return new File.fromUri(absoluteUri.resolveUri(uri)).openRead();
     });

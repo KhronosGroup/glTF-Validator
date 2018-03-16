@@ -56,7 +56,7 @@ class Buffer extends GltfChildOfRootProperty {
       if (uriData != null) {
         if (uriData.mimeType == APPLICATION_OCTET_STREAM ||
             uriData.mimeType == APPLICATION_GLTF_BUFFER) {
-          data = uriData.contentAsBytes(); // ignore: invalid_assignment
+          data = uriData.contentAsBytes();
         } else {
           context.addIssue(SemanticError.bufferDataUriMimeTypeInvalid,
               name: URI, args: [uriData.mimeType]);

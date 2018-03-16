@@ -74,7 +74,7 @@ class Image extends GltfChildOfRootProperty {
       }
 
       if (uriData != null) {
-        data = uriData.contentAsBytes(); // ignore: invalid_assignment
+        data = uriData.contentAsBytes();
 
         // Re-assign `mimeType` only if it wasn't set in JSON
         if (mimeType == null) {
