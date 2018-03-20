@@ -566,7 +566,7 @@ class Accessor extends GltfChildOfRootProperty {
     if (totalOffset.remainder(componentLength) != 0) {
       if (context != null) {
         context.addIssue(LinkError.accessorTotalOffsetAlignment,
-            name: BYTE_OFFSET, args: [totalOffset, componentLength]);
+            args: [totalOffset, componentLength]);
       } else {
         return false;
       }
