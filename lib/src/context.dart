@@ -19,9 +19,9 @@ library gltf.context;
 
 import 'dart:collection';
 
-import 'base/gltf_property.dart';
-import 'errors.dart';
-import 'ext/extensions.dart';
+import 'package:gltf/src/base/gltf_property.dart';
+import 'package:gltf/src/errors.dart';
+import 'package:gltf/src/ext/extensions.dart';
 
 class ValidationOptions {
   final int maxIssues;

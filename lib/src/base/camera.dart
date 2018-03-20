@@ -17,7 +17,7 @@
 
 library gltf.base.camera;
 
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Camera extends GltfChildOfRootProperty {
   final String type;

@@ -17,9 +17,9 @@
 
 library gltf.base.gltf_property;
 
+import 'package:gltf/src/context.dart';
 import 'package:gltf/src/base/gltf.dart';
 import 'package:gltf/src/base/members.dart';
-import 'package:gltf/src/context.dart';
 import 'package:gltf/src/utils.dart';
 
 export 'package:gltf/src/base/gltf.dart';

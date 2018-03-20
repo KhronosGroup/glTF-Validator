@@ -17,7 +17,7 @@
 
 library gltf.base.material;
 
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Material extends GltfChildOfRootProperty {
   final PbrMetallicRoughness pbrMetallicRoughness;

@@ -17,9 +17,9 @@
 
 library gltf.extensions.cesium_rtc;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 const String CESIUM_RTC = 'CESIUM_RTC';
 

@@ -22,9 +22,9 @@ import 'dart:typed_data';
 
 import 'package:vector_math/vector_math.dart';
 
-import 'base/gltf_property.dart';
-import 'ext/extensions.dart';
-import 'gl.dart' as gl;
+import 'package:gltf/src/base/gltf_property.dart';
+import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/gl.dart' as gl;
 
 const _kArray = 'array';
 const _kBoolean = 'boolean';

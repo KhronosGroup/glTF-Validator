@@ -16,6 +16,6 @@
  */
 
 import 'dart:async';
-import 'package:gltf/src/cmd_line.dart' as cmd_line;
+import 'package:gltf/cmd_line.dart' as cmd_line;
 
 Future<void> main(List<String> args) => cmd_line.run(args);

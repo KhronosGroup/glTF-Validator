@@ -22,9 +22,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:gltf/src/base/gltf.dart';
-import 'package:gltf/src/glb_reader.dart';
 import 'package:gltf/src/context.dart';
 import 'package:gltf/src/errors.dart';
+import 'package:gltf/src/glb_reader.dart';
 
 export 'package:gltf/src/base/gltf.dart';
 export 'package:gltf/src/context.dart';

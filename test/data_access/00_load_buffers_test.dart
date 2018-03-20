@@ -21,7 +21,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
-import 'package:gltf/src/cmd_line.dart';
+import 'package:gltf/cmd_line.dart';
 
 Future<ValidationResult> getValidationResult(String filename) async {
   final file = new File(filename);

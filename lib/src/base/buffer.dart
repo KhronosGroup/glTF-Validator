@@ -18,7 +18,7 @@
 library gltf.base.buffer;
 
 import 'dart:typed_data';
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Buffer extends GltfChildOfRootProperty {
   final Uri uri;

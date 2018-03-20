@@ -17,8 +17,8 @@
 
 library gltf.base.node;
 
+import 'package:gltf/src/base/gltf_property.dart';
 import 'package:vector_math/vector_math.dart';
-import 'gltf_property.dart';
 
 class Node extends GltfChildOfRootProperty {
   final int _cameraIndex;

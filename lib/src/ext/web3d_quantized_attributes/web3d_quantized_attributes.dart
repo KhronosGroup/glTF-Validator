@@ -17,9 +17,9 @@
 
 library gltf.extensions.web3d_quantized_attributes;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 // WEB3D_quantized_attributes
 const String WEB3D_QUANTIZED_ATTRIBUTES = 'WEB3D_quantized_attributes';

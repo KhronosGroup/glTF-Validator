@@ -23,9 +23,9 @@ import 'dart:typed_data';
 
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:meta/meta.dart';
+import 'package:gltf/src/errors.dart';
 
-import 'errors.dart';
+import 'package:meta/meta.dart';
 
 class GlbReader implements GltfReader {
   static const int _HEADER_LENGTH = 12;

@@ -17,10 +17,9 @@
 
 library gltf.base.members;
 
-import 'package:gltf/src/hash.dart';
-
 import 'package:gltf/src/base/accessor.dart';
 import 'package:gltf/src/gl.dart' as gl;
+import 'package:gltf/src/hash.dart';
 
 const String GLTF = 'glTF';
 

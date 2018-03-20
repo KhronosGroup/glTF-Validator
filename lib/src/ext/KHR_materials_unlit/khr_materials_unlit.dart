@@ -17,9 +17,9 @@
 
 library gltf.extensions.khr_materials_unlit;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
 
