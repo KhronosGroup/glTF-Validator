@@ -542,7 +542,7 @@ class LinkError extends IssueType {
       'MESH_PRIMITIVE_UNUSED_TEXCOORD',
       (args) => 'Material does not use texture coordinates sets '
           // ignore: avoid_as
-          'with indices ${(args[1] as Iterable).map(_mbq)})',
+          'with indices ${(args[1] as Iterable).map(_mbq)}.',
       Severity.Information);
 
   static final LinkError meshPrimitiveUnequalAccessorsCount = new LinkError._(
