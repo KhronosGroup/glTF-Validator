@@ -409,12 +409,24 @@ class MeshPrimitive extends GltfProperty {
 
     if (context.validate) {
       if (_material != null) {
+        final unusedTexCoords =
+            new List<int>.generate(texcoordCount, (i) => i, growable: false);
+
         _material.texCoordIndices.forEach((pointer, texCoord) {
           if (texCoord != -1 && texCoord + 1 > texcoordCount) {
             context.addIssue(LinkError.meshPrimitiveTooFewTexcoords,
                 name: MATERIAL, args: [pointer, texCoord]);
+          } else {
+            // mark as used
+            unusedTexCoords[texCoord] = -1;
           }
         });
+
+        if (unusedTexCoords.any((i) => i != -1)) {
+          context.addIssue(LinkError.meshPrimitiveUnusedTexcoord,
+              name: MATERIAL,
+              args: [null, unusedTexCoords.where((i) => i != -1)]);
+        }
       } else if (_materialIndex != -1) {
         context.addIssue(LinkError.unresolvedReference,
             name: MATERIAL, args: [_materialIndex]);

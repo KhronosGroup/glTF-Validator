@@ -90,6 +90,7 @@
 |MESH_PRIMITIVE_POSITION_ACCESSOR_WITHOUT_BOUNDS|accessor.min and accessor.max must be defined for POSITION attribute accessor.|Error|
 |MESH_PRIMITIVE_TOO_FEW_TEXCOORDS|Material is incompatible with mesh primitive: Texture binding '`%1`' needs 'TEXCOORD_`%2`' attribute.|Error|
 |MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT|All accessors of the same primitive must have the same count.|Error|
+|MESH_PRIMITIVE_UNUSED_TEXCOORD|Material does not use texture coordinates sets with indices ('`%a`', '`%b`', '`%c`'))|Information|
 |NODE_LOOP|Node is a part of a node loop.|Error|
 |NODE_PARENT_OVERRIDE|Value overrides parent of node `%1`.|Error|
 |NODE_SKINNED_MESH_WITHOUT_SKIN|Node uses skinned mesh, but has no skin defined.|Warning|

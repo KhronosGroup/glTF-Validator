@@ -1,3 +1,9 @@
+## 2.0.0-dev.1.8
+
+* Added `MESH_PRIMITIVE_UNUSED_TEXCOORD` issue.
+
+* `ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND` and `ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND` report only summary of bounds violation.
+
 ## 2.0.0-dev.1.7
 
 * Added `NODE_SKINNED_MESH_WITHOUT_SKIN`, `MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT` issues.

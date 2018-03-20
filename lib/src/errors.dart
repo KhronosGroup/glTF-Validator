@@ -538,6 +538,13 @@ class LinkError extends IssueType {
       (args) => 'Material is incompatible with mesh primitive: '
           'Texture binding ${_q(args[0])} needs \'TEXCOORD_${args[1]}\' attribute.');
 
+  static final LinkError meshPrimitiveUnusedTexcoord = new LinkError._(
+      'MESH_PRIMITIVE_UNUSED_TEXCOORD',
+      (args) => 'Material does not use texture coordinates sets '
+          // ignore: avoid_as
+          'with indices ${(args[1] as Iterable).map(_mbq)})',
+      Severity.Information);
+
   static final LinkError meshPrimitiveUnequalAccessorsCount = new LinkError._(
       'MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT',
       (args) =>

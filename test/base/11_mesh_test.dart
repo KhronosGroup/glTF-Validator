@@ -331,7 +331,22 @@ void main() {
         ..addIssue(LinkError.meshPrimitiveTooFewTexcoords, args: [
           '/materials/0/extensions/KHR_materials_pbrSpecularGlossiness/specularGlossinessTexture',
           1
-        ]);
+        ])
+        ..path.removeLast()
+        ..addIssue(LinkError.meshPrimitiveUnusedTexcoord,
+            name: 'material',
+            args: [
+              null,
+              [0]
+            ])
+        ..path.removeLast()
+        ..path.add('2')
+        ..addIssue(LinkError.meshPrimitiveUnusedTexcoord,
+            name: 'material',
+            args: [
+              null,
+              [0]
+            ]);
 
       await reader.read();
 
