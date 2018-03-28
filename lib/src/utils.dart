@@ -43,7 +43,7 @@ Object _getGuarded(
 }
 
 int getIndex(Map<String, Object> map, String name, Context context,
-    {bool req: true}) {
+    {bool req = true}) {
   final value = _getGuarded(map, name, _kInteger, context);
   if (value is int) {
     if (value >= 0) {
@@ -75,7 +75,7 @@ bool getBool(Map<String, Object> map, String name, Context context) {
 }
 
 int getUint(Map<String, Object> map, String name, Context context,
-    {bool req: false, int min, int max, int def: -1, Iterable<int> list}) {
+    {bool req = false, int min, int max, int def = -1, Iterable<int> list}) {
   assert(min == null || min >= 0);
   final value = _getGuarded(map, name, _kInteger, context);
   if (value is int) {
@@ -101,11 +101,11 @@ int getUint(Map<String, Object> map, String name, Context context,
 }
 
 double getFloat(Map<String, Object> map, String name, Context context,
-    {bool req: false,
+    {bool req = false,
     double min,
     double exclMin,
     double max,
-    double def: double.nan,
+    double def = double.nan,
     Iterable<double> list}) {
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
@@ -133,7 +133,7 @@ double getFloat(Map<String, Object> map, String name, Context context,
 }
 
 String getString(Map<String, Object> map, String name, Context context,
-    {bool req: false, Iterable<String> list, String def, RegExp regexp}) {
+    {bool req = false, Iterable<String> list, String def, RegExp regexp}) {
   final value = _getGuarded(map, name, _kString, context);
   if (value is String) {
     if (list != null) {
@@ -174,7 +174,7 @@ Uri getUri(String uriString, Context context) {
 
 Map<String, Object> getMap(
     Map<String, Object> map, String name, Context context,
-    {bool req: false}) {
+    {bool req = false}) {
   final value = _getGuarded(map, name, _kObject, context);
   if (value is Map<String, Object>) {
     // JSON mandates all keys to be string
@@ -196,7 +196,7 @@ Map<String, Object> getMap(
 
 T getObjectFromInnerMap<T>(Map<String, Object> map, String name,
     Context context, FromMapFunction<T> fromMap,
-    {bool req: false}) {
+    {bool req = false}) {
   final value = _getGuarded(map, name, _kObject, context);
   if (value is Map<String, Object>) {
     // JSON mandates all keys to be string
@@ -216,7 +216,7 @@ T getObjectFromInnerMap<T>(Map<String, Object> map, String name,
 }
 
 List<int> getIndicesList(Map<String, Object> map, String name, Context context,
-    {bool req: false}) {
+    {bool req = false}) {
   final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
     if (value.isEmpty) {
@@ -351,8 +351,8 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
 }
 
 List<double> getFloatList(Map<String, Object> map, String name, Context context,
-    {bool req: false,
-    bool singlePrecision: false,
+    {bool req = false,
+    bool singlePrecision = false,
     double min,
     double max,
     List<double> def,
@@ -522,7 +522,7 @@ String getName(Map<String, Object> map, Context context) =>
 
 Map<String, Object> getExtensions(
     Map<String, Object> map, Type type, Context context,
-    {bool warnOnMultipleExtensions: false}) {
+    {bool warnOnMultipleExtensions = false}) {
   final extensions = <String, Object>{};
   final extensionMaps = getMap(map, EXTENSIONS, context);
 
@@ -569,7 +569,7 @@ Map<String, Object> getExtensions(
 Object getExtras(Map<String, Object> map) => map[EXTRAS];
 
 bool checkEnum<T>(String name, T value, Iterable<T> list, Context context,
-    {bool isLengthList: false}) {
+    {bool isLengthList = false}) {
   if (!list.contains(value)) {
     context.addIssue(
         isLengthList
@@ -593,13 +593,11 @@ void checkMembers(
   }
 }
 
-typedef void _NodeHandlerFunction(Node element, int nodeIndex, int index);
-
 typedef void _CheckKeyFunction(String key);
 
 void resolveNodeList(List<int> sourceList, List<Node> targetList,
     SafeList<Node> nodes, String name, Context context,
-    [_NodeHandlerFunction handleNode]) {
+    [void handleNode(Node element, int nodeIndex, int index)]) {
   if (sourceList != null) {
     context.path.add(name);
     for (var i = 0; i < sourceList.length; i++) {

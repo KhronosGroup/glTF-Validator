@@ -17,7 +17,7 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html';
+import 'dart:html' show querySelector, InputElement, File, FileReader;
 import 'dart:js';
 import 'dart:math';
 

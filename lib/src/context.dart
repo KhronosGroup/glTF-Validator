@@ -43,7 +43,7 @@ class Context {
   final ValidationOptions options;
   final List<String> path = <String>[];
 
-  Context({this.validate: true, ValidationOptions options})
+  Context({this.validate = true, ValidationOptions options})
       : options = options ?? new ValidationOptions() {
     _extensionsLoadedView = new UnmodifiableListView(_extensionsLoaded);
     _extensionsUsedView = new UnmodifiableListView(_extensionsUsed);

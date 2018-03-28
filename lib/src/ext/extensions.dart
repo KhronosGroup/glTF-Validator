@@ -52,8 +52,8 @@ class ExtensionTuple {
   int get hashCode => hash2(type.hashCode, name.hashCode);
 
   @override
-  bool operator ==(Object o) =>
-      o is ExtensionTuple && name == o.name && type == o.type;
+  bool operator ==(Object other) =>
+      other is ExtensionTuple && name == other.name && type == other.type;
 }
 
 const List<Extension> defaultExtensions = const <Extension>[

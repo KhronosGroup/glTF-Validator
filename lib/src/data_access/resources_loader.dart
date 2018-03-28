@@ -25,8 +25,8 @@ import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:gltf/src/data_access/validate_accessors.dart';
 import 'package:meta/meta.dart';
 
-typedef Stream<Uint8List> SequentialFetchFunction(Uri uri);
-typedef FutureOr<Uint8List> BytesFetchFunction(Uri uri);
+typedef Stream<List<int>> SequentialFetchFunction(Uri uri);
+typedef FutureOr<List<int>> BytesFetchFunction(Uri uri);
 
 enum _Storage { Base64, BufferView, GLB, External }
 
@@ -97,7 +97,7 @@ class ResourcesLoader {
       final info = new ResourceInfo(context.getPointerString())
         ..mimeType = APPLICATION_GLTF_BUFFER;
 
-      FutureOr<Uint8List> _fetchBuffer(Buffer buffer) {
+      FutureOr<List<int>> _fetchBuffer(Buffer buffer) {
         if (buffer.extensions.isEmpty) {
           if (buffer.uri != null) {
             // External fetch
@@ -131,7 +131,8 @@ class ResourcesLoader {
 
       Uint8List data;
       try {
-        data = await _fetchBuffer(buffer);
+        // ignore: avoid_as
+        data = await _fetchBuffer(buffer) as Uint8List;
       } on Exception catch (e) {
         // likely IO error
         context.addIssue(IoError.fileNotFound, args: [e]);

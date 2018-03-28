@@ -690,7 +690,8 @@ class Issue {
   int get hashCode => toString().hashCode;
 
   @override
-  bool operator ==(Object o) => o is Issue && o.toString() == toString();
+  bool operator ==(Object other) =>
+      other is Issue && other.toString() == toString();
 
   Map<String, Object> toMap() {
     final map = <String, Object>{

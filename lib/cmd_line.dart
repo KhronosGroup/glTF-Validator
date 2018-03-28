@@ -46,9 +46,9 @@ class ValidatorOptions {
   final bool printNonErrors;
 
   ValidatorOptions(
-      {this.validateResources: false,
-      this.plainText: false,
-      this.printNonErrors: false});
+      {this.validateResources = false,
+      this.plainText = false,
+      this.printNonErrors = false});
 
   factory ValidatorOptions.fromArgs(ArgResults args) => new ValidatorOptions(
       validateResources: args[kValidateResources] == true,
@@ -333,12 +333,10 @@ ResourcesLoader getFileResourceValidator(
       if (isNonRelativeUri(uri)) {
         return null;
       }
-      // ignore: return_of_invalid_type_from_closure
       return new File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
     }, externalStreamFetch: (uri) {
       if (isNonRelativeUri(uri)) {
         return null;
       }
-      // ignore: return_of_invalid_type_from_closure
       return new File.fromUri(absoluteUri.resolveUri(uri)).openRead();
     });

@@ -172,8 +172,8 @@ void npmRelease() {
   jsonMap['version'] = _version;
 
   log('copying package.json to $_destDir');
-  new File(p.join(_destDir, 'package.json')).writeAsStringSync(
-      (const JsonEncoder.withIndent('    ')).convert(jsonMap));
+  new File(p.join(_destDir, 'package.json'))
+      .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 
   copy(new File(p.join(_sourceDir, 'index.js')), _dir);
 }
