@@ -17,7 +17,7 @@
 
 library gltf.base.asset;
 
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Asset extends GltfProperty {
   static final RegExp versionRegexp = new RegExp(r'^([0-9]+)\.([0-9]+)$');

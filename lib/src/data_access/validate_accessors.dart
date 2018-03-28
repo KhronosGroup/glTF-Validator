@@ -57,6 +57,9 @@ void validateAccessorsData(Gltf gltf, Context context) {
   final intMins = new List<int>(16);
   final intMaxs = new List<int>(16);
 
+  final numInvalidMins = new List<int>(16);
+  final numInvalidMaxs = new List<int>(16);
+
   final triangle = new List<int>(3);
 
   gltf.accessors.forEachWithIndices((i, accessor) {
@@ -113,6 +116,9 @@ void validateAccessorsData(Gltf gltf, Context context) {
     var index = 0;
     var componentIndex = 0;
 
+    numInvalidMins.fillRange(0, 16, 0);
+    numInvalidMaxs.fillRange(0, 16, 0);
+
     // 0: in; 1: value; 2: out
     var cubicSplineState = 0;
 
@@ -133,11 +139,11 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
       // Clean min/max arrays to not re-use values from previous accessors
       if (accessor.min != null) {
-        doubleMins.fillRange(0, 16, double.NAN);
+        doubleMins.fillRange(0, 16, double.nan);
       }
 
       if (accessor.max != null) {
-        doubleMaxs.fillRange(0, 16, double.NAN);
+        doubleMaxs.fillRange(0, 16, double.nan);
       }
 
       while (hasNext) {
@@ -153,9 +159,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
           if (accessor.min != null) {
             if (value < accessor.min[componentIndex]) {
-              context.addIssue(DataError.accessorElementOutOfMinBound,
-                  name: '$MIN/$componentIndex',
-                  args: [value, index, accessor.min[componentIndex]]);
+              ++numInvalidMins[componentIndex];
             }
 
             if (doubleMins[componentIndex].isNaN ||
@@ -166,9 +170,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
           if (accessor.max != null) {
             if (value > accessor.max[componentIndex]) {
-              context.addIssue(DataError.accessorElementOutOfMaxBound,
-                  name: '$MAX/$componentIndex',
-                  args: [value, index, accessor.max[componentIndex]]);
+              ++numInvalidMaxs[componentIndex];
             }
 
             if (doubleMaxs[componentIndex].isNaN ||
@@ -232,6 +234,12 @@ void validateAccessorsData(Gltf gltf, Context context) {
           if (accessor.min[i] != doubleMins[i]) {
             context.addIssue(DataError.accessorMinMismatch,
                 name: '$MIN/$i', args: [accessor.min[i], doubleMins[i]]);
+
+            if (numInvalidMins[i] > 0) {
+              context.addIssue(DataError.accessorElementOutOfMinBound,
+                  name: '$MIN/$i',
+                  args: [numInvalidMins[i], accessor.min[componentIndex]]);
+            }
           }
         }
       }
@@ -241,6 +249,12 @@ void validateAccessorsData(Gltf gltf, Context context) {
           if (accessor.max[i] != doubleMaxs[i]) {
             context.addIssue(DataError.accessorMaxMismatch,
                 name: '$MAX/$i', args: [accessor.max[i], doubleMaxs[i]]);
+          }
+
+          if (numInvalidMaxs[i] > 0) {
+            context.addIssue(DataError.accessorElementOutOfMaxBound,
+                name: '$MAX/$i',
+                args: [numInvalidMaxs[i], accessor.max[componentIndex]]);
           }
         }
       }
@@ -283,9 +297,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
         if (accessor.min != null) {
           if (value < accessor.min[componentIndex]) {
-            context.addIssue(DataError.accessorElementOutOfMinBound,
-                name: '$MIN/$componentIndex',
-                args: [value, index, accessor.min[componentIndex]]);
+            ++numInvalidMins[componentIndex];
           }
 
           if (index < components || intMins[componentIndex] > value) {
@@ -295,9 +307,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
         if (accessor.max != null) {
           if (value > accessor.max[componentIndex]) {
-            context.addIssue(DataError.accessorElementOutOfMaxBound,
-                name: '$MAX/$componentIndex',
-                args: [value, index, accessor.max[componentIndex]]);
+            ++numInvalidMaxs[componentIndex];
           }
 
           if (index < components || intMaxs[componentIndex] < value) {
@@ -355,6 +365,12 @@ void validateAccessorsData(Gltf gltf, Context context) {
             context.addIssue(DataError.accessorMinMismatch,
                 name: '$MIN/$i', args: [accessor.min[i], intMins[i]]);
           }
+
+          if (numInvalidMins[i] > 0) {
+            context.addIssue(DataError.accessorElementOutOfMinBound,
+                name: '$MIN/$i',
+                args: [numInvalidMins[i], accessor.min[componentIndex]]);
+          }
         }
       }
 
@@ -363,6 +379,12 @@ void validateAccessorsData(Gltf gltf, Context context) {
           if (accessor.max[i] != intMaxs[i]) {
             context.addIssue(DataError.accessorMaxMismatch,
                 name: '$MAX/$i', args: [accessor.max[i], intMaxs[i]]);
+          }
+
+          if (numInvalidMaxs[i] > 0) {
+            context.addIssue(DataError.accessorElementOutOfMaxBound,
+                name: '$MAX/$i',
+                args: [numInvalidMaxs[i], accessor.max[componentIndex]]);
           }
         }
       }

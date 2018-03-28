@@ -17,9 +17,9 @@
 
 library gltf.extensions.web3d_quantized_attributes;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 // WEB3D_quantized_attributes
 const String WEB3D_QUANTIZED_ATTRIBUTES = 'WEB3D_quantized_attributes';
@@ -65,18 +65,7 @@ class Web3dQuantizedAttributes extends Stringable {
   }
 }
 
-class Web3dQuantizedAttributesExtension extends Extension {
-  @override
-  final String name = WEB3D_QUANTIZED_ATTRIBUTES;
-
-  @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Gltf: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
-  };
-
-  factory Web3dQuantizedAttributesExtension() => _singleton;
-
-  static final Web3dQuantizedAttributesExtension _singleton =
-      new Web3dQuantizedAttributesExtension._();
-  Web3dQuantizedAttributesExtension._();
-}
+const Extension web3dQuantizedAttributesExtension = const Extension(
+    WEB3D_QUANTIZED_ATTRIBUTES, const <Type, ExtFuncs>{
+  Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
+});

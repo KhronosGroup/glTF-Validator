@@ -46,9 +46,9 @@ class ValidatorOptions {
   final bool printNonErrors;
 
   ValidatorOptions(
-      {this.validateResources: false,
-      this.plainText: false,
-      this.printNonErrors: false});
+      {this.validateResources = false,
+      this.plainText = false,
+      this.printNonErrors = false});
 
   factory ValidatorOptions.fromArgs(ArgResults args) => new ValidatorOptions(
       validateResources: args[kValidateResources] == true,
@@ -248,7 +248,7 @@ Future<void> run(List<String> args) async {
   }
 }
 
-FutureOr<bool> _processFile(ValidationTask task) async {
+Future<bool> _processFile(ValidationTask task) async {
   final file = new File(task.filename);
 
   final opts = task.validatorOptions;

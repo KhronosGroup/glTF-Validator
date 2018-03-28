@@ -17,9 +17,9 @@
 
 library gltf.extensions.khr_materials_pbr_specular_glossiness;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_PBRSPECULARGLOSSINESS =
     'KHR_materials_pbrSpecularGlossiness';
@@ -115,18 +115,7 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
   }
 }
 
-class KhrMaterialsPbrSpecularGlossinessExtension extends Extension {
-  @override
-  final String name = KHR_MATERIALS_PBRSPECULARGLOSSINESS;
-
-  @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
-  };
-
-  factory KhrMaterialsPbrSpecularGlossinessExtension() => _singleton;
-
-  static final KhrMaterialsPbrSpecularGlossinessExtension _singleton =
-      new KhrMaterialsPbrSpecularGlossinessExtension._();
-  KhrMaterialsPbrSpecularGlossinessExtension._();
-}
+const Extension khrMaterialsPbrSpecularGlossinessExtension = const Extension(
+    KHR_MATERIALS_PBRSPECULARGLOSSINESS, const <Type, ExtFuncs>{
+  Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
+});

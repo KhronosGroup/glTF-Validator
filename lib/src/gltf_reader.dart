@@ -22,9 +22,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:gltf/src/base/gltf.dart';
-import 'package:gltf/src/glb_reader.dart';
 import 'package:gltf/src/context.dart';
 import 'package:gltf/src/errors.dart';
+import 'package:gltf/src/glb_reader.dart';
 
 export 'package:gltf/src/base/gltf.dart';
 export 'package:gltf/src/context.dart';
@@ -113,8 +113,9 @@ class GltfJsonReader implements GltfReader {
 
   @override
   Future<GltfReaderResult> read() {
-    final outSink = new ChunkedConversionSink<Object>.withCallback((json) {
-      final result = json[0];
+    final outSink =
+        new ChunkedConversionSink<Object>.withCallback((jsonResult) {
+      final result = jsonResult[0];
       if (result is Map<String, Object>) {
         try {
           final root = new Gltf.fromMap(result, _context);
@@ -128,7 +129,7 @@ class GltfJsonReader implements GltfReader {
       }
     });
 
-    _byteSink = JSON.decoder.startChunkedConversion(outSink).asUtf8Sink(false);
+    _byteSink = json.decoder.startChunkedConversion(outSink).asUtf8Sink(false);
     _subscription = stream.listen(_onData, onError: _onError, onDone: _onDone);
     return _completer.future;
   }
@@ -165,10 +166,11 @@ class GltfJsonReader implements GltfReader {
     _completer.complete();
   }
 
-  static GltfReaderResult readFromJsonString(String json, Context context) {
+  static GltfReaderResult readFromJsonString(
+      String jsonString, Context context) {
     Object parsedJson;
     try {
-      parsedJson = JSON.decode(json);
+      parsedJson = json.decode(jsonString);
     } on FormatException catch (e) {
       context.addIssue(SchemaError.invalidJson, args: [e]);
     }

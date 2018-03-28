@@ -17,36 +17,36 @@
 
 library gltf.base.gltf;
 
-import 'accessor.dart';
-import 'animation.dart';
-import 'asset.dart';
-import 'buffer.dart';
-import 'buffer_view.dart';
-import 'camera.dart';
-import 'gltf_property.dart';
-import 'image.dart';
-import 'material.dart';
-import 'mesh.dart';
-import 'node.dart';
-import 'sampler.dart';
-import 'scene.dart';
-import 'skin.dart';
-import 'texture.dart';
+import 'package:gltf/src/base/accessor.dart';
+import 'package:gltf/src/base/animation.dart';
+import 'package:gltf/src/base/asset.dart';
+import 'package:gltf/src/base/buffer.dart';
+import 'package:gltf/src/base/buffer_view.dart';
+import 'package:gltf/src/base/camera.dart';
+import 'package:gltf/src/base/gltf_property.dart';
+import 'package:gltf/src/base/image.dart';
+import 'package:gltf/src/base/material.dart';
+import 'package:gltf/src/base/mesh.dart';
+import 'package:gltf/src/base/node.dart';
+import 'package:gltf/src/base/sampler.dart';
+import 'package:gltf/src/base/scene.dart';
+import 'package:gltf/src/base/skin.dart';
+import 'package:gltf/src/base/texture.dart';
 
-export 'accessor.dart';
-export 'animation.dart';
-export 'asset.dart';
-export 'buffer.dart';
-export 'buffer_view.dart';
-export 'camera.dart';
-export 'image.dart';
-export 'material.dart';
-export 'mesh.dart';
-export 'node.dart';
-export 'sampler.dart';
-export 'scene.dart';
-export 'skin.dart';
-export 'texture.dart';
+export 'package:gltf/src/base/accessor.dart';
+export 'package:gltf/src/base/animation.dart';
+export 'package:gltf/src/base/asset.dart';
+export 'package:gltf/src/base/buffer.dart';
+export 'package:gltf/src/base/buffer_view.dart';
+export 'package:gltf/src/base/camera.dart';
+export 'package:gltf/src/base/image.dart';
+export 'package:gltf/src/base/material.dart';
+export 'package:gltf/src/base/mesh.dart';
+export 'package:gltf/src/base/node.dart';
+export 'package:gltf/src/base/sampler.dart';
+export 'package:gltf/src/base/scene.dart';
+export 'package:gltf/src/base/skin.dart';
+export 'package:gltf/src/base/texture.dart';
 
 class Gltf extends GltfProperty {
   final List<String> extensionsUsed;
@@ -152,7 +152,7 @@ class Gltf extends GltfProperty {
     }
 
     // Helper function for converting JSON dictionary to proper glTF object
-    T toValue<T>(String name, FromMapFunction<T> fromMap, {bool req: false}) {
+    T toValue<T>(String name, FromMapFunction<T> fromMap, {bool req = false}) {
       resetPath();
       final item = getMap(map, name, context, req: req);
       if (item == null) {

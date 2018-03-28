@@ -159,21 +159,21 @@ void npmRelease() {
 
   // Node.js detector adopted from https://github.com/iliakan/detect-node
   const kDetector =
-      "let _isNode=false;try{_isNode=Object.prototype.toString.call(global.process)==='[object process]'}catch(_){}";
+      "Object.prototype.toString.call(typeof process!=='undefined'?process:0)==='[object process]'";
   final preambleJs =
-      '${kDetector}if(_isNode){${preamble.getPreamble(minified: true)}}else{var self=global.self;self.exports=exports}';
+      'if($kDetector){${preamble.getPreamble(minified: true)}}else{var self=global.self;self.exports=exports}';
 
   destination.writeAsStringSync('$preambleJs\n$compiledJs');
 
   delete(new File(p.join(_destDir, 'gltf_validator.dart.js.deps')));
 
-  final Map<String, Object> json = JSON
+  final Map<String, Object> jsonMap = json
       .decode(new File(p.join(_sourceDir, 'package.json')).readAsStringSync());
-  json['version'] = _version;
+  jsonMap['version'] = _version;
 
   log('copying package.json to $_destDir');
   new File(p.join(_destDir, 'package.json'))
-      .writeAsStringSync((const JsonEncoder.withIndent('    ')).convert(json));
+      .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 
   copy(new File(p.join(_sourceDir, 'index.js')), _dir);
 }

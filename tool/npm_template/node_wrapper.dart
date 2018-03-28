@@ -29,9 +29,8 @@ import 'package:gltf/gltf.dart';
 typedef Promise<Object> ExternalResourceFunction(String filename);
 
 @JS()
-abstract class Promise<T> {
-  external factory Promise(
-      void executor(void resolve(T result), Function reject));
+class Promise<T> {
+  external Promise(void executor(void resolve(T result), Function reject));
 
   external Promise then(void onFulfilled(T result), [Function onRejected]);
 }
@@ -230,7 +229,7 @@ Context _getContextFromOptions(_JSValidationOptions options) {
 
 ResourcesLoader _getResourcesLoader(Context context,
     GltfReaderResult readerResult, ExternalResourceFunction getResource) {
-  Future<List<int>> getBytes(Uri uri) {
+  Future<Uint8List> getBytes(Uri uri) {
     if (getResource == null) {
       return null;
     }

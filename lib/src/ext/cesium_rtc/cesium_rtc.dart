@@ -17,9 +17,9 @@
 
 library gltf.extensions.cesium_rtc;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 const String CESIUM_RTC = 'CESIUM_RTC';
 
@@ -46,21 +46,11 @@ class CesiumRtc extends Stringable {
   }
 }
 
-class CesiumRtcExtension extends Extension {
-  @override
-  final String name = CESIUM_RTC;
+const Extension cesiumRtcExtension = const Extension(CESIUM_RTC,
+    const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap, null)});
 
+/*
   @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Gltf: const ExtFuncs(CesiumRtc.fromMap, null)
-  };
-
-  /*@override
   final Map<String, Semantic> uniformParameterSemantics =
       const <String, Semantic>{CESIUM_RTC_MODELVIEW: const Semantic()};
 */
-  factory CesiumRtcExtension() => _singleton;
-
-  static final CesiumRtcExtension _singleton = new CesiumRtcExtension._();
-  CesiumRtcExtension._();
-}

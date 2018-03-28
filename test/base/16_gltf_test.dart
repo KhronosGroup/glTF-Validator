@@ -25,7 +25,7 @@ import 'package:gltf/src/errors.dart';
 void main() {
   group('glTF', () {
     test('Invalid Collection', () async {
-      final json = '{"asset": {"version": "2.0"},"samplers": {}}';
+      const json = '{"asset": {"version": "2.0"},"samplers": {}}';
       final reader = new GltfJsonReader(
           new Stream<List<int>>.fromIterable([json.codeUnits]));
 
@@ -39,7 +39,7 @@ void main() {
     });
 
     test('Invalid Collection Element', () async {
-      final json = '{"asset": {"version": "2.0"},"samplers": [[], null]}';
+      const json = '{"asset": {"version": "2.0"},"samplers": [[], null]}';
       final reader = new GltfJsonReader(
           new Stream<List<int>>.fromIterable([json.codeUnits]));
 
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('Invalid Linkable Collection Element', () async {
-      final json = '{"asset": {"version": "2.0"},"materials": [[], null]}';
+      const json = '{"asset": {"version": "2.0"},"materials": [[], null]}';
       final reader = new GltfJsonReader(
           new Stream<List<int>>.fromIterable([json.codeUnits]));
 

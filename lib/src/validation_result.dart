@@ -17,9 +17,9 @@
 library gltf.validation_result;
 
 import 'dart:math';
+import 'package:gltf/gltf.dart' show kGltfValidatorVersion;
 import 'package:gltf/src/base/members.dart';
 import 'package:gltf/src/context.dart';
-import 'package:gltf/gltf.dart' show kGltfValidatorVersion;
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/gltf_reader.dart';
 import 'package:gltf/src/utils.dart';

@@ -17,10 +17,9 @@
 
 library gltf.base.members;
 
-import 'package:gltf/src/hash.dart';
-
 import 'package:gltf/src/base/accessor.dart';
 import 'package:gltf/src/gl.dart' as gl;
+import 'package:gltf/src/hash.dart';
 
 const String GLTF = 'glTF';
 
@@ -544,7 +543,8 @@ class AccessorFormat {
   final String type;
   final int componentType;
   final bool normalized;
-  const AccessorFormat(this.type, this.componentType, {this.normalized: false});
+  const AccessorFormat(this.type, this.componentType,
+      {this.normalized = false});
 
   AccessorFormat.fromAccessor(Accessor accessor)
       : this(accessor.type, accessor.componentType,
@@ -555,11 +555,11 @@ class AccessorFormat {
       '{$type, ${gl.TYPE_NAMES[componentType]}${normalized ? ' $NORMALIZED' : ''}}';
 
   @override
-  bool operator ==(Object o) =>
-      o is AccessorFormat &&
-      o.type == type &&
-      o.componentType == componentType &&
-      o.normalized == normalized;
+  bool operator ==(Object other) =>
+      other is AccessorFormat &&
+      other.type == type &&
+      other.componentType == componentType &&
+      other.normalized == normalized;
 
   @override
   int get hashCode => hash3(type, componentType, normalized);

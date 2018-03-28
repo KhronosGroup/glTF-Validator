@@ -17,7 +17,7 @@
 
 library gltf.base.texture;
 
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Texture extends GltfChildOfRootProperty {
   final int _samplerIndex;

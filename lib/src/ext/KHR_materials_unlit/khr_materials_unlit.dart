@@ -17,9 +17,9 @@
 
 library gltf.extensions.khr_materials_unlit;
 
-import 'package:gltf/src/utils.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
 
@@ -42,18 +42,7 @@ class KhrMaterialsUnlit extends GltfProperty {
   }
 }
 
-class KhrMaterialsUnlitExtension extends Extension {
-  @override
-  final String name = KHR_MATERIALS_UNLIT;
-
-  @override
-  final Map<Type, ExtFuncs> functions = <Type, ExtFuncs>{
-    Material: const ExtFuncs(KhrMaterialsUnlit.fromMap, null)
-  };
-
-  factory KhrMaterialsUnlitExtension() => _singleton;
-
-  static final KhrMaterialsUnlitExtension _singleton =
-      new KhrMaterialsUnlitExtension._();
-  KhrMaterialsUnlitExtension._();
-}
+const Extension khrMaterialsUnlitExtension = const Extension(
+    KHR_MATERIALS_UNLIT, const <Type, ExtFuncs>{
+  Material: const ExtFuncs(KhrMaterialsUnlit.fromMap, null)
+});

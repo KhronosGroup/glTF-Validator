@@ -17,7 +17,7 @@
 
 library gltf.base.material;
 
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Material extends GltfChildOfRootProperty {
   final PbrMetallicRoughness pbrMetallicRoughness;
@@ -102,15 +102,10 @@ class Material extends GltfChildOfRootProperty {
         extensions,
         getExtras(map));
 
-    context
-      ..registerObjectsOwner(
-          material,
-          [
-            pbrMetallicRoughness,
-            normalTexture,
-            occlusionTexture,
-            emissiveTexture
-          ]..addAll(extensions.values));
+    context.registerObjectsOwner(
+        material,
+        [pbrMetallicRoughness, normalTexture, occlusionTexture, emissiveTexture]
+          ..addAll(extensions.values));
 
     return material;
   }

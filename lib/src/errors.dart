@@ -58,13 +58,15 @@ class DataError extends IssueType {
 
   static final DataError accessorElementOutOfMinBound = new DataError._(
       'ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND',
-      (args) => 'Accessor element ${args[0]} at index ${args[1]} '
-          'is less than declared minimum value ${args[2]}.');
+      (args) => 'Accessor contains ${args[0]} '
+          // ignore: avoid_as
+          'element(s) less than declared minimum value ${args[1]}.');
 
   static final DataError accessorElementOutOfMaxBound = new DataError._(
       'ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND',
-      (args) => 'Accessor element ${args[0]} at index ${args[1]} '
-          'is greater than declared maximum value ${args[2]}.');
+      (args) => 'Accessor contains ${args[0]} '
+          // ignore: avoid_as
+          'element(s) greater than declared maximum value ${args[1]}.');
 
   static final DataError accessorNonUnit = new DataError._(
       'ACCESSOR_NON_UNIT',
@@ -536,6 +538,13 @@ class LinkError extends IssueType {
       (args) => 'Material is incompatible with mesh primitive: '
           'Texture binding ${_q(args[0])} needs \'TEXCOORD_${args[1]}\' attribute.');
 
+  static final LinkError meshPrimitiveUnusedTexcoord = new LinkError._(
+      'MESH_PRIMITIVE_UNUSED_TEXCOORD',
+      (args) => 'Material does not use texture coordinates sets '
+          // ignore: avoid_as
+          'with indices ${(args[1] as Iterable).map(_mbq)}.',
+      Severity.Information);
+
   static final LinkError meshPrimitiveUnequalAccessorsCount = new LinkError._(
       'MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT',
       (args) =>
@@ -681,7 +690,8 @@ class Issue {
   int get hashCode => toString().hashCode;
 
   @override
-  bool operator ==(Object o) => o is Issue && o.toString() == toString();
+  bool operator ==(Object other) =>
+      other is Issue && other.toString() == toString();
 
   Map<String, Object> toMap() {
     final map = <String, Object>{

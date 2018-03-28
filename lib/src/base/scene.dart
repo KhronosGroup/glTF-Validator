@@ -17,7 +17,7 @@
 
 library gltf.base.scene;
 
-import 'gltf_property.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 class Scene extends GltfChildOfRootProperty {
   final List<int> _nodesIndices;

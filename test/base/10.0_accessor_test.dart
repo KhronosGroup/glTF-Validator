@@ -109,16 +109,13 @@ void main() {
         ..path.add('0')
         ..addIssue(SemanticError.accessorOffsetAlignment,
             name: 'byteOffset', args: [1, 4])
-        ..addIssue(LinkError.accessorTotalOffsetAlignment,
-            name: 'byteOffset', args: [3, 4])
+        ..addIssue(LinkError.accessorTotalOffsetAlignment, args: [3, 4])
         ..path.removeLast()
         ..path.add('1')
-        ..addIssue(LinkError.accessorTotalOffsetAlignment,
-            name: 'byteOffset', args: [6, 4])
+        ..addIssue(LinkError.accessorTotalOffsetAlignment, args: [6, 4])
         ..path.removeLast()
         ..path.add('2')
-        ..addIssue(LinkError.accessorTotalOffsetAlignment,
-            name: 'byteOffset', args: [34, 4])
+        ..addIssue(LinkError.accessorTotalOffsetAlignment, args: [34, 4])
         ..addIssue(LinkError.accessorTooLong,
             name: 'byteOffset', args: [32, 12, 0, 16])
         ..path.removeLast()

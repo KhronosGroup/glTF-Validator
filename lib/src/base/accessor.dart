@@ -341,7 +341,7 @@ class Accessor extends GltfChildOfRootProperty {
 
   void setXyzSign() => _isXyzSign = true;
 
-  bool trySetInterpolation({bool cubic: false}) {
+  bool trySetInterpolation({bool cubic = false}) {
     if (_containsCubicSpline == null) {
       _containsCubicSpline = cubic;
     } else if (_containsCubicSpline != cubic) {
@@ -350,7 +350,7 @@ class Accessor extends GltfChildOfRootProperty {
     return true;
   }
 
-  Iterable<num> getElements({bool normalize: false}) sync* {
+  Iterable<num> getElements({bool normalize = false}) sync* {
     // Ensure required fields to not check for them each time
     if (componentType == -1 || count == -1 || type == null) {
       return;
@@ -387,7 +387,7 @@ class Accessor extends GltfChildOfRootProperty {
         // type is either MAT2 or MAT3 here
         // TODO: generalize to non-square matrices
         final skip = byteStride ~/ _componentLength - (type == MAT2 ? 8 : 12);
-        final rowCount = (type == MAT2 ? 2 : 3);
+        final rowCount = type == MAT2 ? 2 : 3;
         final columnCount = rowCount;
 
         elements = () sync* {
@@ -566,7 +566,7 @@ class Accessor extends GltfChildOfRootProperty {
     if (totalOffset.remainder(componentLength) != 0) {
       if (context != null) {
         context.addIssue(LinkError.accessorTotalOffsetAlignment,
-            name: BYTE_OFFSET, args: [totalOffset, componentLength]);
+            args: [totalOffset, componentLength]);
       } else {
         return false;
       }

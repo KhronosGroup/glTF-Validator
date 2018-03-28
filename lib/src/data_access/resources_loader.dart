@@ -18,6 +18,7 @@
 library gltf.data_access.resources_loader;
 
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/data_access/image_decoder.dart';
@@ -128,9 +129,10 @@ class ResourcesLoader {
         }
       }
 
-      List<int> data;
+      Uint8List data;
       try {
-        data = await _fetchBuffer(buffer);
+        // ignore: avoid_as
+        data = await _fetchBuffer(buffer) as Uint8List;
       } on Exception catch (e) {
         // likely IO error
         context.addIssue(IoError.fileNotFound, args: [e]);
@@ -149,7 +151,6 @@ class ResourcesLoader {
                   args: [data.length - paddedLength]);
             }
           }
-          // ignore: invalid_assignment
           buffer.data ??= data;
         }
       }

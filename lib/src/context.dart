@@ -19,9 +19,9 @@ library gltf.context;
 
 import 'dart:collection';
 
-import 'base/gltf_property.dart';
-import 'errors.dart';
-import 'ext/extensions.dart';
+import 'package:gltf/src/base/gltf_property.dart';
+import 'package:gltf/src/errors.dart';
+import 'package:gltf/src/ext/extensions.dart';
 
 class ValidationOptions {
   final int maxIssues;
@@ -43,7 +43,7 @@ class Context {
   final ValidationOptions options;
   final List<String> path = <String>[];
 
-  Context({this.validate: true, ValidationOptions options})
+  Context({this.validate = true, ValidationOptions options})
       : options = options ?? new ValidationOptions() {
     _extensionsLoadedView = new UnmodifiableListView(_extensionsLoaded);
     _extensionsUsedView = new UnmodifiableListView(_extensionsUsed);

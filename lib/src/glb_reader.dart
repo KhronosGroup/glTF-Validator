@@ -23,9 +23,9 @@ import 'dart:typed_data';
 
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:meta/meta.dart';
+import 'package:gltf/src/errors.dart';
 
-import 'errors.dart';
+import 'package:meta/meta.dart';
 
 class GlbReader implements GltfReader {
   static const int _HEADER_LENGTH = 12;
@@ -132,7 +132,7 @@ class GlbReader implements GltfReader {
           }
 
           // Check glTF bytes
-          final magic = _headerByteData.getUint32(0, Endianness.LITTLE_ENDIAN);
+          final magic = _headerByteData.getUint32(0, Endian.little);
           if (magic != _GLTF_MAGIC) {
             context.addIssue(GlbError.invalidMagic, args: [magic], offset: 0);
             _abort();
@@ -140,8 +140,7 @@ class GlbReader implements GltfReader {
           }
 
           // Check glTF version
-          final version =
-              _headerByteData.getUint32(4, Endianness.LITTLE_ENDIAN);
+          final version = _headerByteData.getUint32(4, Endian.little);
           if (version != _GLB_VERSION) {
             context.addIssue(GlbError.invalidVersion,
                 args: [version], offset: 4);
@@ -149,7 +148,7 @@ class GlbReader implements GltfReader {
             return;
           }
 
-          _totalLength = _headerByteData.getUint32(8, Endianness.LITTLE_ENDIAN);
+          _totalLength = _headerByteData.getUint32(8, Endian.little);
 
           if (_totalLength <= _offset) {
             context.addIssue(GlbError.lengthTooSmall,
@@ -173,8 +172,8 @@ class GlbReader implements GltfReader {
             break;
           }
 
-          _chunkLength = _headerByteData.getUint32(0, Endianness.LITTLE_ENDIAN);
-          _chunkType = _headerByteData.getUint32(4, Endianness.LITTLE_ENDIAN);
+          _chunkLength = _headerByteData.getUint32(0, Endian.little);
+          _chunkType = _headerByteData.getUint32(4, Endian.little);
 
           if (_chunkLength & 3 != 0) {
             context.addIssue(GlbError.chunkLengthUnaligned,

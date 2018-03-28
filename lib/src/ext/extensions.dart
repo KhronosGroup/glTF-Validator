@@ -30,13 +30,11 @@ export 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attribut
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 
-abstract class Extension {
-  String get name;
+class Extension {
+  const Extension(this.name, this.functions);
 
-  Map<Type, ExtFuncs> get functions;
-
-  // Sub-classes should be singletons instead of consts because of
-  // https://github.com/dart-lang/sdk/issues/17207
+  final String name;
+  final Map<Type, ExtFuncs> functions;
 }
 
 class ExtFuncs {
@@ -54,15 +52,15 @@ class ExtensionTuple {
   int get hashCode => hash2(type.hashCode, name.hashCode);
 
   @override
-  bool operator ==(Object o) =>
-      o is ExtensionTuple && name == o.name && type == o.type;
+  bool operator ==(Object other) =>
+      other is ExtensionTuple && name == other.name && type == other.type;
 }
 
-final List<Extension> defaultExtensions = <Extension>[
-  new KhrMaterialsPbrSpecularGlossinessExtension(),
-  new KhrMaterialsUnlitExtension(),
-  new CesiumRtcExtension(),
-  new Web3dQuantizedAttributesExtension()
+const List<Extension> defaultExtensions = const <Extension>[
+  khrMaterialsPbrSpecularGlossinessExtension,
+  khrMaterialsUnlitExtension,
+  cesiumRtcExtension,
+  web3dQuantizedAttributesExtension
 ];
 
 // https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md

@@ -307,10 +307,10 @@ class AnimationChannelTarget extends GltfProperty {
   int get hashCode => hash2(_nodeIndex.hashCode, path.hashCode);
 
   @override
-  bool operator ==(Object o) =>
-      o is AnimationChannelTarget &&
-      _nodeIndex == o._nodeIndex &&
-      path == o.path;
+  bool operator ==(Object other) =>
+      other is AnimationChannelTarget &&
+      _nodeIndex == other._nodeIndex &&
+      path == other.path;
 }
 
 class AnimationSampler extends GltfProperty {

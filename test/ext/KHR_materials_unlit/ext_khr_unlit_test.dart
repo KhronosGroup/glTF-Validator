@@ -40,6 +40,23 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Unexpected extension object', () async {
+      final reader = new GltfJsonReader(new File('test/ext/'
+              'KHR_materials_unlit/data/unexpected_extension_object.gltf')
+          .openRead());
+
+      final context = new Context()
+        ..path.add('samplers')
+        ..path.add('0')
+        ..path.add('extensions')
+        ..path.add('KHR_materials_unlit')
+        ..addIssue(LinkError.unexpectedExtensionObject);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid', () async {
       final reader = new GltfJsonReader(new File('test/ext/'
               'KHR_materials_unlit/data/valid_full.gltf')
