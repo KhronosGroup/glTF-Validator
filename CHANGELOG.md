@@ -1,3 +1,9 @@
+## 2.0.0-dev.1.9
+
+* Changed `VALUE_NOT_IN_LIST` and `IMAGE_UNRECOGNIZED_FORMAT` severities to Warning (#77).
+
+* Using custom image format no longer issues `UNSATISFIED_DEPENDENCY` (#77).
+
 ## 2.0.0-dev.1.8
 
 * Added `MESH_PRIMITIVE_UNUSED_TEXCOORD` issue.

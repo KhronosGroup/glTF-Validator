@@ -20,7 +20,7 @@
 |UNEXPECTED_PROPERTY|Unexpected property.|Warning|
 |UNSATISFIED_DEPENDENCY|Dependency failed. '`%1`' must be defined.|Error|
 |VALUE_MULTIPLE_OF|Value `%1` is not a multiple of `%2`.|Error|
-|VALUE_NOT_IN_LIST|Invalid value '`%1`'. Valid values are ('`%a`', '`%b`', '`%c`').|Error|
+|VALUE_NOT_IN_LIST|Invalid value '`%1`'. Valid values are ('`%a`', '`%b`', '`%c`').|Warning|
 |VALUE_NOT_IN_RANGE|Value `%1` is out of range.|Error|
 ## SemanticError
 | Code | Message | Severity |
@@ -126,7 +126,7 @@
 |IMAGE_MIME_TYPE_INVALID|Recognized image format '`%1`' does not match declared image format '`%2`'.|Error|
 |IMAGE_NPOT_DIMENSIONS|Image has non-power-of-two dimensions: `%1`x`%2`.|Information|
 |IMAGE_UNEXPECTED_EOS|Unexpected end of image stream.|Error|
-|IMAGE_UNRECOGNIZED_FORMAT|Image format not recognized.|Error|
+|IMAGE_UNRECOGNIZED_FORMAT|Image format not recognized.|Warning|
 ## GlbError
 | Code | Message | Severity |
 |------|---------|----------|
