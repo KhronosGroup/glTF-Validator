@@ -132,7 +132,9 @@ class DataError extends IssueType {
       'IMAGE_UNEXPECTED_EOS', (args) => 'Unexpected end of image stream.');
 
   static final DataError imageUnrecognizedFormat = new DataError._(
-      'IMAGE_UNRECOGNIZED_FORMAT', (args) => 'Image format not recognized.');
+      'IMAGE_UNRECOGNIZED_FORMAT',
+      (args) => 'Image format not recognized.',
+      Severity.Warning);
 
   static final DataError imageNonPowerOfTwoDimensions = new DataError._(
       'IMAGE_NPOT_DIMENSIONS',
@@ -197,7 +199,8 @@ class SchemaError extends IssueType {
       'VALUE_NOT_IN_LIST',
       (args) => 'Invalid value ${_mbq(args[0])}. '
           // ignore: avoid_as
-          'Valid values are ${(args[1] as Iterable).map(_mbq)}.');
+          'Valid values are ${(args[1] as Iterable).map(_mbq)}.',
+      Severity.Warning);
 
   static final SchemaError valueNotInRange = new SchemaError._(
       'VALUE_NOT_IN_RANGE', (args) => 'Value ${args[0]} is out of range.');
