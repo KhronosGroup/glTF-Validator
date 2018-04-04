@@ -187,8 +187,8 @@
                             "storage": {
                                 "oneOf": [
                                     {
-                                        "const": "base64",
-                                        "description": "Resource is stored as Base 64 URI."
+                                        "const": "data-uri",
+                                        "description": "Resource is stored as Data-URI."
                                     },
                                     {
                                         "const": "bufferView",
@@ -201,6 +201,10 @@
                                     {
                                         "const": "external",
                                         "description": "Resource is stored externally."
+                                    },
+                                    {
+                                        "const": null,
+                                        "description": "Resource storage type is unknown."
                                     }
                                 ]
                             },

@@ -28,7 +28,7 @@ import 'package:meta/meta.dart';
 typedef Stream<List<int>> SequentialFetchFunction(Uri uri);
 typedef FutureOr<List<int>> BytesFetchFunction(Uri uri);
 
-enum _Storage { Base64, BufferView, GLB, External }
+enum _Storage { DataUri, BufferView, GLB, External }
 
 class ResourceInfo {
   final String pointer;
@@ -41,9 +41,9 @@ class ResourceInfo {
   ResourceInfo(this.pointer);
 
   Map<String, Object> toMap() {
-    assert(pointer != null && storage != null);
+    assert(pointer != null);
     const storageString = const <String>[
-      'base64',
+      'data-uri',
       'bufferView',
       'glb',
       'external'
@@ -52,7 +52,7 @@ class ResourceInfo {
     final map = <String, Object>{
       'pointer': pointer,
       'mimeType': mimeType,
-      'storage': storageString[storage.index]
+      'storage': storage != null ? storageString[storage.index] : null
     };
 
     addToMapIfNotNull(map, 'uri', uri);
@@ -107,9 +107,9 @@ class ResourcesLoader {
             return externalBytesFetch(buffer.uri);
           } else if (buffer.data != null) {
             // Data URI
-            info.storage = _Storage.Base64;
+            info.storage = _Storage.DataUri;
             return buffer.data;
-          } else {
+          } else if (context.isGlb) {
             // GLB Buffer
             info.storage = _Storage.GLB;
             final data = externalBytesFetch(null);
@@ -179,7 +179,7 @@ class ResourcesLoader {
             return externalStreamFetch(image.uri);
           } else if (image.data != null && image.mimeType != null) {
             // Data URI, preloaded on phase 2 of GltfLoader
-            resourceInfo.storage = _Storage.Base64;
+            resourceInfo.storage = _Storage.DataUri;
             return new Stream.fromIterable([image.data]);
           } else if (image.bufferView != null) {
             // BufferView

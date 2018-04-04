@@ -12,7 +12,7 @@
 |EMPTY_ENTITY|Entity cannot be empty.|Error|
 |INVALID_INDEX|Index must be a non-negative integer.|Error|
 |INVALID_JSON|Invalid JSON data. Parser output: `%1`|Error|
-|INVALID_URI|Invalid URI `%1`. Parser output: `%2`|Error|
+|INVALID_URI|Invalid URI '`%1`'. Parser output: `%2`|Error|
 |ONE_OF_MISMATCH|Exactly one of ('`%1`', '`%2`', '`%3`', '`%4`') properties must be defined.|Error|
 |PATTERN_MISMATCH|Value '`%1`' does not match regexp pattern '`%2`'.|Error|
 |TYPE_MISMATCH|Type mismatch. Property value '`%1`' is not a '`%2`'.|Error|

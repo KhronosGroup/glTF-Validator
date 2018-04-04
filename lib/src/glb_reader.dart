@@ -76,7 +76,7 @@ class GlbReader implements GltfReader {
   Uint8List _binaryBuffer;
 
   GlbReader(this.stream, [Context context]) {
-    _context = context ?? new Context();
+    _context = (context ?? new Context())..setGlb();
     _headerByteData = new ByteData.view(_header.buffer);
     _jsonStreamController = new StreamController<List<int>>();
   }

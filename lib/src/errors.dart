@@ -177,7 +177,7 @@ class SchemaError extends IssueType {
       'INVALID_JSON', (args) => 'Invalid JSON data. Parser output: ${args[0]}');
 
   static final SchemaError invalidUri = new SchemaError._('INVALID_URI',
-      (args) => 'Invalid URI ${args[0]}. Parser output: ${args[1]}');
+      (args) => 'Invalid URI ${_q(args[0])}. Parser output: ${args[1]}');
 
   static final SchemaError emptyEntity =
       new SchemaError._('EMPTY_ENTITY', (args) => 'Entity cannot be empty.');

@@ -1,8 +1,14 @@
-## 2.0.0-dev.1.9
+## 2.0.0-dev.2.0
 
 * Changed `VALUE_NOT_IN_LIST` and `IMAGE_UNRECOGNIZED_FORMAT` severities to Warning (#77).
 
 * Using custom image format no longer issues `UNSATISFIED_DEPENDENCY` (#77).
+
+* Improved pointers for not found resources.
+
+* Buffers with broken URIs are no longer treated as GLB-stored.
+
+* Updated validation report schema.
 
 ## 2.0.0-dev.1.8
 
