@@ -124,9 +124,8 @@ class ResourcesLoader {
             }
             return data;
           }
-        } else {
-          throw new UnimplementedError();
         }
+        return null;
       }
 
       Uint8List data;
@@ -135,7 +134,7 @@ class ResourcesLoader {
         data = await _fetchBuffer(buffer) as Uint8List;
       } on Exception catch (e) {
         // likely IO error
-        context.addIssue(IoError.fileNotFound, args: [e]);
+        context.addIssue(IoError.fileNotFound, args: [e], name: URI);
       }
 
       if (data != null) {
@@ -190,10 +189,8 @@ class ResourcesLoader {
               return new Stream.fromIterable([image.data]);
             }
           }
-          return null;
-        } else {
-          throw new UnimplementedError();
         }
+        return null;
       }
 
       final imageDataStream = _fetchImageData(image);
@@ -210,7 +207,7 @@ class ResourcesLoader {
           context.addIssue(DataError.imageDataInvalid, args: [e]);
         } on Exception catch (e) {
           // likely IO error
-          context.addIssue(IoError.fileNotFound, args: [e]);
+          context.addIssue(IoError.fileNotFound, args: [e], name: URI);
         }
         if (imageInfo != null) {
           resourceInfo.mimeType = imageInfo.mimeType;
