@@ -8,6 +8,8 @@
 
 * Buffers with broken URIs are no longer treated as GLB-stored.
 
+* Fixed a crash on images with broken URIs.
+
 * Updated validation report schema.
 
 ## 2.0.0-dev.1.8
