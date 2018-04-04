@@ -1,6 +1,6 @@
 ## 2.0.0-dev.2.0
 
-* Changed `VALUE_NOT_IN_LIST` and `IMAGE_UNRECOGNIZED_FORMAT` severities to Warning (#77).
+* Changed `VALUE_NOT_IN_LIST` and `IMAGE_UNRECOGNIZED_FORMAT` default severities to Warning (#77).
 
 * Using custom image format no longer issues `UNSATISFIED_DEPENDENCY` (#77).
 
