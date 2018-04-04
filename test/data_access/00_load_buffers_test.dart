@@ -116,5 +116,19 @@ void main() {
 
       expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
+
+    test('Broken URI', () async {
+      final validationResult =
+          await getValidationResult('test/data_access/buffer/broken_uri.gltf');
+
+      final context = new Context()
+        ..path.add('buffers')
+        ..path.add('0')
+        ..addIssue(SchemaError.invalidUri,
+            name: 'uri',
+            args: ['data:', "FormatException: Expecting '='\ndata:"]);
+
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
+    });
   });
 }

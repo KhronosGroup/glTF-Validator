@@ -193,6 +193,13 @@ class Context {
   }
 
   void addResource(Map<String, Object> info) => _resources.add(info);
+
+  bool _isGlb = false;
+  bool get isGlb => _isGlb;
+
+  void setGlb() {
+    _isGlb = true;
+  }
 }
 
 class IssuesLimitExceededException implements Exception {

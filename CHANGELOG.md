@@ -1,3 +1,17 @@
+## 2.0.0-dev.2.0
+
+* Changed `VALUE_NOT_IN_LIST` and `IMAGE_UNRECOGNIZED_FORMAT` default severities to Warning (#77).
+
+* Using custom image format no longer issues `UNSATISFIED_DEPENDENCY` (#77).
+
+* Improved pointers for not found resources.
+
+* Buffers with broken URIs are no longer treated as GLB-stored.
+
+* Fixed a crash on images with broken URIs.
+
+* Updated validation report schema.
+
 ## 2.0.0-dev.1.8
 
 * Added `MESH_PRIMITIVE_UNUSED_TEXCOORD` issue.

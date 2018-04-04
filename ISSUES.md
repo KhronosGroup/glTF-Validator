@@ -12,7 +12,7 @@
 |EMPTY_ENTITY|Entity cannot be empty.|Error|
 |INVALID_INDEX|Index must be a non-negative integer.|Error|
 |INVALID_JSON|Invalid JSON data. Parser output: `%1`|Error|
-|INVALID_URI|Invalid URI `%1`. Parser output: `%2`|Error|
+|INVALID_URI|Invalid URI '`%1`'. Parser output: `%2`|Error|
 |ONE_OF_MISMATCH|Exactly one of ('`%1`', '`%2`', '`%3`', '`%4`') properties must be defined.|Error|
 |PATTERN_MISMATCH|Value '`%1`' does not match regexp pattern '`%2`'.|Error|
 |TYPE_MISMATCH|Type mismatch. Property value '`%1`' is not a '`%2`'.|Error|
@@ -20,7 +20,7 @@
 |UNEXPECTED_PROPERTY|Unexpected property.|Warning|
 |UNSATISFIED_DEPENDENCY|Dependency failed. '`%1`' must be defined.|Error|
 |VALUE_MULTIPLE_OF|Value `%1` is not a multiple of `%2`.|Error|
-|VALUE_NOT_IN_LIST|Invalid value '`%1`'. Valid values are ('`%a`', '`%b`', '`%c`').|Error|
+|VALUE_NOT_IN_LIST|Invalid value '`%1`'. Valid values are ('`%a`', '`%b`', '`%c`').|Warning|
 |VALUE_NOT_IN_RANGE|Value `%1` is out of range.|Error|
 ## SemanticError
 | Code | Message | Severity |
@@ -126,7 +126,7 @@
 |IMAGE_MIME_TYPE_INVALID|Recognized image format '`%1`' does not match declared image format '`%2`'.|Error|
 |IMAGE_NPOT_DIMENSIONS|Image has non-power-of-two dimensions: `%1`x`%2`.|Information|
 |IMAGE_UNEXPECTED_EOS|Unexpected end of image stream.|Error|
-|IMAGE_UNRECOGNIZED_FORMAT|Image format not recognized.|Error|
+|IMAGE_UNRECOGNIZED_FORMAT|Image format not recognized.|Warning|
 ## GlbError
 | Code | Message | Severity |
 |------|---------|----------|

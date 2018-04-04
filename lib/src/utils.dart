@@ -105,15 +105,10 @@ double getFloat(Map<String, Object> map, String name, Context context,
     double min,
     double exclMin,
     double max,
-    double def = double.nan,
-    Iterable<double> list}) {
+    double def = double.nan}) {
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
-    if (list != null) {
-      if (!checkEnum<num>(name, value, list, context)) {
-        return double.nan;
-      }
-    } else if ((min != null && value < min) ||
+    if ((min != null && value < min) ||
         (exclMin != null && value <= exclMin) ||
         (max != null && value > max)) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
@@ -137,9 +132,7 @@ String getString(Map<String, Object> map, String name, Context context,
   final value = _getGuarded(map, name, _kString, context);
   if (value is String) {
     if (list != null) {
-      if (!checkEnum<String>(name, value, list, context)) {
-        return null;
-      }
+      checkEnum<String>(name, value, list, context);
     } else if (regexp?.hasMatch(value) == false) {
       context.addIssue(SchemaError.patternMismatch,
           name: name, args: [value, regexp.pattern]);
