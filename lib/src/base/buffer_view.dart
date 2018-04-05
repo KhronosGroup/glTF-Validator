@@ -51,6 +51,7 @@ class BufferView extends GltfChildOfRootProperty {
   int get target => _target != -1 ? _target : usage.target;
 
   void setUsage(BufferViewUsage value, String name, Context context) {
+    markAsUsed();
     if (_usage == null) {
       _usage = value;
     } else if (context.validate && _usage != value) {
@@ -131,13 +132,16 @@ class BufferView extends GltfChildOfRootProperty {
       if (_buffer == null) {
         context.addIssue(LinkError.unresolvedReference,
             name: BUFFER, args: [_bufferIndex]);
-      } else if (_buffer.byteLength != -1) {
-        if (byteOffset >= _buffer.byteLength) {
-          context.addIssue(LinkError.bufferViewTooLong,
-              name: BYTE_OFFSET, args: [_bufferIndex, _buffer.byteLength]);
-        } else if (byteOffset + byteLength > _buffer.byteLength) {
-          context.addIssue(LinkError.bufferViewTooLong,
-              name: BYTE_LENGTH, args: [_bufferIndex, _buffer.byteLength]);
+      } else {
+        _buffer.markAsUsed();
+        if (_buffer.byteLength != -1) {
+          if (byteOffset >= _buffer.byteLength) {
+            context.addIssue(LinkError.bufferViewTooLong,
+                name: BYTE_OFFSET, args: [_bufferIndex, _buffer.byteLength]);
+          } else if (byteOffset + byteLength > _buffer.byteLength) {
+            context.addIssue(LinkError.bufferViewTooLong,
+                name: BYTE_LENGTH, args: [_bufferIndex, _buffer.byteLength]);
+          }
         }
       }
     }

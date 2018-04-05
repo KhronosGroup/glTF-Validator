@@ -20,6 +20,8 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Accessor Matrix getElements', () {
     GltfReaderResult result;
@@ -27,7 +29,8 @@ void main() {
     setUpAll(() async {
       final reader = new GltfJsonReader(
           new File('test/base/data/accessor/get_elements_matrix.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       result = await reader.read();
 

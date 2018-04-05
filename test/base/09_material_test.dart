@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Material', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Empty object', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/material/empty_object.gltf').openRead());
+          new File('test/base/data/material/empty_object.gltf').openRead(),
+          ignoreUnusedContext);
 
       await reader.read();
 
@@ -47,7 +50,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/material/custom_property.gltf').openRead());
+          new File('test/base/data/material/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('materials')
@@ -61,7 +65,8 @@ void main() {
 
     test('Alpha cutoff', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/material/alpha_cutoff.gltf').openRead());
+          new File('test/base/data/material/alpha_cutoff.gltf').openRead(),
+          ignoreUnusedContext);
 
       await reader.read();
 
@@ -77,7 +82,8 @@ void main() {
     test('Multiple extensions', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/material/multiple_extensions.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       await reader.read();
 
@@ -96,7 +102,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/material/valid_full.gltf').openRead());
+          new File('test/base/data/material/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 
@@ -109,7 +116,8 @@ void main() {
     test('Unresolved references', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/material/unresolved_references.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('materials')

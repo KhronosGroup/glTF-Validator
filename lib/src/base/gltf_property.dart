@@ -41,7 +41,16 @@ abstract class Stringable {
 abstract class GltfProperty extends Stringable {
   final Map<String, Object> extensions;
   final Object extras;
+
+  bool _isUsed = false;
+
   GltfProperty(this.extensions, this.extras);
+
+  bool get isUsed => _isUsed;
+
+  void markAsUsed() {
+    _isUsed = true;
+  }
 
   @override
   String toString([Map<String, Object> map]) {

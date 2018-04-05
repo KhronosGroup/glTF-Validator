@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Camera', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Empty object & empty nested objects', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/camera/empty_object.gltf').openRead());
+          new File('test/base/data/camera/empty_object.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('cameras')
@@ -75,7 +78,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/camera/custom_property.gltf').openRead());
+          new File('test/base/data/camera/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('cameras')
@@ -96,7 +100,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/camera/valid_full.gltf').openRead());
+          new File('test/base/data/camera/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 
@@ -108,7 +113,8 @@ void main() {
 
     test('Z Far / Z Near, ambigous type', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/camera/invalid_cameras.gltf').openRead());
+          new File('test/base/data/camera/invalid_cameras.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('cameras')

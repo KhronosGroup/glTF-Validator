@@ -20,13 +20,16 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Accessor getElements', () {
     GltfReaderResult result;
 
     setUpAll(() async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/get_elements.gltf').openRead());
+          new File('test/base/data/accessor/get_elements.gltf').openRead(),
+          ignoreUnusedContext);
 
       result = await reader.read();
 

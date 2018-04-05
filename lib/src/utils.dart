@@ -591,26 +591,26 @@ typedef void _CheckKeyFunction(String key);
 void resolveNodeList(List<int> sourceList, List<Node> targetList,
     SafeList<Node> nodes, String name, Context context,
     [void handleNode(Node element, int nodeIndex, int index)]) {
-  if (sourceList != null) {
-    context.path.add(name);
-    for (var i = 0; i < sourceList.length; i++) {
-      final nodeIndex = sourceList[i];
-      if (nodeIndex == null) {
-        continue;
-      }
-      final node = nodes[nodeIndex];
-      if (node != null) {
-        targetList[i] = node;
-        if (handleNode != null) {
-          handleNode(node, nodeIndex, i);
-        }
-      } else {
-        context.addIssue(LinkError.unresolvedReference,
-            index: i, args: [nodeIndex]);
-      }
+  assert(sourceList != null);
+  context.path.add(name);
+  for (var i = 0; i < sourceList.length; i++) {
+    final nodeIndex = sourceList[i];
+    if (nodeIndex == -1) {
+      continue;
     }
-    context.path.removeLast();
+    final node = nodes[nodeIndex];
+    if (node != null) {
+      node.markAsUsed();
+      targetList[i] = node;
+      if (handleNode != null) {
+        handleNode(node, nodeIndex, i);
+      }
+    } else {
+      context
+          .addIssue(LinkError.unresolvedReference, index: i, args: [nodeIndex]);
+    }
   }
+  context.path.removeLast();
 }
 
 /// Adds a [value] to a [map] if that [value] isn't `null`.
@@ -635,12 +635,13 @@ String mapToString([Map<String, Object> map]) {
 class SafeList<T> extends ListBase<T> {
   List<T> _list;
   final int _length;
+  final String name;
 
-  SafeList(this._length) {
+  SafeList(this._length, this.name) {
     _list = new List<T>(length);
   }
 
-  SafeList.empty() : _length = 0 {
+  SafeList.empty(this.name) : _length = 0 {
     _list = new List<T>(0);
   }
 

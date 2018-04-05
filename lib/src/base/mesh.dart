@@ -43,7 +43,8 @@ class Mesh extends GltfChildOfRootProperty {
 
     SafeList<MeshPrimitive> primitives;
     if (primitivesMaps != null) {
-      primitives = new SafeList<MeshPrimitive>(primitivesMaps.length);
+      primitives =
+          new SafeList<MeshPrimitive>(primitivesMaps.length, PRIMITIVES);
 
       context.path.add(PRIMITIVES);
       int targetsCount;
@@ -284,72 +285,77 @@ class MeshPrimitive extends GltfProperty {
     if (_attributesIndices != null) {
       context.path.add(ATTRIBUTES);
       _attributesIndices.forEach((semantic, accessorIndex) {
+        if (accessorIndex == -1) {
+          return;
+        }
+
         final accessor = gltf.accessors[accessorIndex];
 
         if (accessor == null) {
           context.addIssue(LinkError.unresolvedReference,
               name: semantic, args: [accessorIndex]);
-        } else {
-          attributes[semantic] = accessor;
+          return;
+        }
 
-          accessor.setUsage(AccessorUsage.VertexAttribute, semantic, context);
-          accessor.bufferView
-              ?.setUsage(BufferViewUsage.VertexBuffer, semantic, context);
+        attributes[semantic] = accessor;
 
-          if (semantic == NORMAL) {
-            accessor.setUnit();
-          } else if (semantic == TANGENT) {
-            accessor
-              ..setUnit()
-              ..setXyzSign();
+        accessor.setUsage(AccessorUsage.VertexAttribute, semantic, context);
+        accessor.bufferView
+            ?.setUsage(BufferViewUsage.VertexBuffer, semantic, context);
+
+        if (semantic == NORMAL) {
+          accessor.setUnit();
+        } else if (semantic == TANGENT) {
+          accessor
+            ..setUnit()
+            ..setXyzSign();
+        }
+
+        if (context.validate) {
+          if (semantic == POSITION &&
+              (accessor.min == null || accessor.max == null)) {
+            context.addIssue(
+                LinkError.meshPrimitivePositionAccessorWithoutBounds,
+                name: POSITION);
           }
 
-          if (context.validate) {
-            if (semantic == POSITION &&
-                (accessor.min == null || accessor.max == null)) {
-              context.addIssue(
-                  LinkError.meshPrimitivePositionAccessorWithoutBounds,
-                  name: POSITION);
-            }
-
-            final format = new AccessorFormat.fromAccessor(accessor);
-            final validFormats = ATTRIBUTES_ACCESSORS[semantic.split('_')[0]];
-            if (validFormats != null && !validFormats.contains(format)) {
-              context.addIssue(
-                  LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-                  name: semantic,
-                  args: [format, validFormats]);
-            }
-
-            if ((accessor.byteOffset != -1 &&
-                    accessor.byteOffset.remainder(4) != 0) ||
-                (accessor.elementLength.remainder(4) != 0 &&
-                    accessor.bufferView != null &&
-                    accessor.bufferView.byteStride == -1)) {
-              context.addIssue(LinkError.meshPrimitiveAccessorUnaligned,
-                  name: semantic);
-            }
+          final format = new AccessorFormat.fromAccessor(accessor);
+          final validFormats = ATTRIBUTES_ACCESSORS[semantic.split('_')[0]];
+          if (validFormats != null && !validFormats.contains(format)) {
+            context.addIssue(
+                LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
+                name: semantic,
+                args: [format, validFormats]);
           }
 
-          // Mandatory checks even with disabled
-          // validation to always set `effectiveByteStride` and `count`
-
-          if (_vertexCount == -1) {
-            _vertexCount = accessor.count;
-            _count = _vertexCount;
-          } else if (_vertexCount != accessor.count) {
-            context.addIssue(LinkError.meshPrimitiveUnequalAccessorsCount,
+          if ((accessor.byteOffset != -1 &&
+                  accessor.byteOffset.remainder(4) != 0) ||
+              (accessor.elementLength.remainder(4) != 0 &&
+                  accessor.bufferView != null &&
+                  accessor.bufferView.byteStride == -1)) {
+            context.addIssue(LinkError.meshPrimitiveAccessorUnaligned,
                 name: semantic);
           }
+        }
 
-          if (accessor.bufferView != null &&
-              accessor.bufferView.byteStride == -1) {
-            if (accessor.bufferView.effectiveByteStride == -1) {
-              accessor.bufferView.effectiveByteStride = accessor.elementLength;
-            }
+        // Mandatory checks even with disabled
+        // validation to always set `effectiveByteStride` and `count`
 
-            accessor.bufferView.checkAccessorRefs(accessor, semantic, context);
+        if (_vertexCount == -1) {
+          _vertexCount = accessor.count;
+          _count = _vertexCount;
+        } else if (_vertexCount != accessor.count) {
+          context.addIssue(LinkError.meshPrimitiveUnequalAccessorsCount,
+              name: semantic);
+        }
+
+        if (accessor.bufferView != null &&
+            accessor.bufferView.byteStride == -1) {
+          if (accessor.bufferView.effectiveByteStride == -1) {
+            accessor.bufferView.effectiveByteStride = accessor.elementLength;
           }
+
+          accessor.bufferView.checkAccessorRefs(accessor, semantic, context);
         }
       });
       context.path.removeLast();
@@ -407,8 +413,13 @@ class MeshPrimitive extends GltfProperty {
 
     _material = gltf.materials[_materialIndex];
 
-    if (context.validate) {
-      if (_material != null) {
+    if (context.validate && _materialIndex != -1) {
+      if (_material == null) {
+        context.addIssue(LinkError.unresolvedReference,
+            name: MATERIAL, args: [_materialIndex]);
+      } else {
+        _material.markAsUsed();
+
         final unusedTexCoords =
             new List<int>.generate(texcoordCount, (i) => i, growable: false);
 
@@ -427,9 +438,6 @@ class MeshPrimitive extends GltfProperty {
               name: MATERIAL,
               args: [null, unusedTexCoords.where((i) => i != -1)]);
         }
-      } else if (_materialIndex != -1) {
-        context.addIssue(LinkError.unresolvedReference,
-            name: MATERIAL, args: [_materialIndex]);
       }
     }
 
@@ -443,6 +451,10 @@ class MeshPrimitive extends GltfProperty {
 
         context.path.add(i.toString());
         targetIndices.forEach((semantic, accessorIndex) {
+          if (accessorIndex == -1) {
+            return;
+          }
+
           final accessor = gltf.accessors[accessorIndex];
 
           if (accessor == null) {
@@ -450,7 +462,11 @@ class MeshPrimitive extends GltfProperty {
                 name: semantic, args: [accessorIndex]);
           } else {
             if (context.validate) {
+              accessor.setUsage(
+                  AccessorUsage.VertexAttribute, semantic, context);
+
               final baseAccessor = attributes[semantic];
+
               if (baseAccessor == null) {
                 context.addIssue(
                     LinkError.meshPrimitiveMorphTargetNoBaseAccessor,

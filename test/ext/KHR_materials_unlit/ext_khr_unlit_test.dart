@@ -21,12 +21,16 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../../utils.dart';
+
 void main() {
   group('KHR_materials_unlit', () {
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(new File('test/ext/'
-              'KHR_materials_unlit/data/custom_property.gltf')
-          .openRead());
+      final reader = new GltfJsonReader(
+          new File('test/ext/'
+                  'KHR_materials_unlit/data/custom_property.gltf')
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('materials')
@@ -41,9 +45,11 @@ void main() {
     });
 
     test('Unexpected extension object', () async {
-      final reader = new GltfJsonReader(new File('test/ext/'
-              'KHR_materials_unlit/data/unexpected_extension_object.gltf')
-          .openRead());
+      final reader = new GltfJsonReader(
+          new File('test/ext/'
+                  'KHR_materials_unlit/data/unexpected_extension_object.gltf')
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('samplers')
@@ -58,9 +64,11 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(new File('test/ext/'
-              'KHR_materials_unlit/data/valid_full.gltf')
-          .openRead());
+      final reader = new GltfJsonReader(
+          new File('test/ext/'
+                  'KHR_materials_unlit/data/valid_full.gltf')
+              .openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 

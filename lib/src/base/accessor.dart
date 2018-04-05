@@ -228,6 +228,7 @@ class Accessor extends GltfChildOfRootProperty {
         context.addIssue(LinkError.unresolvedReference,
             name: BUFFER_VIEW, args: [_bufferViewIndex]);
       } else {
+        _bufferView.markAsUsed();
         // Byte Stride
         if (_bufferView.byteStride != -1 &&
             _bufferView.byteStride < elementLength) {
@@ -329,6 +330,7 @@ class Accessor extends GltfChildOfRootProperty {
   }
 
   void setUsage(AccessorUsage value, String name, Context context) {
+    markAsUsed();
     if (_usage == null) {
       _usage = value;
     } else if (context.validate && _usage != value) {

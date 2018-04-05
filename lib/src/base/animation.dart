@@ -40,7 +40,7 @@ class Animation extends GltfChildOfRootProperty {
     SafeList<AnimationChannel> channels;
     final channelMaps = getMapList(map, CHANNELS, context);
     if (channelMaps != null) {
-      channels = new SafeList<AnimationChannel>(channelMaps.length);
+      channels = new SafeList<AnimationChannel>(channelMaps.length, CHANNELS);
       context.path.add(CHANNELS);
       for (var i = 0; i < channelMaps.length; i++) {
         final channelMap = channelMaps[i];
@@ -54,7 +54,7 @@ class Animation extends GltfChildOfRootProperty {
     SafeList<AnimationSampler> samplers;
     final samplerMaps = getMapList(map, SAMPLERS, context);
     if (samplerMaps != null) {
-      samplers = new SafeList<AnimationSampler>(samplerMaps.length);
+      samplers = new SafeList<AnimationSampler>(samplerMaps.length, SAMPLERS);
       context.path.add(SAMPLERS);
       for (var i = 0; i < samplerMaps.length; i++) {
         final samplerMap = samplerMaps[i];
@@ -160,6 +160,7 @@ class Animation extends GltfChildOfRootProperty {
             context.addIssue(LinkError.unresolvedReference,
                 name: NODE, args: [channel.target._nodeIndex]);
           } else {
+            channel.target._node.markAsUsed();
             switch (channel.target.path) {
               case TRANSLATION:
               case ROTATION:
@@ -186,6 +187,7 @@ class Animation extends GltfChildOfRootProperty {
           context.addIssue(LinkError.unresolvedReference,
               name: SAMPLER, args: [channel._samplerIndex]);
         } else {
+          channel._sampler.markAsUsed();
           if (channel.target != null && channel._sampler._output != null) {
             if (channel.target.path == ROTATION) {
               channel._sampler._output.setUnit();
@@ -240,6 +242,16 @@ class Animation extends GltfChildOfRootProperty {
       }
     });
     context.path.removeLast();
+
+    if (context.validate) {
+      context.path.add(SAMPLERS);
+      for (var i = 0; i < samplers.length; ++i) {
+        if (!samplers[i].isUsed) {
+          context.addIssue(LinkError.unusedObject, index: i);
+        }
+      }
+      context.path.removeLast();
+    }
   }
 }
 

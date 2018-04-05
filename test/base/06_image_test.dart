@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Image', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Empty object', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/image/empty_object.gltf').openRead());
+          new File('test/base/data/image/empty_object.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('images')
@@ -52,7 +55,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/image/custom_property.gltf').openRead());
+          new File('test/base/data/image/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('images')
@@ -66,7 +70,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/image/valid_full.gltf').openRead());
+          new File('test/base/data/image/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 
@@ -78,7 +83,8 @@ void main() {
 
     test('Broken URIs', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/image/invalid_uris.gltf').openRead());
+          new File('test/base/data/image/invalid_uris.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('images')
@@ -115,7 +121,8 @@ void main() {
     test('Dependency, unresolved bufferView', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/image/invalid_mime_type_buffer_view.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('images')
@@ -133,7 +140,8 @@ void main() {
     test('Load image from bufferView', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/image/load_from_buffer_view.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 

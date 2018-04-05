@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Animation', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/animation/custom_property.gltf').openRead());
+          new File('test/base/data/animation/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('animations')
@@ -68,7 +71,8 @@ void main() {
     test('Unresolved references', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/animation/unresolved_references.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('animations')
@@ -93,7 +97,8 @@ void main() {
 
     test('Misc', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/animation/misc.gltf').openRead());
+          new File('test/base/data/animation/misc.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('animations')

@@ -21,8 +21,10 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
-  group('Node', () {
+  group('Skin', () {
     test('Empty array', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/skin/empty.gltf').openRead());
@@ -38,7 +40,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/skin/custom_property.gltf').openRead());
+          new File('test/base/data/skin/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('skins')
@@ -53,8 +56,8 @@ void main() {
 
     test('Unresolved references', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/skin/unresolved_references.gltf')
-              .openRead());
+          new File('test/base/data/skin/unresolved_references.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('skins')
@@ -72,7 +75,8 @@ void main() {
 
     test('Misc', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/skin/misc.gltf').openRead());
+          new File('test/base/data/skin/misc.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('skins')
@@ -93,7 +97,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/skin/valid_full.gltf').openRead());
+          new File('test/base/data/skin/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 

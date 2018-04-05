@@ -291,9 +291,13 @@ class TextureInfo extends GltfProperty {
   void link(Gltf gltf, Context context) {
     _texture = gltf.textures[_index];
 
-    if (context.validate && _index != -1 && _texture == null) {
-      context
-          .addIssue(LinkError.unresolvedReference, name: INDEX, args: [_index]);
+    if (context.validate && _index != -1) {
+      if (_texture == null) {
+        context.addIssue(LinkError.unresolvedReference,
+            name: INDEX, args: [_index]);
+      } else {
+        _texture.markAsUsed();
+      }
     }
 
     Object o = this;

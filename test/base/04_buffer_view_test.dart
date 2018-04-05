@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('BufferView', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Empty object & zero byteLength', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer_view/empty_object.gltf').openRead());
+          new File('test/base/data/buffer_view/empty_object.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('bufferViews')
@@ -104,7 +107,8 @@ void main() {
 
     test('Link errors', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer_view/link_errors.gltf').openRead());
+          new File('test/base/data/buffer_view/link_errors.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('bufferViews')

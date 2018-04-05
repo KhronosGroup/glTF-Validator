@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Buffer', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Empty object & zero byteLength', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/empty_object.gltf').openRead());
+          new File('test/base/data/buffer/empty_object.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('buffers')
@@ -55,7 +58,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/custom_property.gltf').openRead());
+          new File('test/base/data/buffer/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('buffers')
@@ -69,7 +73,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/valid_full.gltf').openRead());
+          new File('test/base/data/buffer/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 
@@ -81,7 +86,8 @@ void main() {
 
     test('Broken URIs', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/invalid_uris.gltf').openRead());
+          new File('test/base/data/buffer/invalid_uris.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('buffers')

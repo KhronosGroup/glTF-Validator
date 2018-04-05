@@ -117,7 +117,7 @@ class Gltf extends GltfProperty {
     // Helper function for converting JSON array to List of proper glTF objects
     SafeList<T> toSafeList<T>(String name, FromMapFunction<T> fromMap) {
       if (!map.containsKey(name)) {
-        return new SafeList<T>.empty();
+        return new SafeList<T>.empty(name);
       }
 
       resetPath();
@@ -125,7 +125,7 @@ class Gltf extends GltfProperty {
       final itemsList = map[name];
       if (itemsList is List<Object>) {
         if (itemsList.isNotEmpty) {
-          final items = new SafeList<T>(itemsList.length);
+          final items = new SafeList<T>(itemsList.length, name);
           context.path.add(name);
           for (var i = 0; i < itemsList.length; i++) {
             final itemMap = itemsList[i];
@@ -142,12 +142,12 @@ class Gltf extends GltfProperty {
           return items;
         } else {
           context.addIssue(SchemaError.emptyEntity, name: name);
-          return new SafeList<T>.empty();
+          return new SafeList<T>.empty(name);
         }
       } else {
         context.addIssue(SchemaError.typeMismatch,
             name: name, args: [itemsList, 'array']);
-        return new SafeList<T>.empty();
+        return new SafeList<T>.empty(name);
       }
     }
 
@@ -235,8 +235,8 @@ class Gltf extends GltfProperty {
         getExtras(map));
 
     // Step 2: linking IDs
-    void linkCollection(String key, SafeList<GltfProperty> list) {
-      context.path.add(key);
+    void linkCollection(SafeList<GltfProperty> list) {
+      context.path.add(list.name);
       list.forEachWithIndices((i, item) {
         // Skip broken objects
         if (item == null) {
@@ -263,23 +263,23 @@ class Gltf extends GltfProperty {
     }
 
     // Fixed order
-    linkCollection(BUFFER_VIEWS, bufferViews);
+    linkCollection(bufferViews);
 
-    linkCollection(ACCESSORS, accessors);
+    linkCollection(accessors);
 
-    linkCollection(IMAGES, images);
-    linkCollection(TEXTURES, textures);
-    linkCollection(MATERIALS, materials);
+    linkCollection(images);
+    linkCollection(textures);
+    linkCollection(materials);
 
-    linkCollection(MESHES, meshes);
+    linkCollection(meshes);
 
-    linkCollection(NODES, nodes);
-    linkCollection(SKINS, skins);
+    linkCollection(nodes);
+    linkCollection(skins);
 
-    linkCollection(ANIMATIONS, animations);
-    linkCollection(SCENES, scenes);
+    linkCollection(animations);
+    linkCollection(scenes);
 
-    // Check node tree loops
+    // Check node tree loops and orphaned objects
     if (context.validate) {
       context.path.add(NODES);
       final seenNodes = new Set<Node>();
@@ -311,6 +311,35 @@ class Gltf extends GltfProperty {
         }
       });
       context.path.removeLast();
+
+      // Checking unused objects
+      final collections = <SafeList<GltfProperty>>[
+        accessors,
+        buffers,
+        bufferViews,
+        cameras,
+        images,
+        materials,
+        meshes,
+        nodes,
+        samplers,
+        skins,
+        textures
+      ];
+
+      for (final collection in collections) {
+        if (collection.isEmpty) {
+          continue;
+        }
+
+        context.path.add(collection.name);
+        for (var i = 0; i < collection.length; ++i) {
+          if (collection[i]?.isUsed == false) {
+            context.addIssue(LinkError.unusedObject, index: i);
+          }
+        }
+        context.path.removeLast();
+      }
     }
 
     return gltf;
