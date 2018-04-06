@@ -258,7 +258,7 @@ ResourcesLoader _getResourcesLoader(Context context,
         }
         return getBytes(uri);
       },
-      externalStreamFetch: (uri) => new Stream.fromFuture(getBytes(uri)));
+      externalStreamFetch: (uri) => getBytes(uri)?.asStream());
 }
 
 class NodeException implements Exception {
