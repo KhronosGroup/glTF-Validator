@@ -1,3 +1,7 @@
+## 2.0.0-dev.2.1
+
+* Fixed a crash in the NPM build when `externalResourceFunction` isn't provided (#81).
+
 ## 2.0.0-dev.2.0
 
 * Changed `VALUE_NOT_IN_LIST` and `IMAGE_UNRECOGNIZED_FORMAT` default severities to Warning (#77).
