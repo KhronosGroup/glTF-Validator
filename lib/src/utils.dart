@@ -586,7 +586,7 @@ void checkMembers(
   }
 }
 
-typedef void _CheckKeyFunction(String key);
+typedef _CheckKeyFunction = void Function(String key);
 
 void resolveNodeList(List<int> sourceList, List<Node> targetList,
     SafeList<Node> nodes, String name, Context context,

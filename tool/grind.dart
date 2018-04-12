@@ -74,7 +74,7 @@ void issues() {
         errorClassMirror.staticMembers.keys
             .map<Object>(
                 (symbol) => errorClassMirror.getField(symbol).reflectee)
-            .where((reflectee) => reflectee is IssueType),
+            .whereType<IssueType>(),
         growable: false)
       ..sort((a, b) => a.code.compareTo(b.code));
 

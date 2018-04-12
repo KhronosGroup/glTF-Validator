@@ -25,8 +25,8 @@ import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:gltf/src/data_access/validate_accessors.dart';
 import 'package:meta/meta.dart';
 
-typedef Stream<List<int>> SequentialFetchFunction(Uri uri);
-typedef FutureOr<List<int>> BytesFetchFunction(Uri uri);
+typedef SequentialFetchFunction = Stream<List<int>> Function(Uri uri);
+typedef BytesFetchFunction = FutureOr<List<int>> Function(Uri uri);
 
 enum _Storage { DataUri, BufferView, GLB, External }
 

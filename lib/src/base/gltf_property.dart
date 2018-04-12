@@ -28,9 +28,10 @@ export 'package:gltf/src/context.dart';
 export 'package:gltf/src/errors.dart';
 export 'package:gltf/src/utils.dart';
 
-typedef T FromMapFunction<T>(Map<String, Object> map, Context context);
+typedef FromMapFunction<T> = T Function(
+    Map<String, Object> map, Context context);
 
-typedef void LinkFunction(Gltf gltf);
+typedef LinkFunction = void Function(Gltf gltf);
 
 abstract class Stringable {
   @override

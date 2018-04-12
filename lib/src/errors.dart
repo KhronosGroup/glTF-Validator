@@ -17,7 +17,7 @@
 
 library gltf.error;
 
-typedef String ErrorFunction(List args);
+typedef ErrorFunction = String Function(List args);
 
 enum Severity { Error, Warning, Information, Hint }
 
