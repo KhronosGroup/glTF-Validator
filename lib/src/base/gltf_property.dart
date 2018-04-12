@@ -39,7 +39,12 @@ abstract class Stringable {
       mapToString(map ?? <String, Object>{});
 }
 
-abstract class GltfProperty extends Stringable {
+// ignore: one_member_abstracts
+abstract class Linkable {
+  void link(Gltf gltf, Context context);
+}
+
+abstract class GltfProperty extends Stringable implements Linkable {
   final Map<String, Object> extensions;
   final Object extras;
 
@@ -62,6 +67,7 @@ abstract class GltfProperty extends Stringable {
     return super.toString(map);
   }
 
+  @override
   void link(Gltf gltf, Context context) {}
 }
 

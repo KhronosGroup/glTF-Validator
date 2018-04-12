@@ -53,9 +53,14 @@ class Context {
 
   final Map<Object, Object> owners = <Object, Object>{};
 
+  final Map<Type, List<LinkableExtensionEntry>> linkableExtensions =
+      <Type, List<LinkableExtensionEntry>>{};
+
   void registerObjectsOwner(Object owner, Iterable<Object> objects) {
     for (final o in objects) {
-      owners[o] = owner;
+      if (o != null) {
+        owners[o] = owner;
+      }
     }
   }
 
@@ -86,17 +91,21 @@ class Context {
 
   List<Issue> get issues => _issues;
 
-  List<Issue> getErrors() =>
-      _issues.where((issue) => issue.severity == Severity.Error).toList();
+  List<Issue> getErrors() => _issues
+      .where((issue) => issue.severity == Severity.Error)
+      .toList(growable: false);
 
-  List<Issue> getWarnings() =>
-      _issues.where((issue) => issue.severity == Severity.Warning).toList();
+  List<Issue> getWarnings() => _issues
+      .where((issue) => issue.severity == Severity.Warning)
+      .toList(growable: false);
 
-  List<Issue> getInfos() =>
-      _issues.where((issue) => issue.severity == Severity.Information).toList();
+  List<Issue> getInfos() => _issues
+      .where((issue) => issue.severity == Severity.Information)
+      .toList(growable: false);
 
-  List<Issue> getHints() =>
-      _issues.where((issue) => issue.severity == Severity.Hint).toList();
+  List<Issue> getHints() => _issues
+      .where((issue) => issue.severity == Severity.Hint)
+      .toList(growable: false);
 
   final StringBuffer _sb = new StringBuffer();
 

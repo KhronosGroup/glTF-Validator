@@ -107,7 +107,7 @@ class BufferView extends GltfChildOfRootProperty {
 
     return new BufferView._(
         getIndex(map, BUFFER, context),
-        getUint(map, BYTE_OFFSET, context, min: 0, def: 0),
+        getUint(map, BYTE_OFFSET, context, def: 0),
         byteLength,
         byteStride,
         target,

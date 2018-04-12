@@ -117,5 +117,5 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
 
 const Extension khrMaterialsPbrSpecularGlossinessExtension = const Extension(
     KHR_MATERIALS_PBRSPECULARGLOSSINESS, const <Type, ExtFuncs>{
-  Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap, null)
+  Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap)
 });

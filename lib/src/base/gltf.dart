@@ -235,55 +235,52 @@ class Gltf extends GltfProperty {
         getExtras(map));
 
     // Step 2: linking IDs
-    void linkCollection(SafeList<GltfProperty> list) {
+    void linkCollection(SafeList<GltfProperty> list, Type type) {
       context.path.add(list.name);
       list.forEachWithIndices((i, item) {
-        // Skip broken objects
-        if (item == null) {
-          return;
-        }
-
         context.path.add(i.toString());
         item.link(gltf, context);
-
-        if (context.extensionsLoaded.isNotEmpty && item.extensions.isNotEmpty) {
-          context.path.add(EXTENSIONS);
-          item.extensions.forEach((name, extension) {
-            if (extension is GltfProperty) {
-              context.path.add(name);
-              extension.link(gltf, context);
-              context.path.removeLast();
-            }
-          });
-          context.path.removeLast();
-        }
         context.path.removeLast();
       });
+
+      final extensions = context.linkableExtensions[type];
+      if (extensions != null) {
+        final oldPath = context.path.toList(growable: false);
+        for (final entry in extensions) {
+          context.path
+            ..clear()
+            ..addAll(entry.path);
+          entry.object.link(gltf, context);
+        }
+        context.path
+          ..clear()
+          ..addAll(oldPath);
+      }
+
       context.path.removeLast();
     }
 
     // Fixed order
-    linkCollection(bufferViews);
+    linkCollection(bufferViews, BufferView);
 
-    linkCollection(accessors);
+    linkCollection(accessors, Accessor);
 
-    linkCollection(images);
-    linkCollection(textures);
-    linkCollection(materials);
+    linkCollection(images, Image);
+    linkCollection(textures, Texture);
+    linkCollection(materials, Material);
 
-    linkCollection(meshes);
+    linkCollection(meshes, Mesh);
 
-    linkCollection(nodes);
-    linkCollection(skins);
+    linkCollection(nodes, Node);
+    linkCollection(skins, Skin);
 
-    linkCollection(animations);
-    linkCollection(scenes);
+    linkCollection(animations, Animation);
+    linkCollection(scenes, Scene);
 
     // Check node tree loops and orphaned objects
     if (context.validate) {
       context.path.add(NODES);
       final seenNodes = new Set<Node>();
-      Node temp;
       gltf.nodes.forEachWithIndices((i, node) {
         if (!node.isJoint &&
             node.children == null &&
@@ -298,7 +295,7 @@ class Gltf extends GltfProperty {
           return;
         }
         seenNodes.clear();
-        temp = node;
+        var temp = node;
         while (temp.parent != null) {
           if (seenNodes.add(temp)) {
             temp = temp.parent;

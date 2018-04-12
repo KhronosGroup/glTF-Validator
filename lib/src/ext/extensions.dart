@@ -22,6 +22,7 @@ import 'package:gltf/src/base/gltf_property.dart';
 
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
+import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
 import 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
 import 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
 
@@ -29,6 +30,7 @@ export 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
 export 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
+export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
 
 class Extension {
   const Extension(this.name, this.functions);
@@ -38,9 +40,8 @@ class Extension {
 }
 
 class ExtFuncs {
-  final FromMapFunction fromMap;
-  final LinkFunction link;
-  const ExtFuncs(this.fromMap, this.link);
+  final FromMapFunction<Object> fromMap;
+  const ExtFuncs(this.fromMap);
 }
 
 class ExtensionTuple {
@@ -56,9 +57,16 @@ class ExtensionTuple {
       other is ExtensionTuple && name == other.name && type == other.type;
 }
 
+class LinkableExtensionEntry {
+  final Linkable object;
+  final List<String> path;
+  LinkableExtensionEntry(this.object, this.path);
+}
+
 const List<Extension> defaultExtensions = const <Extension>[
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsUnlitExtension,
+  khrTextureTransformExtension,
   cesiumRtcExtension,
   web3dQuantizedAttributesExtension
 ];

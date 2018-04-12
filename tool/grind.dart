@@ -70,13 +70,11 @@ void issues() {
       '`%4`'
     ];
 
-    final issuesList = new List<IssueType>.from(
-        errorClassMirror.staticMembers.keys
-            .map<Object>(
-                (symbol) => errorClassMirror.getField(symbol).reflectee)
-            .whereType<IssueType>(),
-        growable: false)
-      ..sort((a, b) => a.code.compareTo(b.code));
+    final issuesList = errorClassMirror.staticMembers.keys
+        .map<Object>((symbol) => errorClassMirror.getField(symbol).reflectee)
+        .whereType<IssueType>()
+        .toList(growable: false)
+          ..sort((a, b) => a.code.compareTo(b.code));
 
     for (final issueType in issuesList) {
       String message;

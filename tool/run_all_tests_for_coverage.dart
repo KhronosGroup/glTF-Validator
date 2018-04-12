@@ -44,6 +44,8 @@ import '../test/data_access/01_load_images_test.dart' as load_images;
 import '../test/ext/KHR_materials_pbrSpecularGlossiness/ext_khr_spec_gloss_test.dart'
     as spec_gloss;
 import '../test/ext/KHR_materials_unlit/ext_khr_unlit_test.dart' as unlit;
+import '../test/ext/KHR_texture_transform/ext_khr_texture_transform_test.dart'
+    as texture_transform;
 
 void main() {
   gltf_reader.main();
@@ -69,6 +71,7 @@ void main() {
   gltf.main();
   spec_gloss.main();
   unlit.main();
+  texture_transform.main();
   load_buffers.main();
   load_images.main();
   //validate_accessors.main();

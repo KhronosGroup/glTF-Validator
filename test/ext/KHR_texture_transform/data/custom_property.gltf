@@ -1,0 +1,24 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_texture_transform"
+    ],
+    "materials": [
+        {
+            "emissiveTexture": {
+                "index": 0,
+                "extensions": {
+                    "KHR_texture_transform": {
+                        "customProperty": true
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        }
+    ]
+}

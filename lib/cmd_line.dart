@@ -225,7 +225,7 @@ Future<void> run(List<String> args) async {
           spawn();
           if (--activeTasks == 0) {
             watch.stop();
-            errPipe.write('Elapsed: ${watch.elapsedMilliseconds}ms\n');
+            errPipe.write('Elapsed total: ${watch.elapsedMilliseconds}ms\n');
             if (foundErrors) {
               exitCode = kErrorCode;
             }
@@ -249,6 +249,8 @@ Future<void> run(List<String> args) async {
 }
 
 Future<bool> _processFile(ValidationTask task) async {
+  final watch = new Stopwatch()..start();
+
   final file = new File(task.filename);
 
   final opts = task.validatorOptions;
@@ -261,6 +263,7 @@ Future<bool> _processFile(ValidationTask task) async {
     final ext = path.extension(task.filename).toLowerCase();
     errPipe.write('Error while loading ${file.path}...\n'
         'Unknown file extension `$ext`.\n');
+    watch.stop();
     return true;
   }
 
@@ -269,6 +272,7 @@ Future<bool> _processFile(ValidationTask task) async {
     readerResult = await reader.read();
   } on FileSystemException catch (e) {
     errPipe.write('Error while loading ${file.path}...\n$e\n');
+    watch.stop();
     return true;
   }
 
@@ -280,6 +284,8 @@ Future<bool> _processFile(ValidationTask task) async {
         context, validationResult.absoluteUri, readerResult);
     await resourcesLoader.load();
   }
+
+  watch.stop();
 
   final reportPath = '${path.withoutExtension(task.filename)}_report.json';
 
@@ -297,7 +303,8 @@ Future<bool> _processFile(ValidationTask task) async {
         'Errors: ${errors.length}, '
         'Warnings: ${warnings.length}, '
         'Infos: ${infos.length}, '
-        'Hints: ${hints.length}\n\n');
+        'Hints: ${hints.length}\n'
+        'Time: ${watch.elapsedMilliseconds}ms\n\n');
 
   if (opts.plainText) {
     void writeIssues(List<Issue> issues, String title) {
