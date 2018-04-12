@@ -41,8 +41,8 @@ You can use hosted [web front-end tool](http://github.khronos.org/glTF-Validator
 #### Installing from source code
 
 ##### Prerequisites
-1. Download and install [Dart SDK](https://www.dartlang.org/install) for your platform.
-2. Add Dart SDK `bin` folder to your PATH (more info [here](https://www.dartlang.org/tools/pub/installing)).
+1. Download and install [Dart SDK](https://www.dartlang.org/tools/sdk/archive#dev-channel) for your platform.
+2. Add Dart SDK `bin` folder to your PATH (more info [here](https://www.dartlang.org/tools/pub/environment-variables)).
 3. Add packages `bin` folder to your PATH (`~/.pub-cache/bin` for Linux and Mac; `%APPDATA%\Pub\Cache\bin` for Windows).
 
 ##### glTF-Validator

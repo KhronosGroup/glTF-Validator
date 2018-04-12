@@ -1,3 +1,7 @@
+## 2.0.0-dev.2.2
+
+* Added `UNUSED_OBJECT` hint (#80).
+
 ## 2.0.0-dev.2.1
 
 * Fixed a crash in the NPM build when `externalResourceFunction` isn't provided (#81).
