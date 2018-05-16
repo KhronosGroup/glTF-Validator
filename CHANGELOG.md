@@ -2,6 +2,10 @@
 
 * Added `UNUSED_OBJECT` hint (#80).
 
+* Added `KHR_texture_transform` support.
+
+* Changed `MESH_PRIMITIVE_NO_POSITION` default severity to Warning.
+
 ## 2.0.0-dev.2.1
 
 * Fixed a crash in the NPM build when `externalResourceFunction` isn't provided (#81).

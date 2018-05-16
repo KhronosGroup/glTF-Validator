@@ -317,7 +317,9 @@ class SemanticError extends IssueType {
           Severity.Warning);
 
   static final SemanticError meshPrimitiveNoPosition = new SemanticError._(
-      'MESH_PRIMITIVE_NO_POSITION', (args) => 'No POSITION attribute found.');
+      'MESH_PRIMITIVE_NO_POSITION',
+      (args) => 'No POSITION attribute found.',
+      Severity.Warning);
 
   static final SemanticError meshPrimitiveIndexedSemanticContinuity =
       new SemanticError._(
