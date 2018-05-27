@@ -24,4 +24,6 @@ export 'package:gltf/src/validation_result.dart';
 export 'package:gltf/src/base/gltf.dart';
 export 'package:gltf/src/data_access/resources_loader.dart';
 
-const String kGltfValidatorVersion = 'GLTF_VALIDATOR_VERSION';
+part 'gltf.g.dart';
+
+const String kGltfValidatorVersion = _$gltfValidatorVersion;

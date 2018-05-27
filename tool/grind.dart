@@ -35,18 +35,6 @@ final String _version =
 
 Future<void> main(List<String> args) => grind(args);
 
-void _replaceVersion() {
-  final f = new File('lib/gltf.dart');
-  f.writeAsStringSync(
-      f.readAsStringSync().replaceAll('GLTF_VALIDATOR_VERSION', _version));
-}
-
-void _restoreVersion() {
-  final f = new File('lib/gltf.dart');
-  f.writeAsStringSync(
-      f.readAsStringSync().replaceAll(_version, 'GLTF_VALIDATOR_VERSION'));
-}
-
 @Task('Generate ISSUES.md')
 void issues() {
   final sb = new StringBuffer('# glTF 2.0 Validation Issues\n');
@@ -101,58 +89,47 @@ void issues() {
   log('Total number of issues: $total');
 }
 
-@Task('Build Dart snapshot.')
-void snapshot() {
-  new Directory('build').createSync();
+const _nodeSource = 'node';
+const _binSource = 'bin';
+const _webSource = 'web';
 
-  _replaceVersion();
-  Dart.run('bin/gltf_validator.dart',
-      vmArgs: ['--snapshot=build/gltf_validator.snapshot']);
-  _restoreVersion();
+@Task('Build Dart source snapshot.')
+void snapshot() {
+  // Use `release` for setting snapshot kind until
+  // https://github.com/dart-lang/build/issues/1127
+  _runBuild(_binSource, release: false);
+  delete(new File(p.join(_getTarget(_binSource), 'gltf_validator.dart')));
+}
+
+@Task('Build Dart application snapshot.')
+void snapshotApp() {
+  _runBuild(_binSource);
 }
 
 @Task('Build web drag-n-drop version.')
 void web() {
-  _replaceVersion();
-  Pub.build();
-  _restoreVersion();
+  _runBuild(_webSource);
 }
 
-final _dart2jsArgs = [
-  '--minify',
-  '--no-source-maps',
-  '--trust-primitives',
-  '--trust-type-annotations'
-];
-
-const _sourceDir = 'tool/npm_template';
-const _destDir = 'build/npm/';
-final _dir = new Directory(_destDir);
-
-@Task('Build non-minified npm package with source map.')
+@Task('Build non-minified npm package with preserved call-stacks.')
 void npmDebug() {
-  _dart2jsArgs
-    ..clear()
-    ..add('-DGLTF_VALIDATOR_DEBUG=true');
-  npmRelease();
+  _npmBuild(release: false);
 }
 
 @Task('Build minified npm package.')
 void npmRelease() {
-  if (_dir.existsSync()) {
-    _dir.deleteSync(recursive: true);
-  }
-  _dir.createSync(recursive: true);
+  _npmBuild();
+}
 
-  final destination = new File(p.join(_destDir, 'gltf_validator.dart.js'));
+final _nodeTarget = _getTarget(_nodeSource);
+final _nodeTargetDir = new Directory(_nodeTarget);
 
-  _replaceVersion();
+void _npmBuild({bool release = true}) {
+  delete(_nodeTargetDir);
+  _runBuild(_nodeSource, release: release);
 
-  Dart2js.compile(new File(p.join(_sourceDir, 'node_wrapper.dart')),
-      outFile: destination, extraArgs: _dart2jsArgs);
-
-  _restoreVersion();
-
+  log('Adding preamble to the compiled file');
+  final destination = new File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
   final compiledJs = destination.readAsStringSync();
 
   // Node.js detector adopted from https://github.com/iliakan/detect-node
@@ -163,39 +140,63 @@ void npmRelease() {
 
   destination.writeAsStringSync('$preambleJs\n$compiledJs');
 
-  delete(new File(p.join(_destDir, 'gltf_validator.dart.js.deps')));
-
+  const packageJson = 'package.json';
   final Map<String, Object> jsonMap = json
-      .decode(new File(p.join(_sourceDir, 'package.json')).readAsStringSync());
+      .decode(new File(p.join(_nodeSource, packageJson)).readAsStringSync());
   jsonMap['version'] = _version;
 
-  log('copying package.json to $_destDir');
-  new File(p.join(_destDir, 'package.json'))
+  log('copying updated $packageJson to $_nodeTarget');
+  new File(p.join(_nodeTarget, packageJson))
       .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 
-  copy(new File(p.join(_sourceDir, 'index.js')), _dir);
+  copy(new File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
 }
 
 @Depends(issues, npmRelease)
 @Task('Build an npm package.')
 void npm() {
-  log('Building npm README...');
-  copy(new File(p.join(_sourceDir, 'README.md')), _dir);
-  run(npmExecutable,
-      arguments: ['install'], workingDirectory: 'tool/npm_template');
-  run(npmExecutable,
-      arguments: ['run', 'docs'], workingDirectory: 'tool/npm_template');
+  copy(new File('ISSUES.md'), _nodeTargetDir);
+  copy(new File('LICENSE'), _nodeTargetDir);
+  copy(new File('3RD_PARTY'), _nodeTargetDir);
+  copy(new File(p.join('docs', 'validation.schema.json')), _nodeTargetDir);
 
-  copy(new File('ISSUES.md'), _dir);
-  copy(new File('LICENSE'), _dir);
-  copy(new File('3RD_PARTY'), _dir);
-  copy(new File(p.join('docs', 'validation.schema.json')), _dir);
+  log('Building npm README...');
+  copy(new File(p.join(_nodeSource, 'README.md')), _nodeTargetDir);
+  run(npmExecutable, arguments: ['install'], workingDirectory: _nodeSource);
+  run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: _nodeSource);
 }
 
 @Depends(npm)
 @Task('Publish package to npm.')
 void npmPublish() {
-  run(npmExecutable, arguments: ['publish'], workingDirectory: 'build/npm');
+  run(npmExecutable, arguments: ['publish'], workingDirectory: _nodeTarget);
+}
+
+final _args = ['build', '--delete-conflicting-outputs', '--output'];
+
+void _runBuild(String dir, {bool release = true, String defineOption}) {
+  final target = _getTarget(dir);
+  delete(new Directory(target));
+
+  _args.add(_getOutput(dir));
+
+  if (release) {
+    _args.add('--release');
+  }
+
+  if (defineOption != null) {
+    _args..add('--define')..add(defineOption);
+  }
+
+  Pub.run('build_runner', arguments: _args);
+
+  delete(new File(p.join(target, '.build.manifest')));
+  delete(new File(p.join(target, '.packages')));
+  delete(new Directory(p.join(target, 'packages')));
 }
 
 String get npmExecutable => Platform.isWindows ? 'npm.cmd' : 'npm';
+
+String _getOutput(String dir) => '$dir:${_getTarget(dir)}';
+
+String _getTarget(String dir) => p.join('build', dir);

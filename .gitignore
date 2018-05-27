@@ -28,4 +28,4 @@ doc/api/
 pubspec.lock
 
 # Node Modules
-tool/npm_template/node_modules/
+node/node_modules/

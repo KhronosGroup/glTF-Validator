@@ -80,7 +80,7 @@
 
 ## 2.0.0-dev.1.2
 
-* Updated JS API. See [README.md](tool/npm_template/README.md) for details.
+* Updated JS API. See [README.md](node/README.md) for details.
 
 * Added external resources support for drag-n-drop web frontend.
 
