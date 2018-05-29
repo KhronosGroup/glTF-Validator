@@ -1,2 +1,3 @@
 ISSUES.md text eol=lf
 node/package.json eol=lf
+lib/gltf.g.dart eol=lf
