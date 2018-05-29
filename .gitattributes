@@ -1,2 +1,2 @@
 ISSUES.md text eol=lf
-tool/npm_template/package.json eol=lf
+node/package.json eol=lf
