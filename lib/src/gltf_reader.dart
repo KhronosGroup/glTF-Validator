@@ -51,6 +51,9 @@ abstract class GltfReader {
     return null;
   }
 
+  /// Detects glTF stream type based on the first byte and
+  /// returns a [Future] with an appropriate [GltfReader] instance.
+  /// Completes with a [GltfInvalidFormatException] exception on invalid input.
   static Future<GltfReader> detect(Stream<List<int>> stream,
       [Context context]) {
     final completer = new Completer<GltfReader>();
@@ -59,23 +62,39 @@ abstract class GltfReader {
     StreamSubscription<List<int>> subscription;
     final controller = new StreamController<List<int>>();
 
+    // Letter "g"
+    const g = 0x67;
+
+    // Allowed whitespace chars
+    const ht = 0x09;
+    const sp = 0x20;
+    const lf = 0x0A;
+    const cr = 0x0D;
+
+    // Left curly bracket
+    const cl = 0x7B;
+
+    // UTF-8 BOM first byte
+    const bom = 0xEF;
+
     subscription = stream.listen((data) {
       if (!formatDetected) {
         final byte = data[0];
-        if (byte == 0x67) {
+        if (byte == g) {
           completer.complete(new GlbReader(controller.stream, context));
           formatDetected = true;
-        } else if (byte == 0x20 ||
-            byte == 0x09 ||
-            byte == 0x0A ||
-            byte == 0x0D ||
-            byte == 0x7B) {
+        } else if (byte == cl ||
+            byte == ht ||
+            byte == sp ||
+            byte == lf ||
+            byte == cr ||
+            byte == bom) {
           completer.complete(new GltfJsonReader(controller.stream, context));
           formatDetected = true;
         } else {
           subscription.cancel();
           controller.close();
-          completer.completeError(const GltfDataInvalid());
+          completer.completeError(const GltfInvalidFormatException());
           return;
         }
       }
@@ -134,8 +153,20 @@ class GltfJsonReader implements GltfReader {
     return _completer.future;
   }
 
+  bool _isFirstChunk = true;
   void _onData(List<int> data) {
     _subscription.pause();
+    if (_isFirstChunk) {
+      /// UTF-8 BOM may appear only at the beginning of stream.
+      /// If it's incorrect (incomplete), underlying decoder issues a
+      /// [FormatException].
+      /// So we can check only the first byte of the first data chunk.
+      if (data.isNotEmpty && data[0] == 0xEF) {
+        context.addIssue(SchemaError.invalidJson,
+            args: ['BOM found at the beginning of UTF-8 stream.']);
+      }
+      _isFirstChunk = false;
+    }
     try {
       _byteSink.addSlice(data, 0, data.length, false);
       _subscription.resume();
@@ -182,14 +213,14 @@ class GltfJsonReader implements GltfReader {
         return null;
       }
     } else {
-      context.addIssue(SchemaError.typeMismatch, args: [parsedJson, 'object']);
+      context?.addIssue(SchemaError.typeMismatch, args: [parsedJson, 'object']);
       return null;
     }
   }
 }
 
-class GltfDataInvalid implements Exception {
-  const GltfDataInvalid();
+class GltfInvalidFormatException implements Exception {
+  const GltfInvalidFormatException();
 
   @override
   String toString() => 'Invalid data: could not detect glTF format.';
