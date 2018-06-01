@@ -123,9 +123,9 @@ class BufferView extends GltfChildOfRootProperty {
     effectiveByteStride = byteStride;
 
     if (_target == gl.ARRAY_BUFFER) {
-      setUsage(BufferViewUsage.VertexBuffer, null, null);
+      _usage = BufferViewUsage.VertexBuffer;
     } else if (_target == gl.ELEMENT_ARRAY_BUFFER) {
-      setUsage(BufferViewUsage.IndexBuffer, null, null);
+      _usage = BufferViewUsage.IndexBuffer;
     }
 
     if (context.validate && _bufferIndex != -1) {

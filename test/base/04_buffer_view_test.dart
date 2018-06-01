@@ -61,7 +61,8 @@ void main() {
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/buffer_view/custom_property.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('bufferViews')
@@ -75,8 +76,8 @@ void main() {
 
     test('Invalid byteStride', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer_view/invalid_stride.gltf')
-              .openRead());
+          new File('test/base/data/buffer_view/invalid_stride.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('bufferViews')
@@ -95,7 +96,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/buffer_view/valid_full.gltf').openRead());
+          new File('test/base/data/buffer_view/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 
