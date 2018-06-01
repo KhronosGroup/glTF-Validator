@@ -6,6 +6,8 @@
 
 * Changed `MESH_PRIMITIVE_NO_POSITION` default severity to Warning.
 
+* Added UTF-8 BOM detection for byte inputs. 
+
 ## 2.0.0-dev.2.1
 
 * Fixed a crash in the NPM build when `externalResourceFunction` isn't provided (#81).

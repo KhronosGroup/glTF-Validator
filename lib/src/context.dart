@@ -91,21 +91,17 @@ class Context {
 
   List<Issue> get issues => _issues;
 
-  List<Issue> getErrors() => _issues
-      .where((issue) => issue.severity == Severity.Error)
-      .toList(growable: false);
+  Iterable<Issue> get errors =>
+      _issues.where((issue) => issue.severity == Severity.Error);
 
-  List<Issue> getWarnings() => _issues
-      .where((issue) => issue.severity == Severity.Warning)
-      .toList(growable: false);
+  Iterable<Issue> get warnings =>
+      _issues.where((issue) => issue.severity == Severity.Warning);
 
-  List<Issue> getInfos() => _issues
-      .where((issue) => issue.severity == Severity.Information)
-      .toList(growable: false);
+  Iterable<Issue> get infos =>
+      _issues.where((issue) => issue.severity == Severity.Information);
 
-  List<Issue> getHints() => _issues
-      .where((issue) => issue.severity == Severity.Hint)
-      .toList(growable: false);
+  Iterable<Issue> get hints =>
+      _issues.where((issue) => issue.severity == Severity.Hint);
 
   final StringBuffer _sb = new StringBuffer();
 

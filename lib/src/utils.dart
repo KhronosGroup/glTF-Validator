@@ -364,7 +364,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
   if (value is List<Object>) {
     if (lengthsList != null) {
       if (!checkEnum<int>(name, value.length, lengthsList, context,
-          isLengthList: true)) {
+          lengthList: true)) {
         return null;
       }
     } else if (value.isEmpty) {
@@ -580,10 +580,10 @@ Map<String, Object> getExtensions(
 Object getExtras(Map<String, Object> map) => map[EXTRAS];
 
 bool checkEnum<T>(String name, T value, Iterable<T> list, Context context,
-    {bool isLengthList = false}) {
+    {bool lengthList = false}) {
   if (!list.contains(value)) {
     context.addIssue(
-        isLengthList
+        lengthList
             ? SchemaError.arrayLengthNotInList
             : SchemaError.valueNotInList,
         name: name,
