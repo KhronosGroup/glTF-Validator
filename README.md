@@ -41,8 +41,8 @@ You can use hosted [web front-end tool](http://github.khronos.org/glTF-Validator
 #### Installing from source code
 
 ##### Prerequisites
-1. Download and install [Dart SDK](https://www.dartlang.org/install) for your platform.
-2. Add Dart SDK `bin` folder to your PATH (more info [here](https://www.dartlang.org/tools/pub/installing)).
+1. Download and install [Dart SDK](https://www.dartlang.org/tools/sdk/archive#dev-channel) for your platform.
+2. Add Dart SDK `bin` folder to your PATH.
 3. Add packages `bin` folder to your PATH (`~/.pub-cache/bin` for Linux and Mac; `%APPDATA%\Pub\Cache\bin` for Windows).
 
 ##### glTF-Validator
@@ -80,28 +80,39 @@ Shell return code will be non-zero if at least one error was found.
 
 ## Building
 
+### Drag-n-Drop Web Tool
+To build a drag-n-drop online validation tool (as hosted [here](http://github.khronos.org/glTF-Validator/)), follow these steps after installation:
+1. Run `pub run grinder web`.
+2. All needed files will be written to `build/web` directory.
+
 ### Dart Snapshot
-To build application snapshot for more convenient deployment, follow these steps after installation:
+To build a source snapshot for more convenient deployment, follow these steps after installation:
 1. Run `pub run grinder snapshot`.
-2. Snapshot will be written to `build/gltf_validator.snapshot`.
+2. Snapshot will be written to `build/bin/gltf_validator.snapshot`.
 
 It may be used like this:
 ```
 $ dart gltf_validator.snapshot -r -p -a ./path_to_models/
 ```
-Note, that you have to use the same Dart SDK version for building and running the snapshot. For deployment, you will need only two files: application snapshot and `dart` executable.
+Note, that you have to use the same Dart SDK version for building and running the snapshot. For deployment, you will need only two files: the snapshot and `dart` executable.
+
+You may opt to build an application snapshot for better start-up time. 
+Keep in mind that application snapshots are CPU architecture and operating system specific so a snapshot created, e.g., on a IA32 Linux VM cannot run on an x64 macOS VM.
+To build an application snapshot, follow these steps after installation:
+1. Run `pub run grinder snapshot-app`.
+2. Snapshot will be written to `build/bin/gltf_validator.snapshot`.
 
 ### NPM Package
 To build an npm package for use in Node.js environment, follow these steps after installation:
 1. Run `pub run grinder npm`.
-2. `gltf-validator` npm package will be written to `build/npm`.
+2. `gltf-validator` npm package will be written to `build/node`.
 
 Refer to the [npm package documentation](https://www.npmjs.com/package/gltf-validator) for additional information.
 
 #### Publishing
 To publish an npm package, follow these steps after installation:
 1. Run `pub run grinder npm-publish`.
-2. `gltf-validator` npm package will be built to `build/npm` and published to npm registry using `npm publish`.
+2. `gltf-validator` npm package will be built to `build/node` and published to npm registry using `npm publish`.
 
 ### Validation Issues List
 To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
@@ -109,6 +120,5 @@ To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
 2. `ISSUES.md` file will be written to the repo root.
 
 ## Known Issues
-
-- Web version can't differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
+- Web and npm versions cannot differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
 - JSON charset encoding restrictions are not enforced.

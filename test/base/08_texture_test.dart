@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Texture', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Empty object', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/texture/empty_object.gltf').openRead());
+          new File('test/base/data/texture/empty_object.gltf').openRead(),
+          ignoreUnusedContext);
 
       await reader.read();
 
@@ -47,7 +50,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/texture/custom_property.gltf').openRead());
+          new File('test/base/data/texture/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('textures')
@@ -61,7 +65,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/texture/valid_full.gltf').openRead());
+          new File('test/base/data/texture/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 
@@ -74,7 +79,8 @@ void main() {
     test('Unresolved references', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/texture/unresolved_references.gltf')
-              .openRead());
+              .openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('textures')

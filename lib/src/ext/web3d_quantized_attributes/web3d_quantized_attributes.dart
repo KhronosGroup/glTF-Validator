@@ -67,5 +67,5 @@ class Web3dQuantizedAttributes extends Stringable {
 
 const Extension web3dQuantizedAttributesExtension = const Extension(
     WEB3D_QUANTIZED_ATTRIBUTES, const <Type, ExtFuncs>{
-  Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap, null)
+  Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap)
 });

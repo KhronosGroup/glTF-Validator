@@ -113,6 +113,29 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Unused objects', () async {
+      final reader = new GltfJsonReader(
+          new File('test/base/data/gltf/unused_objects.gltf').openRead());
+
+      final context = new Context()
+        ..addIssue(LinkError.unusedObject, name: 'animations/0/samplers/1')
+        ..addIssue(LinkError.unusedObject, name: 'accessors/6')
+        ..addIssue(LinkError.unusedObject, name: 'buffers/1')
+        ..addIssue(LinkError.unusedObject, name: 'bufferViews/2')
+        ..addIssue(LinkError.unusedObject, name: 'cameras/1')
+        ..addIssue(LinkError.unusedObject, name: 'images/1')
+        ..addIssue(LinkError.unusedObject, name: 'materials/1')
+        ..addIssue(LinkError.unusedObject, name: 'meshes/1')
+        ..addIssue(LinkError.unusedObject, name: 'nodes/1')
+        ..addIssue(LinkError.unusedObject, name: 'samplers/1')
+        ..addIssue(LinkError.unusedObject, name: 'skins/0')
+        ..addIssue(LinkError.unusedObject, name: 'textures/1');
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid Full', () async {
       final reader = new GltfJsonReader(
           new File('test/base/data/gltf/valid_full.gltf').openRead());

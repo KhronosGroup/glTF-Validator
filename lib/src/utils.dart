@@ -75,15 +75,20 @@ bool getBool(Map<String, Object> map, String name, Context context) {
 }
 
 int getUint(Map<String, Object> map, String name, Context context,
-    {bool req = false, int min, int max, int def = -1, Iterable<int> list}) {
-  assert(min == null || min >= 0);
+    {bool req = false,
+    int min = 0,
+    int max = -1,
+    int def = -1,
+    Iterable<int> list}) {
+  assert(min != null && min >= 0);
+  assert(max == -1 || max >= min);
   final value = _getGuarded(map, name, _kInteger, context);
   if (value is int) {
     if (list != null) {
       if (!checkEnum<int>(name, value, list, context)) {
         return -1;
       }
-    } else if ((min != null && value < min) || (max != null && value > max)) {
+    } else if ((value < min) || (max != -1 && value > max)) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
       return -1;
     }
@@ -102,15 +107,18 @@ int getUint(Map<String, Object> map, String name, Context context,
 
 double getFloat(Map<String, Object> map, String name, Context context,
     {bool req = false,
-    double min,
-    double exclMin,
-    double max,
+    double min = double.nan,
+    double exclMin = double.nan,
+    double max = double.nan,
     double def = double.nan}) {
+  assert(min != null && max != null);
+  assert(min.isNaN || max.isNaN || max >= min);
+  assert(exclMin.isNaN || max.isNaN || max > exclMin);
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
-    if ((min != null && value < min) ||
-        (exclMin != null && value <= exclMin) ||
-        (max != null && value > max)) {
+    if ((!min.isNaN && value < min) ||
+        (!exclMin.isNaN && value <= exclMin) ||
+        (!max.isNaN && value > max)) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
       return double.nan;
     }
@@ -346,15 +354,17 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
 List<double> getFloatList(Map<String, Object> map, String name, Context context,
     {bool req = false,
     bool singlePrecision = false,
-    double min,
-    double max,
+    double min = double.nan,
+    double max = double.nan,
     List<double> def,
     List<int> lengthsList}) {
+  assert(min != null && max != null);
+  assert(min.isNaN || max.isNaN || max >= min);
   final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
     if (lengthsList != null) {
       if (!checkEnum<int>(name, value.length, lengthsList, context,
-          isLengthList: true)) {
+          lengthList: true)) {
         return null;
       }
     } else if (value.isEmpty) {
@@ -368,12 +378,12 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
       final v = value[i];
       if (v is num) {
         if (context.validate &&
-            ((min != null && v < min) || (max != null && v > max))) {
+            ((!min.isNaN && v < min) || (!max.isNaN && v > max))) {
           context.addIssue(SchemaError.valueNotInRange, name: name, args: [v]);
           wrongMemberFound = true;
         }
         if (singlePrecision) {
-          result[i] = doubleToSingle(v.toDouble());
+          result[i] = _doubleToSingle(v.toDouble());
         } else {
           result[i] = v.toDouble();
         }
@@ -515,7 +525,7 @@ String getName(Map<String, Object> map, Context context) =>
 
 Map<String, Object> getExtensions(
     Map<String, Object> map, Type type, Context context,
-    {bool warnOnMultipleExtensions = false}) {
+    {bool warnOnMultipleExtensions = false, Type overriddenType}) {
   final extensions = <String, Object>{};
   final extensionMaps = getMap(map, EXTENSIONS, context);
 
@@ -550,7 +560,15 @@ Map<String, Object> getExtensions(
     final extensionMap = getMap(extensionMaps, extension, context, req: true);
     if (extensionMap != null) {
       context.path.add(extension);
-      extensions[extension] = functions.fromMap(extensionMap, context);
+      final object = functions.fromMap(extensionMap, context);
+      extensions[extension] = object;
+      if (object is Linkable) {
+        context.linkableExtensions
+            .putIfAbsent(
+                overriddenType ?? type, () => <LinkableExtensionEntry>[])
+            .add(new LinkableExtensionEntry(
+                object, context.path.toList(growable: false)));
+      }
       context.path.removeLast();
     }
   }
@@ -562,10 +580,10 @@ Map<String, Object> getExtensions(
 Object getExtras(Map<String, Object> map) => map[EXTRAS];
 
 bool checkEnum<T>(String name, T value, Iterable<T> list, Context context,
-    {bool isLengthList = false}) {
+    {bool lengthList = false}) {
   if (!list.contains(value)) {
     context.addIssue(
-        isLengthList
+        lengthList
             ? SchemaError.arrayLengthNotInList
             : SchemaError.valueNotInList,
         name: name,
@@ -586,31 +604,31 @@ void checkMembers(
   }
 }
 
-typedef void _CheckKeyFunction(String key);
+typedef _CheckKeyFunction = void Function(String key);
 
 void resolveNodeList(List<int> sourceList, List<Node> targetList,
     SafeList<Node> nodes, String name, Context context,
     [void handleNode(Node element, int nodeIndex, int index)]) {
-  if (sourceList != null) {
-    context.path.add(name);
-    for (var i = 0; i < sourceList.length; i++) {
-      final nodeIndex = sourceList[i];
-      if (nodeIndex == null) {
-        continue;
-      }
-      final node = nodes[nodeIndex];
-      if (node != null) {
-        targetList[i] = node;
-        if (handleNode != null) {
-          handleNode(node, nodeIndex, i);
-        }
-      } else {
-        context.addIssue(LinkError.unresolvedReference,
-            index: i, args: [nodeIndex]);
-      }
+  assert(sourceList != null);
+  context.path.add(name);
+  for (var i = 0; i < sourceList.length; i++) {
+    final nodeIndex = sourceList[i];
+    if (nodeIndex == -1) {
+      continue;
     }
-    context.path.removeLast();
+    final node = nodes[nodeIndex];
+    if (node != null) {
+      node.markAsUsed();
+      targetList[i] = node;
+      if (handleNode != null) {
+        handleNode(node, nodeIndex, i);
+      }
+    } else {
+      context
+          .addIssue(LinkError.unresolvedReference, index: i, args: [nodeIndex]);
+    }
   }
+  context.path.removeLast();
 }
 
 /// Adds a [value] to a [map] if that [value] isn't `null`.
@@ -621,7 +639,7 @@ void addToMapIfNotNull(Map<String, Object> map, String key, Object value) {
 }
 
 /// Clones a map without `null` values and calls `toString` on it.
-String mapToString([Map<String, Object> map]) {
+String mapToString(Map<String, Object> map) {
   final result = <String, Object>{};
   for (final key in map.keys) {
     final value = map[key];
@@ -633,16 +651,15 @@ String mapToString([Map<String, Object> map]) {
 }
 
 class SafeList<T> extends ListBase<T> {
-  List<T> _list;
+  final List<T> _list;
   final int _length;
+  final String name;
 
-  SafeList(this._length) {
-    _list = new List<T>(length);
-  }
+  SafeList(this._length, this.name) : _list = new List<T>(_length);
 
-  SafeList.empty() : _length = 0 {
-    _list = new List<T>(0);
-  }
+  SafeList.empty(this.name)
+      : _length = 0,
+        _list = new List<T>(0);
 
   @override
   T operator [](int index) =>
@@ -670,13 +687,18 @@ class SafeList<T> extends ListBase<T> {
 
   void forEachWithIndices(void action(int index, T element)) {
     for (var i = 0; i < _length; i++) {
-      action(i, _list[i]);
+      final e = _list[i];
+      // Skip broken objects
+      if (e == null) {
+        continue;
+      }
+      action(i, e);
     }
   }
 }
 
 final _float = new Float32List(1);
-double doubleToSingle(double value) {
+double _doubleToSingle(double value) {
   _float[0] = value;
   return _float[0];
 }

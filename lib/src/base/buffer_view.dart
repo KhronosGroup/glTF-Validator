@@ -51,6 +51,7 @@ class BufferView extends GltfChildOfRootProperty {
   int get target => _target != -1 ? _target : usage.target;
 
   void setUsage(BufferViewUsage value, String name, Context context) {
+    markAsUsed();
     if (_usage == null) {
       _usage = value;
     } else if (context.validate && _usage != value) {
@@ -106,7 +107,7 @@ class BufferView extends GltfChildOfRootProperty {
 
     return new BufferView._(
         getIndex(map, BUFFER, context),
-        getUint(map, BYTE_OFFSET, context, min: 0, def: 0),
+        getUint(map, BYTE_OFFSET, context, def: 0),
         byteLength,
         byteStride,
         target,
@@ -122,22 +123,25 @@ class BufferView extends GltfChildOfRootProperty {
     effectiveByteStride = byteStride;
 
     if (_target == gl.ARRAY_BUFFER) {
-      setUsage(BufferViewUsage.VertexBuffer, null, null);
+      _usage = BufferViewUsage.VertexBuffer;
     } else if (_target == gl.ELEMENT_ARRAY_BUFFER) {
-      setUsage(BufferViewUsage.IndexBuffer, null, null);
+      _usage = BufferViewUsage.IndexBuffer;
     }
 
     if (context.validate && _bufferIndex != -1) {
       if (_buffer == null) {
         context.addIssue(LinkError.unresolvedReference,
             name: BUFFER, args: [_bufferIndex]);
-      } else if (_buffer.byteLength != -1) {
-        if (byteOffset >= _buffer.byteLength) {
-          context.addIssue(LinkError.bufferViewTooLong,
-              name: BYTE_OFFSET, args: [_bufferIndex, _buffer.byteLength]);
-        } else if (byteOffset + byteLength > _buffer.byteLength) {
-          context.addIssue(LinkError.bufferViewTooLong,
-              name: BYTE_LENGTH, args: [_bufferIndex, _buffer.byteLength]);
+      } else {
+        _buffer.markAsUsed();
+        if (_buffer.byteLength != -1) {
+          if (byteOffset >= _buffer.byteLength) {
+            context.addIssue(LinkError.bufferViewTooLong,
+                name: BYTE_OFFSET, args: [_bufferIndex, _buffer.byteLength]);
+          } else if (byteOffset + byteLength > _buffer.byteLength) {
+            context.addIssue(LinkError.bufferViewTooLong,
+                name: BYTE_LENGTH, args: [_bufferIndex, _buffer.byteLength]);
+          }
         }
       }
     }

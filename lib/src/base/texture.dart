@@ -58,13 +58,23 @@ class Texture extends GltfChildOfRootProperty {
     _sampler = gltf.samplers[_samplerIndex];
 
     if (context.validate) {
-      if (_sourceIndex != -1 && _source == null)
-        context.addIssue(LinkError.unresolvedReference,
-            name: SOURCE, args: [_sourceIndex]);
+      if (_sourceIndex != -1) {
+        if (_source == null) {
+          context.addIssue(LinkError.unresolvedReference,
+              name: SOURCE, args: [_sourceIndex]);
+        } else {
+          _source.markAsUsed();
+        }
+      }
 
-      if (_samplerIndex != -1 && _sampler == null)
-        context.addIssue(LinkError.unresolvedReference,
-            name: SAMPLER, args: [_samplerIndex]);
+      if (_samplerIndex != -1) {
+        if (_sampler == null) {
+          context.addIssue(LinkError.unresolvedReference,
+              name: SAMPLER, args: [_samplerIndex]);
+        } else {
+          _sampler.markAsUsed();
+        }
+      }
     }
   }
 }

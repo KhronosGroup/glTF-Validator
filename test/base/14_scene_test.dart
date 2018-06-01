@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Scene', () {
     test('Empty array', () async {
@@ -69,7 +71,8 @@ void main() {
 
     test('Misc', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/scene/misc.gltf').openRead());
+          new File('test/base/data/scene/misc.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('scenes')

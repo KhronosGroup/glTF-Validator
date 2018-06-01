@@ -172,37 +172,48 @@ class Node extends GltfChildOfRootProperty {
     _mesh = gltf.meshes[_meshIndex];
 
     if (context.validate) {
-      if (_cameraIndex != -1 && _camera == null) {
-        context.addIssue(LinkError.unresolvedReference,
-            name: CAMERA, args: [_cameraIndex]);
+      if (_cameraIndex != -1) {
+        if (_camera == null) {
+          context.addIssue(LinkError.unresolvedReference,
+              name: CAMERA, args: [_cameraIndex]);
+        } else {
+          _camera.markAsUsed();
+        }
       }
 
-      if (_skinIndex != -1 && _skin == null) {
-        context.addIssue(LinkError.unresolvedReference,
-            name: SKIN, args: [_skinIndex]);
+      if (_skinIndex != -1) {
+        if (_skin == null) {
+          context.addIssue(LinkError.unresolvedReference,
+              name: SKIN, args: [_skinIndex]);
+        } else {
+          _skin.markAsUsed();
+        }
       }
 
       if (_meshIndex != -1) {
         if (_mesh == null) {
           context.addIssue(LinkError.unresolvedReference,
               name: MESH, args: [_meshIndex]);
-        } else if (mesh.primitives != null) {
-          if (weights != null &&
-              _mesh.primitives[0].targets?.length != weights.length) {
-            context.addIssue(LinkError.nodeWeightsInvalid,
-                name: WEIGHTS,
-                args: [weights.length, mesh.primitives[0].targets?.length]);
-          }
-
-          if (_skin != null) {
-            if (mesh.primitives
-                .any((primitive) => primitive.jointsCount == 0)) {
-              context.addIssue(LinkError.nodeSkinWithNonSkinnedMesh);
+        } else {
+          _mesh.markAsUsed();
+          if (_mesh.primitives != null) {
+            if (weights != null &&
+                _mesh.primitives[0].targets?.length != weights.length) {
+              context.addIssue(LinkError.nodeWeightsInvalid,
+                  name: WEIGHTS,
+                  args: [weights.length, _mesh.primitives[0].targets?.length]);
             }
-          } else {
-            if (mesh.primitives
-                .any((primitive) => primitive.jointsCount != 0)) {
-              context.addIssue(LinkError.nodeSkinnedMeshWithoutSkin);
+
+            if (_skin != null) {
+              if (_mesh.primitives
+                  .any((primitive) => primitive.jointsCount == 0)) {
+                context.addIssue(LinkError.nodeSkinWithNonSkinnedMesh);
+              }
+            } else {
+              if (_mesh.primitives
+                  .any((primitive) => primitive.jointsCount != 0)) {
+                context.addIssue(LinkError.nodeSkinnedMeshWithoutSkin);
+              }
             }
           }
         }

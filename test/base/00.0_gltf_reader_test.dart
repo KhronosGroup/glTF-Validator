@@ -94,6 +94,28 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Valid glTF, but starting with BOM', () async {
+      final reader = new GltfJsonReader(new Stream<List<int>>.fromIterable([
+        [
+          0xEF,
+          0xBB,
+          0xBF,
+        ],
+        '{"asset":{"version":"2.0"}}'.codeUnits
+      ]));
+
+      final result = await reader.read();
+
+      final context = new Context()
+        ..addIssue(SchemaError.invalidJson,
+            args: ['BOM found at the beginning of UTF-8 stream.']);
+
+      expect(reader.context.issues, context.issues);
+
+      expect(result.mimeType, 'model/gltf+json');
+      expect(result.gltf, const isInstanceOf<Gltf>());
+    });
+
     test('Smallest possible asset', () async {
       final reader = new GltfJsonReader(new Stream<List<int>>.fromIterable(
           ['{"asset":{"version":"2.0"}}'.codeUnits]));

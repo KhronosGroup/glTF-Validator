@@ -17,7 +17,7 @@
 
 library gltf.error;
 
-typedef String ErrorFunction(List args);
+typedef ErrorFunction = String Function(List args);
 
 enum Severity { Error, Warning, Information, Hint }
 
@@ -317,7 +317,9 @@ class SemanticError extends IssueType {
           Severity.Warning);
 
   static final SemanticError meshPrimitiveNoPosition = new SemanticError._(
-      'MESH_PRIMITIVE_NO_POSITION', (args) => 'No POSITION attribute found.');
+      'MESH_PRIMITIVE_NO_POSITION',
+      (args) => 'No POSITION attribute found.',
+      Severity.Warning);
 
   static final SemanticError meshPrimitiveIndexedSemanticContinuity =
       new SemanticError._(
@@ -606,6 +608,9 @@ class LinkError extends IssueType {
       'UNSUPPORTED_EXTENSION',
       (args) => 'Unsupported extension encountered: ${_q(args[0])}.',
       Severity.Warning);
+
+  static final LinkError unusedObject = new LinkError._(
+      'UNUSED_OBJECT', (args) => 'This object may be unused.', Severity.Hint);
 
   LinkError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])

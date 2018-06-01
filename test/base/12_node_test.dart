@@ -21,6 +21,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('Node', () {
     test('Empty array', () async {
@@ -38,7 +40,8 @@ void main() {
 
     test('Custom Property', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/node/custom_property.gltf').openRead());
+          new File('test/base/data/node/custom_property.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('nodes')
@@ -53,8 +56,8 @@ void main() {
 
     test('Unresolved references', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/node/unresolved_references.gltf')
-              .openRead());
+          new File('test/base/data/node/unresolved_references.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('nodes')
@@ -80,7 +83,8 @@ void main() {
 
     test('Misc', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/node/misc.gltf').openRead());
+          new File('test/base/data/node/misc.gltf').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..path.add('nodes')
@@ -114,7 +118,8 @@ void main() {
 
     test('Valid', () async {
       final reader = new GltfJsonReader(
-          new File('test/base/data/node/valid_full.gltf').openRead());
+          new File('test/base/data/node/valid_full.gltf').openRead(),
+          ignoreUnusedContext);
 
       final result = await reader.read();
 

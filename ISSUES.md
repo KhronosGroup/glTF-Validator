@@ -44,7 +44,7 @@
 |MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
 |MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
 |MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH|Number of JOINTS attribute semantics must match number of WEIGHTS.|Error|
-|MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Error|
+|MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Warning|
 |MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
 |MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL|TANGENT attribute without NORMAL found.|Warning|
 |MULTIPLE_EXTENSIONS|Multiple extensions are defined for this object: ('`%a`', '`%b`', '`%c`').|Warning|
@@ -102,6 +102,7 @@
 |UNEXPECTED_EXTENSION_OBJECT|Unexpected location for this extension.|Error|
 |UNRESOLVED_REFERENCE|Unresolved reference: `%1`.|Error|
 |UNSUPPORTED_EXTENSION|Unsupported extension encountered: '`%1`'.|Warning|
+|UNUSED_OBJECT|This object may be unused.|Hint|
 ## DataError
 | Code | Message | Severity |
 |------|---------|----------|

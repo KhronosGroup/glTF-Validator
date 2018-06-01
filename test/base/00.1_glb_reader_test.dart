@@ -17,11 +17,13 @@
 
 import 'dart:async';
 import 'dart:io';
-
 import 'dart:typed_data';
+
 import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
+
+import '../utils.dart';
 
 void main() {
   group('GlbReader', () {
@@ -177,7 +179,8 @@ void main() {
 
     test('Two valid JSON chunks', () async {
       final glbReader = new GlbReader(
-          new File('test/base/data/glb/two_valid_json_chunks.glb').openRead());
+          new File('test/base/data/glb/two_valid_json_chunks.glb').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..addIssue(GlbError.duplicateChunk, offset: 48, args: ['0x4e4f534a']);
@@ -218,7 +221,8 @@ void main() {
 
     test('Misplaced BIN chunk', () async {
       final glbReader = new GlbReader(
-          new File('test/base/data/glb/misplaced_bin_chunk.glb').openRead());
+          new File('test/base/data/glb/misplaced_bin_chunk.glb').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..addIssue(GlbError.unknownChunkType, offset: 76, args: ['0x004b4e55'])
@@ -259,7 +263,8 @@ void main() {
 
     test('JSON and two buffers', () async {
       final glbReader = new GlbReader(
-          new File('test/base/data/glb/json_and_two_buffers.glb').openRead());
+          new File('test/base/data/glb/json_and_two_buffers.glb').openRead(),
+          ignoreUnusedContext);
 
       final context = new Context()
         ..addIssue(GlbError.duplicateChunk, offset: 88, args: ['0x004e4942']);
@@ -347,7 +352,8 @@ void main() {
 
     test('Valid GLB with buffer', () async {
       final glbReader = new GlbReader(
-          new File('test/base/data/glb/valid_buffer.glb').openRead());
+          new File('test/base/data/glb/valid_buffer.glb').openRead(),
+          ignoreUnusedContext);
 
       final result = await glbReader.read();
 

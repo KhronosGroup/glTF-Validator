@@ -23,9 +23,11 @@ import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/cmd_line.dart';
 
+import '../utils.dart';
+
 Future<ValidationResult> getValidationResult(String filename) async {
   final file = new File(filename);
-  final context = new Context();
+  final context = ignoreUnusedContext;
   final reader = new GltfReader.filename(file.openRead(), filename, context);
 
   final readerResult = await reader.read();

@@ -26,7 +26,7 @@ import 'package:js/js_util.dart';
 
 import 'package:gltf/gltf.dart';
 
-typedef Promise<Object> ExternalResourceFunction(String filename);
+typedef ExternalResourceFunction = Promise<Object> Function(String filename);
 
 @JS()
 class Promise<T> {
@@ -100,7 +100,7 @@ Future<Map<String, Object>> validateBytes(
     final reader =
         await GltfReader.detect(new Stream.fromIterable([data]), context);
     readerResult = await reader.read();
-  } on GltfDataInvalid {
+  } on GltfInvalidFormatException {
     rethrow;
   }
 

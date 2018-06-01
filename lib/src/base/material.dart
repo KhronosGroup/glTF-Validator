@@ -221,12 +221,19 @@ class OcclusionTextureInfo extends TextureInfo {
       checkMembers(map, OCCLUSION_TEXTURE_INFO_MEMBERS, context);
     }
 
-    return new OcclusionTextureInfo._(
+    final extensions = getExtensions(map, OcclusionTextureInfo, context,
+        overriddenType: Material);
+
+    final occlusionTextureInfo = new OcclusionTextureInfo._(
         getIndex(map, INDEX, context),
-        getUint(map, TEX_COORD, context, def: 0, min: 0),
+        getUint(map, TEX_COORD, context, def: 0),
         getFloat(map, STRENGTH, context, min: 0.0, max: 1.0, def: 1.0),
-        getExtensions(map, OcclusionTextureInfo, context),
+        extensions,
         getExtras(map));
+
+    context.registerObjectsOwner(occlusionTextureInfo, extensions.values);
+
+    return occlusionTextureInfo;
   }
 }
 
@@ -245,12 +252,19 @@ class NormalTextureInfo extends TextureInfo {
       checkMembers(map, NORMAL_TEXTURE_INFO_MEMBERS, context);
     }
 
-    return new NormalTextureInfo._(
+    final extensions = getExtensions(map, NormalTextureInfo, context,
+        overriddenType: Material);
+
+    final normalTextureInfo = new NormalTextureInfo._(
         getIndex(map, INDEX, context),
-        getUint(map, TEX_COORD, context, def: 0, min: 0),
+        getUint(map, TEX_COORD, context, def: 0),
         getFloat(map, SCALE, context, def: 1.0),
-        getExtensions(map, NormalTextureInfo, context),
+        extensions,
         getExtras(map));
+
+    context.registerObjectsOwner(normalTextureInfo, extensions.values);
+
+    return normalTextureInfo;
   }
 }
 
@@ -280,20 +294,28 @@ class TextureInfo extends GltfProperty {
       checkMembers(map, TEXTURE_INFO_MEMBERS, context);
     }
 
-    return new TextureInfo._(
-        getIndex(map, INDEX, context),
-        getUint(map, TEX_COORD, context, def: 0, min: 0),
-        getExtensions(map, TextureInfo, context),
-        getExtras(map));
+    final extensions =
+        getExtensions(map, TextureInfo, context, overriddenType: Material);
+
+    final textureInfo = new TextureInfo._(getIndex(map, INDEX, context),
+        getUint(map, TEX_COORD, context, def: 0), extensions, getExtras(map));
+
+    context.registerObjectsOwner(textureInfo, extensions.values);
+
+    return textureInfo;
   }
 
   @override
   void link(Gltf gltf, Context context) {
     _texture = gltf.textures[_index];
 
-    if (context.validate && _index != -1 && _texture == null) {
-      context
-          .addIssue(LinkError.unresolvedReference, name: INDEX, args: [_index]);
+    if (context.validate && _index != -1) {
+      if (_texture == null) {
+        context.addIssue(LinkError.unresolvedReference,
+            name: INDEX, args: [_index]);
+      } else {
+        _texture.markAsUsed();
+      }
     }
 
     Object o = this;

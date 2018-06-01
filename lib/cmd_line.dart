@@ -42,17 +42,17 @@ class ValidatorOptions {
   static const String kConfig = 'config';
 
   final bool validateResources;
-  final bool plainText;
+  final bool printIssues;
   final bool printNonErrors;
 
   ValidatorOptions(
       {this.validateResources = false,
-      this.plainText = false,
+      this.printIssues = false,
       this.printNonErrors = false});
 
   factory ValidatorOptions.fromArgs(ArgResults args) => new ValidatorOptions(
       validateResources: args[kValidateResources] == true,
-      plainText: args[kPlainText] == true,
+      printIssues: args[kPlainText] == true,
       printNonErrors: args[kAllIssues] == true);
 }
 
@@ -225,7 +225,7 @@ Future<void> run(List<String> args) async {
           spawn();
           if (--activeTasks == 0) {
             watch.stop();
-            errPipe.write('Elapsed: ${watch.elapsedMilliseconds}ms\n');
+            errPipe.write('Elapsed total: ${watch.elapsedMilliseconds}ms\n');
             if (foundErrors) {
               exitCode = kErrorCode;
             }
@@ -249,6 +249,8 @@ Future<void> run(List<String> args) async {
 }
 
 Future<bool> _processFile(ValidationTask task) async {
+  final watch = new Stopwatch()..start();
+
   final file = new File(task.filename);
 
   final opts = task.validatorOptions;
@@ -261,6 +263,7 @@ Future<bool> _processFile(ValidationTask task) async {
     final ext = path.extension(task.filename).toLowerCase();
     errPipe.write('Error while loading ${file.path}...\n'
         'Unknown file extension `$ext`.\n');
+    watch.stop();
     return true;
   }
 
@@ -269,6 +272,7 @@ Future<bool> _processFile(ValidationTask task) async {
     readerResult = await reader.read();
   } on FileSystemException catch (e) {
     errPipe.write('Error while loading ${file.path}...\n$e\n');
+    watch.stop();
     return true;
   }
 
@@ -281,25 +285,28 @@ Future<bool> _processFile(ValidationTask task) async {
     await resourcesLoader.load();
   }
 
+  watch.stop();
+
   final reportPath = '${path.withoutExtension(task.filename)}_report.json';
 
   // ignore: unawaited_futures
   new File(reportPath).writeAsString(
       const JsonEncoder.withIndent('    ').convert(validationResult.toMap()));
 
-  final errors = validationResult.context.getErrors();
-  final warnings = validationResult.context.getWarnings();
-  final infos = validationResult.context.getInfos();
-  final hints = validationResult.context.getHints();
+  final errors = validationResult.context.errors.toList(growable: false);
+  final warnings = validationResult.context.warnings.toList(growable: false);
+  final infos = validationResult.context.infos.toList(growable: false);
+  final hints = validationResult.context.hints.toList(growable: false);
 
   final sb = new StringBuffer()
     ..write('Loaded ${file.path}\n'
         'Errors: ${errors.length}, '
         'Warnings: ${warnings.length}, '
         'Infos: ${infos.length}, '
-        'Hints: ${hints.length}\n\n');
+        'Hints: ${hints.length}\n'
+        'Time: ${watch.elapsedMilliseconds}ms\n\n');
 
-  if (opts.plainText) {
+  if (opts.printIssues) {
     void writeIssues(List<Issue> issues, String title) {
       if (issues.isEmpty) {
         return;

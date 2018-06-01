@@ -28,9 +28,10 @@ export 'package:gltf/src/context.dart';
 export 'package:gltf/src/errors.dart';
 export 'package:gltf/src/utils.dart';
 
-typedef T FromMapFunction<T>(Map<String, Object> map, Context context);
+typedef FromMapFunction<T> = T Function(
+    Map<String, Object> map, Context context);
 
-typedef void LinkFunction(Gltf gltf);
+typedef LinkFunction = void Function(Gltf gltf);
 
 abstract class Stringable {
   @override
@@ -38,10 +39,24 @@ abstract class Stringable {
       mapToString(map ?? <String, Object>{});
 }
 
-abstract class GltfProperty extends Stringable {
+// ignore: one_member_abstracts
+abstract class Linkable {
+  void link(Gltf gltf, Context context);
+}
+
+abstract class GltfProperty extends Stringable implements Linkable {
   final Map<String, Object> extensions;
   final Object extras;
+
+  bool _isUsed = false;
+
   GltfProperty(this.extensions, this.extras);
+
+  bool get isUsed => _isUsed;
+
+  void markAsUsed() {
+    _isUsed = true;
+  }
 
   @override
   String toString([Map<String, Object> map]) {
@@ -52,6 +67,7 @@ abstract class GltfProperty extends Stringable {
     return super.toString(map);
   }
 
+  @override
   void link(Gltf gltf, Context context) {}
 }
 

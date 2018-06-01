@@ -47,7 +47,7 @@ class CesiumRtc extends Stringable {
 }
 
 const Extension cesiumRtcExtension = const Extension(CESIUM_RTC,
-    const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap, null)});
+    const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap)});
 
 /*
   @override

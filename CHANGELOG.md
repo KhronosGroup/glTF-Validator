@@ -1,3 +1,13 @@
+## 2.0.0-dev.2.2
+
+* Added `UNUSED_OBJECT` hint (#80).
+
+* Added `KHR_texture_transform` support.
+
+* Changed `MESH_PRIMITIVE_NO_POSITION` default severity to Warning.
+
+* Added UTF-8 BOM detection for byte inputs. 
+
 ## 2.0.0-dev.2.1
 
 * Fixed a crash in the NPM build when `externalResourceFunction` isn't provided (#81).
@@ -72,7 +82,7 @@
 
 ## 2.0.0-dev.1.2
 
-* Updated JS API. See [README.md](tool/npm_template/README.md) for details.
+* Updated JS API. See [README.md](node/README.md) for details.
 
 * Added external resources support for drag-n-drop web frontend.
 

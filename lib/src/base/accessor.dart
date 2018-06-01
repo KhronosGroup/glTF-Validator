@@ -147,7 +147,7 @@ class Accessor extends GltfChildOfRootProperty {
             name: BYTE_OFFSET, args: [BUFFER_VIEW]);
       }
     } else {
-      byteOffset = getUint(map, BYTE_OFFSET, context, def: 0, min: 0);
+      byteOffset = getUint(map, BYTE_OFFSET, context, def: 0);
     }
 
     final componentType = getUint(map, COMPONENT_TYPE, context,
@@ -228,6 +228,7 @@ class Accessor extends GltfChildOfRootProperty {
         context.addIssue(LinkError.unresolvedReference,
             name: BUFFER_VIEW, args: [_bufferViewIndex]);
       } else {
+        _bufferView.markAsUsed();
         // Byte Stride
         if (_bufferView.byteStride != -1 &&
             _bufferView.byteStride < elementLength) {
@@ -329,6 +330,7 @@ class Accessor extends GltfChildOfRootProperty {
   }
 
   void setUsage(AccessorUsage value, String name, Context context) {
+    markAsUsed();
     if (_usage == null) {
       _usage = value;
     } else if (context.validate && _usage != value) {
@@ -680,7 +682,7 @@ class AccessorSparseIndices extends GltfProperty {
 
     return new AccessorSparseIndices._(
         getIndex(map, BUFFER_VIEW, context, req: true),
-        getUint(map, BYTE_OFFSET, context, def: 0, min: 0),
+        getUint(map, BYTE_OFFSET, context, def: 0),
         getUint(map, COMPONENT_TYPE, context,
             req: true, list: gl.ELEMENT_ARRAY_TYPES),
         getExtensions(map, AccessorSparseIndices, context),
@@ -716,7 +718,7 @@ class AccessorSparseValues extends GltfProperty {
 
     return new AccessorSparseValues._(
         getIndex(map, BUFFER_VIEW, context, req: true),
-        getUint(map, BYTE_OFFSET, context, def: 0, min: 0),
+        getUint(map, BYTE_OFFSET, context, def: 0),
         getExtensions(map, AccessorSparseValues, context),
         getExtras(map));
   }
