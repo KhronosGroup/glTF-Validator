@@ -189,7 +189,7 @@ class JpegInfoDecoder extends ImageInfoDecoder {
       final byte = data[index];
       switch (_state) {
         case START:
-          if (byte == MARKER_START) {
+          if (MARKER_START == byte) {
             _state = MARKER_START;
           } else {
             throw const InvalidDataFormatException('Invalid start of file.');

@@ -71,7 +71,7 @@ class Material extends GltfChildOfRootProperty {
     final emissiveTexture = getObjectFromInnerMap<TextureInfo>(
         map, EMISSIVE_TEXTURE, context, TextureInfo.fromMap);
     final emissiveFactor = getFloatList(map, EMISSIVE_FACTOR, context,
-        lengthsList: const [3], min: 0.0, max: 1.0, def: [0.0, 0.0, 0.0]);
+        lengthsList: const [3], min: 0.0, max: 1.0, def: const [0.0, 0.0, 0.0]);
     final alphaMode = getString(map, ALPHA_MODE, context,
         def: OPAQUE, list: MATERIAL_ALPHA_MODES);
     final alphaCutoff =
@@ -160,7 +160,10 @@ class PbrMetallicRoughness extends GltfProperty {
       checkMembers(map, PBR_METALLIC_ROUGHNESS_MEMBERS, context);
 
     final baseColorFactor = getFloatList(map, BASE_COLOR_FACTOR, context,
-        lengthsList: const [4], min: 0.0, max: 1.0, def: [1.0, 1.0, 1.0, 1.0]);
+        lengthsList: const [4],
+        min: 0.0,
+        max: 1.0,
+        def: const [1.0, 1.0, 1.0, 1.0]);
     final baseColorTexture = getObjectFromInnerMap<TextureInfo>(
         map, BASE_COLOR_TEXTURE, context, TextureInfo.fromMap);
     final metallicFactor =

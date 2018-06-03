@@ -53,10 +53,10 @@ class KhrTextureTransform extends GltfProperty {
 
     return new KhrTextureTransform._(
         getFloatList(map, OFFSET, context,
-            def: [0.0, 0.0], lengthsList: const [2]),
+            def: const [0.0, 0.0], lengthsList: const [2]),
         getFloat(map, ROTATION, context, def: 0.0),
         getFloatList(map, SCALE, context,
-            def: [1.0, 1.0], lengthsList: const [2]),
+            def: const [1.0, 1.0], lengthsList: const [2]),
         getUint(map, TEX_COORD, context),
         getExtensions(map, KhrTextureTransform, context),
         getExtras(map));
