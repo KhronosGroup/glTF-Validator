@@ -19,6 +19,7 @@ library gltf.data_access.image_decoder;
 
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:gltf/src/gl.dart' as gl;
 
 class ImageInfo {
@@ -130,7 +131,7 @@ class JpegInfoDecoder extends ImageInfoDecoder {
   int _segmentIndex = 0;
   int _availableDataLength = 0;
 
-  List<int> _sofBuffer;
+  Uint8List _sofBuffer;
 
   @override
   void add(List<int> data) {
@@ -211,11 +212,12 @@ class JpegInfoDecoder extends ImageInfoDecoder {
 
         case LENGTH_END:
           _segmentLength += byte;
-          if (_segmentLength < 2)
+          if (_segmentLength < 2) {
             throw const InvalidDataFormatException(
                 'Invalid JPEG marker segment length.');
+          }
           if (isSOF(_type)) {
-            _sofBuffer = new List<int>(_segmentLength - 2);
+            _sofBuffer = new Uint8List(_segmentLength - 2);
           }
           _state = SEGMENT;
           break;
@@ -228,7 +230,7 @@ class JpegInfoDecoder extends ImageInfoDecoder {
                 _segmentIndex += _availableDataLength, data, index);
 
             if (_segmentIndex == _segmentLength - 2) {
-              _parseSof(_sofBuffer);
+              _parseSof();
               return;
             }
           } else {
@@ -244,14 +246,14 @@ class JpegInfoDecoder extends ImageInfoDecoder {
     }
   }
 
-  void _parseSof(List<int> data) {
+  void _parseSof() {
     subscription.cancel();
-
+    final data = _sofBuffer;
     final bits = data[0];
     final height = data[1] << 8 | data[2];
     final width = data[3] << 8 | data[4];
 
-    int format;
+    var format = -1;
     if (data[5] == 3) {
       format = gl.RGB;
     } else if (data[5] == 1) {
@@ -303,7 +305,7 @@ class PngInfoDecoder extends ImageInfoDecoder {
 
   bool _hasTrns = false;
 
-  final List<int> _headerChunkData = new List<int>(13); // IHDR length
+  final Uint8List _headerChunkData = new Uint8List(13); // IHDR length
 
   @override
   void add(List<int> data) {
@@ -402,7 +404,7 @@ class PngInfoDecoder extends ImageInfoDecoder {
     final height = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
     final bits = data[8];
 
-    int format;
+    var format = -1;
     switch (data[9]) {
       case 0: // Greyscale
         format = _hasTrns ? gl.LUMINANCE_ALPHA : gl.LUMINANCE;
