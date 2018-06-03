@@ -26,7 +26,7 @@ import 'dart:mirrors';
 
 import 'package:gltf/src/errors.dart';
 import 'package:grinder/grinder.dart';
-import 'package:node_preamble/preamble.dart' as preamble;
+import 'package:node_preamble/preamble.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
@@ -128,17 +128,35 @@ void _npmBuild({bool release = true}) {
   delete(_nodeTargetDir);
   _runBuild(_nodeSource, release: release);
 
-  log('Adding preamble to the compiled file');
-  final destination = new File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
-  final compiledJs = destination.readAsStringSync();
+  // TODO remove this block after node_preamble.dart#5
+  {
+    /// Compiled output from dart2js needs some boilerplate (called
+    /// "node_preamble") to work on node. Unfortunately, it's incompatible with
+    /// browserify-based workflow (which needs different preamble to work).
+    ///
+    /// So we use "node detector" to check the runtime and execute proper code.
+    ///
+    /// When compilation is performed through package:build_node_compilers,
+    /// we need to replace the standard node_preamble with patched version.
 
-  // Node.js detector adopted from https://github.com/iliakan/detect-node
-  const kDetector =
-      "Object.prototype.toString.call(typeof process!=='undefined'?process:0)==='[object process]'";
-  final preambleJs =
-      'if($kDetector){${preamble.getPreamble(minified: true)}}else{var self=global.self;self.exports=exports}';
+    log('Adding preamble to the compiled file');
+    final destination = new File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
+    final compiledJS = destination.readAsStringSync();
 
-  destination.writeAsStringSync('$preambleJs\n$compiledJs');
+    // Node.js detector adopted from https://github.com/iliakan/detect-node
+    const kDetector =
+        "Object.prototype.toString.call(typeof process!=='undefined'?process:0)==='[object process]'";
+
+    final nodePreamble = getPreamble(minified: true);
+    const browserifyPreamble = 'var self=global.self;self.exports=exports';
+
+    final patchedPreamble =
+        'if($kDetector){$nodePreamble}else{$browserifyPreamble}\n';
+
+    final patchedJS = compiledJS.replaceFirst(nodePreamble, patchedPreamble);
+
+    destination.writeAsStringSync(patchedJS);
+  }
 
   const packageJson = 'package.json';
   final Map<String, Object> jsonMap = json
