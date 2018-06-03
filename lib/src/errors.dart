@@ -249,7 +249,8 @@ class SemanticError extends IssueType {
 
   static final SemanticError integerWrittenAsFloat = new SemanticError._(
       'INTEGER_WRITTEN_AS_FLOAT',
-      (args) => 'Integer value is written with fractional part: ${args[0]}.');
+      (args) => 'Integer value is written with fractional part: ${args[0]}.',
+      Severity.Warning);
 
   static final SemanticError accessorNormalizedInvalid = new SemanticError._(
       'ACCESSOR_NORMALIZED_INVALID',
