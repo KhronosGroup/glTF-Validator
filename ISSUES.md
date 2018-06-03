@@ -35,7 +35,7 @@
 |BUFFER_VIEW_TOO_BIG_BYTE_STRIDE|Buffer view's byteStride (`%1`) is smaller than byteLength (`%2`).|Error|
 |CAMERA_XMAG_YMAG_ZERO|xmag and ymag must not be zero.|Warning|
 |CAMERA_ZFAR_LEQUAL_ZNEAR|zfar must be greater than znear.|Error|
-|INTEGER_WRITTEN_AS_FLOAT|Integer value is written with fractional part: `%1`.|Error|
+|INTEGER_WRITTEN_AS_FLOAT|Integer value is written with fractional part: `%1`.|Warning|
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|

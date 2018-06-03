@@ -1,3 +1,11 @@
+## 2.0.0-dev.2.3
+
+* Fixed an NPM package regression caused by the new building process.
+
+* Changed `INTEGER_WRITTEN_AS_FLOAT` default severity to Warning.
+
+* Internal tweaks.
+
 ## 2.0.0-dev.2.2
 
 * Added `UNUSED_OBJECT` hint (#80).
