@@ -251,7 +251,7 @@ ResourcesLoader _getResourcesLoader(Context context,
   }
 
   return new ResourcesLoader(context, readerResult.gltf,
-      externalBytesFetch: (uri) {
+      externalBytesFetch: ([uri]) {
         if (uri == null) {
           // GLB-stored buffer
           return readerResult.buffer;

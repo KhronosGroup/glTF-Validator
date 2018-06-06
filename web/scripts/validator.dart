@@ -110,7 +110,7 @@ Future<bool> _doValidate(List<File> files) async {
 
   if (readerResult?.gltf != null) {
     final resourcesLoader = new ResourcesLoader(context, readerResult.gltf,
-        externalBytesFetch: (uri) {
+        externalBytesFetch: ([uri]) {
       if (uri != null) {
         final file = _getFileByUri(files, uri);
         if (file != null) {

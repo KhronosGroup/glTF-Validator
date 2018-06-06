@@ -332,7 +332,8 @@ Future<bool> _processFile(ValidationTask task) async {
 
 ResourcesLoader getFileResourceValidator(
         Context context, Uri absoluteUri, GltfReaderResult readerResult) =>
-    new ResourcesLoader(context, readerResult.gltf, externalBytesFetch: (uri) {
+    new ResourcesLoader(context, readerResult.gltf,
+        externalBytesFetch: ([uri]) {
       if (uri == null) {
         // GLB-stored buffer
         return readerResult.buffer;

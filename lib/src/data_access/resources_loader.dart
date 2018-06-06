@@ -26,7 +26,7 @@ import 'package:gltf/src/data_access/validate_accessors.dart';
 import 'package:meta/meta.dart';
 
 typedef SequentialFetchFunction = Stream<List<int>> Function(Uri uri);
-typedef BytesFetchFunction = FutureOr<List<int>> Function(Uri uri);
+typedef BytesFetchFunction = FutureOr<List<int>> Function([Uri uri]);
 
 enum _Storage { DataUri, BufferView, GLB, External }
 
@@ -109,10 +109,10 @@ class ResourcesLoader {
             // Data URI
             info.storage = _Storage.DataUri;
             return buffer.data;
-          } else if (context.isGlb) {
+          } else if (context.isGlb && !buffer.hasUri) {
             // GLB Buffer
             info.storage = _Storage.GLB;
-            final data = externalBytesFetch(null);
+            final data = externalBytesFetch();
             if (context.validate) {
               if (i != 0) {
                 context.addIssue(LinkError.bufferNonFirstGlb);
