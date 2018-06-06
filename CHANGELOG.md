@@ -4,6 +4,10 @@
 
 * Changed `INTEGER_WRITTEN_AS_FLOAT` default severity to Warning.
 
+* Changed `UNUSED_OBJECT` default severity to Info.
+
+* Fixed handling of GLB assets with buffers with broken URIs.
+
 * Internal tweaks.
 
 ## 2.0.0-dev.2.2
