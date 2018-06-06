@@ -102,7 +102,7 @@
 |UNEXPECTED_EXTENSION_OBJECT|Unexpected location for this extension.|Error|
 |UNRESOLVED_REFERENCE|Unresolved reference: `%1`.|Error|
 |UNSUPPORTED_EXTENSION|Unsupported extension encountered: '`%1`'.|Warning|
-|UNUSED_OBJECT|This object may be unused.|Hint|
+|UNUSED_OBJECT|This object may be unused.|Information|
 ## DataError
 | Code | Message | Severity |
 |------|---------|----------|

@@ -610,8 +610,8 @@ class LinkError extends IssueType {
       (args) => 'Unsupported extension encountered: ${_q(args[0])}.',
       Severity.Warning);
 
-  static final LinkError unusedObject = new LinkError._(
-      'UNUSED_OBJECT', (args) => 'This object may be unused.', Severity.Hint);
+  static final LinkError unusedObject = new LinkError._('UNUSED_OBJECT',
+      (args) => 'This object may be unused.', Severity.Information);
 
   LinkError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
