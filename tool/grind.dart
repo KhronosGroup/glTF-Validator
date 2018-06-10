@@ -151,7 +151,7 @@ void _npmBuild({bool release = true}) {
     const browserifyPreamble = 'var self=global.self;self.exports=exports';
 
     final patchedPreamble =
-        'if($kDetector){$nodePreamble}else{$browserifyPreamble}\n';
+        'if($kDetector){$nodePreamble}else{$browserifyPreamble}';
 
     final patchedJS = compiledJS.replaceFirst(nodePreamble, patchedPreamble);
 
