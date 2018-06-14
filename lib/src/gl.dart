@@ -77,7 +77,7 @@ const List<int> COMPONENT_TYPES = const <int>[
   FLOAT
 ];
 
-int getComponentTypeLength(int componentType) {
+int componentTypeLength(int componentType) {
   switch (componentType) {
     case BYTE:
     case UNSIGNED_BYTE:
@@ -90,7 +90,7 @@ int getComponentTypeLength(int componentType) {
     case FLOAT:
       return 4;
     default:
-      return -1;
+      throw new ArgumentError();
   }
 }
 
@@ -212,29 +212,41 @@ const Map<int, String> TYPE_NAMES = const <int, String>{
   SAMPLER_2D: 'SAMPLER_2D'
 };
 
-const Map<int, int> TYPE_MINS = const <int, int>{
-  BYTE: -128,
-  UNSIGNED_BYTE: 0,
-  SHORT: -32768,
-  UNSIGNED_SHORT: 0,
-  INT: -2147483648,
-  UNSIGNED_INT: 0,
-  INT_VEC2: -2147483648,
-  INT_VEC3: -2147483648,
-  INT_VEC4: -2147483648
-};
+int typeMin(int type) {
+  switch (type) {
+    case UNSIGNED_BYTE:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT:
+      return 0;
+    case BYTE:
+      return -128;
+    case SHORT:
+      return -32768;
+    case INT:
+      return -2147483648;
+    default:
+      throw new ArgumentError();
+  }
+}
 
-const Map<int, int> TYPE_MAXS = const <int, int>{
-  BYTE: 127,
-  UNSIGNED_BYTE: 255,
-  SHORT: 32767,
-  UNSIGNED_SHORT: 65535,
-  INT: 2147483647,
-  UNSIGNED_INT: 4294967295,
-  INT_VEC2: 2147483647,
-  INT_VEC3: 2147483647,
-  INT_VEC4: 2147483647
-};
+int typeMax(int type) {
+  switch (type) {
+    case BYTE:
+      return 127;
+    case UNSIGNED_BYTE:
+      return 255;
+    case SHORT:
+      return 32767;
+    case UNSIGNED_SHORT:
+      return 65535;
+    case INT:
+      return 2147483647;
+    case UNSIGNED_INT:
+      return 4294967295;
+    default:
+      throw new ArgumentError();
+  }
+}
 
 const List<int> BOOL_TYPES = const <int>[BOOL, BOOL_VEC2, BOOL_VEC3, BOOL_VEC4];
 

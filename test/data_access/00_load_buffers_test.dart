@@ -132,5 +132,20 @@ void main() {
 
       expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
+
+    test('GLB with broken URI', () async {
+      final validationResult =
+          await getValidationResult('test/data_access/buffer/broken_uri.glb');
+
+      final context = new Context()
+        ..path.add('buffers')
+        ..path.add('0')
+        ..addIssue(SchemaError.invalidUri,
+            name: 'uri',
+            args: ['data:', "FormatException: Expecting '='\ndata:"]);
+
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
+      expect(validationResult.context.resources[0]['storage'], isNull);
+    });
   });
 }

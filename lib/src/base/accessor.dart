@@ -162,16 +162,15 @@ class Accessor extends GltfChildOfRootProperty {
     List<num> max;
     List<num> min;
     if (type != null && componentType != -1) {
+      final length = ACCESSOR_TYPES_LENGTHS[type] ?? -1;
       if (componentType == gl.FLOAT) {
         min = getFloatList(map, MIN, context,
-            lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], singlePrecision: true);
+            lengthsList: [length], singlePrecision: true);
         max = getFloatList(map, MAX, context,
-            lengthsList: [ACCESSOR_TYPES_LENGTHS[type]], singlePrecision: true);
+            lengthsList: [length], singlePrecision: true);
       } else {
-        min = getGlIntList(
-            map, MIN, context, componentType, ACCESSOR_TYPES_LENGTHS[type]);
-        max = getGlIntList(
-            map, MAX, context, componentType, ACCESSOR_TYPES_LENGTHS[type]);
+        min = getGlIntList(map, MIN, context, componentType, length);
+        max = getGlIntList(map, MAX, context, componentType, length);
       }
     }
 
@@ -211,7 +210,6 @@ class Accessor extends GltfChildOfRootProperty {
   @override
   void link(Gltf gltf, Context context) {
     _bufferView = gltf.bufferViews[_bufferViewIndex];
-    _componentLength = gl.getComponentTypeLength(componentType);
 
     if (_bufferView != null && _bufferView.byteStride != -1) {
       _byteStride = _bufferView.byteStride;
@@ -221,6 +219,8 @@ class Accessor extends GltfChildOfRootProperty {
     if (componentType == -1 || count == -1 || type == null) {
       return;
     }
+
+    _componentLength = gl.componentTypeLength(componentType);
 
     // Check length and alignment when bufferView is present
     if (context.validate && _bufferViewIndex != -1) {
@@ -280,8 +280,8 @@ class Accessor extends GltfChildOfRootProperty {
                 if (indices.componentType != -1) {
                   _checkByteOffsetAndLength(
                       indices.byteOffset,
-                      gl.getComponentTypeLength(indices.componentType),
-                      gl.getComponentTypeLength(indices.componentType) *
+                      gl.componentTypeLength(indices.componentType),
+                      gl.componentTypeLength(indices.componentType) *
                           sparse.count,
                       indices._bufferView,
                       indices._bufferViewIndex,
@@ -453,8 +453,8 @@ class Accessor extends GltfChildOfRootProperty {
 
       if (!_checkByteOffsetAndLength(
               sparse.indices.byteOffset,
-              gl.getComponentTypeLength(sparse.indices.componentType),
-              gl.getComponentTypeLength(sparse.indices.componentType) *
+              gl.componentTypeLength(sparse.indices.componentType),
+              gl.componentTypeLength(sparse.indices.componentType) *
                   sparse.count,
               sparse.indices._bufferView) ||
           !_checkByteOffsetAndLength(

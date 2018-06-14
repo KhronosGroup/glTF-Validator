@@ -5,6 +5,7 @@ targets:
       - "bin/gltf_validator.dart"
       - "lib/**"
       - "node/gltf_validator.dart"
+      - "tool/**"
       - "web/**"
     builders:
       "|version_builder":
@@ -23,6 +24,7 @@ targets:
         release_options:
           dart2js_args:
             - --minify
+            - --categories=Server
             - --trust-primitives
             - --trust-type-annotations
         dev_options:

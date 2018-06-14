@@ -107,18 +107,16 @@ int getUint(Map<String, Object> map, String name, Context context,
 
 double getFloat(Map<String, Object> map, String name, Context context,
     {bool req = false,
-    double min = double.nan,
-    double exclMin = double.nan,
-    double max = double.nan,
+    double min = double.negativeInfinity,
+    double exclMin = double.negativeInfinity,
+    double max = double.infinity,
     double def = double.nan}) {
   assert(min != null && max != null);
-  assert(min.isNaN || max.isNaN || max >= min);
-  assert(exclMin.isNaN || max.isNaN || max > exclMin);
+  assert(max >= min);
+  assert(max > exclMin);
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
-    if ((!min.isNaN && value < min) ||
-        (!exclMin.isNaN && value <= exclMin) ||
-        (!max.isNaN && value > max)) {
+    if (value < min || value <= exclMin || value > max) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
       return double.nan;
     }
@@ -229,16 +227,14 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
       final uniqueItems = new Set<int>();
       for (var i = 0; i < value.length; i++) {
         final v = value[i];
-        if (v is int) {
-          if (v < 0) {
-            context.addIssue(SchemaError.invalidIndex, index: i);
-          } else if (!uniqueItems.add(v)) {
+        if (v is int && v >= 0) {
+          if (!uniqueItems.add(v)) {
             context.addIssue(SchemaError.arrayDuplicateElements, index: i);
           }
         } else {
+          // Sanitize value
           value[i] = -1;
-          context.addIssue(SchemaError.typeMismatch,
-              index: i, args: [v, _kInteger]);
+          context.addIssue(SchemaError.invalidIndex, index: i);
         }
       }
       context.path.removeLast();
@@ -266,21 +262,13 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
     context.path.add(name);
     value.forEach((k, v) {
       checkKey(k);
-      if (v is int) {
-        if (v < 0) {
-          context.addIssue(SchemaError.invalidIndex, name: k);
-          // Sanitize value
-          value[k] = -1;
-        }
-      } else {
+      if (!(v is int && v >= 0)) {
         // Sanitize value
         value[k] = -1;
-        context
-            .addIssue(SchemaError.typeMismatch, name: k, args: [v, _kInteger]);
+        context.addIssue(SchemaError.invalidIndex, name: k);
       }
     });
     context.path.removeLast();
-
     return value.cast();
   } else if (value == null) {
     context.addIssue(SchemaError.undefinedProperty, args: [name]);
@@ -313,17 +301,10 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
               context.path.add(i.toString());
               innerMap.forEach((k, v) {
                 checkKey(k);
-                if (v is int) {
-                  if (v < 0) {
-                    context.addIssue(SchemaError.invalidIndex, name: k);
-                    // Sanitize value
-                    innerMap[k] = -1;
-                  }
-                } else {
-                  context.addIssue(SchemaError.typeMismatch,
-                      name: k, args: [v, _kInteger]);
+                if (!(v is int && v >= 0)) {
                   // Sanitize value
                   innerMap[k] = -1;
+                  context.addIssue(SchemaError.invalidIndex, name: k);
                 }
               });
               context.path.removeLast();
@@ -354,21 +335,22 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
 List<double> getFloatList(Map<String, Object> map, String name, Context context,
     {bool req = false,
     bool singlePrecision = false,
-    double min = double.nan,
-    double max = double.nan,
+    double min = double.negativeInfinity,
+    double max = double.infinity,
     List<double> def,
     List<int> lengthsList}) {
   assert(min != null && max != null);
-  assert(min.isNaN || max.isNaN || max >= min);
+  assert(max >= min);
   final value = _getGuarded(map, name, _kArray, context);
   if (value is List<Object>) {
-    if (lengthsList != null) {
-      if (!checkEnum<int>(name, value.length, lengthsList, context,
-          lengthList: true)) {
-        return null;
-      }
-    } else if (value.isEmpty) {
+    if (value.isEmpty) {
       context.addIssue(SchemaError.emptyEntity, name: name);
+      return null;
+    }
+
+    if (lengthsList != null &&
+        !checkEnum<int>(name, value.length, lengthsList, context,
+            lengthList: true)) {
       return null;
     }
 
@@ -377,8 +359,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     for (var i = 0; i < value.length; ++i) {
       final v = value[i];
       if (v is num) {
-        if (context.validate &&
-            ((!min.isNaN && v < min) || (!max.isNaN && v > max))) {
+        if (context.validate && (v < min || v > max)) {
           context.addIssue(SchemaError.valueNotInRange, name: name, args: [v]);
           wrongMemberFound = true;
         }
@@ -399,7 +380,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     return result;
   } else if (value == null) {
     if (!req) {
-      return def;
+      return def?.toList(growable: false);
     }
     context.addIssue(SchemaError.undefinedProperty, args: [name]);
   } else {
@@ -409,33 +390,36 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
   return null;
 }
 
-List<num> getGlIntList(Map<String, Object> map, String name, Context context,
+List<int> getGlIntList(Map<String, Object> map, String name, Context context,
     int type, int length) {
+  assert(type > 0 && length > 0);
   final value = _getGuarded(map, name, _kArray, context);
-  if (value is List) {
+  if (value is List<Object>) {
     if (value.length != length) {
       context.addIssue(SchemaError.arrayLengthNotInList, name: name, args: [
         value,
         [length]
       ]);
+      return null;
     }
+    final min = gl.typeMin(type);
+    final max = gl.typeMax(type);
+    final result = createTypedIntList(type, length);
     var wrongMemberFound = false;
-    for (final v in value) {
-      if (v is num && v.round() == v) {
+    for (var i = 0; i < value.length; ++i) {
+      final v = value[i];
+      if (v is num && v.toInt() == v) {
         // This check works only on DartVM
         if (v is! int) {
           context.addIssue(SemanticError.integerWrittenAsFloat,
               name: name, args: [v]);
         }
-        if (type != -1) {
-          final min = gl.TYPE_MINS[type];
-          final max = gl.TYPE_MAXS[type];
-          if ((v < min) || (v > max)) {
-            context.addIssue(SemanticError.invalidGlValue,
-                name: name, args: [v, gl.TYPE_NAMES[type]]);
-            wrongMemberFound = true;
-          }
+        if (context.validate && ((v < min) || (v > max))) {
+          context.addIssue(SemanticError.invalidGlValue,
+              name: name, args: [v, gl.TYPE_NAMES[type]]);
+          wrongMemberFound = true;
         }
+        result[i] = v.toInt();
       } else {
         context.addIssue(SchemaError.arrayTypeMismatch,
             name: name, args: [v, _kInteger]);
@@ -445,7 +429,7 @@ List<num> getGlIntList(Map<String, Object> map, String name, Context context,
     if (wrongMemberFound) {
       return null;
     }
-    return value.cast();
+    return result;
   } else if (value != null) {
     context
         .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kArray]);
@@ -500,7 +484,7 @@ List<Map<String, Object>> getMapList(
     } else {
       var invalidElementFound = false;
       for (final v in value) {
-        if (v is! Map) {
+        if (v is! Map<String, Object>) {
           context.addIssue(SchemaError.arrayTypeMismatch,
               name: name, args: [v, _kObject]);
           invalidElementFound = true;
@@ -734,3 +718,23 @@ bool isNonRelativeUri(Uri uri) =>
     uri.hasFragment;
 
 int padLength(int length) => length + ((4 - (length & 3)) & 3);
+
+List<int> createTypedIntList(int type, int length) {
+  assert(length > 0);
+  switch (type) {
+    case gl.BYTE:
+      return new Int8List(length);
+    case gl.UNSIGNED_BYTE:
+      return new Uint8List(length);
+    case gl.SHORT:
+      return new Int16List(length);
+    case gl.UNSIGNED_SHORT:
+      return new Uint16List(length);
+    case gl.INT:
+      return new Int32List(length);
+    case gl.UNSIGNED_INT:
+      return new Uint32List(length);
+    default:
+      throw new ArgumentError();
+  }
+}

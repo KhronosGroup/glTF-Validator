@@ -161,7 +161,7 @@ class GltfJsonReader implements GltfReader {
       /// If it's incorrect (incomplete), underlying decoder issues a
       /// [FormatException].
       /// So we can check only the first byte of the first data chunk.
-      if (data.isNotEmpty && data[0] == 0xEF) {
+      if (data.isNotEmpty && 0xEF == data[0]) {
         context.addIssue(SchemaError.invalidJson,
             args: ['BOM found at the beginning of UTF-8 stream.']);
       }

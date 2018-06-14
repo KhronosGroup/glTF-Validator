@@ -29,7 +29,7 @@ html, body {
     text-align: center;
 
     width: 400px;
-    padding: 50px 0;
+    padding: 25px 0;
     margin: 50px auto;
 
     background: #eee;
@@ -62,18 +62,24 @@ html, body {
     text-align: left;
 }
 
-#cnv {
-    border: 1px black solid;
+#dropZone.drop {
+    background: #d9d498;
+    border-color: #a6a600;
+}
+
+#dropZone.valid {
+    background: #98d998;
+    border-color: #00a600;
+}
+
+#dropZone.invalid {
+    background: #d99898;
+    border-color: #a60000;
 }
 
 #dropZone.hover {
     background: #ddd;
     border-color: #aaa;
-}
-
-#dropZone.drop {
-    background: #afa;
-    border-color: #0f0;
 }
 
 #inputLink {

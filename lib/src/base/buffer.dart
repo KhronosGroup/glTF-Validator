@@ -24,9 +24,14 @@ class Buffer extends GltfChildOfRootProperty {
   final Uri uri;
   final int byteLength;
 
+  /// Users of this class need a way of distinguishing between
+  /// a buffer with broken URI and a buffer without URI.
+  /// The [Buffer.uri] field will be `null` in both cases.
+  final bool hasUri;
+
   Uint8List data;
 
-  Buffer._(this.uri, this.data, this.byteLength, String name,
+  Buffer._(this.uri, this.data, this.byteLength, this.hasUri, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
 
@@ -40,36 +45,39 @@ class Buffer extends GltfChildOfRootProperty {
 
     var byteLength = getUint(map, BYTE_LENGTH, context, min: 1, req: true);
 
-    final uriString = getString(map, URI, context);
-
     Uri uri;
     Uint8List data;
+    final hasUri = map.containsKey(URI);
 
-    if (uriString != null) {
-      UriData uriData;
-      try {
-        uriData = UriData.parse(uriString);
-      } on FormatException catch (_) {
-        uri = getUri(uriString, context);
-      }
+    if (hasUri) {
+      final uriString = getString(map, URI, context);
 
-      if (uriData != null) {
-        if (uriData.mimeType == APPLICATION_OCTET_STREAM ||
-            uriData.mimeType == APPLICATION_GLTF_BUFFER) {
-          data = uriData.contentAsBytes();
-        } else {
-          context.addIssue(SemanticError.bufferDataUriMimeTypeInvalid,
-              name: URI, args: [uriData.mimeType]);
+      if (uriString != null) {
+        UriData uriData;
+        try {
+          uriData = UriData.parse(uriString);
+        } on FormatException catch (_) {
+          uri = getUri(uriString, context);
         }
-      }
-      if (data != null && data.length != byteLength) {
-        context.addIssue(DataError.bufferEmbeddedBytelengthMismatch,
-            args: [data.length, byteLength], name: BYTE_LENGTH);
-        byteLength = data.length;
+
+        if (uriData != null) {
+          if (uriData.mimeType == APPLICATION_OCTET_STREAM ||
+              uriData.mimeType == APPLICATION_GLTF_BUFFER) {
+            data = uriData.contentAsBytes();
+          } else {
+            context.addIssue(SemanticError.bufferDataUriMimeTypeInvalid,
+                name: URI, args: [uriData.mimeType]);
+          }
+        }
+        if (data != null && data.length != byteLength) {
+          context.addIssue(DataError.bufferEmbeddedBytelengthMismatch,
+              args: [data.length, byteLength], name: BYTE_LENGTH);
+          byteLength = data.length;
+        }
       }
     }
 
-    return new Buffer._(uri, data, byteLength, getName(map, context),
+    return new Buffer._(uri, data, byteLength, hasUri, getName(map, context),
         getExtensions(map, Buffer, context), getExtras(map));
   }
 }

@@ -34,7 +34,7 @@ NPM package: https://www.npmjs.com/package/gltf-validator
 
 ## Usage
 
-You can use hosted [web front-end tool](http://github.khronos.org/glTF-Validator). It works completely in the browser without any server-side processing.
+You can use hosted [web front-end tool](https://github.khronos.org/glTF-Validator). It works completely in the browser without any server-side processing.
 
 ### Command-line tool
 

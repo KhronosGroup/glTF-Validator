@@ -34,23 +34,31 @@ final _output = querySelector('#output');
 final InputElement _input = querySelector('#input');
 final _inputLink = querySelector('#inputLink');
 final _truncatedWarning = querySelector('#truncatedWarning');
+final _validityLabel = querySelector('#validityLabel');
 
 final _sw = new Stopwatch();
 
 void main() {
-  _dropZone.onDragOver.listen((e) {
+  // Needed to prevent flickering while dragging over text.
+  var cnt = 0;
+
+  _dropZone.onDragEnter.listen((e) {
     _dropZone.classes.add('hover');
+    ++cnt;
+  });
+
+  _dropZone.onDragOver.listen((e) {
     e.preventDefault();
   });
 
   _dropZone.onDragLeave.listen((e) {
-    _dropZone.classes.remove('hover');
-    e.preventDefault();
+    if (--cnt == 0) {
+      _dropZone.classes.remove('hover');
+    }
   });
 
   _dropZone.onDrop.listen((e) {
     e.preventDefault();
-    _dropZone.classes.remove('hover');
     _validate(e.dataTransfer.files);
   });
 
@@ -71,16 +79,30 @@ void main() {
 void _validate(List<File> files) {
   _output.text = '';
   _truncatedWarning.style.display = 'none';
-  _dropZone.classes.add('drop');
-  _doValidate(files).then((isTruncated) {
+  _validityLabel.text = 'Validating...';
+  _dropZone.classes
+    ..clear()
+    ..add('drop');
+
+  _doValidate(files).then((result) {
     _dropZone.classes.remove('drop');
-    if (isTruncated) {
-      _truncatedWarning.style.display = 'block';
+    if (result != null) {
+      if (result.context.isTruncated) {
+        _truncatedWarning.style.display = 'block';
+      }
+
+      if (result.context.errors.isEmpty) {
+        _dropZone.classes.add('valid');
+        _validityLabel.text = 'The asset is valid.';
+      } else {
+        _dropZone.classes.add('invalid');
+        _validityLabel.text = 'The asset contains errors.';
+      }
     }
   });
 }
 
-Future<bool> _doValidate(List<File> files) async {
+Future<ValidationResult> _doValidate(List<File> files) async {
   _sw
     ..reset()
     ..start();
@@ -103,14 +125,14 @@ Future<bool> _doValidate(List<File> files) async {
   }
 
   if (reader == null) {
-    return false;
+    return null;
   }
 
   final readerResult = await reader.read();
 
   if (readerResult?.gltf != null) {
     final resourcesLoader = new ResourcesLoader(context, readerResult.gltf,
-        externalBytesFetch: (uri) {
+        externalBytesFetch: ([uri]) {
       if (uri != null) {
         final file = _getFileByUri(files, uri);
         if (file != null) {
@@ -144,7 +166,7 @@ Future<bool> _doValidate(List<File> files) async {
   _sw.stop();
   print('Writing report: ${_sw.elapsedMilliseconds}ms.');
 
-  return context.isTruncated;
+  return validationResult;
 }
 
 File _getFileByUri(List<File> files, Uri uri) {
