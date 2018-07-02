@@ -27,8 +27,7 @@ class VersionBuilder extends Builder {
   Future build(BuildStep buildStep) async {
     final name = buildStep.inputId.package;
 
-    final pubspec =
-        await buildStep.readAsString(AssetId(name, 'pubspec.yaml'));
+    final pubspec = await buildStep.readAsString(AssetId(name, 'pubspec.yaml'));
 
     final String version = loadYaml(pubspec)['version'];
 

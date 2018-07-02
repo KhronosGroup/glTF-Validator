@@ -137,7 +137,7 @@ void _npmBuild({bool release = true}) {
       .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 
   copy(File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
-  copy(File(p.join(_nodeSource, 'module.js')), _nodeTargetDir);
+  copy(File(p.join(_nodeSource, 'module.mjs')), _nodeTargetDir);
 }
 
 @Depends(issues, npmRelease)

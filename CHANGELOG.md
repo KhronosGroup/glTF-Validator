@@ -1,3 +1,11 @@
+## 2.0.0-dev.2.4
+
+* Improved errors on invalid JS API usage.
+
+* Fixed global namespace issues for npm build.
+
+* Added ES6 module definition.
+
 ## 2.0.0-dev.2.3
 
 * Fixed an NPM package regression caused by the new building process.
