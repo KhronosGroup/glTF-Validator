@@ -43,15 +43,14 @@ class Mesh extends GltfChildOfRootProperty {
 
     SafeList<MeshPrimitive> primitives;
     if (primitivesMaps != null) {
-      primitives =
-          new SafeList<MeshPrimitive>(primitivesMaps.length, PRIMITIVES);
+      primitives = SafeList<MeshPrimitive>(primitivesMaps.length, PRIMITIVES);
 
       context.path.add(PRIMITIVES);
       int targetsCount;
       var jointsCount = -1;
       for (var i = 0; i < primitivesMaps.length; i++) {
         context.path.add(i.toString());
-        final primitive = new MeshPrimitive.fromMap(primitivesMaps[i], context);
+        final primitive = MeshPrimitive.fromMap(primitivesMaps[i], context);
         if (context.validate) {
           if (targetsCount == null) {
             targetsCount = primitive._targetsIndices?.length;
@@ -81,7 +80,7 @@ class Mesh extends GltfChildOfRootProperty {
       }
     }
 
-    return new Mesh._(primitives, weights, getName(map, context),
+    return Mesh._(primitives, weights, getName(map, context),
         getExtensions(map, Mesh, context), getExtras(map));
   }
 
@@ -248,7 +247,7 @@ class MeshPrimitive extends GltfProperty {
     final targets =
         getIndicesMapsList(map, TARGETS, context, checkAttributeSemanticName);
 
-    return new MeshPrimitive._(
+    return MeshPrimitive._(
         attributes,
         getIndex(map, INDICES, context, req: false),
         getIndex(map, MATERIAL, context, req: false),
@@ -319,7 +318,7 @@ class MeshPrimitive extends GltfProperty {
                 name: POSITION);
           }
 
-          final format = new AccessorFormat.fromAccessor(accessor);
+          final format = AccessorFormat.fromAccessor(accessor);
           final validFormats = ATTRIBUTES_ACCESSORS[semantic.split('_')[0]];
           if (validFormats != null && !validFormats.contains(format)) {
             context.addIssue(
@@ -382,7 +381,7 @@ class MeshPrimitive extends GltfProperty {
                 name: INDICES);
           }
 
-          final format = new AccessorFormat.fromAccessor(indices);
+          final format = AccessorFormat.fromAccessor(indices);
           if (!MESH_PRIMITIVE_INDICES_FORMATS.contains(format)) {
             context.addIssue(
                 LinkError.meshPrimitiveIndicesAccessorInvalidFormat,
@@ -421,7 +420,7 @@ class MeshPrimitive extends GltfProperty {
         _material.markAsUsed();
 
         final unusedTexCoords =
-            new List<int>.generate(texcoordCount, (i) => i, growable: false);
+            List<int>.generate(texcoordCount, (i) => i, growable: false);
 
         _material.texCoordIndices.forEach((pointer, texCoord) {
           if (texCoord != -1) {
@@ -445,7 +444,7 @@ class MeshPrimitive extends GltfProperty {
 
     if (_targetsIndices != null) {
       context.path.add(TARGETS);
-      _targets = new List<Map<String, Accessor>>(_targetsIndices.length);
+      _targets = List<Map<String, Accessor>>(_targetsIndices.length);
 
       for (var i = 0; i < _targetsIndices.length; i++) {
         final targetIndices = _targetsIndices[i];
@@ -488,7 +487,7 @@ class MeshPrimitive extends GltfProperty {
                     name: POSITION);
               }
 
-              final format = new AccessorFormat.fromAccessor(accessor);
+              final format = AccessorFormat.fromAccessor(accessor);
               final validFormats = MORPH_ATTRIBUTES_ACCESSORS[semantic];
 
               if (validFormats != null && !validFormats.contains(format)) {

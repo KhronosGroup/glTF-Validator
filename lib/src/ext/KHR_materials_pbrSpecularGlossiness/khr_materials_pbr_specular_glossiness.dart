@@ -30,7 +30,7 @@ const String SPECULAR_FACTOR = 'specularFactor';
 const String GLOSSINESS_FACTOR = 'glossinessFactor';
 const String SPECULAR_GLOSSINESS_TEXTURE = 'specularGlossinessTexture';
 
-const List<String> KHR_MATERIALS_PBRSPECULARGLOSSINESS_MEMBERS = const <String>[
+const List<String> KHR_MATERIALS_PBRSPECULARGLOSSINESS_MEMBERS = <String>[
   DIFFUSE_FACTOR,
   DIFFUSE_TEXTURE,
   SPECULAR_FACTOR,
@@ -87,7 +87,7 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
     final extensions =
         getExtensions(map, KhrMaterialsPbrSpecularGlossiness, context);
 
-    final pbrSg = new KhrMaterialsPbrSpecularGlossiness._(
+    final pbrSg = KhrMaterialsPbrSpecularGlossiness._(
         diffuseFactor,
         diffuseTexture,
         specularFactor,
@@ -118,7 +118,7 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
   }
 }
 
-const Extension khrMaterialsPbrSpecularGlossinessExtension = const Extension(
-    KHR_MATERIALS_PBRSPECULARGLOSSINESS, const <Type, ExtFuncs>{
-  Material: const ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap)
+const Extension khrMaterialsPbrSpecularGlossinessExtension = Extension(
+    KHR_MATERIALS_PBRSPECULARGLOSSINESS, <Type, ExtFuncs>{
+  Material: ExtFuncs(KhrMaterialsPbrSpecularGlossiness.fromMap)
 });

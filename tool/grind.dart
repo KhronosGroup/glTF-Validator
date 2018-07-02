@@ -26,18 +26,17 @@ import 'dart:mirrors';
 
 import 'package:gltf/src/errors.dart';
 import 'package:grinder/grinder.dart';
-import 'package:node_preamble/preamble.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
 final String _version =
-    loadYaml(new File('pubspec.yaml').readAsStringSync())['version'];
+    loadYaml(File('pubspec.yaml').readAsStringSync())['version'];
 
 Future<void> main(List<String> args) => grind(args);
 
 @Task('Generate ISSUES.md')
 void issues() {
-  final sb = new StringBuffer('# glTF 2.0 Validation Issues\n');
+  final sb = StringBuffer('# glTF 2.0 Validation Issues\n');
 
   String severityToMdString(Severity severity) =>
       const ['Error', 'Warning', 'Information', 'Hint'][severity.index];
@@ -85,7 +84,7 @@ void issues() {
   processErrorClass(DataError);
   processErrorClass(GlbError);
 
-  new File('ISSUES.md').writeAsStringSync(sb.toString(), flush: true);
+  File('ISSUES.md').writeAsStringSync(sb.toString(), flush: true);
   log('Total number of issues: $total');
 }
 
@@ -98,7 +97,7 @@ void snapshot() {
   // Use `release` for setting snapshot kind until
   // https://github.com/dart-lang/build/issues/1127
   _runBuild(_binSource, release: false);
-  delete(new File(p.join(_getTarget(_binSource), 'gltf_validator.dart')));
+  delete(File(p.join(_getTarget(_binSource), 'gltf_validator.dart')));
 }
 
 @Task('Build Dart application snapshot.')
@@ -122,64 +121,35 @@ void npmRelease() {
 }
 
 final _nodeTarget = _getTarget(_nodeSource);
-final _nodeTargetDir = new Directory(_nodeTarget);
+final _nodeTargetDir = Directory(_nodeTarget);
 
 void _npmBuild({bool release = true}) {
   delete(_nodeTargetDir);
   _runBuild(_nodeSource, release: release);
 
-  // TODO remove this block after node_preamble.dart#5
-  {
-    /// Compiled output from dart2js needs some boilerplate (called
-    /// "node_preamble") to work on node. Unfortunately, it's incompatible with
-    /// browserify-based workflow (which needs different preamble to work).
-    ///
-    /// So we use "node detector" to check the runtime and execute proper code.
-    ///
-    /// When compilation is performed through package:build_node_compilers,
-    /// we need to replace the standard node_preamble with patched version.
-
-    log('Adding preamble to the compiled file');
-    final destination = new File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
-    final compiledJS = destination.readAsStringSync();
-
-    // Node.js detector adopted from https://github.com/iliakan/detect-node
-    const kDetector =
-        "Object.prototype.toString.call(typeof process!=='undefined'?process:0)==='[object process]'";
-
-    final nodePreamble = getPreamble(minified: true);
-    const browserifyPreamble = 'var self=global.self;self.exports=exports';
-
-    final patchedPreamble =
-        'if($kDetector){$nodePreamble}else{$browserifyPreamble}';
-
-    final patchedJS = compiledJS.replaceFirst(nodePreamble, patchedPreamble);
-
-    destination.writeAsStringSync(patchedJS);
-  }
-
   const packageJson = 'package.json';
-  final Map<String, Object> jsonMap = json
-      .decode(new File(p.join(_nodeSource, packageJson)).readAsStringSync());
+  final Map<String, Object> jsonMap =
+      json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync());
   jsonMap['version'] = _version;
 
   log('copying updated $packageJson to $_nodeTarget');
-  new File(p.join(_nodeTarget, packageJson))
+  File(p.join(_nodeTarget, packageJson))
       .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 
-  copy(new File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
+  copy(File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
+  copy(File(p.join(_nodeSource, 'module.js')), _nodeTargetDir);
 }
 
 @Depends(issues, npmRelease)
 @Task('Build an npm package.')
 void npm() {
-  copy(new File('ISSUES.md'), _nodeTargetDir);
-  copy(new File('LICENSE'), _nodeTargetDir);
-  copy(new File('3RD_PARTY'), _nodeTargetDir);
-  copy(new File(p.join('docs', 'validation.schema.json')), _nodeTargetDir);
+  copy(File('ISSUES.md'), _nodeTargetDir);
+  copy(File('LICENSE'), _nodeTargetDir);
+  copy(File('3RD_PARTY'), _nodeTargetDir);
+  copy(File(p.join('docs', 'validation.schema.json')), _nodeTargetDir);
 
   log('Building npm README...');
-  copy(new File(p.join(_nodeSource, 'README.md')), _nodeTargetDir);
+  copy(File(p.join(_nodeSource, 'README.md')), _nodeTargetDir);
   run(npmExecutable, arguments: ['install'], workingDirectory: _nodeSource);
   run(npmExecutable, arguments: ['run', 'docs'], workingDirectory: _nodeSource);
 }
@@ -194,7 +164,7 @@ final _args = ['build', '--delete-conflicting-outputs', '--output'];
 
 void _runBuild(String dir, {bool release = true, String defineOption}) {
   final target = _getTarget(dir);
-  delete(new Directory(target));
+  delete(Directory(target));
 
   _args.add(_getOutput(dir));
 
@@ -208,9 +178,9 @@ void _runBuild(String dir, {bool release = true, String defineOption}) {
 
   Pub.run('build_runner', arguments: _args);
 
-  delete(new File(p.join(target, '.build.manifest')));
-  delete(new File(p.join(target, '.packages')));
-  delete(new Directory(p.join(target, 'packages')));
+  delete(File(p.join(target, '.build.manifest')));
+  delete(File(p.join(target, '.packages')));
+  delete(Directory(p.join(target, 'packages')));
 }
 
 String get npmExecutable => Platform.isWindows ? 'npm.cmd' : 'npm';

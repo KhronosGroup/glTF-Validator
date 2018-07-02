@@ -31,20 +31,20 @@ void main() {
       const ERROR_STRING = 'Stream error throwable';
 
       StreamController<List<int>> controller;
-      controller = new StreamController<List<int>>(onListen: () {
+      controller = StreamController<List<int>>(onListen: () {
         controller
           ..addError(ERROR_STRING)
           ..close();
       });
 
-      final reader = new GlbReader(controller.stream);
+      final reader = GlbReader(controller.stream);
 
       expect(reader.read(), throwsA(ERROR_STRING));
     });
 
     test('Zero Stream', () async {
-      final glbReader = new GlbReader(new Stream.fromIterable([<int>[]]));
-      final context = new Context()
+      final glbReader = GlbReader(Stream.fromIterable([<int>[]]));
+      final context = Context()
         ..addIssue(GlbError.unexpectedEndOfHeader, offset: 0);
 
       await glbReader.read();
@@ -53,10 +53,10 @@ void main() {
     });
 
     test('Unexpected end of header', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/no_header.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/no_header.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedEndOfHeader, offset: 1);
 
       await glbReader.read();
@@ -65,10 +65,10 @@ void main() {
     });
 
     test('Invalid magic', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/invalid_magic.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/invalid_magic.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.invalidMagic, offset: 0, args: [0]);
 
       await glbReader.read();
@@ -77,10 +77,10 @@ void main() {
     });
 
     test('Invalid version', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/invalid_version.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/invalid_version.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.invalidVersion, offset: 4, args: [0]);
 
       await glbReader.read();
@@ -89,10 +89,10 @@ void main() {
     });
 
     test('Zero total length', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/zero_length.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/zero_length.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.lengthTooSmall, offset: 8, args: [0])
         ..addIssue(GlbError.lengthMismatch, offset: 12, args: [0, 12]);
 
@@ -102,10 +102,10 @@ void main() {
     });
 
     test('Only header present', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/only_header.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/only_header.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.lengthTooSmall, offset: 8, args: [12]);
 
       await glbReader.read();
@@ -114,10 +114,10 @@ void main() {
     });
 
     test('Zero chunk header', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/zero_chunk_header.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/zero_chunk_header.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedFirstChunk,
             offset: 12, args: ['0x00000000'])
         ..addIssue(GlbError.unknownChunkType, offset: 12, args: ['0x00000000']);
@@ -128,10 +128,10 @@ void main() {
     });
 
     test('Unaligned chunk', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/unaligned_chunk.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/unaligned_chunk.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.chunkLengthUnaligned,
             offset: 12, args: ['0x4e4f534a']);
 
@@ -141,10 +141,10 @@ void main() {
     });
 
     test('Empty JSON chunk', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/empty_json_chunk.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/empty_json_chunk.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.emptyChunk, offset: 12, args: ['0x4e4f534a']);
 
       await glbReader.read();
@@ -153,10 +153,10 @@ void main() {
     });
 
     test('Empty JSON object', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/empty_json_object.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/empty_json_object.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.undefinedProperty, args: ['asset']);
 
       await glbReader.read();
@@ -165,10 +165,10 @@ void main() {
     });
 
     test('Invalid JSON chunk', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/invalid_json_chunk.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/invalid_json_chunk.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.invalidJson,
             args: ['FormatException: Unexpected character (at offset 1)']);
 
@@ -178,11 +178,11 @@ void main() {
     });
 
     test('Two valid JSON chunks', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/two_valid_json_chunks.glb').openRead(),
+      final glbReader = GlbReader(
+          File('test/base/data/glb/two_valid_json_chunks.glb').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.duplicateChunk, offset: 48, args: ['0x4e4f534a']);
 
       await glbReader.read();
@@ -191,10 +191,10 @@ void main() {
     });
 
     test('Two empty JSON chunks', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/two_empty_json_chunks.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/two_empty_json_chunks.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.emptyChunk, offset: 12, args: ['0x4e4f534a'])
         ..addIssue(GlbError.emptyChunk, offset: 20, args: ['0x4e4f534a'])
         ..addIssue(GlbError.duplicateChunk, offset: 20, args: ['0x4e4f534a'])
@@ -207,10 +207,10 @@ void main() {
     });
 
     test('Only BIN chunk', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/only_bin_chunk.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/only_bin_chunk.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedFirstChunk,
             offset: 12, args: ['0x004e4942']);
 
@@ -220,11 +220,11 @@ void main() {
     });
 
     test('Misplaced BIN chunk', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/misplaced_bin_chunk.glb').openRead(),
+      final glbReader = GlbReader(
+          File('test/base/data/glb/misplaced_bin_chunk.glb').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unknownChunkType, offset: 76, args: ['0x004b4e55'])
         ..addIssue(GlbError.unexpectedBinChunk, offset: 88);
 
@@ -234,10 +234,10 @@ void main() {
     });
 
     test('Two BIN chunks', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/two_bin_chunks.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/two_bin_chunks.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedFirstChunk,
             offset: 12, args: ['0x004e4942'])
         ..addIssue(GlbError.duplicateChunk, offset: 24, args: ['0x004e4942']);
@@ -248,10 +248,10 @@ void main() {
     });
 
     test('Two empty BIN chunks', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/two_empty_bin_chunks.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/two_empty_bin_chunks.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedFirstChunk,
             offset: 12, args: ['0x004e4942'])
         ..addIssue(GlbError.duplicateChunk, offset: 20, args: ['0x004e4942']);
@@ -262,11 +262,11 @@ void main() {
     });
 
     test('JSON and two buffers', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/json_and_two_buffers.glb').openRead(),
+      final glbReader = GlbReader(
+          File('test/base/data/glb/json_and_two_buffers.glb').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.duplicateChunk, offset: 88, args: ['0x004e4942']);
 
       await glbReader.read();
@@ -275,10 +275,10 @@ void main() {
     });
 
     test('Unknown chunk', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/unknown_chunk.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/unknown_chunk.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedFirstChunk,
             offset: 12, args: ['0x4e4b4e55'])
         ..addIssue(GlbError.unknownChunkType, offset: 12, args: ['0x4e4b4e55']);
@@ -289,10 +289,10 @@ void main() {
     });
 
     test('Chunk bigger than GLB', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/chunk_too_big.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/chunk_too_big.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.chunkTooBig, offset: 12, args: ['0x4e4f534a', 28])
         ..addIssue(GlbError.lengthMismatch, offset: 48, args: [13, 48]);
 
@@ -302,10 +302,10 @@ void main() {
     });
 
     test('Truncated chunk header', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/truncated_chunk_header.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/truncated_chunk_header.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedEndOfChunkHeader, offset: 13);
 
       await glbReader.read();
@@ -314,10 +314,10 @@ void main() {
     });
 
     test('Truncated chunk data', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/truncated_chunk_data.glb').openRead());
+      final glbReader = GlbReader(
+          File('test/base/data/glb/truncated_chunk_data.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.unexpectedEndOfChunkData, offset: 47);
 
       await glbReader.read();
@@ -326,10 +326,10 @@ void main() {
     });
 
     test('Total length mismatch', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/length_mismatch.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/length_mismatch.glb').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(GlbError.lengthMismatch, offset: 48, args: [49, 48]);
 
       await glbReader.read();
@@ -338,21 +338,21 @@ void main() {
     });
 
     test('Minimal valid GLB', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/valid_minimal.glb').openRead());
+      final glbReader =
+          GlbReader(File('test/base/data/glb/valid_minimal.glb').openRead());
 
       final result = await glbReader.read();
 
       expect(glbReader.context.issues, isEmpty);
 
       expect(result.mimeType, 'model/gltf-binary');
-      expect(result.gltf, const isInstanceOf<Gltf>());
+      expect(result.gltf, const TypeMatcher<Gltf>());
       expect(result.buffer, isNull);
     });
 
     test('Valid GLB with buffer', () async {
-      final glbReader = new GlbReader(
-          new File('test/base/data/glb/valid_buffer.glb').openRead(),
+      final glbReader = GlbReader(
+          File('test/base/data/glb/valid_buffer.glb').openRead(),
           ignoreUnusedContext);
 
       final result = await glbReader.read();
@@ -360,8 +360,8 @@ void main() {
       expect(glbReader.context.issues, isEmpty);
 
       expect(result.mimeType, 'model/gltf-binary');
-      expect(result.gltf, const isInstanceOf<Gltf>());
-      expect(result.buffer, const isInstanceOf<Uint8List>());
+      expect(result.gltf, const TypeMatcher<Gltf>());
+      expect(result.buffer, const TypeMatcher<Uint8List>());
     });
   });
 }

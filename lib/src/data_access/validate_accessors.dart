@@ -49,18 +49,18 @@ void validateAccessorsData(Gltf gltf, Context context) {
     ..clear()
     ..add(ACCESSORS);
 
-  final matrix = new Matrix4.zero();
+  final matrix = Matrix4.zero();
 
-  final doubleMins = new List<double>(16);
-  final doubleMaxs = new List<double>(16);
+  final doubleMins = List<double>(16);
+  final doubleMaxs = List<double>(16);
 
-  final intMins = new List<int>(16);
-  final intMaxs = new List<int>(16);
+  final intMins = List<int>(16);
+  final intMaxs = List<int>(16);
 
-  final numInvalidMins = new List<int>(16);
-  final numInvalidMaxs = new List<int>(16);
+  final numInvalidMins = List<int>(16);
+  final numInvalidMaxs = List<int>(16);
 
-  final triangle = new List<int>(3);
+  final triangle = List<int>(3);
 
   gltf.accessors.forEachWithIndices((i, accessor) {
     // Skip broken accessors
@@ -91,7 +91,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
     if (accessor.sparse != null) {
       // Check sparse indices
-      final view = accessor.sparse.getIndicesTypedView();
+      final view = accessor.sparse.indicesTypedView;
       if (view != null) {
         var index = 0;
         var lastValue = -1;
@@ -334,7 +334,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
           }
         } else if (accessor.isUnit &&
             !(accessor.containsCubicSpline && cubicSplineState != 1)) {
-          final normalizedValue = accessor.getNormalizedValue(value);
+          final normalizedValue = accessor.normalizeValue(value);
           sum += normalizedValue * normalizedValue;
         }
 

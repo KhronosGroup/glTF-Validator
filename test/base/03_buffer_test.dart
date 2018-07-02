@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Buffer', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/buffer/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Empty object & zero byteLength', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/empty_object.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/buffer/empty_object.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(SchemaError.undefinedProperty, args: ['byteLength'])
@@ -57,11 +57,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/buffer/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
@@ -72,8 +72,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/buffer/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();
@@ -85,11 +85,11 @@ void main() {
     });
 
     test('Broken URIs', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/buffer/invalid_uris.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/buffer/invalid_uris.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(SchemaError.invalidUri, name: 'uri', args: [

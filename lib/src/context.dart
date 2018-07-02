@@ -25,7 +25,7 @@ import 'package:gltf/src/ext/extensions.dart';
 
 class ValidationOptions {
   final int maxIssues;
-  final Set<String> ignoredIssues = new Set<String>();
+  final Set<String> ignoredIssues = Set<String>();
   final Map<String, Severity> severityOverrides;
 
   ValidationOptions(
@@ -44,11 +44,11 @@ class Context {
   final List<String> path = <String>[];
 
   Context({this.validate = true, ValidationOptions options})
-      : options = options ?? new ValidationOptions() {
-    _extensionsLoadedView = new UnmodifiableListView(_extensionsLoaded);
-    _extensionsUsedView = new UnmodifiableListView(_extensionsUsed);
-    _extensionsFunctionsView = new UnmodifiableMapView(_extensionsFunctions);
-    _resourcesView = new UnmodifiableListView(_resources);
+      : options = options ?? ValidationOptions() {
+    _extensionsLoadedView = UnmodifiableListView(_extensionsLoaded);
+    _extensionsUsedView = UnmodifiableListView(_extensionsUsed);
+    _extensionsFunctionsView = UnmodifiableMapView(_extensionsFunctions);
+    _resourcesView = UnmodifiableListView(_resources);
   }
 
   final Map<Object, Object> owners = <Object, Object>{};
@@ -85,7 +85,7 @@ class Context {
   List<Map<String, Object>> _resourcesView;
   List<Map<String, Object>> get resources => _resourcesView;
 
-  final Set<Extension> _userExtensions = new Set<Extension>();
+  final Set<Extension> _userExtensions = Set<Extension>();
 
   final List<Issue> _issues = <Issue>[];
 
@@ -103,7 +103,7 @@ class Context {
   Iterable<Issue> get hints =>
       _issues.where((issue) => issue.severity == Severity.Hint);
 
-  final StringBuffer _sb = new StringBuffer();
+  final StringBuffer _sb = StringBuffer();
 
   String getPointerString([String token]) {
     if (path.isEmpty) {
@@ -155,7 +155,7 @@ class Context {
       }
 
       extension.functions?.forEach((type, funcs) {
-        _extensionsFunctions[new ExtensionTuple(type, extension.name)] = funcs;
+        _extensionsFunctions[ExtensionTuple(type, extension.name)] = funcs;
       });
       _extensionsLoaded.add(extensionName);
     }
@@ -187,11 +187,11 @@ class Context {
         : null;
 
     if (offset != null) {
-      _issues.add(new Issue(issueType, args,
+      _issues.add(Issue(issueType, args,
           offset: offset, severityOverride: severityOverride));
     } else {
       final token = index != null ? index.toString() : name;
-      _issues.add(new Issue(issueType, args,
+      _issues.add(Issue(issueType, args,
           pointer: getPointerString(token),
           severityOverride: severityOverride));
     }

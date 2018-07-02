@@ -60,7 +60,7 @@ class Camera extends GltfChildOfRootProperty {
         break;
     }
 
-    return new Camera._(type, orthographic, perspective, getName(map, context),
+    return Camera._(type, orthographic, perspective, getName(map, context),
         getExtensions(map, Camera, context), getExtras(map));
   }
 }
@@ -96,7 +96,7 @@ class CameraOrthographic extends GltfProperty {
       }
     }
 
-    return new CameraOrthographic._(xmag, ymag, zfar, znear,
+    return CameraOrthographic._(xmag, ymag, zfar, znear,
         getExtensions(map, CameraOrthographic, context), getExtras(map));
   }
 
@@ -127,7 +127,7 @@ class CameraPerspective extends GltfProperty {
       context.addIssue(SemanticError.cameraZfarLequalZnear);
     }
 
-    return new CameraPerspective._(
+    return CameraPerspective._(
         getFloat(map, ASPECT_RATIO, context, exclMin: 0.0),
         getFloat(map, YFOV, context, req: true, exclMin: 0.0),
         zfar,

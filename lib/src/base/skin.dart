@@ -53,7 +53,7 @@ class Skin extends GltfChildOfRootProperty {
       checkMembers(map, SKIN_MEMBERS, context);
     }
 
-    return new Skin._(
+    return Skin._(
         getIndex(map, INVERSE_BIND_MATRICES, context, req: false),
         getIndex(map, SKELETON, context, req: false),
         getIndicesList(map, JOINTS, context, req: true),
@@ -69,7 +69,7 @@ class Skin extends GltfChildOfRootProperty {
     _skeleton = gltf.nodes[_skeletonIndex];
 
     if (_jointsIndices != null) {
-      _joints = new List<Node>(_jointsIndices.length);
+      _joints = List<Node>(_jointsIndices.length);
 
       resolveNodeList(_jointsIndices, _joints, gltf.nodes, JOINTS, context,
           (node, nodeIndex, index) {
@@ -89,7 +89,7 @@ class Skin extends GltfChildOfRootProperty {
             ?.setUsage(BufferViewUsage.IBM, INVERSE_BIND_MATRICES, context);
 
         if (context.validate) {
-          final format = new AccessorFormat.fromAccessor(_inverseBindMatrices);
+          final format = AccessorFormat.fromAccessor(_inverseBindMatrices);
           if (format != SKIN_IBM_FORMAT) {
             context.addIssue(LinkError.skinIbmInvalidFormat,
                 name: INVERSE_BIND_MATRICES,

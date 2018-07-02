@@ -44,7 +44,7 @@ class Texture extends GltfChildOfRootProperty {
       checkMembers(map, TEXTURE_MEMBERS, context);
     }
 
-    return new Texture._(
+    return Texture._(
         getIndex(map, SAMPLER, context, req: false),
         getIndex(map, SOURCE, context, req: false),
         getName(map, context),

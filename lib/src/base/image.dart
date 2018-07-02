@@ -88,14 +88,8 @@ class Image extends GltfChildOfRootProperty {
       }
     }
 
-    return new Image._(
-        bufferViewIndex,
-        uri,
-        mimeType,
-        data,
-        getName(map, context),
-        getExtensions(map, Image, context),
-        getExtras(map));
+    return Image._(bufferViewIndex, uri, mimeType, data, getName(map, context),
+        getExtensions(map, Image, context), getExtras(map));
   }
 
   @override
@@ -113,14 +107,13 @@ class Image extends GltfChildOfRootProperty {
   }
 
   void tryLoadFromBufferView() {
-    if (_bufferView != null) {
-      /// use unfiltered try to skip checking invalid input here,
+    if (_bufferView?.buffer?.data != null) {
       /// in the worst case, `data` will remain `null`
       try {
-        data = new Uint8List.view(_bufferView.buffer.data.buffer,
+        data = Uint8List.view(_bufferView.buffer.data.buffer,
             _bufferView.byteOffset, _bufferView.byteLength);
-        // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
+        // ignore: avoid_catching_errors
+      } on ArgumentError catch (_) {}
     }
   }
 }

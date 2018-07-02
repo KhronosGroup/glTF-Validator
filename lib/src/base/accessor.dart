@@ -192,7 +192,7 @@ class Accessor extends GltfChildOfRootProperty {
       }
     }
 
-    return new Accessor._(
+    return Accessor._(
         bufferViewIndex,
         byteOffset,
         componentType,
@@ -377,7 +377,7 @@ class Accessor extends GltfChildOfRootProperty {
         return;
       }
 
-      final view = _getTypedView(componentType, _bufferView.buffer.data.buffer,
+      final view = _typedView(componentType, _bufferView.buffer.data.buffer,
           _bufferView.byteOffset + byteOffset, byteLength ~/ _componentLength);
 
       if (view == null) {
@@ -429,7 +429,7 @@ class Accessor extends GltfChildOfRootProperty {
       }
     } else {
       // Base accessor is filled with zeros
-      elements = new Iterable<num>.generate(elementsCount, (_) => 0);
+      elements = Iterable<num>.generate(elementsCount, (_) => 0);
     }
 
     if (sparse != null) {
@@ -465,13 +465,13 @@ class Accessor extends GltfChildOfRootProperty {
         return;
       }
 
-      final indices = _getTypedView(
+      final indices = _typedView(
           sparse.indices.componentType,
           sparse.indices._bufferView.buffer.data.buffer,
           sparse.indices._bufferView.byteOffset + sparse.indices.byteOffset,
           sparse.count);
 
-      final values = _getTypedView(
+      final values = _typedView(
           componentType,
           sparse.values._bufferView.buffer.data.buffer,
           sparse.values._bufferView.byteOffset + sparse.values.byteOffset,
@@ -523,7 +523,7 @@ class Accessor extends GltfChildOfRootProperty {
     }
   }
 
-  double getNormalizedValue(num value) {
+  double normalizeValue(num value) {
     if (!normalized) {
       return value.toDouble();
     }
@@ -619,16 +619,19 @@ class AccessorSparse extends GltfProperty {
   String toString([_]) =>
       super.toString({COUNT: count, INDICES: indices, VALUES: values});
 
-  List<int> getIndicesTypedView() {
+  List<int> get indicesTypedView {
     try {
+      /// Due to [indices.componentType],
+      /// runtime return type is always [List<int>].
+
       // ignore: return_of_invalid_type
-      return _getTypedView(
+      return _typedView(
           indices.componentType,
           indices._bufferView.buffer.data.buffer,
           indices._bufferView.byteOffset + indices.byteOffset,
           count);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {
+      // ignore: avoid_catching_errors
+    } on ArgumentError catch (_) {
       return null;
     }
   }
@@ -650,7 +653,7 @@ class AccessorSparse extends GltfProperty {
       return null;
     }
 
-    return new AccessorSparse._(count, indices, values,
+    return AccessorSparse._(count, indices, values,
         getExtensions(map, AccessorSparse, context), getExtras(map));
   }
 }
@@ -680,7 +683,7 @@ class AccessorSparseIndices extends GltfProperty {
     if (context.validate)
       checkMembers(map, ACCESSOR_SPARSE_INDICES_MEMBERS, context);
 
-    return new AccessorSparseIndices._(
+    return AccessorSparseIndices._(
         getIndex(map, BUFFER_VIEW, context, req: true),
         getUint(map, BYTE_OFFSET, context, def: 0),
         getUint(map, COMPONENT_TYPE, context,
@@ -716,7 +719,7 @@ class AccessorSparseValues extends GltfProperty {
     if (context.validate)
       checkMembers(map, ACCESSOR_SPARSE_VALUES_MEMBERS, context);
 
-    return new AccessorSparseValues._(
+    return AccessorSparseValues._(
         getIndex(map, BUFFER_VIEW, context, req: true),
         getUint(map, BYTE_OFFSET, context, def: 0),
         getExtensions(map, AccessorSparseValues, context),
@@ -729,23 +732,24 @@ class AccessorSparseValues extends GltfProperty {
   }
 }
 
-List<num> _getTypedView(
+List<num> _typedView(
     int componentType, ByteBuffer buffer, int offsetInBytes, int length) {
+  assert(buffer != null);
   switch (componentType) {
     case gl.BYTE:
-      return new Int8List.view(buffer, offsetInBytes, length);
+      return Int8List.view(buffer, offsetInBytes, length);
     case gl.UNSIGNED_BYTE:
-      return new Uint8List.view(buffer, offsetInBytes, length);
+      return Uint8List.view(buffer, offsetInBytes, length);
     case gl.SHORT:
-      return new Int16List.view(buffer, offsetInBytes, length);
+      return Int16List.view(buffer, offsetInBytes, length);
     case gl.UNSIGNED_SHORT:
-      return new Uint16List.view(buffer, offsetInBytes, length);
+      return Uint16List.view(buffer, offsetInBytes, length);
 /*    case gl.INT:
-      return new Int32List.view(buffer, offsetInBytes, length);*/
+      return Int32List.view(buffer, offsetInBytes, length);*/
     case gl.UNSIGNED_INT:
-      return new Uint32List.view(buffer, offsetInBytes, length);
+      return Uint32List.view(buffer, offsetInBytes, length);
     case gl.FLOAT:
-      return new Float32List.view(buffer, offsetInBytes, length);
+      return Float32List.view(buffer, offsetInBytes, length);
     default:
       return null;
   }

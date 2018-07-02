@@ -40,7 +40,7 @@ class Animation extends GltfChildOfRootProperty {
     SafeList<AnimationChannel> channels;
     final channelMaps = getMapList(map, CHANNELS, context);
     if (channelMaps != null) {
-      channels = new SafeList<AnimationChannel>(channelMaps.length, CHANNELS);
+      channels = SafeList<AnimationChannel>(channelMaps.length, CHANNELS);
       context.path.add(CHANNELS);
       for (var i = 0; i < channelMaps.length; i++) {
         final channelMap = channelMaps[i];
@@ -54,7 +54,7 @@ class Animation extends GltfChildOfRootProperty {
     SafeList<AnimationSampler> samplers;
     final samplerMaps = getMapList(map, SAMPLERS, context);
     if (samplerMaps != null) {
-      samplers = new SafeList<AnimationSampler>(samplerMaps.length, SAMPLERS);
+      samplers = SafeList<AnimationSampler>(samplerMaps.length, SAMPLERS);
       context.path.add(SAMPLERS);
       for (var i = 0; i < samplerMaps.length; i++) {
         final samplerMap = samplerMaps[i];
@@ -65,7 +65,7 @@ class Animation extends GltfChildOfRootProperty {
       context.path.removeLast();
     }
 
-    return new Animation._(channels, samplers, getName(map, context),
+    return Animation._(channels, samplers, getName(map, context),
         getExtensions(map, Animation, context), getExtras(map));
   }
 
@@ -93,7 +93,7 @@ class Animation extends GltfChildOfRootProperty {
               ?.setUsage(BufferViewUsage.Other, INPUT, context);
 
           if (context.validate) {
-            final inputFormat = new AccessorFormat.fromAccessor(sampler._input);
+            final inputFormat = AccessorFormat.fromAccessor(sampler._input);
             if (inputFormat != ANIMATION_SAMPLER_INPUT_FORMAT) {
               context.addIssue(
                   LinkError.animationSamplerInputAccessorInvalidFormat,
@@ -195,7 +195,7 @@ class Animation extends GltfChildOfRootProperty {
 
             if (context.validate) {
               final outputFormat =
-                  new AccessorFormat.fromAccessor(channel._sampler._output);
+                  AccessorFormat.fromAccessor(channel._sampler._output);
               final validFormats =
                   ANIMATION_SAMPLER_OUTPUT_FORMATS[channel.target.path];
 
@@ -272,7 +272,7 @@ class AnimationChannel extends GltfProperty {
       checkMembers(map, ANIMATION_CHANNEL_MEMBERS, context);
     }
 
-    return new AnimationChannel._(
+    return AnimationChannel._(
         getIndex(map, SAMPLER, context),
         getObjectFromInnerMap<AnimationChannelTarget>(
             map, TARGET, context, AnimationChannelTarget.fromMap,
@@ -304,7 +304,7 @@ class AnimationChannelTarget extends GltfProperty {
       checkMembers(map, ANIMATION_CHANNEL_TARGET_MEMBERS, context);
     }
 
-    return new AnimationChannelTarget._(
+    return AnimationChannelTarget._(
         getIndex(map, NODE, context, req: false),
         getString(map, PATH, context,
             req: true, list: ANIMATION_CHANNEL_TARGET_PATHS),
@@ -345,7 +345,7 @@ class AnimationSampler extends GltfProperty {
       checkMembers(map, ANIMATION_SAMPLER_MEMBERS, context);
     }
 
-    return new AnimationSampler._(
+    return AnimationSampler._(
         getIndex(map, INPUT, context),
         getString(map, INTERPOLATION, context,
             list: ANIMATION_SAMPLER_INTERPOLATIONS, def: LINEAR),

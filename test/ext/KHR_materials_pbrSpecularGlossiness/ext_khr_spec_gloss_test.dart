@@ -26,15 +26,15 @@ import '../../utils.dart';
 void main() {
   group('KHR_materials_pbrSpecularGlossiness', () {
     test('Empty object', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_materials_pbrSpecularGlossiness/data/empty_object.gltf')
               .openRead(),
           ignoreUnusedContext);
 
       await reader.read();
 
-      final context = new Context()
+      final context = Context()
         ..path.add('materials')
         ..path.add('0')
         ..path.add('extensions')
@@ -46,13 +46,13 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_materials_pbrSpecularGlossiness/data/custom_property.gltf')
               .openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('materials')
         ..path.add('0')
         ..path.add('extensions')
@@ -65,8 +65,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_materials_pbrSpecularGlossiness/data/valid_full.gltf')
               .openRead(),
           ignoreUnusedContext);

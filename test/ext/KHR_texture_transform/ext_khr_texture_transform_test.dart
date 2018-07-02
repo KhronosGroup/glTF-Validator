@@ -26,13 +26,13 @@ import '../../utils.dart';
 void main() {
   group('KHR_texture_transform', () {
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_texture_transform/data/custom_property.gltf')
               .openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('materials')
         ..path.add('0')
         ..path.add('emissiveTexture')
@@ -46,13 +46,13 @@ void main() {
     });
 
     test('Unexpected extension object', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_texture_transform/data/unexpected_extension_object.gltf')
               .openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('textures')
         ..path.add('0')
         ..path.add('extensions')
@@ -65,13 +65,13 @@ void main() {
     });
 
     test('UV bindings', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_texture_transform/data/uv_sets.gltf')
               .openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..path.add('primitives')
@@ -88,8 +88,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/ext/'
+      final reader = GltfJsonReader(
+          File('test/ext/'
                   'KHR_texture_transform/data/valid_full.gltf')
               .openRead(),
           ignoreUnusedContext);

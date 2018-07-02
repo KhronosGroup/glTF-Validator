@@ -26,14 +26,14 @@ import 'package:gltf/cmd_line.dart';
 import '../utils.dart';
 
 Future<ValidationResult> getValidationResult(String filename) async {
-  final file = new File(filename);
+  final file = File(filename);
   final context = ignoreUnusedContext;
-  final reader = new GltfReader.filename(file.openRead(), filename, context);
+  final reader = GltfReader.filename(file.openRead(), filename, context);
 
   final readerResult = await reader.read();
 
   final validationResult =
-      new ValidationResult(file.absolute.uri, reader.context, readerResult);
+      ValidationResult(file.absolute.uri, reader.context, readerResult);
 
   final resourcesLoader = getFileResourceValidator(
       context, validationResult.absoluteUri, readerResult);
@@ -63,7 +63,7 @@ void main() {
       final validationResult =
           await getValidationResult('test/data_access/buffer/wrong_length.glb');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(DataError.bufferExternalBytelengthMismatch, args: [16, 17]);
@@ -75,7 +75,7 @@ void main() {
       final validationResult = await getValidationResult(
           'test/data_access/buffer/extra_padding.glb');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(DataError.bufferGlbChunkTooBig, args: [4]);
@@ -99,7 +99,7 @@ void main() {
       final validationResult = await getValidationResult(
           'test/data_access/buffer/non_first_buffer.glb');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('1')
         ..addIssue(LinkError.bufferNonFirstGlb);
@@ -111,7 +111,7 @@ void main() {
       final validationResult = await getValidationResult(
           'test/data_access/buffer/json_missing_bin.glb');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(LinkError.bufferMissingGlbData);
@@ -123,7 +123,7 @@ void main() {
       final validationResult =
           await getValidationResult('test/data_access/buffer/broken_uri.gltf');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(SchemaError.invalidUri,
@@ -137,7 +137,7 @@ void main() {
       final validationResult =
           await getValidationResult('test/data_access/buffer/broken_uri.glb');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('buffers')
         ..path.add('0')
         ..addIssue(SchemaError.invalidUri,

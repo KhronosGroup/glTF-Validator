@@ -45,15 +45,14 @@ class GlbReader implements GltfReader {
 
   @override
   final String mimeType = 'model/gltf-binary';
-  final Uint8List _header = new Uint8List(_HEADER_LENGTH);
+  final Uint8List _header = Uint8List(_HEADER_LENGTH);
 
   ByteData _headerByteData;
 
   final Stream<List<int>> stream;
 
   StreamSubscription<List<int>> _subscription;
-  final Completer<GltfReaderResult> _completer =
-      new Completer<GltfReaderResult>();
+  final Completer<GltfReaderResult> _completer = Completer<GltfReaderResult>();
 
   Context _context;
 
@@ -76,9 +75,9 @@ class GlbReader implements GltfReader {
   Uint8List _binaryBuffer;
 
   GlbReader(this.stream, [Context context]) {
-    _context = (context ?? new Context())..setGlb();
-    _headerByteData = new ByteData.view(_header.buffer);
-    _jsonStreamController = new StreamController<List<int>>();
+    _context = (context ?? Context())..setGlb();
+    _headerByteData = ByteData.view(_header.buffer);
+    _jsonStreamController = StreamController<List<int>>();
   }
 
   @override
@@ -105,7 +104,7 @@ class GlbReader implements GltfReader {
   void _abort() {
     _subscription.cancel();
     if (!_completer.isCompleted)
-      _completer.complete(new GltfReaderResult(mimeType, null, _binaryBuffer));
+      _completer.complete(GltfReaderResult(mimeType, null, _binaryBuffer));
   }
 
   String _getChunkString(int type) =>
@@ -242,8 +241,7 @@ class GlbReader implements GltfReader {
               min(data.length - dataOffset, _chunkLength - _localOffset);
 
           if (_jsonReader == null) {
-            _jsonReader =
-                new GltfJsonReader(_jsonStreamController.stream, context);
+            _jsonReader = GltfJsonReader(_jsonStreamController.stream, context);
             _jsonReaderResult = _jsonReader.read();
           }
 
@@ -264,7 +262,7 @@ class GlbReader implements GltfReader {
           availableLength =
               min(data.length - dataOffset, _chunkLength - _localOffset);
 
-          _binaryBuffer ??= new Uint8List(_chunkLength);
+          _binaryBuffer ??= Uint8List(_chunkLength);
 
           _binaryBuffer.setRange(
               _localOffset, _localOffset += availableLength, data, dataOffset);
@@ -317,11 +315,11 @@ class GlbReader implements GltfReader {
           if (_jsonReaderResult != null) {
             _jsonReaderResult.then((result) {
               _completer.complete(
-                  new GltfReaderResult(mimeType, result?.gltf, _binaryBuffer));
+                  GltfReaderResult(mimeType, result?.gltf, _binaryBuffer));
             }, onError: _onError);
           } else {
             _completer
-                .complete(new GltfReaderResult(mimeType, null, _binaryBuffer));
+                .complete(GltfReaderResult(mimeType, null, _binaryBuffer));
           }
         }
         break;

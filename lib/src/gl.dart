@@ -25,7 +25,7 @@ const int TRIANGLES = 4;
 const int TRIANGLE_STRIP = 5;
 const int TRIANGLE_FAN = 6;
 
-const List<String> MODES_NAMES = const <String>[
+const List<String> MODES_NAMES = <String>[
   'POINTS',
   'LINES',
   'LINE_LOOP',
@@ -68,7 +68,7 @@ const int INT = 5124;
 const int UNSIGNED_INT = 5125;
 const int FLOAT = 5126;
 
-const List<int> COMPONENT_TYPES = const <int>[
+const List<int> COMPONENT_TYPES = <int>[
   BYTE,
   UNSIGNED_BYTE,
   SHORT,
@@ -90,11 +90,11 @@ int componentTypeLength(int componentType) {
     case FLOAT:
       return 4;
     default:
-      throw new ArgumentError();
+      throw ArgumentError();
   }
 }
 
-const List<int> ELEMENT_ARRAY_TYPES = const <int>[
+const List<int> ELEMENT_ARRAY_TYPES = <int>[
   UNSIGNED_BYTE,
   UNSIGNED_SHORT,
   UNSIGNED_INT,
@@ -141,7 +141,7 @@ const int UNSIGNED_SHORT_4_4_4_4 = 32819;
 const int UNSIGNED_SHORT_5_5_5_1 = 32820;
 const int UNSIGNED_SHORT_5_6_5 = 33635;
 
-const List<int> TARGETS = const <int>[ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER];
+const List<int> TARGETS = <int>[ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER];
 
 const int ARRAY_BUFFER = 34962;
 const int ELEMENT_ARRAY_BUFFER = 34963;
@@ -164,7 +164,7 @@ const int FLOAT_MAT3 = 35675;
 const int FLOAT_MAT4 = 35676;
 const int SAMPLER_2D = 35678;
 
-const Map<int, int> TYPE_LENGTHS = const <int, int>{
+const Map<int, int> TYPE_LENGTHS = <int, int>{
   BYTE: 1,
   UNSIGNED_BYTE: 1,
   SHORT: 1,
@@ -188,7 +188,7 @@ const Map<int, int> TYPE_LENGTHS = const <int, int>{
   SAMPLER_2D: 1
 };
 
-const Map<int, String> TYPE_NAMES = const <int, String>{
+const Map<int, String> TYPE_NAMES = <int, String>{
   BYTE: 'BYTE',
   UNSIGNED_BYTE: 'UNSIGNED_BYTE',
   SHORT: 'SHORT',
@@ -225,7 +225,7 @@ int typeMin(int type) {
     case INT:
       return -2147483648;
     default:
-      throw new ArgumentError();
+      throw ArgumentError();
   }
 }
 
@@ -244,13 +244,13 @@ int typeMax(int type) {
     case UNSIGNED_INT:
       return 4294967295;
     default:
-      throw new ArgumentError();
+      throw ArgumentError();
   }
 }
 
-const List<int> BOOL_TYPES = const <int>[BOOL, BOOL_VEC2, BOOL_VEC3, BOOL_VEC4];
+const List<int> BOOL_TYPES = <int>[BOOL, BOOL_VEC2, BOOL_VEC3, BOOL_VEC4];
 
-const List<int> FLOAT_TYPES = const <int>[
+const List<int> FLOAT_TYPES = <int>[
   FLOAT,
   FLOAT_VEC2,
   FLOAT_VEC3,
@@ -260,7 +260,7 @@ const List<int> FLOAT_TYPES = const <int>[
   FLOAT_MAT4
 ];
 
-const List<int> INT_TYPES = const <int>[
+const List<int> INT_TYPES = <int>[
   BYTE,
   UNSIGNED_BYTE,
   SHORT,

@@ -1,5 +1,5 @@
 name: gltf
-version: 2.0.0-dev.2.3
+version: 2.0.0-dev.2.4
 description: Library for loading and validating glTF 2.0 assets
 author: The Khronos Group Inc.
 homepage: https://github.com/KhronosGroup/glTF-Validator
@@ -13,16 +13,16 @@ dependencies:
   yaml: '^2.1.14'
 
 dev_dependencies:
-  build_runner: '^0.8.10'
+  build_runner: '^0.9.1'
   build_web_compilers: '^0.4.0'
-  build_node_compilers: '^0.1.6'
+  build_node_compilers: '^0.1.8'
   grinder: '^0.8.2'
   js: '^0.6.1'
-  node_preamble: '1.4.2'
-  test: '>=0.12.0 <0.13.0'
+  node_preamble: '^1.4.3'
+  test: '^1.2.0'
 
 environment:
-  sdk: '>=2.0.0-dev.62.0 <2.0.0'
+  sdk: '>=2.0.0-dev.66.0 <2.0.0'
 
 executables:
   gltf_validator:

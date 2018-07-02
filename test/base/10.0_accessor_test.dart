@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Accessor', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/accessor/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('accessors')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Empty object', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/empty_object.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/empty_object.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('accessors')
         ..path.add('0')
         ..addIssue(SchemaError.undefinedProperty, args: ['componentType'])
@@ -56,11 +56,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('accessors')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
@@ -71,8 +71,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();
@@ -84,12 +84,11 @@ void main() {
     });
 
     test('Unresolved references', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/unresolved_references.gltf')
-              .openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/unresolved_references.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('accessors')
         ..path.add('0')
         ..addIssue(LinkError.unresolvedReference, name: 'bufferView', args: [0])
@@ -107,11 +106,11 @@ void main() {
     });
 
     test('Alignment', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/alignment.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/alignment.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('accessors')
         ..path.add('0')
         ..addIssue(SemanticError.accessorOffsetAlignment,
@@ -135,11 +134,11 @@ void main() {
     });
 
     test('Misc', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/misc.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/misc.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('accessors')
         ..path.add('0')
         ..addIssue(SchemaError.unsatisfiedDependency,
@@ -173,10 +172,10 @@ void main() {
     });
 
     test('Matrix Alignment', () async {
-      final context = new Context()..path.add('accessors');
+      final context = Context()..path.add('accessors');
 
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/matrix_alignment.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/matrix_alignment.gltf').openRead(),
           ignoreUnusedContext);
       await reader.read();
 

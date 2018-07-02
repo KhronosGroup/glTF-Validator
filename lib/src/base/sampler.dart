@@ -43,7 +43,7 @@ class Sampler extends GltfChildOfRootProperty {
       checkMembers(map, SAMPLER_MEMBERS, context);
     }
 
-    return new Sampler._(
+    return Sampler._(
         getUint(map, MAG_FILTER, context, list: MAG_FILTERS),
         getUint(map, MIN_FILTER, context, list: MIN_FILTERS),
         getUint(map, WRAP_S, context, list: WRAP_FILTERS, def: gl.REPEAT),

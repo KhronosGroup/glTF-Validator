@@ -29,6 +29,8 @@ import 'package:gltf/src/glb_reader.dart';
 export 'package:gltf/src/base/gltf.dart';
 export 'package:gltf/src/context.dart';
 
+const _kMimeType = 'model/gltf+json';
+
 class GltfReaderResult {
   final String mimeType;
   final Gltf gltf;
@@ -41,11 +43,11 @@ abstract class GltfReader {
   factory GltfReader.filename(Stream<List<int>> stream, String filename,
       [Context context]) {
     if (filename.toLowerCase().endsWith('.glb')) {
-      return new GlbReader(stream, context);
+      return GlbReader(stream, context);
     }
 
     if (filename.toLowerCase().endsWith('.gltf')) {
-      return new GltfJsonReader(stream, context);
+      return GltfJsonReader(stream, context);
     }
 
     return null;
@@ -56,11 +58,14 @@ abstract class GltfReader {
   /// Completes with a [GltfInvalidFormatException] exception on invalid input.
   static Future<GltfReader> detect(Stream<List<int>> stream,
       [Context context]) {
-    final completer = new Completer<GltfReader>();
+    final completer = Completer<GltfReader>();
 
     var formatDetected = false;
     StreamSubscription<List<int>> subscription;
-    final controller = new StreamController<List<int>>();
+    final controller = StreamController<List<int>>(
+        onPause: () => subscription.pause(),
+        onResume: () => subscription.resume(),
+        onCancel: () => subscription.cancel());
 
     // Letter "g"
     const g = 0x67;
@@ -80,16 +85,16 @@ abstract class GltfReader {
     subscription = stream.listen((data) {
       if (!formatDetected) {
         final byte = data[0];
-        if (byte == g) {
-          completer.complete(new GlbReader(controller.stream, context));
+        if (g == byte) {
+          completer.complete(GlbReader(controller.stream, context));
           formatDetected = true;
-        } else if (byte == cl ||
-            byte == ht ||
-            byte == sp ||
-            byte == lf ||
-            byte == cr ||
-            byte == bom) {
-          completer.complete(new GltfJsonReader(controller.stream, context));
+        } else if (cl == byte ||
+            ht == byte ||
+            sp == byte ||
+            lf == byte ||
+            cr == byte ||
+            bom == byte) {
+          completer.complete(GltfJsonReader(controller.stream, context));
           formatDetected = true;
         } else {
           subscription.cancel();
@@ -112,19 +117,18 @@ abstract class GltfReader {
 
 class GltfJsonReader implements GltfReader {
   @override
-  final String mimeType = 'model/gltf+json';
+  final String mimeType = _kMimeType;
 
   final Stream<List<int>> stream;
   StreamSubscription<List<int>> _subscription;
-  final Completer<GltfReaderResult> _completer =
-      new Completer<GltfReaderResult>();
+  final Completer<GltfReaderResult> _completer = Completer<GltfReaderResult>();
 
   ByteConversionSink _byteSink;
 
   Context _context;
 
   GltfJsonReader(this.stream, [Context context]) {
-    _context = context ?? new Context();
+    _context = context ?? Context();
   }
 
   @override
@@ -132,13 +136,12 @@ class GltfJsonReader implements GltfReader {
 
   @override
   Future<GltfReaderResult> read() {
-    final outSink =
-        new ChunkedConversionSink<Object>.withCallback((jsonResult) {
+    final outSink = ChunkedConversionSink<Object>.withCallback((jsonResult) {
       final result = jsonResult[0];
       if (result is Map<String, Object>) {
         try {
-          final root = new Gltf.fromMap(result, _context);
-          _completer.complete(new GltfReaderResult(mimeType, root, null));
+          final root = Gltf.fromMap(result, _context);
+          _completer.complete(GltfReaderResult(mimeType, root, null));
         } on IssuesLimitExceededException catch (_) {
           _abort();
         }
@@ -203,12 +206,14 @@ class GltfJsonReader implements GltfReader {
     try {
       parsedJson = json.decode(jsonString);
     } on FormatException catch (e) {
-      context.addIssue(SchemaError.invalidJson, args: [e]);
+      context?.addIssue(SchemaError.invalidJson, args: [e]);
+      return null;
     }
+
     if (parsedJson is Map<String, Object>) {
       try {
-        final root = new Gltf.fromMap(parsedJson, context);
-        return new GltfReaderResult('model/gltf+json', root, null);
+        final root = Gltf.fromMap(parsedJson, context);
+        return GltfReaderResult(_kMimeType, root, null);
       } on IssuesLimitExceededException catch (_) {
         return null;
       }

@@ -63,7 +63,7 @@ class LinkableExtensionEntry {
   LinkableExtensionEntry(this.object, this.path);
 }
 
-const List<Extension> defaultExtensions = const <Extension>[
+const List<Extension> defaultExtensions = <Extension>[
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsUnlitExtension,
   khrTextureTransformExtension,
@@ -72,7 +72,7 @@ const List<Extension> defaultExtensions = const <Extension>[
 ];
 
 // https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md
-const List<String> kReservedPrefixes = const <String>[
+const List<String> kReservedPrefixes = <String>[
   'KHR_',
   'EXT_',
   'ALI_',

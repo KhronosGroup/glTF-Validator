@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Scene', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/scene/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/scene/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('scenes')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,10 +39,10 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/scene/custom_property.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/scene/custom_property.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('scenes')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
@@ -53,11 +53,10 @@ void main() {
     });
 
     test('Unresolved references', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/scene/unresolved_references.gltf')
-              .openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/scene/unresolved_references.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(LinkError.unresolvedReference, name: 'scene', args: [1])
         ..path.add('scenes')
         ..path.add('0')
@@ -70,11 +69,11 @@ void main() {
     });
 
     test('Misc', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/scene/misc.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/scene/misc.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('scenes')
         ..path.add('0')
         ..addIssue(SchemaError.emptyEntity, name: 'nodes')
@@ -94,12 +93,12 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/scene/valid_full.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/scene/valid_full.gltf').openRead());
 
       final result = await reader.read();
 
-      final context = new Context()
+      final context = Context()
         ..path.add('nodes')
         ..path.add('0')
         ..addIssue(SemanticError.nodeEmpty);

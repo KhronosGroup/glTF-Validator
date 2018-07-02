@@ -21,7 +21,7 @@ import 'dart:io';
 import 'package:build/build.dart';
 import 'package:path/path.dart' as p;
 
-Builder snapshotBuilder(BuilderOptions options) => new SnapshotBuilder(options);
+Builder snapshotBuilder(BuilderOptions options) => SnapshotBuilder(options);
 
 class SnapshotBuilder extends Builder {
   final BuilderOptions options;
@@ -43,11 +43,11 @@ class SnapshotBuilder extends Builder {
 
     await Process.run(dart, args);
 
-    final file = new File(snapshotPath);
+    final file = File(snapshotPath);
     final data = await file.readAsBytes();
     await file.delete();
 
-    final snapshotAsset = new AssetId(buildStep.inputId.package,
+    final snapshotAsset = AssetId(buildStep.inputId.package,
         p.join(p.dirname(buildStep.inputId.path), snapshot));
 
     await buildStep.writeAsBytes(snapshotAsset, data);
@@ -55,6 +55,6 @@ class SnapshotBuilder extends Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => const {
-        '.dart': const ['.snapshot']
+        '.dart': ['.snapshot']
       };
 }

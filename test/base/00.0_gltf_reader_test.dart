@@ -24,12 +24,12 @@ import 'package:gltf/src/errors.dart';
 void main() {
   group('GltfReader', () {
     test('File extensions', () async {
-      final gltfReader = new GltfReader.filename(null, '.gltf', null);
-      final glbReader = new GltfReader.filename(null, '.glb', null);
-      final invalidReader = new GltfReader.filename(null, '.glb2', null);
+      final gltfReader = GltfReader.filename(null, '.gltf', null);
+      final glbReader = GltfReader.filename(null, '.glb', null);
+      final invalidReader = GltfReader.filename(null, '.glb2', null);
 
-      expect(gltfReader, const isInstanceOf<GltfJsonReader>());
-      expect(glbReader, const isInstanceOf<GlbReader>());
+      expect(gltfReader, const TypeMatcher<GltfJsonReader>());
+      expect(glbReader, const TypeMatcher<GlbReader>());
       expect(invalidReader, isNull);
     });
 
@@ -37,22 +37,21 @@ void main() {
       const ERROR_STRING = 'Stream error throwable';
 
       StreamController<List<int>> controller;
-      controller = new StreamController<List<int>>(onListen: () {
+      controller = StreamController<List<int>>(onListen: () {
         controller
           ..addError(ERROR_STRING)
           ..close();
       });
 
-      final reader = new GltfJsonReader(controller.stream);
+      final reader = GltfJsonReader(controller.stream);
 
       expect(reader.read(), throwsA(ERROR_STRING));
     });
 
     test('Empty stream', () async {
-      final reader =
-          new GltfJsonReader(new Stream<List<int>>.fromIterable([<int>[]]));
+      final reader = GltfJsonReader(Stream<List<int>>.fromIterable([<int>[]]));
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.invalidJson,
             args: ['FormatException: Unexpected end of input (at offset 0)']);
 
@@ -61,10 +60,10 @@ void main() {
     });
 
     test('Invalid stream', () async {
-      final reader = new GltfJsonReader(
-          new Stream<List<int>>.fromIterable(['{]'.codeUnits]));
+      final reader =
+          GltfJsonReader(Stream<List<int>>.fromIterable(['{]'.codeUnits]));
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.invalidJson,
             args: ['FormatException: Unexpected character (at offset 1)']);
 
@@ -73,10 +72,10 @@ void main() {
     });
 
     test('Invalid root type', () async {
-      final reader = new GltfJsonReader(
-          new Stream<List<int>>.fromIterable(['[]'.codeUnits]));
+      final reader =
+          GltfJsonReader(Stream<List<int>>.fromIterable(['[]'.codeUnits]));
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.typeMismatch, args: [<Object>[], 'object']);
 
       await reader.read();
@@ -84,10 +83,10 @@ void main() {
     });
 
     test('Empty root object', () async {
-      final reader = new GltfJsonReader(
-          new Stream<List<int>>.fromIterable(['{}'.codeUnits]));
+      final reader =
+          GltfJsonReader(Stream<List<int>>.fromIterable(['{}'.codeUnits]));
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.undefinedProperty, args: ['asset']);
 
       await reader.read();
@@ -95,7 +94,7 @@ void main() {
     });
 
     test('Valid glTF, but starting with BOM', () async {
-      final reader = new GltfJsonReader(new Stream<List<int>>.fromIterable([
+      final reader = GltfJsonReader(Stream<List<int>>.fromIterable([
         [
           0xEF,
           0xBB,
@@ -106,18 +105,18 @@ void main() {
 
       final result = await reader.read();
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.invalidJson,
             args: ['BOM found at the beginning of UTF-8 stream.']);
 
       expect(reader.context.issues, context.issues);
 
       expect(result.mimeType, 'model/gltf+json');
-      expect(result.gltf, const isInstanceOf<Gltf>());
+      expect(result.gltf, const TypeMatcher<Gltf>());
     });
 
     test('Smallest possible asset', () async {
-      final reader = new GltfJsonReader(new Stream<List<int>>.fromIterable(
+      final reader = GltfJsonReader(Stream<List<int>>.fromIterable(
           ['{"asset":{"version":"2.0"}}'.codeUnits]));
 
       final result = await reader.read();
@@ -125,7 +124,7 @@ void main() {
       expect(reader.context.issues, isEmpty);
 
       expect(result.mimeType, 'model/gltf+json');
-      expect(result.gltf, const isInstanceOf<Gltf>());
+      expect(result.gltf, const TypeMatcher<Gltf>());
     });
   });
 }
