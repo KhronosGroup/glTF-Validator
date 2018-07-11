@@ -18,7 +18,6 @@ import 'package:gltf/src/errors.dart';
  * # limitations under the License.
  */
 
-Context get ignoreUnusedContext => new Context(
+Context get ignoreUnusedContext => Context(
     validate: true,
-    options:
-        new ValidationOptions(ignoredIssues: [LinkError.unusedObject.code]));
+    options: ValidationOptions(ignoredIssues: [LinkError.unusedObject.code]));

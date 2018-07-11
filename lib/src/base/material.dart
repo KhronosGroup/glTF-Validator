@@ -89,7 +89,7 @@ class Material extends GltfChildOfRootProperty {
     final extensions =
         getExtensions(map, Material, context, warnOnMultipleExtensions: true);
 
-    final material = new Material._(
+    final material = Material._(
         pbrMetallicRoughness,
         normalTexture,
         occlusionTexture,
@@ -175,7 +175,7 @@ class PbrMetallicRoughness extends GltfProperty {
 
     final extensions = getExtensions(map, PbrMetallicRoughness, context);
 
-    final pbrMr = new PbrMetallicRoughness._(
+    final pbrMr = PbrMetallicRoughness._(
         baseColorFactor,
         baseColorTexture,
         metallicFactor,
@@ -227,7 +227,7 @@ class OcclusionTextureInfo extends TextureInfo {
     final extensions = getExtensions(map, OcclusionTextureInfo, context,
         overriddenType: Material);
 
-    final occlusionTextureInfo = new OcclusionTextureInfo._(
+    final occlusionTextureInfo = OcclusionTextureInfo._(
         getIndex(map, INDEX, context),
         getUint(map, TEX_COORD, context, def: 0),
         getFloat(map, STRENGTH, context, min: 0.0, max: 1.0, def: 1.0),
@@ -258,7 +258,7 @@ class NormalTextureInfo extends TextureInfo {
     final extensions = getExtensions(map, NormalTextureInfo, context,
         overriddenType: Material);
 
-    final normalTextureInfo = new NormalTextureInfo._(
+    final normalTextureInfo = NormalTextureInfo._(
         getIndex(map, INDEX, context),
         getUint(map, TEX_COORD, context, def: 0),
         getFloat(map, SCALE, context, def: 1.0),
@@ -300,7 +300,7 @@ class TextureInfo extends GltfProperty {
     final extensions =
         getExtensions(map, TextureInfo, context, overriddenType: Material);
 
-    final textureInfo = new TextureInfo._(getIndex(map, INDEX, context),
+    final textureInfo = TextureInfo._(getIndex(map, INDEX, context),
         getUint(map, TEX_COORD, context, def: 0), extensions, getExtras(map));
 
     context.registerObjectsOwner(textureInfo, extensions.values);

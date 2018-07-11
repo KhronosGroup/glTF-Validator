@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Image', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/image/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Empty object', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/empty_object.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/image/empty_object.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..path.add('0')
         ..addIssue(SchemaError.oneOfMismatch, args: ['bufferView', 'uri']);
@@ -54,11 +54,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/image/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
@@ -69,8 +69,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/image/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();
@@ -82,11 +82,11 @@ void main() {
     });
 
     test('Broken URIs', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/invalid_uris.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/image/invalid_uris.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..path.add('0')
         ..addIssue(SchemaError.invalidUri, name: 'uri', args: [
@@ -119,12 +119,12 @@ void main() {
     });
 
     test('Dependency, unresolved bufferView', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/invalid_mime_type_buffer_view.gltf')
+      final reader = GltfJsonReader(
+          File('test/base/data/image/invalid_mime_type_buffer_view.gltf')
               .openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..path.add('0')
         ..addIssue(SchemaError.unsatisfiedDependency,
@@ -138,9 +138,8 @@ void main() {
     });
 
     test('Load image from bufferView', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/image/load_from_buffer_view.gltf')
-              .openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/image/load_from_buffer_view.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();

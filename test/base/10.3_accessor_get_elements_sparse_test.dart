@@ -27,9 +27,8 @@ void main() {
     GltfReaderResult result;
 
     setUpAll(() async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/accessor/get_elements_sparse.gltf')
-              .openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/accessor/get_elements_sparse.gltf').openRead(),
           ignoreUnusedContext);
 
       result = await reader.read();

@@ -26,10 +26,10 @@ void main() {
   group('glTF', () {
     test('Invalid Collection', () async {
       const json = '{"asset": {"version": "2.0"},"samplers": {}}';
-      final reader = new GltfJsonReader(
-          new Stream<List<int>>.fromIterable([json.codeUnits]));
+      final reader =
+          GltfJsonReader(Stream<List<int>>.fromIterable([json.codeUnits]));
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.typeMismatch,
             name: 'samplers', args: [<Object, Object>{}, 'array']);
 
@@ -40,10 +40,10 @@ void main() {
 
     test('Invalid Collection Element', () async {
       const json = '{"asset": {"version": "2.0"},"samplers": [[], null]}';
-      final reader = new GltfJsonReader(
-          new Stream<List<int>>.fromIterable([json.codeUnits]));
+      final reader =
+          GltfJsonReader(Stream<List<int>>.fromIterable([json.codeUnits]));
 
-      final context = new Context()
+      final context = Context()
         ..path.add('samplers')
         ..addIssue(SchemaError.typeMismatch,
             index: 0, args: [<Object>[], 'object'])
@@ -56,10 +56,10 @@ void main() {
 
     test('Invalid Linkable Collection Element', () async {
       const json = '{"asset": {"version": "2.0"},"materials": [[], null]}';
-      final reader = new GltfJsonReader(
-          new Stream<List<int>>.fromIterable([json.codeUnits]));
+      final reader =
+          GltfJsonReader(Stream<List<int>>.fromIterable([json.codeUnits]));
 
-      final context = new Context()
+      final context = Context()
         ..path.add('materials')
         ..addIssue(SchemaError.typeMismatch,
             index: 0, args: [<Object>[], 'object'])
@@ -71,11 +71,11 @@ void main() {
     });
 
     test('Invalid Extensions', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/gltf/invalid_extensions_arrays.gltf')
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/invalid_extensions_arrays.gltf')
               .openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.arrayDuplicateElements, name: 'extensionsUsed/1')
         ..addIssue(SchemaError.arrayDuplicateElements,
             name: 'extensionsRequired/1')
@@ -98,11 +98,11 @@ void main() {
     });
 
     test('Invalid Extensions Deps', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/gltf/undefined_used_extensions.gltf')
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/undefined_used_extensions.gltf')
               .openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SchemaError.unsatisfiedDependency,
             name: 'extensionsRequired', args: ['extensionsUsed'])
         ..addIssue(SemanticError.unusedExtensionRequired,
@@ -114,10 +114,10 @@ void main() {
     });
 
     test('Unused objects', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/gltf/unused_objects.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/unused_objects.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(LinkError.unusedObject, name: 'animations/0/samplers/1')
         ..addIssue(LinkError.unusedObject, name: 'accessors/6')
         ..addIssue(LinkError.unusedObject, name: 'buffers/1')
@@ -137,8 +137,8 @@ void main() {
     });
 
     test('Valid Full', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/gltf/valid_full.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/valid_full.gltf').openRead());
 
       final result = await reader.read();
 

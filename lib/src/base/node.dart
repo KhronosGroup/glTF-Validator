@@ -77,7 +77,7 @@ class Node extends GltfChildOfRootProperty {
       final matrixList =
           getFloatList(map, MATRIX, context, lengthsList: const [16]);
       if (matrixList != null) {
-        matrix = new Matrix4.fromList(matrixList);
+        matrix = Matrix4.fromList(matrixList);
       }
     }
 
@@ -86,7 +86,7 @@ class Node extends GltfChildOfRootProperty {
       final translationList =
           getFloatList(map, TRANSLATION, context, lengthsList: const [3]);
       if (translationList != null) {
-        translation = new Vector3.array(translationList);
+        translation = Vector3.array(translationList);
       }
     }
 
@@ -95,7 +95,7 @@ class Node extends GltfChildOfRootProperty {
       final rotationList = getFloatList(map, ROTATION, context,
           lengthsList: const [4], min: -1.0, max: 1.0);
       if (rotationList != null) {
-        rotation = new Quaternion(
+        rotation = Quaternion(
             rotationList[0], rotationList[1], rotationList[2], rotationList[3]);
         if (context.validate && (rotation.length - 1.0).abs() > 0.000005) {
           context.addIssue(SemanticError.nodeRotationNonUnit, name: ROTATION);
@@ -108,7 +108,7 @@ class Node extends GltfChildOfRootProperty {
       final scaleList =
           getFloatList(map, SCALE, context, lengthsList: const [3]);
       if (scaleList != null) {
-        scale = new Vector3.array(scaleList);
+        scale = Vector3.array(scaleList);
       }
     }
 
@@ -144,7 +144,7 @@ class Node extends GltfChildOfRootProperty {
       }
     }
 
-    return new Node._(
+    return Node._(
         cameraIndex,
         childrenIndices,
         skinIndex,
@@ -221,7 +221,7 @@ class Node extends GltfChildOfRootProperty {
     }
 
     if (_childrenIndices != null) {
-      _children = new List<Node>(_childrenIndices.length);
+      _children = List<Node>(_childrenIndices.length);
 
       resolveNodeList(
           _childrenIndices, _children, gltf.nodes, CHILDREN, context,

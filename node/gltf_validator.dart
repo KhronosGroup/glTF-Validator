@@ -55,7 +55,7 @@ abstract class _JSValidationOptions {
 
   external bool get validateAccessorData;
   external int get maxIssues;
-  external List<String> get ignoredIssues;
+  external List get ignoredIssues;
   external Object get severityOverrides;
 }
 
@@ -63,24 +63,24 @@ abstract class _JSValidationOptions {
 external Exports get exports;
 
 @JS('Object.keys')
-external List<String> _getKeys(Object value);
+external List _getKeys(Object value);
 
 void main() {
   const kDebug =
-      const bool.fromEnvironment('GLTF_VALIDATOR_DEBUG', defaultValue: false);
+      bool.fromEnvironment('GLTF_VALIDATOR_DEBUG', defaultValue: false);
 
   void onError(Object e, StackTrace st, Function reject) =>
       kDebug ? reject(st.toString()) : reject(e.toString());
 
   exports.validateBytes = allowInterop((Uint8List data, Object options) =>
-      new Promise<Object>(allowInterop((resolve, reject) {
+      Promise<Object>(allowInterop((resolve, reject) {
         validateBytes(data, options).then((result) {
           resolve(jsify(result));
         }, onError: (Object e, StackTrace st) => onError(e, st, reject));
       })));
 
   exports.validateString = allowInterop((String json, Object options) =>
-      new Promise<Object>(allowInterop((resolve, reject) {
+      Promise<Object>(allowInterop((resolve, reject) {
         validateString(json, options).then((result) {
           resolve(jsify(result));
         }, onError: (Object e, StackTrace st) => onError(e, st, reject));
@@ -90,7 +90,7 @@ void main() {
 Future<Map<String, Object>> validateBytes(
     Uint8List data, Object options) async {
   if (data is! Uint8List) {
-    throw new ArgumentError('data: Argument must be a Uint8Array.');
+    throw ArgumentError('data: Argument must be a Uint8Array.');
   }
   final _JSValidationOptions _options = _checkOptionsObject(options);
   final context = _getContextFromOptions(_options);
@@ -98,7 +98,7 @@ Future<Map<String, Object>> validateBytes(
   GltfReaderResult readerResult;
   try {
     final reader =
-        await GltfReader.detect(new Stream.fromIterable([data]), context);
+        await GltfReader.detect(Stream.fromIterable([data]), context);
     readerResult = await reader.read();
   } on GltfInvalidFormatException {
     rethrow;
@@ -109,7 +109,7 @@ Future<Map<String, Object>> validateBytes(
 
 Future<Map<String, Object>> validateString(String json, Object options) async {
   if (json is! String) {
-    throw new ArgumentError('json: Argument must be a string.');
+    throw ArgumentError('json: Argument must be a string.');
   }
   final _JSValidationOptions _options = _checkOptionsObject(options);
   final context = _getContextFromOptions(_options);
@@ -125,7 +125,7 @@ Object _checkOptionsObject(Object options) {
           options is bool ||
           options is String ||
           options is List)) {
-    throw new ArgumentError('options: Value must be an object.');
+    throw ArgumentError('options: Value must be an object.');
   }
   return options;
 }
@@ -143,7 +143,7 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
 
     if (options.externalResourceFunction != null &&
         options.externalResourceFunction is! Function) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'options.externalResourceFunction: Value must be a function.');
     } else {
       externalResourceFunction = options.externalResourceFunction;
@@ -151,7 +151,7 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
 
     if (options.validateAccessorData != null &&
         options.validateAccessorData is! bool) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'options.validateAccessorData: Value must be a boolean.');
     } else {
       validateAccessorData = options.validateAccessorData;
@@ -163,7 +163,7 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
         _getResourcesLoader(context, result, externalResourceFunction);
     await loader.load(mustValidateAccessorData: validateAccessorData);
   }
-  return new ValidationResult(uri, context, result).toMap();
+  return ValidationResult(uri, context, result).toMap();
 }
 
 Uri _getUri(Object uri) {
@@ -172,10 +172,10 @@ Uri _getUri(Object uri) {
       try {
         return Uri.parse(uri);
       } on FormatException catch (e) {
-        throw new ArgumentError('options.uri: $e.');
+        throw ArgumentError('options.uri: $e.');
       }
     } else {
-      throw new ArgumentError('options.uri: Value must be a string.');
+      throw ArgumentError('options.uri: Value must be a string.');
     }
   }
   return null;
@@ -184,16 +184,30 @@ Uri _getUri(Object uri) {
 Context _getContextFromOptions(_JSValidationOptions options) {
   ValidationOptions validationOptions;
   Map<String, Severity> severityOverrides;
+  List<String> ignoredIssues;
 
   if (options != null) {
     if (options.maxIssues != null &&
         (options.maxIssues is! int || options.maxIssues < 0)) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'options.maxIssues: Value must be a non-negative integer.');
     }
 
-    if (options.ignoredIssues != null && options.ignoredIssues is! List) {
-      throw new ArgumentError('options.ignoredIssues: Value must be an array.');
+    if (options.ignoredIssues != null) {
+      if (options.ignoredIssues is! List) {
+        throw ArgumentError('options.ignoredIssues: Value must be an array.');
+      }
+
+      ignoredIssues = <String>[];
+      for (var i = 0; i < options.ignoredIssues.length; ++i) {
+        final Object entry = options.ignoredIssues[i];
+        if (entry is String && entry.isNotEmpty) {
+          ignoredIssues.add(entry);
+        } else {
+          throw ArgumentError(
+              'options.ignoredIssues[$i]: Value must be a non-empty String.');
+        }
+      }
     }
 
     if (options.severityOverrides != null) {
@@ -201,30 +215,30 @@ Context _getContextFromOptions(_JSValidationOptions options) {
           options.severityOverrides is bool ||
           options.severityOverrides is String ||
           options.severityOverrides is List) {
-        throw new ArgumentError(
+        throw ArgumentError(
             'options.severityOverrides: Value must be an object.');
       }
 
       severityOverrides = <String, Severity>{};
 
-      for (final key in _getKeys(options.severityOverrides)) {
+      for (final String key in _getKeys(options.severityOverrides)) {
         final Object value = getProperty(options.severityOverrides, key);
         if (value is int && value >= 0 && value <= 3) {
           severityOverrides[key] = Severity.values[value];
         } else {
-          throw new ArgumentError('options.severityOverrides["$key"]: '
+          throw ArgumentError('options.severityOverrides["$key"]: '
               'Value must be one of [0, 1, 2, 3].');
         }
       }
     }
 
-    validationOptions = new ValidationOptions(
+    validationOptions = ValidationOptions(
         maxIssues: options.maxIssues,
-        ignoredIssues: options.ignoredIssues,
+        ignoredIssues: ignoredIssues,
         severityOverrides: severityOverrides);
   }
 
-  return new Context(options: validationOptions);
+  return Context(options: validationOptions);
 }
 
 ResourcesLoader _getResourcesLoader(Context context,
@@ -234,23 +248,23 @@ ResourcesLoader _getResourcesLoader(Context context,
       return null;
     }
 
-    final completer = new Completer<Uint8List>();
+    final completer = Completer<Uint8List>();
     getResource(uri.toString()).then(allowInterop((Object o) {
       if (o is Uint8List) {
         completer.complete(o);
       } else {
-        completer.completeError(
-            new ArgumentError('options.externalResourceFunction: '
+        completer
+            .completeError(ArgumentError('options.externalResourceFunction: '
                 'Promise must be fulfilled with Uint8Array.'));
       }
     }),
         allowInterop((Object e) =>
-            completer.completeError(new NodeException(e.toString()))));
+            completer.completeError(NodeException(e.toString()))));
 
     return completer.future;
   }
 
-  return new ResourcesLoader(context, readerResult.gltf,
+  return ResourcesLoader(context, readerResult.gltf,
       externalBytesFetch: ([uri]) {
         if (uri == null) {
           // GLB-stored buffer

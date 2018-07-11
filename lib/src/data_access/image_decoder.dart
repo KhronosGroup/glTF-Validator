@@ -31,7 +31,7 @@ class ImageInfo {
 
   ImageInfo._(this.mimeType, this.bits, this.format, this.width, this.height);
 
-  static const _kFormats = const <int, String>{
+  static const _kFormats = <int, String>{
     gl.RGB: 'RGB',
     gl.RGBA: 'RGBA',
     gl.LUMINANCE: 'LUMINANCE',
@@ -48,7 +48,7 @@ class ImageInfo {
   static Future<ImageInfo> parseStreamAsync(Stream<List<int>> data) {
     ImageInfoDecoder decoder;
     StreamSubscription<List<int>> subscription;
-    final completer = new Completer<ImageInfo>();
+    final completer = Completer<ImageInfo>();
 
     var isDetected = false;
 
@@ -61,10 +61,10 @@ class ImageInfo {
         } else {
           switch (_detectCodec(data)) {
             case _ImageCodec.JPEG:
-              decoder = new JpegInfoDecoder(subscription, completer);
+              decoder = JpegInfoDecoder(subscription, completer);
               break;
             case _ImageCodec.PNG:
-              decoder = new PngInfoDecoder(subscription, completer);
+              decoder = PngInfoDecoder(subscription, completer);
               break;
             default:
               subscription.cancel();
@@ -86,8 +86,8 @@ class ImageInfo {
   }
 
   static _ImageCodec _detectCodec(List<int> firstChunk) {
-    const JPEG = const <int>[0xFF, 0xD8];
-    const PNG = const <int>[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+    const JPEG = <int>[0xFF, 0xD8];
+    const PNG = <int>[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
 
     bool beginsWith(List<int> a, List<int> b) {
       for (var i = 0; i < b.length; i++) {
@@ -217,7 +217,7 @@ class JpegInfoDecoder extends ImageInfoDecoder {
                 'Invalid JPEG marker segment length.');
           }
           if (isSOF(_type)) {
-            _sofBuffer = new Uint8List(_segmentLength - 2);
+            _sofBuffer = Uint8List(_segmentLength - 2);
           }
           _state = SEGMENT;
           break;
@@ -260,7 +260,7 @@ class JpegInfoDecoder extends ImageInfoDecoder {
       format = gl.LUMINANCE;
     }
 
-    completer.complete(new ImageInfo._(mimeType, bits, format, width, height));
+    completer.complete(ImageInfo._(mimeType, bits, format, width, height));
   }
 
   @override
@@ -305,7 +305,7 @@ class PngInfoDecoder extends ImageInfoDecoder {
 
   bool _hasTrns = false;
 
-  final Uint8List _headerChunkData = new Uint8List(13); // IHDR length
+  final Uint8List _headerChunkData = Uint8List(13); // IHDR length
 
   @override
   void add(List<int> data) {
@@ -421,7 +421,7 @@ class PngInfoDecoder extends ImageInfoDecoder {
         break;
     }
 
-    completer.complete(new ImageInfo._(mimeType, bits, format, width, height));
+    completer.complete(ImageInfo._(mimeType, bits, format, width, height));
   }
 
   @override

@@ -37,7 +37,7 @@ class Scene extends GltfChildOfRootProperty {
 
     final nodesIndices = getIndicesList(map, NODES, context);
 
-    return new Scene._(nodesIndices, getName(map, context),
+    return Scene._(nodesIndices, getName(map, context),
         getExtensions(map, Scene, context), getExtras(map));
   }
 
@@ -47,7 +47,7 @@ class Scene extends GltfChildOfRootProperty {
       return;
     }
 
-    nodes = new List<Node>(_nodesIndices.length);
+    nodes = List<Node>(_nodesIndices.length);
 
     resolveNodeList(_nodesIndices, nodes, gltf.nodes, NODES, context,
         (node, nodeIndex, index) {

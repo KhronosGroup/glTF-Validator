@@ -24,10 +24,10 @@ import 'package:gltf/src/errors.dart';
 void main() {
   group('Asset', () {
     test('Empty', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/asset/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('asset')
         ..addIssue(SchemaError.undefinedProperty, args: ['version'])
         ..addIssue(SemanticError.unknownAssetMajorVersion, args: [0]);
@@ -38,10 +38,10 @@ void main() {
     });
 
     test('Unknown major version', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/1_0_version.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/1_0_version.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('asset')
         ..addIssue(SemanticError.unknownAssetMajorVersion, args: [1]);
 
@@ -51,10 +51,10 @@ void main() {
     });
 
     test('Unknown minor version', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/2_1_version.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/2_1_version.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('asset')
         ..addIssue(SemanticError.unknownAssetMinorVersion, args: [1]);
 
@@ -64,10 +64,10 @@ void main() {
     });
 
     test('Invalid version string', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/invalid_version.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/invalid_version.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('asset')
         ..addIssue(SchemaError.patternMismatch,
             name: 'version', args: ['1.0.1-dev', r'^([0-9]+)\.([0-9]+)$'])
@@ -79,10 +79,10 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/custom_property.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/custom_property.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('asset')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
 
@@ -92,8 +92,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/valid_full.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/valid_full.gltf').openRead());
 
       final result = await reader.read();
 
@@ -104,10 +104,10 @@ void main() {
     });
 
     test('Valid minVersion', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/min_version_valid.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/min_version_valid.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..addIssue(SemanticError.unknownAssetMinorVersion,
             name: 'asset', args: [1]);
 
@@ -117,10 +117,10 @@ void main() {
     });
 
     test('Invalid minVersion', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/asset/min_version_invalid.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/asset/min_version_invalid.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('asset')
         ..addIssue(SemanticError.minVersionGreaterThanVersion,
             name: 'minVersion', args: ['2.1', '2.0']);

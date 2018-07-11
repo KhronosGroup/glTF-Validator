@@ -42,12 +42,7 @@ class ResourceInfo {
 
   Map<String, Object> toMap() {
     assert(pointer != null);
-    const storageString = const <String>[
-      'data-uri',
-      'bufferView',
-      'glb',
-      'external'
-    ];
+    const storageString = <String>['data-uri', 'bufferView', 'glb', 'external'];
 
     final map = <String, Object>{
       'pointer': pointer,
@@ -94,7 +89,7 @@ class ResourcesLoader {
       final buffer = gltf.buffers[i];
       context.path.add(i.toString());
 
-      final info = new ResourceInfo(context.getPointerString())
+      final info = ResourceInfo(context.getPointerString())
         ..mimeType = APPLICATION_GLTF_BUFFER;
 
       FutureOr<List<int>> _fetchBuffer(Buffer buffer) {
@@ -167,7 +162,7 @@ class ResourcesLoader {
       final image = gltf.images[i];
       context.path.add(i.toString());
 
-      final resourceInfo = new ResourceInfo(context.getPointerString());
+      final resourceInfo = ResourceInfo(context.getPointerString());
 
       Stream<List<int>> _fetchImageData(Image image) {
         if (image.extensions.isEmpty) {
@@ -180,13 +175,13 @@ class ResourcesLoader {
           } else if (image.data != null && image.mimeType != null) {
             // Data URI, preloaded on phase 2 of GltfLoader
             resourceInfo.storage = _Storage.DataUri;
-            return new Stream.fromIterable([image.data]);
+            return Stream.fromIterable([image.data]);
           } else if (image.bufferView != null) {
             // BufferView
             resourceInfo.storage = _Storage.BufferView;
             image.tryLoadFromBufferView();
             if (image.data != null) {
-              return new Stream.fromIterable([image.data]);
+              return Stream.fromIterable([image.data]);
             }
           }
         }

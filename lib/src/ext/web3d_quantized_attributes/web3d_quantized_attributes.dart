@@ -27,14 +27,14 @@ const String DECODE_MATRIX = 'decodeMatrix';
 const String DECODED_MAX = 'decodedMax';
 const String DECODED_MIN = 'decodedMin';
 
-const List<String> WEB3D_QUANTIZED_ATTRIBUTES_MEMBERS = const <String>[
+const List<String> WEB3D_QUANTIZED_ATTRIBUTES_MEMBERS = <String>[
   DECODE_MATRIX,
   DECODED_MAX,
   DECODED_MIN
 ];
 
-const List<int> MATRIX_LENGTHS = const <int>[4, 9, 16, 25];
-const List<int> VECTOR_LENGTHS = const <int>[1, 2, 3, 4];
+const List<int> MATRIX_LENGTHS = <int>[4, 9, 16, 25];
+const List<int> VECTOR_LENGTHS = <int>[1, 2, 3, 4];
 
 class Web3dQuantizedAttributes extends Stringable {
   final List<double> decodeMatrix;
@@ -55,7 +55,7 @@ class Web3dQuantizedAttributes extends Stringable {
       Map<String, Object> map, Context context) {
     if (context.validate)
       checkMembers(map, WEB3D_QUANTIZED_ATTRIBUTES_MEMBERS, context);
-    return new Web3dQuantizedAttributes._(
+    return Web3dQuantizedAttributes._(
         getFloatList(map, DECODE_MATRIX, context,
             req: true, lengthsList: MATRIX_LENGTHS),
         getFloatList(map, DECODED_MIN, context,
@@ -65,7 +65,6 @@ class Web3dQuantizedAttributes extends Stringable {
   }
 }
 
-const Extension web3dQuantizedAttributesExtension = const Extension(
-    WEB3D_QUANTIZED_ATTRIBUTES, const <Type, ExtFuncs>{
-  Accessor: const ExtFuncs(Web3dQuantizedAttributes.fromMap)
-});
+const Extension web3dQuantizedAttributesExtension = Extension(
+    WEB3D_QUANTIZED_ATTRIBUTES,
+    <Type, ExtFuncs>{Accessor: ExtFuncs(Web3dQuantizedAttributes.fromMap)});

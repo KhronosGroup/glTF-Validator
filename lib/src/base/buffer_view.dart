@@ -62,7 +62,7 @@ class BufferView extends GltfChildOfRootProperty {
 
   void checkAccessorRefs(Accessor accessor, String semantic, Context context) {
     if (byteStride == -1) {
-      _accessors ??= new Set<Accessor>();
+      _accessors ??= Set<Accessor>();
       if (_accessors.add(accessor) && _accessors.length > 1) {
         context.addIssue(LinkError.meshPrimitiveAccessorWithoutByteStride,
             name: semantic);
@@ -105,7 +105,7 @@ class BufferView extends GltfChildOfRootProperty {
       }
     }
 
-    return new BufferView._(
+    return BufferView._(
         getIndex(map, BUFFER, context),
         getUint(map, BYTE_OFFSET, context, def: 0),
         byteLength,

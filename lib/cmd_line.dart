@@ -50,7 +50,7 @@ class ValidatorOptions {
       this.printIssues = false,
       this.printNonErrors = false});
 
-  factory ValidatorOptions.fromArgs(ArgResults args) => new ValidatorOptions(
+  factory ValidatorOptions.fromArgs(ArgResults args) => ValidatorOptions(
       validateResources: args[kValidateResources] == true,
       printIssues: args[kPlainText] == true,
       printNonErrors: args[kAllIssues] == true);
@@ -76,7 +76,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
 
   String configYaml;
   try {
-    configYaml = new File(fileName).readAsStringSync();
+    configYaml = File(fileName).readAsStringSync();
   } on FileSystemException catch (e) {
     abort(e);
   }
@@ -104,7 +104,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
 
     final Object yamlIgnoredIssues = yaml[kIgnore];
     if (yamlIgnoredIssues is List) {
-      ignoredIssues = new List.generate(yamlIgnoredIssues.length, (i) {
+      ignoredIssues = List.generate(yamlIgnoredIssues.length, (i) {
         final Object entry = yamlIgnoredIssues[i];
         if (entry is String) {
           return entry;
@@ -133,7 +133,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
       abort("$kYamlError '$kOverride' must be a map.");
     }
 
-    return new ValidationOptions(
+    return ValidationOptions(
         maxIssues: maxIssues,
         ignoredIssues: ignoredIssues,
         severityOverrides: severityOverrides);
@@ -145,7 +145,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
 
 Future<void> run(List<String> args) async {
   ArgResults argResult;
-  final parser = new ArgParser()
+  final parser = ArgParser()
     ..addFlag(ValidatorOptions.kValidateResources,
         abbr: 'r',
         help: 'Validate contents of embedded and/or '
@@ -186,7 +186,7 @@ Future<void> run(List<String> args) async {
 
   final input = argResult.rest[0];
   ValidationOptions validationOptions;
-  final validatorOptions = new ValidatorOptions.fromArgs(argResult);
+  final validatorOptions = ValidatorOptions.fromArgs(argResult);
 
   final Object configFile = argResult[ValidatorOptions.kConfig];
   if (configFile is String) {
@@ -199,9 +199,9 @@ Future<void> run(List<String> args) async {
 
     var activeTasks = 0;
     var foundErrors = false;
-    final watch = new Stopwatch()..start();
+    final watch = Stopwatch()..start();
 
-    final it = new Directory(input).listSync(recursive: true).where((entry) {
+    final it = Directory(input).listSync(recursive: true).where((entry) {
       if (entry is File) {
         final ext = path.extension(entry.path);
         return (ext == '.gltf') || (ext == '.glb');
@@ -215,7 +215,7 @@ Future<void> run(List<String> args) async {
         balancer
             .run(
                 _processFile,
-                new ValidationTask(it.current.absolute.path, validatorOptions,
+                ValidationTask(it.current.absolute.path, validatorOptions,
                     validationOptions))
             .then((hasErrors) {
           if (hasErrors) {
@@ -239,7 +239,7 @@ Future<void> run(List<String> args) async {
     }
   } else if (FileSystemEntity.isFileSync(input)) {
     if (await _processFile(
-        new ValidationTask(input, validatorOptions, validationOptions))) {
+        ValidationTask(input, validatorOptions, validationOptions))) {
       exitCode = kErrorCode;
     }
   } else {
@@ -249,15 +249,14 @@ Future<void> run(List<String> args) async {
 }
 
 Future<bool> _processFile(ValidationTask task) async {
-  final watch = new Stopwatch()..start();
+  final watch = Stopwatch()..start();
 
-  final file = new File(task.filename);
+  final file = File(task.filename);
 
   final opts = task.validatorOptions;
-  final context = new Context(options: task.validationOptions);
+  final context = Context(options: task.validationOptions);
 
-  final reader =
-      new GltfReader.filename(file.openRead(), task.filename, context);
+  final reader = GltfReader.filename(file.openRead(), task.filename, context);
 
   if (reader == null) {
     final ext = path.extension(task.filename).toLowerCase();
@@ -277,7 +276,7 @@ Future<bool> _processFile(ValidationTask task) async {
   }
 
   final validationResult =
-      new ValidationResult(new Uri.file(task.filename), context, readerResult);
+      ValidationResult(Uri.file(task.filename), context, readerResult);
 
   if (readerResult?.gltf != null && opts.validateResources) {
     final resourcesLoader = getFileResourceValidator(
@@ -290,7 +289,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final reportPath = '${path.withoutExtension(task.filename)}_report.json';
 
   // ignore: unawaited_futures
-  new File(reportPath).writeAsString(
+  File(reportPath).writeAsString(
       const JsonEncoder.withIndent('    ').convert(validationResult.toMap()));
 
   final errors = validationResult.context.errors.toList(growable: false);
@@ -298,7 +297,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final infos = validationResult.context.infos.toList(growable: false);
   final hints = validationResult.context.hints.toList(growable: false);
 
-  final sb = new StringBuffer()
+  final sb = StringBuffer()
     ..write('Loaded ${file.path}\n'
         'Errors: ${errors.length}, '
         'Warnings: ${warnings.length}, '
@@ -332,8 +331,7 @@ Future<bool> _processFile(ValidationTask task) async {
 
 ResourcesLoader getFileResourceValidator(
         Context context, Uri absoluteUri, GltfReaderResult readerResult) =>
-    new ResourcesLoader(context, readerResult.gltf,
-        externalBytesFetch: ([uri]) {
+    ResourcesLoader(context, readerResult.gltf, externalBytesFetch: ([uri]) {
       if (uri == null) {
         // GLB-stored buffer
         return readerResult.buffer;
@@ -341,10 +339,10 @@ ResourcesLoader getFileResourceValidator(
       if (isNonRelativeUri(uri)) {
         return null;
       }
-      return new File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
+      return File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
     }, externalStreamFetch: (uri) {
       if (isNonRelativeUri(uri)) {
         return null;
       }
-      return new File.fromUri(absoluteUri.resolveUri(uri)).openRead();
+      return File.fromUri(absoluteUri.resolveUri(uri)).openRead();
     });

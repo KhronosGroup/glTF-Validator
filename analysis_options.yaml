@@ -1,6 +1,5 @@
 analyzer:
   strong-mode:
-    # declaration-casts: False
     implicit-casts: False
     implicit-dynamic: False
 
@@ -50,6 +49,7 @@ linter:
     - empty_catches
     - empty_constructor_bodies
     - empty_statements
+#    - file_names
     - hash_and_equals
     - implementation_imports
     - invariant_booleans
@@ -57,11 +57,13 @@ linter:
     - join_return_with_assignment
     - library_names
     - library_prefixes
+#    - lines_longer_than_80_chars
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
     - no_adjacent_strings_in_list
     - no_duplicate_case_values
     - non_constant_identifier_names
+    - null_closures
     - omit_local_variable_types
     - one_member_abstracts
     - only_throw_errors
@@ -107,8 +109,10 @@ linter:
     - type_init_formals
     - unawaited_futures
     - unnecessary_brace_in_string_interps
+    - unnecessary_const
     - unnecessary_getters_setters
     - unnecessary_lambdas
+    - unnecessary_new
     - unnecessary_null_aware_assignments
     - unnecessary_null_in_if_null_operators
     - unnecessary_overrides

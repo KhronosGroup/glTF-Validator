@@ -20,7 +20,7 @@ library gltf.base.asset;
 import 'package:gltf/src/base/gltf_property.dart';
 
 class Asset extends GltfProperty {
-  static final RegExp versionRegexp = new RegExp(r'^([0-9]+)\.([0-9]+)$');
+  static final RegExp versionRegexp = RegExp(r'^([0-9]+)\.([0-9]+)$');
 
   final String copyright;
   final String generator;
@@ -72,7 +72,7 @@ class Asset extends GltfProperty {
       checkMembers(map, ASSET_MEMBERS, context);
     }
 
-    final asset = new Asset._(
+    final asset = Asset._(
         getString(map, COPYRIGHT, context),
         getString(map, GENERATOR, context),
         getString(map, VERSION, context, req: true, regexp: versionRegexp),

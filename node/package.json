@@ -12,6 +12,7 @@
         "name": "The Khronos Group Inc."
     },
     "main": "index.js",
+    "module": "module.mjs",
     "keywords": [
         "gltf",
         "webgl",

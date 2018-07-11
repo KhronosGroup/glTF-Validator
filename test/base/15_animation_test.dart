@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Animation', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/empty.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('animations')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('animations')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
@@ -69,12 +69,12 @@ void main() {
     });
 
     test('Unresolved references', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/unresolved_references.gltf')
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/unresolved_references.gltf')
               .openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('animations')
         ..path.add('0')
         ..path.add('channels')
@@ -96,11 +96,11 @@ void main() {
     });
 
     test('Misc', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/misc.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/misc.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('animations')
         ..path.add('0')
         ..path.add('samplers')
@@ -159,11 +159,11 @@ void main() {
     });
 
     test('Override interpolation', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/override_interpolation.gltf')
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/override_interpolation.gltf')
               .openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('animations')
         ..path.add('0')
         ..path.add('samplers')
@@ -177,11 +177,11 @@ void main() {
     });
 
     test('Too few cubic frames', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/too_few_cubic_frames.gltf')
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/too_few_cubic_frames.gltf')
               .openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('animations')
         ..path.add('0')
         ..path.add('samplers')
@@ -196,12 +196,12 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/animation/valid_full.gltf').openRead());
+      final reader = GltfJsonReader(
+          File('test/base/data/animation/valid_full.gltf').openRead());
 
       final result = await reader.read();
 
-      final context = new Context()
+      final context = Context()
         ..path.add('nodes')
         ..path.add('0')
         ..addIssue(SemanticError.nodeEmpty);

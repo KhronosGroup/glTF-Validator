@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Sampler', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/sampler/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/sampler/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('samplers')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,8 +39,8 @@ void main() {
     });
 
     test('Empty object', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/sampler/empty_object.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/sampler/empty_object.gltf').openRead(),
           ignoreUnusedContext);
 
       await reader.read();
@@ -49,11 +49,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/sampler/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/sampler/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('samplers')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
@@ -64,8 +64,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/sampler/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/sampler/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();

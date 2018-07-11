@@ -224,7 +224,7 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
     }
     if (context.validate) {
       context.path.add(name);
-      final uniqueItems = new Set<int>();
+      final uniqueItems = Set<int>();
       for (var i = 0; i < value.length; i++) {
         final v = value[i];
         if (v is int && v >= 0) {
@@ -355,7 +355,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     }
 
     var wrongMemberFound = false;
-    final result = new List<double>(value.length);
+    final result = List<double>(value.length);
     for (var i = 0; i < value.length; ++i) {
       final v = value[i];
       if (v is num) {
@@ -448,7 +448,7 @@ List<String> getStringList(
     if (context.validate) {
       var wrongMemberFound = false;
       context.path.add(name);
-      final uniqueItems = new Set<String>();
+      final uniqueItems = Set<String>();
       for (var i = 0; i < value.length; i++) {
         final v = value[i];
         if (v is String) {
@@ -534,7 +534,7 @@ Map<String, Object> getExtensions(
     }
 
     final functions =
-        context.extensionsFunctions[new ExtensionTuple(type, extension)];
+        context.extensionsFunctions[ExtensionTuple(type, extension)];
 
     if (functions == null) {
       context.addIssue(LinkError.unexpectedExtensionObject, name: extension);
@@ -550,7 +550,7 @@ Map<String, Object> getExtensions(
         context.linkableExtensions
             .putIfAbsent(
                 overriddenType ?? type, () => <LinkableExtensionEntry>[])
-            .add(new LinkableExtensionEntry(
+            .add(LinkableExtensionEntry(
                 object, context.path.toList(growable: false)));
       }
       context.path.removeLast();
@@ -581,7 +581,7 @@ bool checkEnum<T>(String name, T value, Iterable<T> list, Context context,
 void checkMembers(
     Map<String, Object> map, List<String> knownMembers, Context context,
     {bool useSuper = true}) {
-  const superMembers = const <String>[EXTENSIONS, EXTRAS];
+  const superMembers = <String>[EXTENSIONS, EXTRAS];
   for (final k in map.keys) {
     if (!knownMembers.contains(k) && !(useSuper && superMembers.contains(k)))
       context.addIssue(SchemaError.unexpectedProperty, name: k);
@@ -639,11 +639,11 @@ class SafeList<T> extends ListBase<T> {
   final int _length;
   final String name;
 
-  SafeList(this._length, this.name) : _list = new List<T>(_length);
+  SafeList(this._length, this.name) : _list = List<T>(_length);
 
   SafeList.empty(this.name)
       : _length = 0,
-        _list = new List<T>(0);
+        _list = List<T>(0);
 
   @override
   T operator [](int index) =>
@@ -663,7 +663,7 @@ class SafeList<T> extends ListBase<T> {
 
   @override
   set length(int newLength) {
-    throw new UnsupportedError('Changing length is not supported');
+    throw UnsupportedError('Changing length is not supported');
   }
 
   @override
@@ -681,16 +681,16 @@ class SafeList<T> extends ListBase<T> {
   }
 }
 
-final _float = new Float32List(1);
+final _float = Float32List(1);
 double _doubleToSingle(double value) {
   _float[0] = value;
   return _float[0];
 }
 
-final _matrix = new Matrix4.zero();
-final _translation = new Vector3.zero();
-final _rotation = new Quaternion.identity();
-final _scale = new Vector3.zero();
+final _matrix = Matrix4.zero();
+final _translation = Vector3.zero();
+final _rotation = Quaternion.identity();
+final _scale = Vector3.zero();
 bool isTrsDecomposable(Matrix4 matrix) {
   if (matrix[3] != 0.0 ||
       matrix[7] != 0.0 ||
@@ -723,18 +723,18 @@ List<int> createTypedIntList(int type, int length) {
   assert(length > 0);
   switch (type) {
     case gl.BYTE:
-      return new Int8List(length);
+      return Int8List(length);
     case gl.UNSIGNED_BYTE:
-      return new Uint8List(length);
+      return Uint8List(length);
     case gl.SHORT:
-      return new Int16List(length);
+      return Int16List(length);
     case gl.UNSIGNED_SHORT:
-      return new Uint16List(length);
+      return Uint16List(length);
     case gl.INT:
-      return new Int32List(length);
+      return Int32List(length);
     case gl.UNSIGNED_INT:
-      return new Uint32List(length);
+      return Uint32List(length);
     default:
-      throw new ArgumentError();
+      throw ArgumentError();
   }
 }

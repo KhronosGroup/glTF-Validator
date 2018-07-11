@@ -36,14 +36,14 @@ class ValidationResult {
       'uri': absoluteUri.toString(),
       'mimeType': readerResult?.mimeType,
       'validatorVersion': kGltfValidatorVersion,
-      'validatedAt': new DateTime.now().toUtc().toIso8601String()
+      'validatedAt': DateTime.now().toUtc().toIso8601String()
     };
 
     final issues = context.issues;
     final issuesMap = <String, Object>{};
     final numIssues = [0, 0, 0, 0];
 
-    final messages = new List<Map<String, Object>>(issues.length);
+    final messages = List<Map<String, Object>>(issues.length);
     for (var i = 0; i < messages.length; ++i) {
       final issue = issues[i];
       ++numIssues[issue.severity.index];

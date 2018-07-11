@@ -27,7 +27,7 @@ import 'package:gltf/gltf.dart';
 const _kChunkSize = 1024 * 1024;
 const _kMaxReportLength = 512 * 1024;
 const _kMaxIssuesCount = 16 * 1024;
-const _kJsonEncoder = const JsonEncoder.withIndent('    ');
+const _kJsonEncoder = JsonEncoder.withIndent('    ');
 
 final _dropZone = querySelector('#dropZone');
 final _output = querySelector('#output');
@@ -36,7 +36,7 @@ final _inputLink = querySelector('#inputLink');
 final _truncatedWarning = querySelector('#truncatedWarning');
 final _validityLabel = querySelector('#validityLabel');
 
-final _sw = new Stopwatch();
+final _sw = Stopwatch();
 
 void main() {
   // Needed to prevent flickering while dragging over text.
@@ -110,16 +110,16 @@ Future<ValidationResult> _doValidate(List<File> files) async {
   GltfReader reader;
 
   final context =
-      new Context(options: new ValidationOptions(maxIssues: _kMaxIssuesCount));
+      Context(options: ValidationOptions(maxIssues: _kMaxIssuesCount));
 
   for (gltfFile in files) {
     final lowerCaseName = gltfFile.name.toLowerCase();
     if (lowerCaseName.endsWith('.gltf')) {
-      reader = new GltfJsonReader(_getFileStream(gltfFile), context);
+      reader = GltfJsonReader(_getFileStream(gltfFile), context);
       break;
     }
     if (lowerCaseName.endsWith('.glb')) {
-      reader = new GlbReader(_getFileStream(gltfFile), context);
+      reader = GlbReader(_getFileStream(gltfFile), context);
       break;
     }
   }
@@ -131,7 +131,7 @@ Future<ValidationResult> _doValidate(List<File> files) async {
   final readerResult = await reader.read();
 
   if (readerResult?.gltf != null) {
-    final resourcesLoader = new ResourcesLoader(context, readerResult.gltf,
+    final resourcesLoader = ResourcesLoader(context, readerResult.gltf,
         externalBytesFetch: ([uri]) {
       if (uri != null) {
         final file = _getFileByUri(files, uri);
@@ -155,7 +155,7 @@ Future<ValidationResult> _doValidate(List<File> files) async {
     await resourcesLoader.load();
   }
   final validationResult =
-      new ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
+      ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
 
   _sw.stop();
   print('Validation: ${_sw.elapsedMilliseconds}ms.');
@@ -176,13 +176,13 @@ File _getFileByUri(List<File> files, Uri uri) {
 
 Stream<Uint8List> _getFileStream(File file) {
   var isCanceled = false;
-  final controller = new StreamController<Uint8List>(onCancel: () {
+  final controller = StreamController<Uint8List>(onCancel: () {
     isCanceled = true;
   });
 
   controller.onListen = () {
     var index = 0;
-    final fileReader = new FileReader();
+    final fileReader = FileReader();
     fileReader.onLoadEnd.listen((_) {
       if (isCanceled) {
         return;
@@ -209,7 +209,7 @@ Stream<Uint8List> _getFileStream(File file) {
 }
 
 Future<Uint8List> _getFile(File file) async {
-  final fileReader = new FileReader()..readAsArrayBuffer(file);
+  final fileReader = FileReader()..readAsArrayBuffer(file);
   await fileReader.onLoadEnd.first;
   final result = fileReader.result;
   if (result is Uint8List) {

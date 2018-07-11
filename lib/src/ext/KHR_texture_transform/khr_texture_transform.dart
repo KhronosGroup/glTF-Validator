@@ -25,7 +25,7 @@ import 'package:gltf/src/ext/extensions.dart';
 const String KHR_TEXTURE_TRANSFORM = 'KHR_texture_transform';
 const String OFFSET = 'offset';
 
-const List<String> KHR_TEXTURE_TRANSFORM_MEMBERS = const <String>[
+const List<String> KHR_TEXTURE_TRANSFORM_MEMBERS = <String>[
   OFFSET,
   ROTATION,
   SCALE,
@@ -51,7 +51,7 @@ class KhrTextureTransform extends GltfProperty {
       checkMembers(map, KHR_TEXTURE_TRANSFORM_MEMBERS, context);
     }
 
-    return new KhrTextureTransform._(
+    return KhrTextureTransform._(
         getFloatList(map, OFFSET, context,
             def: const [0.0, 0.0], lengthsList: const [2]),
         getFloat(map, ROTATION, context, def: 0.0),
@@ -76,8 +76,8 @@ class KhrTextureTransform extends GltfProperty {
 }
 
 const Extension khrTextureTransformExtension =
-    const Extension(KHR_TEXTURE_TRANSFORM, const <Type, ExtFuncs>{
-  TextureInfo: const ExtFuncs(KhrTextureTransform.fromMap),
-  NormalTextureInfo: const ExtFuncs(KhrTextureTransform.fromMap),
-  OcclusionTextureInfo: const ExtFuncs(KhrTextureTransform.fromMap),
+    Extension(KHR_TEXTURE_TRANSFORM, <Type, ExtFuncs>{
+  TextureInfo: ExtFuncs(KhrTextureTransform.fromMap),
+  NormalTextureInfo: ExtFuncs(KhrTextureTransform.fromMap),
+  OcclusionTextureInfo: ExtFuncs(KhrTextureTransform.fromMap),
 });

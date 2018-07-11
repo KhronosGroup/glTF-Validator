@@ -26,7 +26,7 @@ const String CESIUM_RTC = 'CESIUM_RTC';
 const String CESIUM_RTC_MODELVIEW = 'CESIUM_RTC_MODELVIEW';
 
 const String CENTER = 'center';
-const List<String> CESIUM_RTC_MEMBERS = const <String>[CENTER];
+const List<String> CESIUM_RTC_MEMBERS = <String>[CENTER];
 
 class CesiumRtc extends Stringable {
   final List<double> center;
@@ -41,13 +41,13 @@ class CesiumRtc extends Stringable {
       checkMembers(map, CESIUM_RTC_MEMBERS, context);
     }
 
-    return new CesiumRtc._(
+    return CesiumRtc._(
         getFloatList(map, CENTER, context, req: true, lengthsList: const [3]));
   }
 }
 
-const Extension cesiumRtcExtension = const Extension(CESIUM_RTC,
-    const <Type, ExtFuncs>{Gltf: const ExtFuncs(CesiumRtc.fromMap)});
+const Extension cesiumRtcExtension =
+    Extension(CESIUM_RTC, <Type, ExtFuncs>{Gltf: ExtFuncs(CesiumRtc.fromMap)});
 
 /*
   @override

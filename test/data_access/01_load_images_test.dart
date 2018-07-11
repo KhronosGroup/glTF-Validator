@@ -26,14 +26,14 @@ import 'package:gltf/cmd_line.dart';
 import '../utils.dart';
 
 Future<ValidationResult> getValidationResult(String filename) async {
-  final file = new File(filename);
+  final file = File(filename);
   final context = ignoreUnusedContext;
-  final reader = new GltfReader.filename(file.openRead(), filename, context);
+  final reader = GltfReader.filename(file.openRead(), filename, context);
 
   final readerResult = await reader.read();
 
   final validationResult =
-      new ValidationResult(file.absolute.uri, reader.context, readerResult);
+      ValidationResult(file.absolute.uri, reader.context, readerResult);
 
   final resourcesLoader = getFileResourceValidator(
       context, validationResult.absoluteUri, readerResult);
@@ -56,7 +56,7 @@ void main() {
       final validationResult =
           await getValidationResult('test/data_access/image/data_uri.gltf');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..path.add('0')
         ..addIssue(DataError.imageMimeTypeInvalid,
@@ -104,7 +104,7 @@ void main() {
       final validationResult = await getValidationResult(
           'test/data_access/image/invalid_external.gltf');
 
-      final context = new Context()
+      final context = Context()
         ..path.add('images')
         ..addIssue(DataError.imageUnexpectedEos, index: 0)
         ..addIssue(DataError.imageUnrecognizedFormat, index: 1)

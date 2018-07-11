@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Node', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/node/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/node/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('nodes')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/node/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/node/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('nodes')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
@@ -55,11 +55,11 @@ void main() {
     });
 
     test('Unresolved references', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/node/unresolved_references.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/node/unresolved_references.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('nodes')
         ..path.add('0')
         ..addIssue(LinkError.unresolvedReference, name: 'camera', args: [0])
@@ -82,11 +82,11 @@ void main() {
     });
 
     test('Misc', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/node/misc.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/node/misc.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('nodes')
         ..path.add('0')
         ..addIssue(SemanticError.nodeRotationNonUnit, name: 'rotation')
@@ -117,8 +117,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/node/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/node/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();

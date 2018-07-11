@@ -23,7 +23,7 @@ import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
 
-const List<String> KHR_MATERIALS_UNLIT_MEMBERS = const <String>[];
+const List<String> KHR_MATERIALS_UNLIT_MEMBERS = <String>[];
 
 class KhrMaterialsUnlit extends GltfProperty {
   KhrMaterialsUnlit._(Map<String, Object> extensions, Object extras)
@@ -38,11 +38,9 @@ class KhrMaterialsUnlit extends GltfProperty {
 
     final extensions = getExtensions(map, KhrMaterialsUnlit, context);
 
-    return new KhrMaterialsUnlit._(extensions, getExtras(map));
+    return KhrMaterialsUnlit._(extensions, getExtras(map));
   }
 }
 
-const Extension khrMaterialsUnlitExtension = const Extension(
-    KHR_MATERIALS_UNLIT, const <Type, ExtFuncs>{
-  Material: const ExtFuncs(KhrMaterialsUnlit.fromMap)
-});
+const Extension khrMaterialsUnlitExtension = Extension(KHR_MATERIALS_UNLIT,
+    <Type, ExtFuncs>{Material: ExtFuncs(KhrMaterialsUnlit.fromMap)});

@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Mesh', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/mesh/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Empty object', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/empty_object.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/empty_object.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..addIssue(SchemaError.undefinedProperty, args: ['primitives'])
@@ -90,11 +90,11 @@ void main() {
     });
 
     test('Skins', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/skins.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/skins.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('1')
         ..path.add('primitives')
@@ -108,11 +108,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty');
@@ -123,11 +123,11 @@ void main() {
     });
 
     test('Unresolved references', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/unresolved_references.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/unresolved_references.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..path.add('primitives')
@@ -147,11 +147,11 @@ void main() {
     });
 
     test('Misc', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/misc.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/misc.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..addIssue(SemanticError.meshInvalidWeightsCount,
@@ -231,13 +231,13 @@ void main() {
     });
 
     test('Indices', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/indices.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/indices.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..path.add('primitives')
@@ -267,13 +267,13 @@ void main() {
     });
 
     test('Morphs', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/morphs.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/morphs.gltf').openRead(),
           ignoreUnusedContext);
 
       await reader.read();
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..path.add('primitives')
@@ -307,11 +307,10 @@ void main() {
     });
 
     test('UV Bindings', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/uv.gltf').openRead(),
-          ignoreUnusedContext);
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/uv.gltf').openRead(), ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('meshes')
         ..path.add('0')
         ..path.add('primitives')
@@ -363,8 +362,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/mesh/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/mesh/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();

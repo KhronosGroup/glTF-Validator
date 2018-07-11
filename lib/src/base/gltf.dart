@@ -117,7 +117,7 @@ class Gltf extends GltfProperty {
     // Helper function for converting JSON array to List of proper glTF objects
     SafeList<T> toSafeList<T>(String name, FromMapFunction<T> fromMap) {
       if (!map.containsKey(name)) {
-        return new SafeList<T>.empty(name);
+        return SafeList<T>.empty(name);
       }
 
       resetPath();
@@ -125,7 +125,7 @@ class Gltf extends GltfProperty {
       final itemsList = map[name];
       if (itemsList is List<Object>) {
         if (itemsList.isNotEmpty) {
-          final items = new SafeList<T>(itemsList.length, name);
+          final items = SafeList<T>(itemsList.length, name);
           context.path.add(name);
           for (var i = 0; i < itemsList.length; i++) {
             final itemMap = itemsList[i];
@@ -142,12 +142,12 @@ class Gltf extends GltfProperty {
           return items;
         } else {
           context.addIssue(SchemaError.emptyEntity, name: name);
-          return new SafeList<T>.empty(name);
+          return SafeList<T>.empty(name);
         }
       } else {
         context.addIssue(SchemaError.typeMismatch,
             name: name, args: [itemsList, 'array']);
-        return new SafeList<T>.empty(name);
+        return SafeList<T>.empty(name);
       }
     }
 
@@ -212,7 +212,7 @@ class Gltf extends GltfProperty {
 
     resetPath();
 
-    final gltf = new Gltf._(
+    final gltf = Gltf._(
         extensionsUsed,
         extensionsRequired,
         accessors,
@@ -280,7 +280,7 @@ class Gltf extends GltfProperty {
     // Check node tree loops and orphaned objects
     if (context.validate) {
       context.path.add(NODES);
-      final seenNodes = new Set<Node>();
+      final seenNodes = Set<Node>();
       gltf.nodes.forEachWithIndices((i, node) {
         if (!node.isJoint &&
             node.children == null &&

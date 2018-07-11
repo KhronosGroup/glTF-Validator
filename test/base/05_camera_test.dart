@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Camera', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/camera/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/camera/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('cameras')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Empty object & empty nested objects', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/camera/empty_object.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/camera/empty_object.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('cameras')
         ..path.add('0')
         ..addIssue(SchemaError.undefinedProperty, args: ['type'])
@@ -77,11 +77,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/camera/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/camera/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('cameras')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
@@ -99,8 +99,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/camera/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/camera/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();
@@ -112,11 +112,11 @@ void main() {
     });
 
     test('Z Far / Z Near, ambigous type', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/camera/invalid_cameras.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/camera/invalid_cameras.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('cameras')
         ..path.add('0')
         ..addIssue(SchemaError.oneOfMismatch,

@@ -26,10 +26,10 @@ import '../utils.dart';
 void main() {
   group('Skin', () {
     test('Empty array', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/skin/empty.gltf').openRead());
+      final reader =
+          GltfJsonReader(File('test/base/data/skin/empty.gltf').openRead());
 
-      final context = new Context()
+      final context = Context()
         ..path.add('skins')
         ..addIssue(SchemaError.emptyEntity);
 
@@ -39,11 +39,11 @@ void main() {
     });
 
     test('Custom Property', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/skin/custom_property.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/skin/custom_property.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('skins')
         ..path.add('0')
         ..addIssue(SchemaError.unexpectedProperty, name: 'customProperty')
@@ -55,11 +55,11 @@ void main() {
     });
 
     test('Unresolved references', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/skin/unresolved_references.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/skin/unresolved_references.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('skins')
         ..path.add('0')
         ..addIssue(LinkError.unresolvedReference,
@@ -74,11 +74,11 @@ void main() {
     });
 
     test('Misc', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/skin/misc.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/skin/misc.gltf').openRead(),
           ignoreUnusedContext);
 
-      final context = new Context()
+      final context = Context()
         ..path.add('skins')
         ..path.add('0')
         ..addIssue(LinkError.skinIbmInvalidFormat,
@@ -96,8 +96,8 @@ void main() {
     });
 
     test('Valid', () async {
-      final reader = new GltfJsonReader(
-          new File('test/base/data/skin/valid_full.gltf').openRead(),
+      final reader = GltfJsonReader(
+          File('test/base/data/skin/valid_full.gltf').openRead(),
           ignoreUnusedContext);
 
       final result = await reader.read();

@@ -77,7 +77,7 @@ class Buffer extends GltfChildOfRootProperty {
       }
     }
 
-    return new Buffer._(uri, data, byteLength, hasUri, getName(map, context),
+    return Buffer._(uri, data, byteLength, hasUri, getName(map, context),
         getExtensions(map, Buffer, context), getExtras(map));
   }
 }
