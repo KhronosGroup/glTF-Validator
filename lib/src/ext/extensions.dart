@@ -89,6 +89,7 @@ const List<String> kReservedPrefixes = <String>[
   'NV_',
   'OWLII_',
   'S8S_',
+  'SI_',
   'SKFB_',
   'WEB3D_'
 ];
