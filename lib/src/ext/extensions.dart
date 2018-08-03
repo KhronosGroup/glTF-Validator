@@ -84,6 +84,7 @@ const List<String> kReservedPrefixes = <String>[
   'CVTOOLS_',
   'FB_',
   'GOOGLE_',
+  'LLQ_',
   'MOZ_',
   'MSFT_',
   'NV_',
