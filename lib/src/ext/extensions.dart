@@ -75,6 +75,7 @@ const List<Extension> defaultExtensions = <Extension>[
 const List<String> kReservedPrefixes = <String>[
   'KHR_',
   'EXT_',
+  'ADOBE_',
   'AGI_',
   'ALI_',
   'AMZN_',
