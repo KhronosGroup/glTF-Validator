@@ -1,3 +1,7 @@
+## 2.0.0-dev.2.5
+
+* Updated extension reserved prefixes.
+
 ## 2.0.0-dev.2.4
 
 * Improved errors on invalid JS API usage.
