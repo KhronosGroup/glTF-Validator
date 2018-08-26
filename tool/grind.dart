@@ -157,7 +157,7 @@ void npm() {
 @Depends(npm)
 @Task('Publish package to npm.')
 void npmPublish() {
-  run(npmExecutable, arguments: ['publish'], workingDirectory: _nodeTarget);
+  run(npmExecutable, arguments: ['publish', '--loglevel=verbose'], workingDirectory: _nodeTarget);
 }
 
 final _args = ['build', '--delete-conflicting-outputs', '--output'];
