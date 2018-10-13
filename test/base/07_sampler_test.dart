@@ -72,7 +72,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.samplers.toString(),
+      expect(
+          result.gltf.samplers.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{magFilter: 9728, minFilter: 9987, wrapS: 33071, wrapT: 33648, extensions: {}}]');
     });
   });

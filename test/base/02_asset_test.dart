@@ -99,7 +99,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.asset.toString(),
+      expect(
+          result.gltf.asset.toString(),
+          //ignore: lines_longer_than_80_chars
           '{copyright: Khronos Group Inc., generator: glTF 2.0 Validator test suite, version: 2.0, minVersion: 2.0, extensions: {}}');
     });
 

@@ -80,7 +80,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.buffers.toString(),
+      expect(
+          result.gltf.buffers.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{uri: one_byte.bin, byteLength: 1, extensions: {}}, {byteLength: 1, extensions: {}}]');
     });
 

@@ -306,9 +306,10 @@ class Accessor extends GltfChildOfRootProperty {
                   .setUsage(BufferViewUsage.Other, BUFFER_VIEW, context);
 
               if (context.validate) {
-                if (values._bufferView.byteStride != -1)
+                if (values._bufferView.byteStride != -1) {
                   context.addIssue(SemanticError.bufferViewInvalidByteStride,
                       name: BUFFER_VIEW);
+                }
 
                 _checkByteOffsetAndLength(
                     values.byteOffset,
@@ -680,8 +681,9 @@ class AccessorSparseIndices extends GltfProperty {
 
   static AccessorSparseIndices fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, ACCESSOR_SPARSE_INDICES_MEMBERS, context);
+    }
 
     return AccessorSparseIndices._(
         getIndex(map, BUFFER_VIEW, context, req: true),
@@ -716,8 +718,9 @@ class AccessorSparseValues extends GltfProperty {
 
   static AccessorSparseValues fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, ACCESSOR_SPARSE_VALUES_MEMBERS, context);
+    }
 
     return AccessorSparseValues._(
         getIndex(map, BUFFER_VIEW, context, req: true),

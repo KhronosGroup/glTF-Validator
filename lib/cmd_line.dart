@@ -174,8 +174,8 @@ Future<void> run(List<String> args) async {
       ..write('Usage: gltf_validator [<options>] <input>\n\n'
           'Validation report will be written to '
           '`<asset_filename>_report.json`.\n'
-          'If <input> is a directory, '
-          'validation reports will be recursively created for each glTF asset.\n\n'
+          'If <input> is a directory, validation reports will be recursively '
+          'created for each glTF asset.\n\n'
           'Validation log will be printed to stderr.\n\n'
           'Shell return code will be non-zero '
           'if at least one error was found.\n')

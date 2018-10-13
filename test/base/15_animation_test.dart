@@ -208,7 +208,9 @@ void main() {
 
       expect(reader.context.issues, unorderedMatches(context.issues));
 
-      expect(result.gltf.animations.toString(),
+      expect(
+          result.gltf.animations.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{channels: [{sampler: 0, target: {node: 0, path: scale, extensions: {}}, extensions: {}}], samplers: [{input: 0, interpolation: LINEAR, output: 1, extensions: {}}], extensions: {}}]');
     });
   });

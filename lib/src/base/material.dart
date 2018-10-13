@@ -156,8 +156,9 @@ class PbrMetallicRoughness extends GltfProperty {
 
   static PbrMetallicRoughness fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, PBR_METALLIC_ROUGHNESS_MEMBERS, context);
+    }
 
     final baseColorFactor = getFloatList(map, BASE_COLOR_FACTOR, context,
         lengthsList: const [4],

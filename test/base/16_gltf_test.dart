@@ -144,7 +144,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.toString(),
+      expect(
+          result.gltf.toString(),
+          //ignore: lines_longer_than_80_chars
           '{asset: {version: 2.0, extensions: {}}, accessors: [], animations: [], buffers: [], bufferViews: [], cameras: [], images: [], materials: [], meshes: [], nodes: [], samplers: [], scenes: [], scene: -1, skins: [], textures: [], extensionsRequired: [], extensionsUsed: [], extensions: {}}');
     });
   });

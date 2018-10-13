@@ -108,7 +108,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.materials.toString(),
+      expect(
+          result.gltf.materials.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{pbrMetallicRoughness: {baseColorFactor: [1.0, 0.0, 1.0, 1.0], baseColorTexture: {index: 0, texCoord: 0, extensions: {}}, metallicFactor: 0.5, roughnessFactor: 0.5, metallicRoughnessTexture: {index: 1, texCoord: 1, extensions: {}}, extensions: {}}, normalTexture: {scale: 2.1, index: 2, texCoord: 2, extensions: {}}, occlusionTexture: {strength: 0.5, index: 3, texCoord: 3, extensions: {}}, emissiveTexture: {index: 4, texCoord: 4, extensions: {}}, emissiveFactor: [0.0, 1.0, 0.0], alphaMode: MASK, alphaCutoff: 0.4, doubleSided: true, extensions: {}}]');
     });
 

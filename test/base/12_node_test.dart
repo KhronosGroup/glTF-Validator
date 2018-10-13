@@ -125,7 +125,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.nodes.toString(),
+      expect(
+          result.gltf.nodes.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{camera: 0, children: [1], skin: 0, matrix: [2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0], mesh: 0, weights: [0.5], extensions: {}}, {camera: -1, skin: -1, matrix: null, mesh: -1, rotation: 0.0, 0.0, 0.0 @ 1.0, scale: [1.0,1.0,1.0], translation: [0.0,0.0,0.0], extensions: {}}]');
     });
   });

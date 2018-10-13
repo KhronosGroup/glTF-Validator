@@ -67,8 +67,9 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
 
   static KhrMaterialsPbrSpecularGlossiness fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, KHR_MATERIALS_PBRSPECULARGLOSSINESS_MEMBERS, context);
+    }
 
     final diffuseFactor = getFloatList(map, DIFFUSE_FACTOR, context,
         lengthsList: const [4],

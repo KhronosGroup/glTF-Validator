@@ -583,8 +583,9 @@ void checkMembers(
     {bool useSuper = true}) {
   const superMembers = <String>[EXTENSIONS, EXTRAS];
   for (final k in map.keys) {
-    if (!knownMembers.contains(k) && !(useSuper && superMembers.contains(k)))
+    if (!knownMembers.contains(k) && !(useSuper && superMembers.contains(k))) {
       context.addIssue(SchemaError.unexpectedProperty, name: k);
+    }
   }
 }
 

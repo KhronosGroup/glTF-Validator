@@ -104,7 +104,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.skins.toString(),
+      expect(
+          result.gltf.skins.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{inverseBindMatrices: 0, skeleton: 0, joints: [0, 1], extensions: {}}]');
     });
   });

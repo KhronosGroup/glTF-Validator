@@ -53,8 +53,10 @@ class Web3dQuantizedAttributes extends Stringable {
 
   static Web3dQuantizedAttributes fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, WEB3D_QUANTIZED_ATTRIBUTES_MEMBERS, context);
+    }
+
     return Web3dQuantizedAttributes._(
         getFloatList(map, DECODE_MATRIX, context,
             req: true, lengthsList: MATRIX_LENGTHS),
