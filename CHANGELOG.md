@@ -1,3 +1,9 @@
+## 2.0.0-dev.2.6
+
+* Fixed crash on validating sparse accessors when data is unavailable (#99).
+
+* Added `NON_OBJECT_EXTRAS` validation issue.
+
 ## 2.0.0-dev.2.5
 
 * Updated extension reserved prefixes.
