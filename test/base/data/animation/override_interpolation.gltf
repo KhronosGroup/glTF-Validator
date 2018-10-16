@@ -65,10 +65,14 @@
     ],
     "nodes": [
         {
-            "extras": "not empty"
+            "extras": {
+                "value": "not empty"
+            }
         },
         {
-            "extras": "not empty"
+            "extras": {
+                "value": "not empty"
+            }
         }
     ]
 }

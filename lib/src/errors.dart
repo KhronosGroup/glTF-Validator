@@ -384,6 +384,11 @@ class SemanticError extends IssueType {
           '${(args[1] as Iterable).map(_q)}.',
       Severity.Warning);
 
+  static final SemanticError nonObjectExtras = SemanticError._(
+      'NON_OBJECT_EXTRAS',
+      (args) => 'Prefer JSON Objects for extras.',
+      Severity.Information);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);

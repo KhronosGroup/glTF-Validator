@@ -39,7 +39,7 @@ class KhrMaterialsUnlit extends GltfProperty {
 
     final extensions = getExtensions(map, KhrMaterialsUnlit, context);
 
-    return KhrMaterialsUnlit._(extensions, getExtras(map));
+    return KhrMaterialsUnlit._(extensions, getExtras(map, context));
   }
 }
 

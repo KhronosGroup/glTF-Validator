@@ -89,7 +89,7 @@ class Image extends GltfChildOfRootProperty {
     }
 
     return Image._(bufferViewIndex, uri, mimeType, data, getName(map, context),
-        getExtensions(map, Image, context), getExtras(map));
+        getExtensions(map, Image, context), getExtras(map, context));
   }
 
   @override

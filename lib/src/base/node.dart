@@ -156,7 +156,7 @@ class Node extends GltfChildOfRootProperty {
         weightsList,
         getName(map, context),
         getExtensions(map, Node, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   Camera get camera => _camera;

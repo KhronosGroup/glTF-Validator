@@ -233,7 +233,7 @@ class Gltf extends GltfProperty {
         skins,
         textures,
         getExtensions(map, Gltf, context),
-        getExtras(map));
+        getExtras(map, context));
 
     // Step 2: linking IDs
     void linkCollection(SafeList<GltfProperty> list, Type type) {

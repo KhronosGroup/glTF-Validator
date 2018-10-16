@@ -204,7 +204,7 @@ class Accessor extends GltfChildOfRootProperty {
         sparse,
         getName(map, context),
         getExtensions(map, Accessor, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override
@@ -655,7 +655,7 @@ class AccessorSparse extends GltfProperty {
     }
 
     return AccessorSparse._(count, indices, values,
-        getExtensions(map, AccessorSparse, context), getExtras(map));
+        getExtensions(map, AccessorSparse, context), getExtras(map, context));
   }
 }
 
@@ -691,7 +691,7 @@ class AccessorSparseIndices extends GltfProperty {
         getUint(map, COMPONENT_TYPE, context,
             req: true, list: gl.ELEMENT_ARRAY_TYPES),
         getExtensions(map, AccessorSparseIndices, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override
@@ -726,7 +726,7 @@ class AccessorSparseValues extends GltfProperty {
         getIndex(map, BUFFER_VIEW, context, req: true),
         getUint(map, BYTE_OFFSET, context, def: 0),
         getExtensions(map, AccessorSparseValues, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

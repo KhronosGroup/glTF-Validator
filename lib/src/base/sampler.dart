@@ -50,6 +50,6 @@ class Sampler extends GltfChildOfRootProperty {
         getUint(map, WRAP_T, context, list: WRAP_FILTERS, def: gl.REPEAT),
         getName(map, context),
         getExtensions(map, Sampler, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 }

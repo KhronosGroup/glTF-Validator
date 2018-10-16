@@ -95,7 +95,7 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
         glossinessFactor,
         specularGlossinessTexture,
         extensions,
-        getExtras(map));
+        getExtras(map, context));
 
     context.registerObjectsOwner(pbrSg,
         [diffuseTexture, specularGlossinessTexture]..addAll(extensions.values));

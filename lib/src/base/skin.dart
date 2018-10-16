@@ -59,7 +59,7 @@ class Skin extends GltfChildOfRootProperty {
         getIndicesList(map, JOINTS, context, req: true),
         getName(map, context),
         getExtensions(map, Skin, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

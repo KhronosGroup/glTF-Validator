@@ -61,7 +61,7 @@ class Camera extends GltfChildOfRootProperty {
     }
 
     return Camera._(type, orthographic, perspective, getName(map, context),
-        getExtensions(map, Camera, context), getExtras(map));
+        getExtensions(map, Camera, context), getExtras(map, context));
   }
 }
 
@@ -96,8 +96,13 @@ class CameraOrthographic extends GltfProperty {
       }
     }
 
-    return CameraOrthographic._(xmag, ymag, zfar, znear,
-        getExtensions(map, CameraOrthographic, context), getExtras(map));
+    return CameraOrthographic._(
+        xmag,
+        ymag,
+        zfar,
+        znear,
+        getExtensions(map, CameraOrthographic, context),
+        getExtras(map, context));
   }
 
   @override
@@ -133,7 +138,7 @@ class CameraPerspective extends GltfProperty {
         zfar,
         znear,
         getExtensions(map, CameraPerspective, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

@@ -1,0 +1,27 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "extras": 42
+        },
+        {
+            "extras": "string"
+        },
+        {
+            "extras": true
+        },
+        {
+            "extras": false
+        },
+        {
+            "extras": [
+                "array"
+            ]
+        },
+        {
+            "extras": null
+        }
+    ]
+}

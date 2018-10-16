@@ -81,7 +81,7 @@ class Mesh extends GltfChildOfRootProperty {
     }
 
     return Mesh._(primitives, weights, getName(map, context),
-        getExtensions(map, Mesh, context), getExtras(map));
+        getExtensions(map, Mesh, context), getExtras(map, context));
   }
 
   @override
@@ -261,7 +261,7 @@ class MeshPrimitive extends GltfProperty {
         weightsCount,
         texcoordCount,
         getExtensions(map, MeshPrimitive, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   int get count => _count;

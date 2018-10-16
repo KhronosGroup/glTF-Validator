@@ -113,7 +113,7 @@ class BufferView extends GltfChildOfRootProperty {
         target,
         getName(map, context),
         getExtensions(map, BufferView, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

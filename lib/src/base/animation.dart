@@ -66,7 +66,7 @@ class Animation extends GltfChildOfRootProperty {
     }
 
     return Animation._(channels, samplers, getName(map, context),
-        getExtensions(map, Animation, context), getExtras(map));
+        getExtensions(map, Animation, context), getExtras(map, context));
   }
 
   @override
@@ -278,7 +278,7 @@ class AnimationChannel extends GltfProperty {
             map, TARGET, context, AnimationChannelTarget.fromMap,
             req: true),
         getExtensions(map, AnimationChannel, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override
@@ -309,7 +309,7 @@ class AnimationChannelTarget extends GltfProperty {
         getString(map, PATH, context,
             req: true, list: ANIMATION_CHANNEL_TARGET_PATHS),
         getExtensions(map, AnimationChannelTarget, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override
@@ -351,7 +351,7 @@ class AnimationSampler extends GltfProperty {
             list: ANIMATION_SAMPLER_INTERPOLATIONS, def: LINEAR),
         getIndex(map, OUTPUT, context),
         getExtensions(map, AnimationSampler, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

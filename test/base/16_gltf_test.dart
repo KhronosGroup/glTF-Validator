@@ -22,6 +22,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('glTF', () {
     test('Invalid Collection', () async {
@@ -130,6 +132,24 @@ void main() {
         ..addIssue(LinkError.unusedObject, name: 'samplers/1')
         ..addIssue(LinkError.unusedObject, name: 'skins/0')
         ..addIssue(LinkError.unusedObject, name: 'textures/1');
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
+    test('Non-object extras', () async {
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/extras.gltf').openRead(),
+          ignoreUnusedContext);
+
+      final context = Context()
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/0/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/1/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/2/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/3/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/4/extras')
+        ..addIssue(SemanticError.nodeEmpty, name: 'nodes/5');
 
       await reader.read();
 
