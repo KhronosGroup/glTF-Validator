@@ -40,7 +40,8 @@ import '../test/base/15_animation_test.dart' as animation;
 import '../test/base/16_gltf_test.dart' as gltf;
 import '../test/data_access/00_load_buffers_test.dart' as load_buffers;
 import '../test/data_access/01_load_images_test.dart' as load_images;
-//import '../test/data_access/02_validate_accessor_data_test.dart' as validate_accessors;
+import '../test/data_access/02_validate_accessor_elements_test.dart'
+    as validate_accessors;
 import '../test/ext/KHR_materials_pbrSpecularGlossiness/ext_khr_spec_gloss_test.dart'
     as spec_gloss;
 import '../test/ext/KHR_materials_unlit/ext_khr_unlit_test.dart' as unlit;
@@ -74,5 +75,5 @@ void main() {
   texture_transform.main();
   load_buffers.main();
   load_images.main();
-  //validate_accessors.main();
+  validate_accessors.main();
 }

@@ -621,6 +621,10 @@ class AccessorSparse extends GltfProperty {
       super.toString({COUNT: count, INDICES: indices, VALUES: values});
 
   List<int> get indicesTypedView {
+    if (indices._bufferView?.buffer?.data == null) {
+      return null;
+    }
+
     try {
       /// Due to [indices.componentType],
       /// runtime return type is always [List<int>].
