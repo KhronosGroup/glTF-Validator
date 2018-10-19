@@ -561,7 +561,13 @@ Map<String, Object> getExtensions(
   return extensions;
 }
 
-Object getExtras(Map<String, Object> map) => map[EXTRAS];
+Object getExtras(Map<String, Object> map, Context context) {
+  final extras = map[EXTRAS];
+  if (context.validate && extras != null && extras is! Map) {
+    context.addIssue(SemanticError.nonObjectExtras, name: EXTRAS);
+  }
+  return extras;
+}
 
 bool checkEnum<T>(String name, T value, Iterable<T> list, Context context,
     {bool lengthList = false}) {
@@ -583,8 +589,9 @@ void checkMembers(
     {bool useSuper = true}) {
   const superMembers = <String>[EXTENSIONS, EXTRAS];
   for (final k in map.keys) {
-    if (!knownMembers.contains(k) && !(useSuper && superMembers.contains(k)))
+    if (!knownMembers.contains(k) && !(useSuper && superMembers.contains(k))) {
       context.addIssue(SchemaError.unexpectedProperty, name: k);
+    }
   }
 }
 

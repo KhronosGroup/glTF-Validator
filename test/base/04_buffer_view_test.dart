@@ -102,7 +102,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.bufferViews.toString(),
+      expect(
+          result.gltf.bufferViews.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{buffer: 0, byteOffset: 0, byteLength: 4, byteStride: 4, target: 34962, extensions: {}}]');
     });
 

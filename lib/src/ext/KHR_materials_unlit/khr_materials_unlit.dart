@@ -33,12 +33,13 @@ class KhrMaterialsUnlit extends GltfProperty {
   String toString([_]) => super.toString({});
 
   static KhrMaterialsUnlit fromMap(Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, KHR_MATERIALS_UNLIT_MEMBERS, context);
+    }
 
     final extensions = getExtensions(map, KhrMaterialsUnlit, context);
 
-    return KhrMaterialsUnlit._(extensions, getExtras(map));
+    return KhrMaterialsUnlit._(extensions, getExtras(map, context));
   }
 }
 

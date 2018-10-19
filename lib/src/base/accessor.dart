@@ -204,7 +204,7 @@ class Accessor extends GltfChildOfRootProperty {
         sparse,
         getName(map, context),
         getExtensions(map, Accessor, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override
@@ -306,9 +306,10 @@ class Accessor extends GltfChildOfRootProperty {
                   .setUsage(BufferViewUsage.Other, BUFFER_VIEW, context);
 
               if (context.validate) {
-                if (values._bufferView.byteStride != -1)
+                if (values._bufferView.byteStride != -1) {
                   context.addIssue(SemanticError.bufferViewInvalidByteStride,
                       name: BUFFER_VIEW);
+                }
 
                 _checkByteOffsetAndLength(
                     values.byteOffset,
@@ -620,6 +621,10 @@ class AccessorSparse extends GltfProperty {
       super.toString({COUNT: count, INDICES: indices, VALUES: values});
 
   List<int> get indicesTypedView {
+    if (indices._bufferView?.buffer?.data == null) {
+      return null;
+    }
+
     try {
       /// Due to [indices.componentType],
       /// runtime return type is always [List<int>].
@@ -654,7 +659,7 @@ class AccessorSparse extends GltfProperty {
     }
 
     return AccessorSparse._(count, indices, values,
-        getExtensions(map, AccessorSparse, context), getExtras(map));
+        getExtensions(map, AccessorSparse, context), getExtras(map, context));
   }
 }
 
@@ -680,8 +685,9 @@ class AccessorSparseIndices extends GltfProperty {
 
   static AccessorSparseIndices fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, ACCESSOR_SPARSE_INDICES_MEMBERS, context);
+    }
 
     return AccessorSparseIndices._(
         getIndex(map, BUFFER_VIEW, context, req: true),
@@ -689,7 +695,7 @@ class AccessorSparseIndices extends GltfProperty {
         getUint(map, COMPONENT_TYPE, context,
             req: true, list: gl.ELEMENT_ARRAY_TYPES),
         getExtensions(map, AccessorSparseIndices, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override
@@ -716,14 +722,15 @@ class AccessorSparseValues extends GltfProperty {
 
   static AccessorSparseValues fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, ACCESSOR_SPARSE_VALUES_MEMBERS, context);
+    }
 
     return AccessorSparseValues._(
         getIndex(map, BUFFER_VIEW, context, req: true),
         getUint(map, BYTE_OFFSET, context, def: 0),
         getExtensions(map, AccessorSparseValues, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

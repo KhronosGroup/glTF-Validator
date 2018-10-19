@@ -370,7 +370,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.meshes.toString(),
+      expect(
+          result.gltf.meshes.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{primitives: [{attributes: {POSITION: 1}, indices: 0, material: 0, mode: 4, targets: [{POSITION: 2}, {POSITION: 3}], extensions: {}}], weights: [0.7, 0.2], extensions: {}}]');
     });
   });

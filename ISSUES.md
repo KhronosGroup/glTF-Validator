@@ -53,6 +53,7 @@
 |NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
 |NODE_MATRIX_TRS|A node can have either a matrix or any combination of translation/rotation/scale (TRS) properties.|Error|
 |NODE_ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
+|NON_OBJECT_EXTRAS|Prefer JSON Objects for extras.|Information|
 |NON_RELATIVE_URI|Non-relative URI found: `%1`.|Warning|
 |UNKNOWN_ASSET_MAJOR_VERSION|Unknown glTF major asset version: `%1`.|Error|
 |UNKNOWN_ASSET_MINOR_VERSION|Unknown glTF minor asset version: `%1`.|Warning|

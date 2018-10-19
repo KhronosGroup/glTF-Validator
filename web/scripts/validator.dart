@@ -74,6 +74,8 @@ void main() {
       _validate(_input.files);
     }
   });
+
+  print('glTF Validator ver. $kGltfValidatorVersion.');
 }
 
 void _validate(List<File> files) {

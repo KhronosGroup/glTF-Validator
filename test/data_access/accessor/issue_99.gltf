@@ -1,0 +1,38 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "byteLength": 6
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 4
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4,
+            "byteLength": 2
+        }
+    ],
+    "accessors": [
+        {
+            "componentType": 5126,
+            "count": 1,
+            "type": "SCALAR",
+            "sparse": {
+                "count": 1,
+                "indices": {
+                    "bufferView": 1,
+                    "componentType": 5123
+                },
+                "values": {
+                    "bufferView": 0
+                }
+            }
+        }
+    ]
+}

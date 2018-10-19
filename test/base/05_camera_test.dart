@@ -107,7 +107,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.cameras.toString(),
+      expect(
+          result.gltf.cameras.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{type: perspective, perspective: {aspectRatio: 1.0, yfov: 1.0, zfar: 10.0, znear: 1.0, extensions: {}}, extensions: {}}, {type: orthographic, orthographic: {xmag: 1.0, ymag: 1.0, zfar: 10.0, znear: 1.0, extensions: {}}, extensions: {}}]');
     });
 

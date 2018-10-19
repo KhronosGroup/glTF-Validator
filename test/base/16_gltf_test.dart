@@ -22,6 +22,8 @@ import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 
+import '../utils.dart';
+
 void main() {
   group('glTF', () {
     test('Invalid Collection', () async {
@@ -136,6 +138,24 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Non-object extras', () async {
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/extras.gltf').openRead(),
+          ignoreUnusedContext);
+
+      final context = Context()
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/0/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/1/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/2/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/3/extras')
+        ..addIssue(SemanticError.nonObjectExtras, name: 'nodes/4/extras')
+        ..addIssue(SemanticError.nodeEmpty, name: 'nodes/5');
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid Full', () async {
       final reader = GltfJsonReader(
           File('test/base/data/gltf/valid_full.gltf').openRead());
@@ -144,7 +164,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.toString(),
+      expect(
+          result.gltf.toString(),
+          //ignore: lines_longer_than_80_chars
           '{asset: {version: 2.0, extensions: {}}, accessors: [], animations: [], buffers: [], bufferViews: [], cameras: [], images: [], materials: [], meshes: [], nodes: [], samplers: [], scenes: [], scene: -1, skins: [], textures: [], extensionsRequired: [], extensionsUsed: [], extensions: {}}');
     });
   });

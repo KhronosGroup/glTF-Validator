@@ -163,8 +163,8 @@ class SchemaError extends IssueType {
 
   static final SchemaError arrayTypeMismatch = SchemaError._(
       'ARRAY_TYPE_MISMATCH',
-      (args) =>
-          'Type mismatch. Array element ${_mbq(args[0])} is not a ${_q(args[1])}.');
+      (args) => 'Type mismatch. '
+          'Array element ${_mbq(args[0])} is not a ${_q(args[1])}.');
 
   static final SchemaError arrayDuplicateElements =
       SchemaError._('DUPLICATE_ELEMENTS', (args) => 'Duplicate element.');
@@ -191,8 +191,8 @@ class SchemaError extends IssueType {
 
   static final SchemaError typeMismatch = SchemaError._(
       'TYPE_MISMATCH',
-      (args) =>
-          'Type mismatch. Property value ${_mbq(args[0])} is not a ${_q(args[1])}.');
+      (args) => 'Type mismatch. '
+          'Property value ${_mbq(args[0])} is not a ${_q(args[1])}.');
 
   static final SchemaError valueNotInList = SchemaError._(
       'VALUE_NOT_IN_LIST',
@@ -384,6 +384,11 @@ class SemanticError extends IssueType {
           '${(args[1] as Iterable).map(_q)}.',
       Severity.Warning);
 
+  static final SemanticError nonObjectExtras = SemanticError._(
+      'NON_OBJECT_EXTRAS',
+      (args) => 'Prefer JSON Objects for extras.',
+      Severity.Information);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);
@@ -489,8 +494,8 @@ class LinkError extends IssueType {
   static final LinkError meshPrimitiveAttributesAccessorInvalidFormat =
       LinkError._(
           'MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_INVALID_FORMAT',
-          (args) =>
-              'Invalid accessor format ${_q(args[0])} for this attribute semantic. '
+          (args) => 'Invalid accessor format ${_q(args[0])} '
+              'for this attribute semantic. '
               'Must be one of ${(args[1] as Iterable).map(_q)}.');
 
   static final LinkError meshPrimitivePositionAccessorWithoutBounds =
@@ -529,7 +534,8 @@ class LinkError extends IssueType {
   static final LinkError meshPrimitiveTooFewTexcoords = LinkError._(
       'MESH_PRIMITIVE_TOO_FEW_TEXCOORDS',
       (args) => 'Material is incompatible with mesh primitive: '
-          'Texture binding ${_q(args[0])} needs \'TEXCOORD_${args[1]}\' attribute.');
+          'Texture binding ${_q(args[0])} '
+          'needs \'TEXCOORD_${args[1]}\' attribute.');
 
   static final LinkError meshPrimitiveUnusedTexcoord = LinkError._(
       'MESH_PRIMITIVE_UNUSED_TEXCOORD',
@@ -669,9 +675,8 @@ class Issue {
   final List _args;
 
   Issue(this.type, this._args,
-      {this.pointer, this.offset, this.severityOverride}) {
-    assert(pointer == null || offset == null);
-  }
+      {this.pointer, this.offset, this.severityOverride})
+      : assert(pointer == null || offset == null);
 
   String get message =>
       (type.message != null) ? type.message(_args) : type.code;

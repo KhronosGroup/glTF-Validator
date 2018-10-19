@@ -266,8 +266,9 @@ class JpegInfoDecoder extends ImageInfoDecoder {
   @override
   void close() {
     subscription.cancel();
-    if (!completer.isCompleted)
+    if (!completer.isCompleted) {
       completer.completeError(const UnexpectedEndOfStreamException());
+    }
   }
 }
 
@@ -427,8 +428,9 @@ class PngInfoDecoder extends ImageInfoDecoder {
   @override
   void close() {
     subscription.cancel();
-    if (!completer.isCompleted)
+    if (!completer.isCompleted) {
       completer.completeError(const UnexpectedEndOfStreamException());
+    }
   }
 }
 

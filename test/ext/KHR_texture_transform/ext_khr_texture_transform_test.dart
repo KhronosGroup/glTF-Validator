@@ -98,7 +98,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.materials.first.emissiveTexture.toString(),
+      expect(
+          result.gltf.materials.first.emissiveTexture.toString(),
+          //ignore: lines_longer_than_80_chars
           '{index: 0, texCoord: 0, extensions: {KHR_texture_transform: {offset: [0.0, 1.0], rotation: 1.57079632679, scale: [0.5, 0.5], texCoord: 1, extensions: {}}}}');
     });
   });

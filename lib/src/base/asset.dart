@@ -78,7 +78,7 @@ class Asset extends GltfProperty {
         getString(map, VERSION, context, req: true, regexp: versionRegexp),
         getString(map, MIN_VERSION, context, regexp: versionRegexp),
         getExtensions(map, Asset, context),
-        getExtras(map));
+        getExtras(map, context));
 
     if (context.validate && asset.minVersion != null) {
       // Check that minVersion isn't greater than version

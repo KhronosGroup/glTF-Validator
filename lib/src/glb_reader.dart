@@ -103,8 +103,9 @@ class GlbReader implements GltfReader {
 
   void _abort() {
     _subscription.cancel();
-    if (!_completer.isCompleted)
+    if (!_completer.isCompleted) {
       _completer.complete(GltfReaderResult(mimeType, null, _binaryBuffer));
+    }
   }
 
   String _getChunkString(int type) =>
@@ -211,7 +212,8 @@ class GlbReader implements GltfReader {
 
           switch (_chunkType) {
             case _CHUNK_JSON:
-              // In general, chunks could have valid zero length, but not JSON chunk
+              // In general, chunks could have valid zero length,
+              // but not JSON chunk
               if (_chunkLength == 0) {
                 context.addIssue(GlbError.emptyChunk,
                     offset: _offset - _CHUNK_HEADER_LENGTH,

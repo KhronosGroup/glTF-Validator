@@ -49,7 +49,7 @@ class Texture extends GltfChildOfRootProperty {
         getIndex(map, SOURCE, context, req: false),
         getName(map, context),
         getExtensions(map, Texture, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

@@ -100,7 +100,7 @@ class Material extends GltfChildOfRootProperty {
         doubleSided,
         getName(map, context),
         extensions,
-        getExtras(map));
+        getExtras(map, context));
 
     context.registerObjectsOwner(
         material,
@@ -156,8 +156,9 @@ class PbrMetallicRoughness extends GltfProperty {
 
   static PbrMetallicRoughness fromMap(
       Map<String, Object> map, Context context) {
-    if (context.validate)
+    if (context.validate) {
       checkMembers(map, PBR_METALLIC_ROUGHNESS_MEMBERS, context);
+    }
 
     final baseColorFactor = getFloatList(map, BASE_COLOR_FACTOR, context,
         lengthsList: const [4],
@@ -182,7 +183,7 @@ class PbrMetallicRoughness extends GltfProperty {
         roughnessFactor,
         metallicRoughnessTexture,
         extensions,
-        getExtras(map));
+        getExtras(map, context));
 
     context.registerObjectsOwner(
         pbrMr,
@@ -232,7 +233,7 @@ class OcclusionTextureInfo extends TextureInfo {
         getUint(map, TEX_COORD, context, def: 0),
         getFloat(map, STRENGTH, context, min: 0.0, max: 1.0, def: 1.0),
         extensions,
-        getExtras(map));
+        getExtras(map, context));
 
     context.registerObjectsOwner(occlusionTextureInfo, extensions.values);
 
@@ -263,7 +264,7 @@ class NormalTextureInfo extends TextureInfo {
         getUint(map, TEX_COORD, context, def: 0),
         getFloat(map, SCALE, context, def: 1.0),
         extensions,
-        getExtras(map));
+        getExtras(map, context));
 
     context.registerObjectsOwner(normalTextureInfo, extensions.values);
 
@@ -300,8 +301,11 @@ class TextureInfo extends GltfProperty {
     final extensions =
         getExtensions(map, TextureInfo, context, overriddenType: Material);
 
-    final textureInfo = TextureInfo._(getIndex(map, INDEX, context),
-        getUint(map, TEX_COORD, context, def: 0), extensions, getExtras(map));
+    final textureInfo = TextureInfo._(
+        getIndex(map, INDEX, context),
+        getUint(map, TEX_COORD, context, def: 0),
+        extensions,
+        getExtras(map, context));
 
     context.registerObjectsOwner(textureInfo, extensions.values);
 

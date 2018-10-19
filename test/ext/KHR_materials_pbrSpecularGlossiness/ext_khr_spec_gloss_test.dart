@@ -75,7 +75,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.materials.toString(),
+      expect(
+          result.gltf.materials.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{emissiveFactor: [0.0, 0.0, 0.0], alphaMode: OPAQUE, alphaCutoff: 0.5, doubleSided: false, extensions: {KHR_materials_pbrSpecularGlossiness: {diffuseFactor: [0.5, 0.5, 0.5, 0.5], diffuseTexture: {index: 0, texCoord: 0, extensions: {}}, specularFactor: [0.0, 0.0, 0.0], glossinessFactor: 0.5, specularGlossinessTexture: {index: 1, texCoord: 0, extensions: {}}, extensions: {}}}}]');
     });
   });

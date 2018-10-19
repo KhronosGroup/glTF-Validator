@@ -59,7 +59,7 @@ class KhrTextureTransform extends GltfProperty {
             def: const [1.0, 1.0], lengthsList: const [2]),
         getUint(map, TEX_COORD, context),
         getExtensions(map, KhrTextureTransform, context),
-        getExtras(map));
+        getExtras(map, context));
   }
 
   @override

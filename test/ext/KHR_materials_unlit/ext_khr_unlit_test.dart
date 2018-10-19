@@ -74,7 +74,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.materials.toString(),
+      expect(
+          result.gltf.materials.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{emissiveFactor: [0.0, 0.0, 0.0], alphaMode: OPAQUE, alphaCutoff: 0.5, doubleSided: false, extensions: {KHR_materials_unlit: {extensions: {}}}}]');
     });
   });

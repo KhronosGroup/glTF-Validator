@@ -79,7 +79,9 @@ void main() {
 
       expect(reader.context.issues, isEmpty);
 
-      expect(result.gltf.accessors.toString(),
+      expect(
+          result.gltf.accessors.toString(),
+          //ignore: lines_longer_than_80_chars
           '[{bufferView: 0, byteOffset: 0, componentType: 5126, count: 4, type: VEC3, normalized: false, max: [1.0, 1.0, 1.0], min: [0.0, 0.0, 0.0], sparse: {count: 2, indices: {bufferView: 1, byteOffset: 24, componentType: 5121, extensions: {}}, values: {bufferView: 1, byteOffset: 0, extensions: {}}, extensions: {}}, extensions: {}}]');
     });
 

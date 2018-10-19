@@ -537,8 +537,8 @@ class AccessorFormat {
             normalized: accessor.normalized);
 
   @override
-  String toString() =>
-      '{$type, ${gl.TYPE_NAMES[componentType]}${normalized ? ' $NORMALIZED' : ''}}';
+  String toString() => '{$type, ${gl.TYPE_NAMES[componentType]}'
+      '${normalized ? ' $NORMALIZED' : ''}}';
 
   @override
   bool operator ==(Object other) =>

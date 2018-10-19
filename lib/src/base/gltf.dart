@@ -202,9 +202,10 @@ class Gltf extends GltfProperty {
     final sceneIndex = getIndex(map, SCENE, context, req: false);
     final scene = scenes[sceneIndex];
 
-    if (context.validate && sceneIndex != -1 && scene == null)
+    if (context.validate && sceneIndex != -1 && scene == null) {
       context.addIssue(LinkError.unresolvedReference,
           name: SCENE, args: [sceneIndex]);
+    }
 
     final skins = toSafeList<Skin>(SKINS, Skin.fromMap);
 
@@ -232,7 +233,7 @@ class Gltf extends GltfProperty {
         skins,
         textures,
         getExtensions(map, Gltf, context),
-        getExtras(map));
+        getExtras(map, context));
 
     // Step 2: linking IDs
     void linkCollection(SafeList<GltfProperty> list, Type type) {
