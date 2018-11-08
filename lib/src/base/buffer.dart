@@ -61,6 +61,10 @@ class Buffer extends GltfChildOfRootProperty {
         }
 
         if (uriData != null) {
+          if (context.isGlb) {
+            context.addIssue(DataError.dataUriGlb, name: URI);
+          }
+
           if (uriData.mimeType == APPLICATION_OCTET_STREAM ||
               uriData.mimeType == APPLICATION_GLTF_BUFFER) {
             data = uriData.contentAsBytes();

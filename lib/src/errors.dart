@@ -147,6 +147,9 @@ class DataError extends IssueType {
       (args) => 'Image has non-power-of-two dimensions: ${args[0]}x${args[1]}.',
       Severity.Information);
 
+  static final DataError dataUriGlb = DataError._('DATA_URI_GLB',
+      (args) => 'Data URI is used in GLB container.', Severity.Information);
+
   DataError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);

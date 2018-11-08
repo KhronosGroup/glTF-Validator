@@ -113,6 +113,7 @@
 |ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor contains `%1` element(s) less than declared minimum value `%2`.|Error|
 |ACCESSOR_INDECOMPOSABLE_MATRIX|Matrix element at index `%1` is not decomposable to TRS.|Error|
 |ACCESSOR_INDEX_OOB|Indices accessor element at index `%1` has vertex index `%2` that exceeds number of available vertices `%3`.|Error|
+|ACCESSOR_INDEX_PRIMITIVE_RESTART|Indices accessor contains primitive restart value (`%1`) at index `%2`.|Error|
 |ACCESSOR_INDEX_TRIANGLE_DEGENERATE|Indices accessor contains `%1` degenerate triangles.|Information|
 |ACCESSOR_INVALID_FLOAT|Accessor element at index `%1` is NaN or Infinity.|Error|
 |ACCESSOR_INVALID_SIGN|Accessor element at index `%1` has invalid w component: `%2`. Must be 1.0 or -1.0.|Error|
@@ -124,6 +125,7 @@
 |BUFFER_EMBEDDED_BYTELENGTH_MISMATCH|Actual data length `%1` is not equal to the declared buffer byteLength `%2`.|Error|
 |BUFFER_EXTERNAL_BYTELENGTH_MISMATCH|Actual data length `%1` is less than the declared buffer byteLength `%2`.|Error|
 |BUFFER_GLB_CHUNK_TOO_BIG|GLB-stored BIN chunk contains `%1` extra padding byte(s).|Warning|
+|DATA_URI_GLB|Data URI is used in GLB container.|Information|
 |IMAGE_DATA_INVALID|Image data is invalid. `%1`|Error|
 |IMAGE_MIME_TYPE_INVALID|Recognized image format '`%1`' does not match declared image format '`%2`'.|Error|
 |IMAGE_NPOT_DIMENSIONS|Image has non-power-of-two dimensions: `%1`x`%2`.|Information|
