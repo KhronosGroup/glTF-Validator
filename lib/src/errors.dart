@@ -607,7 +607,8 @@ class LinkError extends IssueType {
 
   static final LinkError unsupportedExtension = LinkError._(
       'UNSUPPORTED_EXTENSION',
-      (args) => 'Unsupported extension encountered: ${_q(args[0])}.',
+      (args) => 'Cannot validate an extension as it is not supported '
+          'by the validator: ${_q(args[0])}.',
       Severity.Warning);
 
   static final LinkError unusedObject = LinkError._('UNUSED_OBJECT',

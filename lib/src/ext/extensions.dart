@@ -63,7 +63,7 @@ class LinkableExtensionEntry {
   LinkableExtensionEntry(this.object, this.path);
 }
 
-const List<Extension> defaultExtensions = <Extension>[
+const List<Extension> kDefaultExtensions = <Extension>[
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsUnlitExtension,
   khrTextureTransformExtension,

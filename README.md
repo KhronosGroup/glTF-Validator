@@ -30,6 +30,12 @@ NPM package: https://www.npmjs.com/package/gltf-validator
   - Animation inputs and outputs.
 - Images validation
   - Warning on non-power-of-two dimensions.
+- Extensions validation
+  - KHR_materials_pbrSpecularGlossiness
+  - KHR_materials_unlit
+  - KHR_texture_transform
+  - CESIUM_RTC
+  - WEB3D_quantized_attributes
 - [Full list of detectable issues](ISSUES.md).
 
 ## Usage
