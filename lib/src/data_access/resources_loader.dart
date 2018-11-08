@@ -76,7 +76,7 @@ class ResourcesLoader {
         validateAccessorsData(gltf, context);
       }
     } on IssuesLimitExceededException catch (_) {
-      return null;
+      return;
     }
   }
 

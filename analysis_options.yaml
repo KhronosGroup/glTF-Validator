@@ -31,6 +31,7 @@ linter:
 #    - avoid_renaming_method_parameters
     - avoid_return_types_on_setters
     - avoid_returning_null
+    - avoid_returning_null_for_void
     - avoid_returning_this
     - avoid_setters_without_getters
     - avoid_single_cascade_in_expression_statements
@@ -95,6 +96,7 @@ linter:
     - prefer_function_declarations_over_variables
     - prefer_generic_function_type_aliases
     - prefer_initializing_formals
+#    - prefer_int_literals
     - prefer_interpolation_to_compose_strings
     - prefer_is_empty
     - prefer_is_not_empty

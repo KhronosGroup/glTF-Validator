@@ -90,7 +90,7 @@ int componentTypeLength(int componentType) {
     case FLOAT:
       return 4;
     default:
-      throw ArgumentError();
+      return -1;
   }
 }
 

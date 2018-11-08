@@ -181,7 +181,7 @@ Future<void> run(List<String> args) async {
           'if at least one error was found.\n')
       ..writeln(parser.usage);
     exitCode = kErrorCode;
-    return null;
+    return;
   }
 
   final input = argResult.rest[0];
