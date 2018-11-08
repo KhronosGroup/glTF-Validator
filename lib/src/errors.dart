@@ -94,6 +94,12 @@ class DataError extends IssueType {
       (args) => 'Indices accessor contains ${args[0]} degenerate triangles.',
       Severity.Information);
 
+  static final DataError accessorIndexPrimitiveRestart = DataError._(
+      'ACCESSOR_INDEX_PRIMITIVE_RESTART',
+      (args) => 'Indices accessor contains primitive restart value '
+          '(${args[0]}) at index ${args[1]}.',
+      Severity.Error);
+
   static final DataError accessorAnimationInputNegative = DataError._(
       'ACCESSOR_ANIMATION_INPUT_NEGATIVE',
       (args) => 'Animation input accessor element at index ${args[0]} '
