@@ -533,7 +533,7 @@ class Accessor extends GltfChildOfRootProperty {
         componentType == gl.INT) {
       // Signed
       final divider = (1 << width - 1) - 1;
-      return math.max<double>(value / divider, -1.0);
+      return math.max<double>(value / divider, -1);
     } else {
       // Unsigned
       final divider = (1 << width) - 1;

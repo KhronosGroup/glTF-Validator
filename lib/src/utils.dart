@@ -110,13 +110,13 @@ double getFloat(Map<String, Object> map, String name, Context context,
     double min = double.negativeInfinity,
     double exclMin = double.negativeInfinity,
     double max = double.infinity,
+    double exclMax = double.infinity,
     double def = double.nan}) {
-  assert(min != null && max != null);
-  assert(max >= min);
-  assert(max > exclMin);
+  assert(min != null && max != null && exclMin != null && exclMax != null);
+  assert(exclMax > min && max >= min && exclMax > exclMin && max > exclMin);
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
-    if (value < min || value <= exclMin || value > max) {
+    if (value < min || value <= exclMin || value > max || value >= exclMax) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
       return double.nan;
     }
@@ -599,7 +599,7 @@ typedef _CheckKeyFunction = void Function(String key);
 
 void resolveNodeList(List<int> sourceList, List<Node> targetList,
     SafeList<Node> nodes, String name, Context context,
-    [void handleNode(Node element, int nodeIndex, int index)]) {
+    [void Function(Node element, int nodeIndex, int index) handleNode]) {
   assert(sourceList != null);
   context.path.add(name);
   for (var i = 0; i < sourceList.length; i++) {
@@ -676,7 +676,7 @@ class SafeList<T> extends ListBase<T> {
   @override
   String toString() => _list.toString();
 
-  void forEachWithIndices(void action(int index, T element)) {
+  void forEachWithIndices(void Function(int index, T element) action) {
     for (var i = 0; i < _length; i++) {
       final e = _list[i];
       // Skip broken objects

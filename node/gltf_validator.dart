@@ -30,9 +30,11 @@ typedef ExternalResourceFunction = Promise<Object> Function(String filename);
 
 @JS()
 class Promise<T> {
-  external Promise(void executor(void resolve(T result), Function reject));
+  external Promise(
+      void Function(void Function(T result) resolve, Function reject) executor);
 
-  external Promise then(void onFulfilled(T result), [Function onRejected]);
+  external Promise then(void Function(T result) onFulfilled,
+      [Function onRejected]);
 }
 
 @JS()
@@ -40,11 +42,11 @@ class Promise<T> {
 abstract class Exports {
   // ignore: avoid_setters_without_getters
   external set validateBytes(
-      Promise v(Uint8List data, _JSValidationOptions options));
+      Promise Function(Uint8List data, _JSValidationOptions options) v);
 
   // ignore: avoid_setters_without_getters
   external set validateString(
-      Promise v(String json, _JSValidationOptions options));
+      Promise Function(String json, _JSValidationOptions options) v);
 }
 
 @JS()
@@ -104,7 +106,7 @@ Future<Map<String, Object>> validateBytes(
     rethrow;
   }
 
-  return await _validateResourcesAndGetReport(_options, context, readerResult);
+  return _validateResourcesAndGetReport(_options, context, readerResult);
 }
 
 Future<Map<String, Object>> validateString(String json, Object options) async {
@@ -116,7 +118,7 @@ Future<Map<String, Object>> validateString(String json, Object options) async {
 
   final readerResult = GltfJsonReader.readFromJsonString(json, context);
 
-  return await _validateResourcesAndGetReport(_options, context, readerResult);
+  return _validateResourcesAndGetReport(_options, context, readerResult);
 }
 
 Object _checkOptionsObject(Object options) {
