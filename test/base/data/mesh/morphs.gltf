@@ -17,12 +17,14 @@
                 },
                 {
                     "attributes": {
-                        "POSITION": 2
+                        "POSITION": 2,
+                        "INVALID": 2
                     },
                     "targets": [
                         {
                             "NORMAL": 2,
-                            "POSITION": 3
+                            "POSITION": 3,
+                            "INVALID": 2
                         }
                     ]
                 }

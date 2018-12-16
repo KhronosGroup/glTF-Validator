@@ -108,7 +108,7 @@ class MeshPrimitive extends GltfProperty {
   final bool hasTangent;
   final int colorCount;
   final int jointsCount;
-  final int weigthsCount;
+  final int weightsCount;
   final int texcoordCount;
 
   final Map<String, Accessor> attributes = <String, Accessor>{};
@@ -130,7 +130,7 @@ class MeshPrimitive extends GltfProperty {
       this.hasTangent,
       this.colorCount,
       this.jointsCount,
-      this.weigthsCount,
+      this.weightsCount,
       this.texcoordCount,
       Map<String, Object> extensions,
       Object extras)
@@ -175,14 +175,35 @@ class MeshPrimitive extends GltfProperty {
           final arraySemantic = semParts[0];
 
           if (!ATTRIBUTE_SEMANTIC_ARRAY_MEMBERS.contains(arraySemantic) ||
-              semParts.length != 2 ||
-              semParts[1].length != 1 ||
-              semParts[1].codeUnitAt(0) < 48 /* 0 */ ||
-              semParts[1].codeUnitAt(0) > 57) /* 9 */ {
+              semParts.length != 2) {
             context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-                args: [semantic]);
+                name: semantic);
+            break;
+          }
+
+          var index = 0;
+          var valid = true;
+          final codeUnits = semParts[1].codeUnits;
+
+          if (codeUnits.isEmpty) {
+            valid = false;
+          } else if (codeUnits.length == 1) {
+            index = codeUnits[0] - 0x30 /* 0 */;
+            if (index < 0 || index > 9) {
+              valid = false;
+            }
           } else {
-            final index = semParts[1].codeUnitAt(0) - 48;
+            for (var i = 0; i < codeUnits.length; ++i) {
+              final digit = codeUnits[i] - 0x30;
+              if (digit > 9 || digit < 0 || i == 0 && digit == 0) {
+                valid = false;
+                break;
+              }
+              index = 10 * index + digit;
+            }
+          }
+
+          if (valid) {
             switch (arraySemantic) {
               case COLOR_:
                 colorCount++;
@@ -201,6 +222,9 @@ class MeshPrimitive extends GltfProperty {
                 maxWeights = index > maxWeights ? index : maxWeights;
                 break;
             }
+          } else {
+            context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
+                name: semantic);
           }
       }
     }
@@ -229,23 +253,36 @@ class MeshPrimitive extends GltfProperty {
         context.addIssue(SemanticError.meshPrimitiveJointsWeightsMismatch);
       }
 
-      void checkContinuity(int maxIndex, int count, String name) {
+      /// Check for indexed semantics continuity -
+      /// they must start with zero and do not have gaps.
+      /// Otherwise, the semantic will be completely ignored.
+      int checkContinuity(int maxIndex, int count, String name) {
         if (maxIndex + 1 != count) {
           context.addIssue(SemanticError.meshPrimitiveIndexedSemanticContinuity,
-              args: [name]);
+              args: [name, maxIndex + 1, count]);
+          return 0;
         }
+        return count;
       }
 
-      checkContinuity(maxColor, colorCount, COLOR_);
-      checkContinuity(maxJoints, jointsCount, JOINTS_);
-      checkContinuity(maxWeights, weightsCount, WEIGHTS_);
-      checkContinuity(maxTexcoord, texcoordCount, TEXCOORD_);
+      colorCount = checkContinuity(maxColor, colorCount, COLOR_);
+      jointsCount = checkContinuity(maxJoints, jointsCount, JOINTS_);
+      weightsCount = checkContinuity(maxWeights, weightsCount, WEIGHTS_);
+      texcoordCount = checkContinuity(maxTexcoord, texcoordCount, TEXCOORD_);
 
       context.path.removeLast();
     }
 
-    final targets =
-        getIndicesMapsList(map, TARGETS, context, checkAttributeSemanticName);
+    void checkMorphTargetAttributeSemanticName(String semantic) {
+      if (!MORPH_ATTRIBUTES_ACCESSORS.containsKey(semantic) &&
+          !semantic.startsWith('_')) {
+        context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
+            name: semantic);
+      }
+    }
+
+    final targets = getIndicesMapsList(
+        map, TARGETS, context, checkMorphTargetAttributeSemanticName);
 
     return MeshPrimitive._(
         attributes,

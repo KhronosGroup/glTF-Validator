@@ -7,11 +7,13 @@
             "primitives": [
                 {
                     "attributes": {
-                        "POSITION": 0
+                        "POSITION": 0,
+                        "_CUSTOM": 0
                     },
                     "targets": [
                         {
-                            "POSITION": 1
+                            "POSITION": 1,
+                            "_CUSTOM": 0
                         }
                     ]
                 },
@@ -19,7 +21,7 @@
                     "attributes": {
                         "POSITION": 0,
                         "COLOR_0": 0,
-                        "_CUSTOM": 0,
+                        "COLOR_10": 0,
                         "INVALID": 0,
                         "INVALID_": 0,
                         "INVALID_1_1": 0,

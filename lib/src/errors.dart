@@ -305,8 +305,7 @@ class SemanticError extends IssueType {
       Severity.Warning);
 
   static final SemanticError meshPrimitiveInvalidAttribute = SemanticError._(
-      'MESH_PRIMITIVE_INVALID_ATTRIBUTE',
-      (args) => 'Invalid attribute name ${_q(args[0])}.');
+      'MESH_PRIMITIVE_INVALID_ATTRIBUTE', (args) => 'Invalid attribute name.');
 
   static final SemanticError meshPrimitivesUnequalTargetsCount =
       SemanticError._(
@@ -329,7 +328,9 @@ class SemanticError extends IssueType {
       SemanticError._(
           'MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY',
           (args) => 'Indices for indexed attribute semantic ${_q(args[0])} '
-              'must start with 0 and be continuous.');
+              'must start with 0 and be continuous. '
+              'Total expected indices: ${args[1]}, '
+              'total provided indices: ${args[2]}.');
 
   static final SemanticError meshPrimitiveTangentWithoutNormal =
       SemanticError._(

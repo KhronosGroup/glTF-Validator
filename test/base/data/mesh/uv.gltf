@@ -18,6 +18,8 @@
                 {
                     "attributes": {
                         "POSITION": 0,
+                        "TEXCOORD_00": 1,
+                        "TEXCOORD_01": 1,
                         "TEXCOORD_1": 1
                     }
                 },
