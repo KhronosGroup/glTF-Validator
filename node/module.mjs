@@ -18,6 +18,18 @@
 import * as v from './gltf_validator.dart.js';
 
 /**
+ * Returns a version string.
+ * @returns {string}
+ */
+export const version = () => v.default.version();
+
+/**
+ * Returns an array of supported extensions names.
+ * @returns {string[]}
+ */
+export const supportedExtensions = () => v.default.supportedExtensions();
+
+/**
  * Validates an asset from bytes.
  * @param {Uint8Array} data - Byte array containing glTF or GLB data.
  * @param {ValidationOptions} options - Object with validation options.

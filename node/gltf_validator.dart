@@ -47,6 +47,12 @@ abstract class Exports {
   // ignore: avoid_setters_without_getters
   external set validateString(
       Promise Function(String json, _JSValidationOptions options) v);
+
+  // ignore: avoid_setters_without_getters
+  external set version(String Function() v);
+
+  // ignore: avoid_setters_without_getters
+  external set supportedExtensions(Object Function() v);
 }
 
 @JS()
@@ -87,6 +93,11 @@ void main() {
           resolve(jsify(result));
         }, onError: (Object e, StackTrace st) => onError(e, st, reject));
       })));
+
+  exports.version = allowInterop(() => kGltfValidatorVersion);
+
+  exports.supportedExtensions =
+      allowInterop(() => jsify(kDefaultExtensions.map((e) => e.name)));
 }
 
 Future<Map<String, Object>> validateBytes(
