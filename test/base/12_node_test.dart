@@ -89,7 +89,7 @@ void main() {
       final context = Context()
         ..path.add('nodes')
         ..path.add('0')
-        ..addIssue(SemanticError.nodeRotationNonUnit, name: 'rotation')
+        ..addIssue(SemanticError.rotationNonUnit, name: 'rotation')
         ..addIssue(SchemaError.unsatisfiedDependency,
             name: 'skin', args: ['mesh'])
         ..addIssue(SchemaError.unsatisfiedDependency,

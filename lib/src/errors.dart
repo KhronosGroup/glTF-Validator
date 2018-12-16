@@ -366,9 +366,8 @@ class SemanticError extends IssueType {
   static final SemanticError nodeNonTrsMatrix = SemanticError._(
       'NODE_MATRIX_NON_TRS', (args) => 'Matrix must be decomposable to TRS.');
 
-  static final SemanticError nodeRotationNonUnit = SemanticError._(
-      'NODE_ROTATION_NON_UNIT',
-      (args) => 'Rotation quaternion must be normalized.');
+  static final SemanticError rotationNonUnit = SemanticError._(
+      'ROTATION_NON_UNIT', (args) => 'Rotation quaternion must be normalized.');
 
   static final SemanticError unusedExtensionRequired = SemanticError._(
       'UNUSED_EXTENSION_REQUIRED',
