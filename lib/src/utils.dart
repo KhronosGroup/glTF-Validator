@@ -525,6 +525,9 @@ Map<String, Object> getExtensions(
   }
 
   for (final extension in extensionMaps.keys) {
+    // Fetch extension JSON map first to ensure schema compliance.
+    final extensionMap = getMap(extensionMaps, extension, context);
+
     if (!context.extensionsLoaded.contains(extension)) {
       extensions[extension] = null;
       if (context.validate && !context.extensionsUsed.contains(extension)) {
@@ -541,7 +544,6 @@ Map<String, Object> getExtensions(
       continue;
     }
 
-    final extensionMap = getMap(extensionMaps, extension, context, req: true);
     if (extensionMap != null) {
       context.path.add(extension);
       final object = functions.fromMap(extensionMap, context);
