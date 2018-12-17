@@ -42,6 +42,8 @@ import '../test/data_access/00_load_buffers_test.dart' as load_buffers;
 import '../test/data_access/01_load_images_test.dart' as load_images;
 import '../test/data_access/02_validate_accessor_elements_test.dart'
     as validate_accessors;
+import '../test/ext/KHR_lights_punctual/ext_khr_lights_punctual_test.dart'
+    as lights_punctual;
 import '../test/ext/KHR_materials_pbrSpecularGlossiness/ext_khr_spec_gloss_test.dart'
     as spec_gloss;
 import '../test/ext/KHR_materials_unlit/ext_khr_unlit_test.dart' as unlit;
@@ -70,6 +72,7 @@ void main() {
   scene.main();
   animation.main();
   gltf.main();
+  lights_punctual.main();
   spec_gloss.main();
   unlit.main();
   texture_transform.main();

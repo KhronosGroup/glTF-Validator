@@ -59,6 +59,9 @@ class Context {
   final Map<Type, List<LinkableExtensionEntry>> linkableExtensions =
       <Type, List<LinkableExtensionEntry>>{};
 
+  final Map<SafeList, List<String>> extensionCollections =
+      <SafeList, List<String>>{};
+
   void registerObjectsOwner(Object owner, Iterable<Object> objects) {
     for (final o in objects) {
       if (o != null) {

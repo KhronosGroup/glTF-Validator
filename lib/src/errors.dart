@@ -398,6 +398,16 @@ class SemanticError extends IssueType {
       (args) => 'Prefer JSON Objects for extras.',
       Severity.Information);
 
+  static final SemanticError extraProperty = SemanticError._(
+      'EXTRA_PROPERTY',
+      (args) => 'This property should not be defined as it will not be used.',
+      Severity.Information);
+
+  static final SemanticError khrLightsPunctualLightSpotAngles = SemanticError._(
+      'KHR_LIHGTS_PUNCTUAL_LIGHT_SPOT_ANGLES',
+      (args) => 'outterConeAngle (${args[1]}) is less than or equal to '
+          'innerConeAngle (${args[0]}).');
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);

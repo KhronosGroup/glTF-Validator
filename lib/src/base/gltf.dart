@@ -211,6 +211,8 @@ class Gltf extends GltfProperty {
 
     final textures = toSafeList<Texture>(TEXTURES, Texture.fromMap);
 
+    final extensions = getExtensions(map, Gltf, context);
+
     resetPath();
 
     final gltf = Gltf._(
@@ -232,7 +234,7 @@ class Gltf extends GltfProperty {
         scenes,
         skins,
         textures,
-        getExtensions(map, Gltf, context),
+        extensions,
         getExtras(map, context));
 
     // Step 2: linking IDs
@@ -277,6 +279,19 @@ class Gltf extends GltfProperty {
 
     linkCollection(animations, Animation);
     linkCollection(scenes, Scene);
+
+    // Link root-level extensions
+    if (extensions.isNotEmpty) {
+      context.path.add(EXTENSIONS);
+      extensions.forEach((name, object) {
+        if (object is Linkable) {
+          context.path.add(name);
+          object.link(gltf, context);
+          context.path.removeLast();
+        }
+      });
+      context.path.removeLast();
+    }
 
     // Check node tree loops and orphaned objects
     if (context.validate) {
@@ -337,6 +352,25 @@ class Gltf extends GltfProperty {
           }
         }
         context.path.removeLast();
+      }
+
+      if (context.extensionCollections.isNotEmpty) {
+        for (final collection in context.extensionCollections.keys) {
+          if (collection.isEmpty) {
+            continue;
+          }
+
+          final path = context.extensionCollections[collection];
+          context.path
+            ..clear()
+            ..addAll(path);
+          for (var i = 0; i < collection.length; ++i) {
+            if (collection[i]?.isUsed == false) {
+              context.addIssue(LinkError.unusedObject, index: i);
+            }
+          }
+        }
+        context.path.clear();
       }
     }
 

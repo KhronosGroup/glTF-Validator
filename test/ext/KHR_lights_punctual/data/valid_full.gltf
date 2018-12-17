@@ -1,0 +1,44 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_lights_punctual"
+    ],
+    "extensions": {
+        "KHR_lights_punctual": {
+            "lights": [
+                {
+                    "type": "spot",
+                    "spot": {
+                        "innerConeAngle": 0.2,
+                        "outerConeAngle": 1.0
+                    },
+                    "intensity": 2.45,
+                    "color": [
+                        0.75,
+                        0.3,
+                        1.0
+                    ],
+                    "range": 10
+                }
+            ]
+        }
+    },
+    "nodes": [
+        {
+            "extensions": {
+                "KHR_lights_punctual": {
+                    "light": 0
+                }
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}
