@@ -31,6 +31,7 @@ NPM package: https://www.npmjs.com/package/gltf-validator
 - Images validation
   - Warning on non-power-of-two dimensions.
 - Extensions validation
+  - KHR_lights_punctual
   - KHR_materials_pbrSpecularGlossiness
   - KHR_materials_unlit
   - KHR_texture_transform

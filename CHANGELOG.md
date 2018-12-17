@@ -1,3 +1,21 @@
+## 2.0.0-dev.2.7
+
+* Added `ACCESSOR_INDEX_PRIMITIVE_RESTART` (#102).
+
+* Added `DATA_URI_GLB` (#103).
+
+* Updated language for `UNSUPPORTED_EXTENSION`, publish a list of supported extensions (#101).
+
+* JS API can now provide a list of supported extensions.
+
+* Updated indexed semantics validation to match the updated spec (#107).
+
+* Unsupported extension objects cannot be `null` anymore (#108).
+
+* Added `KHR_lights_punctual` support.
+
+* Renamed error code `NODE_ROTATION_NON_UNIT` to `ROTATION_NON_UNIT`. 
+
 ## 2.0.0-dev.2.6
 
 * Fixed crash on validating sparse accessors when data is unavailable (#99).
