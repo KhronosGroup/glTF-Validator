@@ -97,7 +97,7 @@ void main() {
   exports.version = allowInterop(() => kGltfValidatorVersion);
 
   exports.supportedExtensions =
-      allowInterop(() => jsify(kDefaultExtensions.map((e) => e.name)));
+      allowInterop(() => jsify(Context.defaultExtensionNames));
 }
 
 Future<Map<String, Object>> validateBytes(
