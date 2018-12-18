@@ -404,8 +404,8 @@ class SemanticError extends IssueType {
       Severity.Information);
 
   static final SemanticError khrLightsPunctualLightSpotAngles = SemanticError._(
-      'KHR_LIHGTS_PUNCTUAL_LIGHT_SPOT_ANGLES',
-      (args) => 'outterConeAngle (${args[1]}) is less than or equal to '
+      'KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES',
+      (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
           'innerConeAngle (${args[0]}).');
 
   SemanticError._(String type, ErrorFunction message,
