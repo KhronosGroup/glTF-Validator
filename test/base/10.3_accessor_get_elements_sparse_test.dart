@@ -42,13 +42,13 @@ void main() {
     test('Zeros', () async {
       final elements = result.gltf.accessors[0].getElements().toList();
 
-      expect(elements, orderedEquals(<double>[0.0, 0.0]));
+      expect(elements, orderedEquals(<double>[0, 0]));
     });
 
     test('Zeros with Sparse', () async {
       final elements = result.gltf.accessors[1].getElements().toList();
 
-      expect(elements, orderedEquals(<double>[0.125, 1024.0]));
+      expect(elements, orderedEquals(<double>[0.125, 1024]));
     });
 
     test('Partially overridden', () async {

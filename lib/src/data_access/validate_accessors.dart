@@ -263,6 +263,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
       // Temp vars for indices validation
       var maxVertexIndex = -1;
+      var primitiveRestartIndex = -1;
       var modesMask = 0;
       var vertIndex = 0;
       var degenerateTris = 0;
@@ -290,6 +291,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
           }
         }
         --maxVertexIndex;
+        primitiveRestartIndex = gl.typeMax(accessor.componentType);
       }
 
       while (hasNext) {
@@ -319,6 +321,11 @@ void validateAccessorsData(Gltf gltf, Context context) {
           if (value > maxVertexIndex) {
             context.addIssue(DataError.accessorIndexOob,
                 args: [index, value, maxVertexIndex]);
+          }
+
+          if (value == primitiveRestartIndex) {
+            context.addIssue(DataError.accessorIndexPrimitiveRestart,
+                args: [value, index]);
           }
 
           if (_isTriangles(modesMask)) {

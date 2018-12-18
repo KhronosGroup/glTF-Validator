@@ -71,11 +71,10 @@ class Material extends GltfChildOfRootProperty {
     final emissiveTexture = getObjectFromInnerMap<TextureInfo>(
         map, EMISSIVE_TEXTURE, context, TextureInfo.fromMap);
     final emissiveFactor = getFloatList(map, EMISSIVE_FACTOR, context,
-        lengthsList: const [3], min: 0.0, max: 1.0, def: const [0.0, 0.0, 0.0]);
+        lengthsList: const [3], min: 0, max: 1, def: const [0, 0, 0]);
     final alphaMode = getString(map, ALPHA_MODE, context,
         def: OPAQUE, list: MATERIAL_ALPHA_MODES);
-    final alphaCutoff =
-        getFloat(map, ALPHA_CUTOFF, context, min: 0.0, def: 0.5);
+    final alphaCutoff = getFloat(map, ALPHA_CUTOFF, context, min: 0, def: 0.5);
 
     if (context.validate &&
         alphaMode != MASK &&
@@ -161,16 +160,13 @@ class PbrMetallicRoughness extends GltfProperty {
     }
 
     final baseColorFactor = getFloatList(map, BASE_COLOR_FACTOR, context,
-        lengthsList: const [4],
-        min: 0.0,
-        max: 1.0,
-        def: const [1.0, 1.0, 1.0, 1.0]);
+        lengthsList: const [4], min: 0, max: 1, def: const [1, 1, 1, 1]);
     final baseColorTexture = getObjectFromInnerMap<TextureInfo>(
         map, BASE_COLOR_TEXTURE, context, TextureInfo.fromMap);
     final metallicFactor =
-        getFloat(map, METALLIC_FACTOR, context, min: 0.0, max: 1.0, def: 1.0);
+        getFloat(map, METALLIC_FACTOR, context, min: 0, max: 1, def: 1);
     final roughnessFactor =
-        getFloat(map, ROUGHNESS_FACTOR, context, min: 0.0, max: 1.0, def: 1.0);
+        getFloat(map, ROUGHNESS_FACTOR, context, min: 0, max: 1, def: 1);
     final metallicRoughnessTexture = getObjectFromInnerMap<TextureInfo>(
         map, METALLIC_ROUGHNESS_TEXTURE, context, TextureInfo.fromMap);
 
@@ -231,7 +227,7 @@ class OcclusionTextureInfo extends TextureInfo {
     final occlusionTextureInfo = OcclusionTextureInfo._(
         getIndex(map, INDEX, context),
         getUint(map, TEX_COORD, context, def: 0),
-        getFloat(map, STRENGTH, context, min: 0.0, max: 1.0, def: 1.0),
+        getFloat(map, STRENGTH, context, min: 0, max: 1, def: 1),
         extensions,
         getExtras(map, context));
 
@@ -262,7 +258,7 @@ class NormalTextureInfo extends TextureInfo {
     final normalTextureInfo = NormalTextureInfo._(
         getIndex(map, INDEX, context),
         getUint(map, TEX_COORD, context, def: 0),
-        getFloat(map, SCALE, context, def: 1.0),
+        getFloat(map, SCALE, context, def: 1),
         extensions,
         getExtras(map, context));
 

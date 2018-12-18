@@ -17,6 +17,18 @@
 const validator = require('./gltf_validator.dart.js');
 
 /**
+ * Returns a version string.
+ * @returns {string}
+ */
+exports.version = () => validator.version();
+
+/**
+ * Returns an array of supported extensions names.
+ * @returns {string[]}
+ */
+exports.supportedExtensions = () => validator.supportedExtensions();
+
+/**
  * Validates an asset from bytes.
  * @param {Uint8Array} data - Byte array containing glTF or GLB data.
  * @param {ValidationOptions} options - Object with validation options.

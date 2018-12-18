@@ -161,17 +161,18 @@ void main() {
         ..addIssue(SemanticError.meshPrimitivesUnequalTargetsCount,
             name: 'targets')
         ..path.add('attributes')
+        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute, name: 'INVALID')
         ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-            args: ['INVALID'])
+            name: 'INVALID_')
         ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-            args: ['INVALID_'])
+            name: 'INVALID_1_1')
         ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-            args: ['INVALID_1_1'])
+            name: 'INVALID_11')
         ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-            args: ['INVALID_11'])
-        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
-            args: ['INVALID_D'])
-        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute, args: [''])
+            name: 'INVALID_D')
+        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute, name: '')
+        ..addIssue(SemanticError.meshPrimitiveIndexedSemanticContinuity,
+            args: ['COLOR', 11, 2])
         ..path.removeLast()
         ..path.removeLast()
         ..path.removeLast()
@@ -296,12 +297,17 @@ void main() {
         ..path.removeLast()
         ..path.removeLast()
         ..path.add('1')
+        ..path.add('attributes')
+        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute, name: 'INVALID')
+        ..path.removeLast()
         ..path.add('targets')
         ..path.add('0')
         ..addIssue(LinkError.meshPrimitiveMorphTargetNoBaseAccessor,
             name: 'NORMAL')
         ..addIssue(LinkError.meshPrimitiveMorphTargetInvalidAttributeCount,
-            name: 'POSITION');
+            name: 'POSITION')
+        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
+            name: 'INVALID');
 
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
@@ -315,8 +321,14 @@ void main() {
         ..path.add('0')
         ..path.add('primitives')
         ..path.add('1')
+        ..path.add('attributes')
+        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
+            name: 'TEXCOORD_00')
+        ..addIssue(SemanticError.meshPrimitiveInvalidAttribute,
+            name: 'TEXCOORD_01')
         ..addIssue(SemanticError.meshPrimitiveIndexedSemanticContinuity,
-            name: 'attributes', args: ['TEXCOORD'])
+            args: ['TEXCOORD', 2, 1])
+        ..path.removeLast()
         ..path.removeLast()
         ..path.add('0')
         ..path.add('material')

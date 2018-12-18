@@ -35,14 +35,16 @@
 |BUFFER_VIEW_TOO_BIG_BYTE_STRIDE|Buffer view's byteStride (`%1`) is smaller than byteLength (`%2`).|Error|
 |CAMERA_XMAG_YMAG_ZERO|xmag and ymag must not be zero.|Warning|
 |CAMERA_ZFAR_LEQUAL_ZNEAR|zfar must be greater than znear.|Error|
+|EXTRA_PROPERTY|This property should not be defined as it will not be used.|Information|
 |INTEGER_WRITTEN_AS_FLOAT|Integer value is written with fractional part: `%1`.|Warning|
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
+|KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES|outerConeAngle (`%2`) is less than or equal to innerConeAngle (`%1`).|Error|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
 |MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT|All primitives should contain the same number of 'JOINTS' and 'WEIGHTS' attribute sets.|Warning|
 |MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|
-|MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous.|Error|
-|MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name '`%1`'.|Error|
+|MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY|Indices for indexed attribute semantic '`%1`' must start with 0 and be continuous. Total expected indices: `%2`, total provided indices: `%3`.|Error|
+|MESH_PRIMITIVE_INVALID_ATTRIBUTE|Invalid attribute name.|Error|
 |MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH|Number of JOINTS attribute semantics must match number of WEIGHTS.|Error|
 |MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Warning|
 |MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
@@ -52,9 +54,9 @@
 |NODE_MATRIX_DEFAULT|Do not specify default transform matrix.|Information|
 |NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
 |NODE_MATRIX_TRS|A node can have either a matrix or any combination of translation/rotation/scale (TRS) properties.|Error|
-|NODE_ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
 |NON_OBJECT_EXTRAS|Prefer JSON Objects for extras.|Information|
 |NON_RELATIVE_URI|Non-relative URI found: `%1`.|Warning|
+|ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
 |UNKNOWN_ASSET_MAJOR_VERSION|Unknown glTF major asset version: `%1`.|Error|
 |UNKNOWN_ASSET_MINOR_VERSION|Unknown glTF minor asset version: `%1`.|Warning|
 |UNRESERVED_EXTENSION_PREFIX|Extension uses unreserved extension prefix '`%1`'.|Warning|
@@ -102,7 +104,7 @@
 |UNDECLARED_EXTENSION|Extension was not declared in extensionsUsed.|Error|
 |UNEXPECTED_EXTENSION_OBJECT|Unexpected location for this extension.|Error|
 |UNRESOLVED_REFERENCE|Unresolved reference: `%1`.|Error|
-|UNSUPPORTED_EXTENSION|Unsupported extension encountered: '`%1`'.|Warning|
+|UNSUPPORTED_EXTENSION|Cannot validate an extension as it is not supported by the validator: '`%1`'.|Warning|
 |UNUSED_OBJECT|This object may be unused.|Information|
 ## DataError
 | Code | Message | Severity |
@@ -113,6 +115,7 @@
 |ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND|Accessor contains `%1` element(s) less than declared minimum value `%2`.|Error|
 |ACCESSOR_INDECOMPOSABLE_MATRIX|Matrix element at index `%1` is not decomposable to TRS.|Error|
 |ACCESSOR_INDEX_OOB|Indices accessor element at index `%1` has vertex index `%2` that exceeds number of available vertices `%3`.|Error|
+|ACCESSOR_INDEX_PRIMITIVE_RESTART|Indices accessor contains primitive restart value (`%1`) at index `%2`.|Error|
 |ACCESSOR_INDEX_TRIANGLE_DEGENERATE|Indices accessor contains `%1` degenerate triangles.|Information|
 |ACCESSOR_INVALID_FLOAT|Accessor element at index `%1` is NaN or Infinity.|Error|
 |ACCESSOR_INVALID_SIGN|Accessor element at index `%1` has invalid w component: `%2`. Must be 1.0 or -1.0.|Error|
@@ -124,6 +127,7 @@
 |BUFFER_EMBEDDED_BYTELENGTH_MISMATCH|Actual data length `%1` is not equal to the declared buffer byteLength `%2`.|Error|
 |BUFFER_EXTERNAL_BYTELENGTH_MISMATCH|Actual data length `%1` is less than the declared buffer byteLength `%2`.|Error|
 |BUFFER_GLB_CHUNK_TOO_BIG|GLB-stored BIN chunk contains `%1` extra padding byte(s).|Warning|
+|DATA_URI_GLB|Data URI is used in GLB container.|Information|
 |IMAGE_DATA_INVALID|Image data is invalid. `%1`|Error|
 |IMAGE_MIME_TYPE_INVALID|Recognized image format '`%1`' does not match declared image format '`%2`'.|Error|
 |IMAGE_NPOT_DIMENSIONS|Image has non-power-of-two dimensions: `%1`x`%2`.|Information|

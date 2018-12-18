@@ -74,6 +74,10 @@ class Image extends GltfChildOfRootProperty {
       }
 
       if (uriData != null) {
+        if (context.isGlb) {
+          context.addIssue(DataError.dataUriGlb, name: URI);
+        }
+
         data = uriData.contentAsBytes();
 
         // Re-assign `mimeType` only if it wasn't set in JSON

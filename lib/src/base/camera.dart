@@ -38,7 +38,8 @@ class Camera extends GltfChildOfRootProperty {
     }
 
     if (context.validate &&
-        map.keys.where((key) => CAMERA_TYPES.contains(key)).length > 1) {
+        map.containsKey(CAMERA_TYPES[0]) &&
+        map.containsKey(CAMERA_TYPES[1])) {
       context.addIssue(SchemaError.oneOfMismatch, args: CAMERA_TYPES);
     }
 
@@ -83,8 +84,8 @@ class CameraOrthographic extends GltfProperty {
     final xmag = getFloat(map, XMAG, context, req: true);
     final ymag = getFloat(map, YMAG, context, req: true);
 
-    final zfar = getFloat(map, ZFAR, context, req: true, exclMin: 0.0);
-    final znear = getFloat(map, ZNEAR, context, req: true, min: 0.0);
+    final zfar = getFloat(map, ZFAR, context, req: true, exclMin: 0);
+    final znear = getFloat(map, ZNEAR, context, req: true, min: 0);
 
     if (context.validate) {
       if (!zfar.isNaN && !znear.isNaN && zfar <= znear) {
@@ -125,16 +126,16 @@ class CameraPerspective extends GltfProperty {
       checkMembers(map, CAMERA_PERSPECTIVE_MEMBERS, context);
     }
 
-    final zfar = getFloat(map, ZFAR, context, exclMin: 0.0);
-    final znear = getFloat(map, ZNEAR, context, req: true, exclMin: 0.0);
+    final zfar = getFloat(map, ZFAR, context, exclMin: 0);
+    final znear = getFloat(map, ZNEAR, context, req: true, exclMin: 0);
 
     if (context.validate && !zfar.isNaN && !znear.isNaN && zfar <= znear) {
       context.addIssue(SemanticError.cameraZfarLequalZnear);
     }
 
     return CameraPerspective._(
-        getFloat(map, ASPECT_RATIO, context, exclMin: 0.0),
-        getFloat(map, YFOV, context, req: true, exclMin: 0.0),
+        getFloat(map, ASPECT_RATIO, context, exclMin: 0),
+        getFloat(map, YFOV, context, req: true, exclMin: 0),
         zfar,
         znear,
         getExtensions(map, CameraPerspective, context),

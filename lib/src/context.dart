@@ -43,6 +43,9 @@ class Context {
   final ValidationOptions options;
   final List<String> path = <String>[];
 
+  static Iterable<String> get defaultExtensionNames =>
+      kDefaultExtensions.map((e) => e.name);
+
   Context({this.validate = true, ValidationOptions options})
       : options = options ?? ValidationOptions() {
     _extensionsLoadedView = UnmodifiableListView(_extensionsLoaded);
@@ -55,6 +58,9 @@ class Context {
 
   final Map<Type, List<LinkableExtensionEntry>> linkableExtensions =
       <Type, List<LinkableExtensionEntry>>{};
+
+  final Map<SafeList, List<String>> extensionCollections =
+      <SafeList, List<String>>{};
 
   void registerObjectsOwner(Object owner, Iterable<Object> objects) {
     for (final o in objects) {
@@ -144,7 +150,7 @@ class Context {
 
       final extension = _userExtensions.firstWhere(
           (extension) => extension.name == extensionName,
-          orElse: () => defaultExtensions.firstWhere(
+          orElse: () => kDefaultExtensions.firstWhere(
               (extension) => extension.name == extensionName,
               orElse: () => null));
 

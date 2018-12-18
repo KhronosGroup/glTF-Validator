@@ -1,0 +1,21 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_invalid1",
+        "KHR_invalid2",
+        "KHR_invalid3",
+        "KHR_invalid4",
+        "KHR_invalid5",
+        "KHR_invalid6"
+    ],
+    "extensions": {
+        "KHR_invalid1": 42,
+        "KHR_invalid2": "string",
+        "KHR_invalid3": true,
+        "KHR_invalid4": false,
+        "KHR_invalid5": [],
+        "KHR_invalid6": null
+    }
+}

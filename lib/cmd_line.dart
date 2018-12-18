@@ -171,6 +171,9 @@ Future<void> run(List<String> args) async {
   if (argResult?.rest?.length != 1) {
     errPipe
       ..write('glTF 2.0 Validator, version $kGltfValidatorVersion\n')
+      ..write('Supported extensions:\n\t')
+      ..write(Context.defaultExtensionNames.join('\n\t'))
+      ..write('\n\n')
       ..write('Usage: gltf_validator [<options>] <input>\n\n'
           'Validation report will be written to '
           '`<asset_filename>_report.json`.\n'
@@ -181,7 +184,7 @@ Future<void> run(List<String> args) async {
           'if at least one error was found.\n')
       ..writeln(parser.usage);
     exitCode = kErrorCode;
-    return null;
+    return;
   }
 
   final input = argResult.rest[0];

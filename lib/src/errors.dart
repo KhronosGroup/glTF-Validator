@@ -94,6 +94,12 @@ class DataError extends IssueType {
       (args) => 'Indices accessor contains ${args[0]} degenerate triangles.',
       Severity.Information);
 
+  static final DataError accessorIndexPrimitiveRestart = DataError._(
+      'ACCESSOR_INDEX_PRIMITIVE_RESTART',
+      (args) => 'Indices accessor contains primitive restart value '
+          '(${args[0]}) at index ${args[1]}.',
+      Severity.Error);
+
   static final DataError accessorAnimationInputNegative = DataError._(
       'ACCESSOR_ANIMATION_INPUT_NEGATIVE',
       (args) => 'Animation input accessor element at index ${args[0]} '
@@ -140,6 +146,9 @@ class DataError extends IssueType {
       'IMAGE_NPOT_DIMENSIONS',
       (args) => 'Image has non-power-of-two dimensions: ${args[0]}x${args[1]}.',
       Severity.Information);
+
+  static final DataError dataUriGlb = DataError._('DATA_URI_GLB',
+      (args) => 'Data URI is used in GLB container.', Severity.Information);
 
   DataError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
@@ -296,8 +305,7 @@ class SemanticError extends IssueType {
       Severity.Warning);
 
   static final SemanticError meshPrimitiveInvalidAttribute = SemanticError._(
-      'MESH_PRIMITIVE_INVALID_ATTRIBUTE',
-      (args) => 'Invalid attribute name ${_q(args[0])}.');
+      'MESH_PRIMITIVE_INVALID_ATTRIBUTE', (args) => 'Invalid attribute name.');
 
   static final SemanticError meshPrimitivesUnequalTargetsCount =
       SemanticError._(
@@ -320,7 +328,9 @@ class SemanticError extends IssueType {
       SemanticError._(
           'MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY',
           (args) => 'Indices for indexed attribute semantic ${_q(args[0])} '
-              'must start with 0 and be continuous.');
+              'must start with 0 and be continuous. '
+              'Total expected indices: ${args[1]}, '
+              'total provided indices: ${args[2]}.');
 
   static final SemanticError meshPrimitiveTangentWithoutNormal =
       SemanticError._(
@@ -357,9 +367,8 @@ class SemanticError extends IssueType {
   static final SemanticError nodeNonTrsMatrix = SemanticError._(
       'NODE_MATRIX_NON_TRS', (args) => 'Matrix must be decomposable to TRS.');
 
-  static final SemanticError nodeRotationNonUnit = SemanticError._(
-      'NODE_ROTATION_NON_UNIT',
-      (args) => 'Rotation quaternion must be normalized.');
+  static final SemanticError rotationNonUnit = SemanticError._(
+      'ROTATION_NON_UNIT', (args) => 'Rotation quaternion must be normalized.');
 
   static final SemanticError unusedExtensionRequired = SemanticError._(
       'UNUSED_EXTENSION_REQUIRED',
@@ -388,6 +397,16 @@ class SemanticError extends IssueType {
       'NON_OBJECT_EXTRAS',
       (args) => 'Prefer JSON Objects for extras.',
       Severity.Information);
+
+  static final SemanticError extraProperty = SemanticError._(
+      'EXTRA_PROPERTY',
+      (args) => 'This property should not be defined as it will not be used.',
+      Severity.Information);
+
+  static final SemanticError khrLightsPunctualLightSpotAngles = SemanticError._(
+      'KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES',
+      (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
+          'innerConeAngle (${args[0]}).');
 
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
@@ -598,7 +617,8 @@ class LinkError extends IssueType {
 
   static final LinkError unsupportedExtension = LinkError._(
       'UNSUPPORTED_EXTENSION',
-      (args) => 'Unsupported extension encountered: ${_q(args[0])}.',
+      (args) => 'Cannot validate an extension as it is not supported '
+          'by the validator: ${_q(args[0])}.',
       Severity.Warning);
 
   static final LinkError unusedObject = LinkError._('UNUSED_OBJECT',

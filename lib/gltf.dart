@@ -18,6 +18,7 @@
 library gltf;
 
 export 'package:gltf/src/context.dart';
+export 'package:gltf/src/ext/extensions.dart';
 export 'package:gltf/src/gltf_reader.dart';
 export 'package:gltf/src/glb_reader.dart';
 export 'package:gltf/src/validation_result.dart';

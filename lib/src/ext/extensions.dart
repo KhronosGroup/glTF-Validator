@@ -20,6 +20,8 @@ library gltf.extensions;
 import 'package:gltf/src/hash.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 
+//import 'package:gltf/src/ext/EXT_lights_image_based/ext_lights_image_based.dart';
+import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
@@ -28,6 +30,8 @@ import 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attribut
 
 export 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
 export 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
+//export 'package:gltf/src/ext/EXT_lights_image_based/ext_lights_image_based.dart';
+export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
@@ -63,7 +67,8 @@ class LinkableExtensionEntry {
   LinkableExtensionEntry(this.object, this.path);
 }
 
-const List<Extension> defaultExtensions = <Extension>[
+const List<Extension> kDefaultExtensions = <Extension>[
+  khrLightsPunctualExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsUnlitExtension,
   khrTextureTransformExtension,

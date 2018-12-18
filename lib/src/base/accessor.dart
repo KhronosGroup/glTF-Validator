@@ -33,9 +33,10 @@ class Accessor extends GltfChildOfRootProperty {
   final List<num> min;
   final AccessorSparse sparse;
 
+  final int componentLength;
+
   BufferView _bufferView;
   int _byteStride = 0;
-  int _componentLength = -1;
   bool _isUnit = false;
   bool _isXyzSign = false;
   bool _containsCubicSpline;
@@ -54,7 +55,8 @@ class Accessor extends GltfChildOfRootProperty {
       String name,
       Map<String, Object> extensions,
       Object extras)
-      : super(name, extensions, extras);
+      : componentLength = gl.componentTypeLength(componentType),
+        super(name, extensions, extras);
 
   bool get _isMatrixWithGaps =>
       ((componentType == gl.UNSIGNED_BYTE || componentType == gl.BYTE) &&
@@ -65,8 +67,6 @@ class Accessor extends GltfChildOfRootProperty {
   BufferView get bufferView => _bufferView;
 
   int get components => ACCESSOR_TYPES_LENGTHS[type] ?? 0;
-
-  int get componentLength => _componentLength;
 
   int get elementLength {
     // TODO: generalize to non-square matrices
@@ -220,8 +220,6 @@ class Accessor extends GltfChildOfRootProperty {
       return;
     }
 
-    _componentLength = gl.componentTypeLength(componentType);
-
     // Check length and alignment when bufferView is present
     if (context.validate && _bufferViewIndex != -1) {
       if (_bufferView == null) {
@@ -236,7 +234,7 @@ class Accessor extends GltfChildOfRootProperty {
               args: [_bufferView.byteStride, elementLength]);
         }
 
-        _checkByteOffsetAndLength(byteOffset, _componentLength, byteLength,
+        _checkByteOffsetAndLength(byteOffset, componentLength, byteLength,
             _bufferView, _bufferViewIndex, context);
       }
     }
@@ -313,8 +311,8 @@ class Accessor extends GltfChildOfRootProperty {
 
                 _checkByteOffsetAndLength(
                     values.byteOffset,
-                    _componentLength,
-                    _componentLength *
+                    componentLength,
+                    componentLength *
                         ACCESSOR_TYPES_LENGTHS[type] *
                         sparse.count,
                     values._bufferView,
@@ -374,12 +372,12 @@ class Accessor extends GltfChildOfRootProperty {
       }
 
       if (!_checkByteOffsetAndLength(
-          byteOffset, _componentLength, byteLength, _bufferView)) {
+          byteOffset, componentLength, byteLength, _bufferView)) {
         return;
       }
 
       final view = _typedView(componentType, _bufferView.buffer.data.buffer,
-          _bufferView.byteOffset + byteOffset, byteLength ~/ _componentLength);
+          _bufferView.byteOffset + byteOffset, byteLength ~/ componentLength);
 
       if (view == null) {
         return;
@@ -389,7 +387,7 @@ class Accessor extends GltfChildOfRootProperty {
       if (_isMatrixWithGaps) {
         // type is either MAT2 or MAT3 here
         // TODO: generalize to non-square matrices
-        final skip = byteStride ~/ _componentLength - (type == MAT2 ? 8 : 12);
+        final skip = byteStride ~/ componentLength - (type == MAT2 ? 8 : 12);
         final rowCount = type == MAT2 ? 2 : 3;
         final columnCount = rowCount;
 
@@ -413,7 +411,7 @@ class Accessor extends GltfChildOfRootProperty {
           }
         }();
       } else {
-        final skip = byteStride ~/ _componentLength - components;
+        final skip = byteStride ~/ componentLength - components;
         elements = (int length, int components, int skip) sync* {
           var index = 0;
           var componentIndex = 0;
@@ -460,8 +458,8 @@ class Accessor extends GltfChildOfRootProperty {
               sparse.indices._bufferView) ||
           !_checkByteOffsetAndLength(
               sparse.values.byteOffset,
-              _componentLength,
-              _componentLength * ACCESSOR_TYPES_LENGTHS[type] * sparse.count,
+              componentLength,
+              componentLength * ACCESSOR_TYPES_LENGTHS[type] * sparse.count,
               sparse.values._bufferView)) {
         return;
       }
@@ -506,7 +504,7 @@ class Accessor extends GltfChildOfRootProperty {
     }
 
     if (normalized && normalize) {
-      final width = _componentLength * 8;
+      final width = componentLength * 8;
       if (componentType == gl.BYTE ||
           componentType == gl.SHORT ||
           componentType == gl.INT) {
@@ -529,13 +527,13 @@ class Accessor extends GltfChildOfRootProperty {
       return value.toDouble();
     }
 
-    final width = _componentLength * 8;
+    final width = componentLength * 8;
     if (componentType == gl.BYTE ||
         componentType == gl.SHORT ||
         componentType == gl.INT) {
       // Signed
       final divider = (1 << width - 1) - 1;
-      return math.max<double>(value / divider, -1.0);
+      return math.max<double>(value / divider, -1);
     } else {
       // Unsigned
       final divider = (1 << width) - 1;

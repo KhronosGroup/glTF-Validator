@@ -93,12 +93,12 @@ class Node extends GltfChildOfRootProperty {
     Quaternion rotation;
     if (map.containsKey(ROTATION)) {
       final rotationList = getFloatList(map, ROTATION, context,
-          lengthsList: const [4], min: -1.0, max: 1.0);
+          lengthsList: const [4], min: -1, max: 1);
       if (rotationList != null) {
         rotation = Quaternion(
             rotationList[0], rotationList[1], rotationList[2], rotationList[3]);
         if (context.validate && (rotation.length - 1.0).abs() > 0.000005) {
-          context.addIssue(SemanticError.nodeRotationNonUnit, name: ROTATION);
+          context.addIssue(SemanticError.rotationNonUnit, name: ROTATION);
         }
       }
     }

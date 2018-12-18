@@ -101,6 +101,9 @@ void main() {
 
       final context = Context()
         ..path.add('buffers')
+        ..path.add('0')
+        ..addIssue(DataError.dataUriGlb, name: 'uri')
+        ..path.removeLast()
         ..path.add('1')
         ..addIssue(LinkError.bufferNonFirstGlb);
 

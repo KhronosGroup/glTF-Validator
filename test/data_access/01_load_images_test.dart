@@ -65,6 +65,18 @@ void main() {
       expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Data URI in GLB', () async {
+      final validationResult =
+          await getValidationResult('test/data_access/image/data_uri.glb');
+
+      final context = Context()
+        ..path.add('images')
+        ..path.add('0')
+        ..addIssue(DataError.dataUriGlb, name: 'uri');
+
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
+    });
+
     test('From BufferView', () async {
       final validationResult =
           await getValidationResult('test/data_access/image/yellow.glb');

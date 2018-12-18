@@ -42,8 +42,7 @@ void main() {
     test('Regular', () async {
       final elements = result.gltf.accessors[0].getElements();
 
-      expect(
-          elements, orderedEquals(<double>[0.0, -5.0, 27.0, -0.0, 10.5, 0.5]));
+      expect(elements, orderedEquals(<double>[0, -5, 27, -0, 10.5, 0.5]));
     });
 
     test('scalar float & vec2 ushort', () async {
@@ -51,7 +50,7 @@ void main() {
       final elements2 = result.gltf.accessors[2].getElements();
       final elements2n = result.gltf.accessors[2].getElements(normalize: true);
 
-      expect(elements1, orderedEquals(<double>[1000.0, 0.25]));
+      expect(elements1, orderedEquals(<double>[1000, 0.25]));
       expect(elements2, orderedEquals(<int>[50, 45, 12345, 0]));
       expect(
           elements2n,
@@ -59,7 +58,7 @@ void main() {
             50 * (1 / 65535),
             45 * (1 / 65535),
             12345 * (1 / 65535),
-            0.0
+            0
           ]));
     });
 
@@ -76,7 +75,7 @@ void main() {
             1 / 127,
             126 * (1 / 127),
             -127 * (1 / 127),
-            0.0,
+            0,
             50 * (1 / 127),
             -125 * (1 / 127)
           ]));
@@ -89,7 +88,7 @@ void main() {
             50 * (1 / 32767),
             45 * (1 / 32767),
             12345 * (1 / 32767),
-            0.0,
+            0,
             -1 * (1 / 32767),
             45 * (1 / 32767),
             12345 * (1 / 32767),

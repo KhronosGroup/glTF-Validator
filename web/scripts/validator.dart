@@ -76,6 +76,7 @@ void main() {
   });
 
   print('glTF Validator ver. $kGltfValidatorVersion.');
+  print('Supported extensions: ${Context.defaultExtensionNames.join(', ')}');
 }
 
 void _validate(List<File> files) {

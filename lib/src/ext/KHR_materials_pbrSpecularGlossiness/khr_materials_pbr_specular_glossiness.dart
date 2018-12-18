@@ -72,16 +72,13 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
     }
 
     final diffuseFactor = getFloatList(map, DIFFUSE_FACTOR, context,
-        lengthsList: const [4],
-        min: 0.0,
-        max: 1.0,
-        def: const [1.0, 1.0, 1.0, 1.0]);
+        lengthsList: const [4], min: 0, max: 1, def: const [1, 1, 1, 1]);
     final diffuseTexture = getObjectFromInnerMap<TextureInfo>(
         map, DIFFUSE_TEXTURE, context, TextureInfo.fromMap);
     final specularFactor = getFloatList(map, SPECULAR_FACTOR, context,
-        lengthsList: const [3], min: 0.0, max: 1.0, def: const [1.0, 1.0, 1.0]);
+        lengthsList: const [3], min: 0, max: 1, def: const [1, 1, 1]);
     final glossinessFactor =
-        getFloat(map, GLOSSINESS_FACTOR, context, min: 0.0, max: 1.0, def: 1.0);
+        getFloat(map, GLOSSINESS_FACTOR, context, min: 0, max: 1, def: 1);
     final specularGlossinessTexture = getObjectFromInnerMap<TextureInfo>(
         map, SPECULAR_GLOSSINESS_TEXTURE, context, TextureInfo.fromMap);
 

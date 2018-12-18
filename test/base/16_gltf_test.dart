@@ -156,6 +156,43 @@ void main() {
       expect(reader.context.issues, unorderedMatches(context.issues));
     });
 
+    test('Non-object extensions', () async {
+      final reader = GltfJsonReader(
+          File('test/base/data/gltf/extensions.gltf').openRead(),
+          ignoreUnusedContext);
+
+      final context = Context()
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/0', args: ['KHR_invalid1'])
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/1', args: ['KHR_invalid2'])
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/2', args: ['KHR_invalid3'])
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/3', args: ['KHR_invalid4'])
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/4', args: ['KHR_invalid5'])
+        ..addIssue(LinkError.unsupportedExtension,
+            name: 'extensionsUsed/5', args: ['KHR_invalid6'])
+        ..path.add('extensions')
+        ..addIssue(SchemaError.typeMismatch,
+            name: 'KHR_invalid1', args: [42, 'object'])
+        ..addIssue(SchemaError.typeMismatch,
+            name: 'KHR_invalid2', args: ['string', 'object'])
+        ..addIssue(SchemaError.typeMismatch,
+            name: 'KHR_invalid3', args: [true, 'object'])
+        ..addIssue(SchemaError.typeMismatch,
+            name: 'KHR_invalid4', args: [false, 'object'])
+        ..addIssue(SchemaError.typeMismatch,
+            name: 'KHR_invalid5', args: [const <Object>[], 'object'])
+        ..addIssue(SchemaError.typeMismatch,
+            name: 'KHR_invalid6', args: [null, 'object']);
+
+      await reader.read();
+
+      expect(reader.context.issues, unorderedMatches(context.issues));
+    });
+
     test('Valid Full', () async {
       final reader = GltfJsonReader(
           File('test/base/data/gltf/valid_full.gltf').openRead());
