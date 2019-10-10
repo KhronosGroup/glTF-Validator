@@ -104,20 +104,21 @@ class ResourcesLoader {
             // Data URI
             info.storage = _Storage.DataUri;
             return buffer.data;
-          } else if (context.isGlb && !buffer.hasUri) {
-            // GLB Buffer
-            info.storage = _Storage.GLB;
-            final data = externalBytesFetch();
-            if (context.validate) {
-              if (i != 0) {
+          } else if (context.isGlb && i == 0) {
+            if (buffer.hasUri) {
+              if (context.validate) {
                 context.addIssue(LinkError.bufferNonFirstGlb);
               }
-
+              return null;
+            } else {
+              // GLB Buffer
+              info.storage = _Storage.GLB;
+              final data = externalBytesFetch();
               if (data == null) {
                 context.addIssue(LinkError.bufferMissingGlbData);
               }
+              return data;
             }
-            return data;
           }
         }
         return null;
