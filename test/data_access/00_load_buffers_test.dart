@@ -99,11 +99,16 @@ void main() {
       final validationResult = await getValidationResult(
           'test/data_access/buffer/non_first_buffer.glb');
 
+      final context = Context()
+        ..path.add('buffers')
+        ..path.add('0')
+        ..addIssue(DataError.dataUriGlb, name: 'uri');
+
       // Note: this GLB file has an orphaned BIN chunk: the buffer without a uri is
       // not the first and thus it doesn't refer to BIN chunk. This file is unusual
       // but valid; access to dummy buffers is left undefined to accomodate future
       // specification versions and extensions.
-      expect(validationResult.context.issues, isEmpty);
+      expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
 
     test('Missing BIN chunk', () async {
