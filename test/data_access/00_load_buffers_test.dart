@@ -104,10 +104,10 @@ void main() {
         ..path.add('0')
         ..addIssue(DataError.dataUriGlb, name: 'uri');
 
-      // Note: this GLB file has an orphaned BIN chunk: the buffer without a uri is
-      // not the first and thus it doesn't refer to BIN chunk. This file is unusual
-      // but valid; access to dummy buffers is left undefined to accomodate future
-      // specification versions and extensions.
+      // Note: this GLB file has an orphaned BIN chunk: the buffer without uri
+      // is not the first and thus it doesn't refer to BIN chunk. This file is
+      // unusual but valid; access to dummy buffers is left undefined to
+      // accomodate future specification versions and extensions.
       expect(validationResult.context.issues, unorderedMatches(context.issues));
     });
 
