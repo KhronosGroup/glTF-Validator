@@ -489,9 +489,6 @@ class LinkError extends IssueType {
           (args) => 'Animation sampler output accessor of count '
               '${args[0]} expected. Found ${args[1]}.');
 
-  static final LinkError bufferNonFirstGlb = LinkError._('BUFFER_NON_FIRST_GLB',
-      (args) => 'Buffer referring to GLB binary chunk must be the first.');
-
   static final LinkError bufferMissingGlbData = LinkError._(
       'BUFFER_MISSING_GLB_DATA',
       (args) => 'Buffer refers to an unresolved GLB binary chunk.');
