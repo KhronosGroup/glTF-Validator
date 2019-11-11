@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -44,18 +43,6 @@ class Material extends GltfChildOfRootProperty {
       Map<String, Object> extensions,
       Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([Object _]) => super.toString({
-        PBR_METALLIC_ROUGHNESS: pbrMetallicRoughness,
-        NORMAL_TEXTURE: normalTexture,
-        OCCLUSION_TEXTURE: occlusionTexture,
-        EMISSIVE_TEXTURE: emissiveTexture,
-        EMISSIVE_FACTOR: emissiveFactor,
-        ALPHA_MODE: alphaMode,
-        ALPHA_CUTOFF: alphaCutoff,
-        DOUBLE_SIDED: doubleSided
-      });
 
   static Material fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -101,10 +88,13 @@ class Material extends GltfChildOfRootProperty {
         extensions,
         getExtras(map, context));
 
-    context.registerObjectsOwner(
-        material,
-        [pbrMetallicRoughness, normalTexture, occlusionTexture, emissiveTexture]
-          ..addAll(extensions.values));
+    context.registerObjectsOwner(material, [
+      pbrMetallicRoughness,
+      normalTexture,
+      occlusionTexture,
+      emissiveTexture,
+      ...extensions.values
+    ]);
 
     return material;
   }
@@ -144,15 +134,6 @@ class PbrMetallicRoughness extends GltfProperty {
       Object extras)
       : super(extensions, extras);
 
-  @override
-  String toString([Object _]) => super.toString({
-        BASE_COLOR_FACTOR: baseColorFactor,
-        BASE_COLOR_TEXTURE: baseColorTexture,
-        METALLIC_FACTOR: metallicFactor,
-        ROUGHNESS_FACTOR: roughnessFactor,
-        METALLIC_ROUGHNESS_TEXTURE: metallicRoughnessTexture
-      });
-
   static PbrMetallicRoughness fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -181,10 +162,8 @@ class PbrMetallicRoughness extends GltfProperty {
         extensions,
         getExtras(map, context));
 
-    context.registerObjectsOwner(
-        pbrMr,
-        [baseColorTexture, metallicRoughnessTexture]
-          ..addAll(extensions.values));
+    context.registerObjectsOwner(pbrMr,
+        [baseColorTexture, metallicRoughnessTexture, ...extensions.values]);
 
     return pbrMr;
   }
@@ -211,9 +190,6 @@ class OcclusionTextureInfo extends TextureInfo {
   OcclusionTextureInfo._(int index, int texCoord, this.strength,
       Map<String, Object> extensions, Object extras)
       : super._(index, texCoord, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({STRENGTH: strength});
 
   static OcclusionTextureInfo fromMap(
       Map<String, Object> map, Context context) {
@@ -243,9 +219,6 @@ class NormalTextureInfo extends TextureInfo {
   NormalTextureInfo._(int index, int texCoord, this.scale,
       Map<String, Object> extensions, Object extras)
       : super._(index, texCoord, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({SCALE: scale});
 
   static NormalTextureInfo fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -279,15 +252,6 @@ class TextureInfo extends GltfProperty {
       : super(extensions, extras);
 
   Texture get texture => _texture;
-
-  @override
-  String toString([Map<String, Object> map]) {
-    map ??= <String, Object>{};
-    map[INDEX] = _index;
-    map[TEX_COORD] = texCoord;
-
-    return super.toString(map);
-  }
 
   static TextureInfo fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {

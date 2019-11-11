@@ -1,0 +1,54 @@
+{
+    "uri": "test/base/data/image/missing_mime_type_buffer_view.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNSATISFIED_DEPENDENCY",
+                "message": "Dependency failed. 'mimeType' must be defined.",
+                "severity": 0,
+                "pointer": "/images/0/bufferView"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer",
+                "storage": null
+            },
+            {
+                "pointer": "/images/0",
+                "mimeType": null,
+                "storage": "bufferView"
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

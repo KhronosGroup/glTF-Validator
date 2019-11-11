@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -29,7 +28,6 @@ class BufferView extends GltfChildOfRootProperty {
 
   Buffer _buffer;
   BufferViewUsage _usage;
-  Set<Accessor> _accessors;
 
   int effectiveByteStride = -1;
 
@@ -59,25 +57,6 @@ class BufferView extends GltfChildOfRootProperty {
           name: name, args: [_usage, value]);
     }
   }
-
-  void checkAccessorRefs(Accessor accessor, String semantic, Context context) {
-    if (byteStride == -1) {
-      _accessors ??= Set<Accessor>();
-      if (_accessors.add(accessor) && _accessors.length > 1) {
-        context.addIssue(LinkError.meshPrimitiveAccessorWithoutByteStride,
-            name: semantic);
-      }
-    }
-  }
-
-  @override
-  String toString([_]) => super.toString({
-        BUFFER: _bufferIndex,
-        BYTE_OFFSET: byteOffset,
-        BYTE_LENGTH: byteLength,
-        BYTE_STRIDE: byteStride,
-        TARGET: _target
-      });
 
   static BufferView fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {

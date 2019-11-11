@@ -1,0 +1,110 @@
+{
+    "uri": "test/base/data/root/extensions_non_objects.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 6,
+        "numWarnings": 6,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'KHR_invalid1'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/0"
+            },
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'KHR_invalid2'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/1"
+            },
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'KHR_invalid3'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/2"
+            },
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'KHR_invalid4'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/3"
+            },
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'KHR_invalid5'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/4"
+            },
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'KHR_invalid6'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/5"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value 42 is not a 'object'.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_invalid1"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value 'string' is not a 'object'.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_invalid2"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value true is not a 'object'.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_invalid3"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value false is not a 'object'.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_invalid4"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value [] is not a 'object'.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_invalid5"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value null is not a 'object'.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_invalid6"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": [
+            "KHR_invalid1",
+            "KHR_invalid2",
+            "KHR_invalid3",
+            "KHR_invalid4",
+            "KHR_invalid5",
+            "KHR_invalid6"
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

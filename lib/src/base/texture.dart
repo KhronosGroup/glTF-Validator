@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,7 +18,7 @@ library gltf.base.texture;
 
 import 'package:gltf/src/base/gltf_property.dart';
 
-class Texture extends GltfChildOfRootProperty {
+class Texture extends GltfChildOfRootProperty implements ResourceValidatable {
   final int _samplerIndex;
   final int _sourceIndex;
 
@@ -32,12 +31,6 @@ class Texture extends GltfChildOfRootProperty {
 
   Sampler get sampler => _sampler;
   Image get source => _source;
-
-  @override
-  String toString([_]) => super.toString({
-        SAMPLER: _samplerIndex,
-        SOURCE: _sourceIndex,
-      });
 
   static Texture fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -75,6 +68,17 @@ class Texture extends GltfChildOfRootProperty {
           _sampler.markAsUsed();
         }
       }
+    }
+  }
+
+  @override
+  void validateResources(Gltf gltf, Context context) {
+    // The core spec allows only JPEG and PNG.
+    const types = [IMAGE_JPEG, IMAGE_PNG];
+    final mimeType = _source?.info?.mimeType;
+    if (mimeType != null && !types.contains(mimeType)) {
+      context.addIssue(LinkError.textureInvalidImageMimeType,
+          name: SOURCE, args: [mimeType, types]);
     }
   }
 }

@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,7 +24,7 @@ import 'package:gltf/src/ext/extensions.dart';
 
 class ValidationOptions {
   final int maxIssues;
-  final Set<String> ignoredIssues = Set<String>();
+  final Set<String> ignoredIssues = <String>{};
   final Map<String, Severity> severityOverrides;
 
   ValidationOptions(
@@ -43,6 +42,8 @@ class Context {
   final ValidationOptions options;
   final List<String> path = <String>[];
 
+  static final _extNameFormat = RegExp(r'^([A-Z0-9]+)_[A-Za-z0-9_]+$');
+
   static Iterable<String> get defaultExtensionNames =>
       kDefaultExtensions.map((e) => e.name);
 
@@ -54,10 +55,25 @@ class Context {
     _resourcesView = UnmodifiableListView(_resources);
   }
 
+  void addElementChecker(Accessor accessor, ElementChecker checker) {
+    accessorElementCheckers
+        .putIfAbsent(accessor, () => <ElementChecker>[])
+        .add(checker);
+  }
+
+  final Map<Accessor, List<ElementChecker>> accessorElementCheckers =
+      <Accessor, List<ElementChecker>>{};
+
   final Map<Object, Object> owners = <Object, Object>{};
 
   final Map<Type, List<LinkableExtensionEntry>> linkableExtensions =
       <Type, List<LinkableExtensionEntry>>{};
+
+  final List<ResourceValidatableExtensionEntry> resourceValidatableExtensions =
+      <ResourceValidatableExtensionEntry>[];
+
+  final Map<BufferView, Set<Accessor>> bufferViewAccessors =
+      <BufferView, Set<Accessor>>{};
 
   final Map<SafeList, List<String>> extensionCollections =
       <SafeList, List<String>>{};
@@ -91,7 +107,7 @@ class Context {
   List<Map<String, Object>> _resourcesView;
   List<Map<String, Object>> get resources => _resourcesView;
 
-  final Set<Extension> _userExtensions = Set<Extension>();
+  final Set<Extension> _userExtensions = <Extension>{};
 
   final List<Issue> _issues = <Issue>[];
 
@@ -113,7 +129,13 @@ class Context {
 
   String getPointerString([String token]) {
     if (path.isEmpty) {
-      return token == null ? '/' : '/$token';
+      if (token == null) {
+        return '/';
+      } else if (token.startsWith('/')) {
+        return token;
+      } else {
+        return '/$token';
+      }
     }
 
     var i = 0;
@@ -143,9 +165,13 @@ class Context {
     for (var i = 0; i < extensionsUsed.length; ++i) {
       final extensionName = extensionsUsed[i];
 
-      if (!kReservedPrefixes.any(extensionName.startsWith)) {
+      final prefix = _extNameFormat.firstMatch(extensionName)?.group(1);
+      if (prefix == null) {
+        addIssue(SemanticError.invalidExtensionNameFormat,
+            name: '$EXTENSIONS_USED/$i');
+      } else if (!kReservedPrefixes.contains(prefix)) {
         addIssue(SemanticError.unreservedExtensionPrefix,
-            name: '$EXTENSIONS_USED/$i', args: [extensionName.split('_')[0]]);
+            name: '$EXTENSIONS_USED/$i', args: [prefix]);
       }
 
       final extension = _userExtensions.firstWhere(
@@ -163,6 +189,18 @@ class Context {
       extension.functions?.forEach((type, funcs) {
         _extensionsFunctions[ExtensionTuple(type, extension.name)] = funcs;
       });
+
+      if (extension.init != null) {
+        extension.init();
+      }
+
+      if (validate &&
+          extension.required &&
+          !extensionsRequired.contains(extensionName)) {
+        addIssue(SemanticError.nonRequiredExtension,
+            name: '$EXTENSIONS_USED/$i', args: [extensionName]);
+      }
+
       _extensionsLoaded.add(extensionName);
     }
 
@@ -178,7 +216,11 @@ class Context {
   }
 
   void addIssue(IssueType issueType,
-      {String name, List<Object> args, int offset, int index}) {
+      {String name,
+      List<Object> args,
+      int offset,
+      int index,
+      bool noPointer = false}) {
     if (options.ignoredIssues.contains(issueType.code)) {
       return;
     }
@@ -198,7 +240,7 @@ class Context {
     } else {
       final token = index != null ? index.toString() : name;
       _issues.add(Issue(issueType, args,
-          pointer: getPointerString(token),
+          pointer: noPointer ? '' : getPointerString(token),
           severityOverride: severityOverride));
     }
   }

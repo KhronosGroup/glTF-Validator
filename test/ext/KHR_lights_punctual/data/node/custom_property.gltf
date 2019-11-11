@@ -1,0 +1,27 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_lights_punctual"
+    ],
+    "extensions": {
+        "KHR_lights_punctual": {
+            "lights": [
+                {
+                    "type": "directional"
+                }
+            ]
+        }
+    },
+    "nodes": [
+        {
+            "extensions": {
+                "KHR_lights_punctual": {
+                    "light": 0,
+                    "customProperty": true
+                }
+            }
+        }
+    ]
+}

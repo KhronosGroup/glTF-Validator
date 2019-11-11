@@ -1,0 +1,43 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "weights": [0.5, 0.5],
+            "mesh": 0
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "targets": [
+                        {
+                            "POSITION": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        }
+    ]
+}

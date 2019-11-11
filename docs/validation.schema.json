@@ -48,9 +48,16 @@
             "description": "Version string of glTF-Validator. Must follow semver syntax."
         },
         "validatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "UTC timestamp of validation time."
+            "description": "UTC timestamp of validation time.",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                {
+                    "const": null
+                }
+            ]
         },
         "issues": {
             "type": "object",
@@ -191,7 +198,7 @@
                                         "description": "Resource is stored as Data-URI."
                                     },
                                     {
-                                        "const": "bufferView",
+                                        "const": "buffer-view",
                                         "description": "Resource is stored within glTF buffer and accessed via bufferView."
                                     },
                                     {
@@ -235,10 +242,25 @@
                                     },
                                     "format": {
                                         "enum": [
-                                            "RGB",
-                                            "RGBA",
-                                            "LUMINANCE",
-                                            "LUMINANCE_ALPHA"
+                                            "rgb",
+                                            "rgba",
+                                            "luminance",
+                                            "luminance-alpha"
+                                        ]
+                                    },
+                                    "primaries": {
+                                        "enum": [
+                                            null,
+                                            "srgb",
+                                            "custom"
+                                        ]
+                                    },
+                                    "transfer": {
+                                        "enum": [
+                                            null,
+                                            "linear",
+                                            "srgb",
+                                            "custom"
                                         ]
                                     },
                                     "bits": {
@@ -249,7 +271,9 @@
                                     "width",
                                     "height",
                                     "format",
-                                    "bits"
+                                    "bits",
+                                    "primaries",
+                                    "transfer"
                                 ]
                             }
                         }

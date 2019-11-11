@@ -17,7 +17,8 @@
                 {
                     "attributes": {
                         "POSITION": 0
-                    }
+                    },
+                    "customProperty": true
                 }
             ],
             "customProperty": true

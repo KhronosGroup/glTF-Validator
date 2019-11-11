@@ -1,0 +1,36 @@
+{
+    "uri": "test/base/data/json/bom.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "INVALID_JSON",
+                "message": "Invalid JSON data. Parser output: BOM found at the beginning of UTF-8 stream.",
+                "severity": 0,
+                "pointer": ""
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

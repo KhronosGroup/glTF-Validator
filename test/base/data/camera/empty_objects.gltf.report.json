@@ -1,0 +1,114 @@
+{
+    "uri": "test/base/data/camera/empty_objects.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 8,
+        "numWarnings": 1,
+        "numInfos": 5,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'type' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/0"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'perspective' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/1"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'znear' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/2/perspective"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'yfov' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/2/perspective"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'xmag' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/3/orthographic"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'ymag' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/3/orthographic"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'zfar' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/3/orthographic"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'znear' must be defined.",
+                "severity": 0,
+                "pointer": "/cameras/3/orthographic"
+            },
+            {
+                "code": "VALUE_NOT_IN_LIST",
+                "message": "Invalid value 'unknown'. Valid values are ('orthographic', 'perspective').",
+                "severity": 1,
+                "pointer": "/cameras/4/type"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/cameras/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/cameras/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/cameras/2"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/cameras/3"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/cameras/4"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

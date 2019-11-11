@@ -1,0 +1,11 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "uri": "http://example.com/buffer.bin",
+            "byteLength": 2
+        }
+    ]
+}

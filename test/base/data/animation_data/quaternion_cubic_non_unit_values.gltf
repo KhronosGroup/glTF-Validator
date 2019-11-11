@@ -1,0 +1,59 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "animations": [
+        {
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1,
+                    "interpolation": "CUBICSPLINE"
+                }
+            ],
+            "channels": [
+                {
+                    "sampler": 0,
+                    "target": {
+                        "node": 0,
+                        "path": "rotation"
+                    }
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 2,
+            "min": [0],
+            "max": [1]
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 6,
+            "bufferView": 0
+        }
+    ],
+    "nodes": [
+        {
+            "extras": {
+                "value": "not empty"
+            }
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 96
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 96,
+            "uri": "quaternion_cubic_non_unit_values.bin"
+        }
+    ]
+}

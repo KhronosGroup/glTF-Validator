@@ -1,0 +1,18 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "children": [1]
+        },
+        {},
+        {}
+    ],
+    "skins": [
+        {
+            "joints": [0, 1],
+            "skeleton": 2
+        }
+    ]
+}

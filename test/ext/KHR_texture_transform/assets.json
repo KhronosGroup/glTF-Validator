@@ -1,0 +1,11 @@
+{
+    "textureInfo": {
+        "name": "textureInfo.KHR_texture_transform",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "unexpected_extension.gltf": "Unexpected extension object location",
+            "uv_sets.gltf": "UV sets",
+            "valid.gltf": "Valid"
+        }
+    }
+}

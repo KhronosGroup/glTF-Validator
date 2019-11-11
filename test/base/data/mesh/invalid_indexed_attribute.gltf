@@ -1,0 +1,38 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "TEXCOORD_00": 1,
+                        "TEXCOORD_01": 1,
+                        "TEXCOORD_1": 1,
+                        "INVALID_": 0,
+                        "INVALID_1_1": 0,
+                        "INVALID_11": 0,
+                        "INVALID_D": 0,
+                        "": 0
+                    }
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        },
+        {
+            "type": "VEC2",
+            "componentType": 5126,
+            "count": 3
+        }
+    ]
+}

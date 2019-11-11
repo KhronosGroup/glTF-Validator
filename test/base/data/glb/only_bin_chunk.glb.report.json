@@ -1,0 +1,22 @@
+{
+    "uri": "test/base/data/glb/only_bin_chunk.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "GLB_UNEXPECTED_FIRST_CHUNK",
+                "message": "First chunk must be of JSON type. Found 0x004e4942 instead.",
+                "severity": 0,
+                "offset": 12
+            }
+        ],
+        "truncated": false
+    },
+    "info": null
+}

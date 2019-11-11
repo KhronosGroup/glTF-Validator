@@ -1,0 +1,14 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {}
+    ],
+    "skins": [
+        {
+            "inverseBindMatrices": 0,
+            "joints": [0]
+        }
+    ]
+}

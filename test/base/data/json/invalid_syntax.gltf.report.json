@@ -1,0 +1,22 @@
+{
+    "uri": "test/base/data/json/invalid_syntax.gltf",
+    "mimeType": null,
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "INVALID_JSON",
+                "message": "Invalid JSON data. Parser output: FormatException: Unexpected character (at offset 1)",
+                "severity": 0,
+                "pointer": ""
+            }
+        ],
+        "truncated": false
+    },
+    "info": null
+}

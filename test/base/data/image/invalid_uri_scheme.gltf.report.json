@@ -1,0 +1,49 @@
+{
+    "uri": "test/base/data/image/invalid_uri_scheme.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "INVALID_URI",
+                "message": "Invalid URI ':'. Parser output:\nFormatException: Invalid empty scheme (at character 1)\n:\n^",
+                "severity": 0,
+                "pointer": "/images/0/uri"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/images/0",
+                "mimeType": null,
+                "storage": null
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

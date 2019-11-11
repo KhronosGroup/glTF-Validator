@@ -1,0 +1,45 @@
+{
+    "uri": "test/base/data/root/unreserved_extension_prefix.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 2,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNRESERVED_EXTENSION_PREFIX",
+                "message": "Extension uses unreserved extension prefix 'VALIDATOR'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/0"
+            },
+            {
+                "code": "UNSUPPORTED_EXTENSION",
+                "message": "Cannot validate an extension as it is not supported by the validator: 'VALIDATOR_test_extension'.",
+                "severity": 1,
+                "pointer": "/extensionsUsed/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": [
+            "VALIDATOR_test_extension"
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

@@ -1,0 +1,87 @@
+{
+    "uri": "test/base/data/mesh_data/joints_weights_complex.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 5,
+        "numWarnings": 1,
+        "numInfos": 2,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/9"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/10"
+            },
+            {
+                "code": "ACCESSOR_JOINTS_INDEX_OOB",
+                "message": "Joints accessor element at index 4 (component index 0) has value 9 that is greater than the maximum joint index (7) set by skin 1.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/JOINTS_1"
+            },
+            {
+                "code": "ACCESSOR_JOINTS_USED_ZERO_WEIGHT",
+                "message": "Joints accessor element at index 5 (component index 1) is used with zero weight but has non-zero value (4).",
+                "severity": 1,
+                "pointer": "/meshes/0/primitives/0/attributes/JOINTS_1"
+            },
+            {
+                "code": "ACCESSOR_JOINTS_INDEX_DUPLICATE",
+                "message": "Joints accessor element at index 6 (component index 2) has value 1 that is already in use for the vertex.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/JOINTS_1"
+            },
+            {
+                "code": "ACCESSOR_WEIGHTS_NEGATIVE",
+                "message": "Weights accessor element at index 6 (component index 2) has negative value -1.0.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/WEIGHTS_1"
+            },
+            {
+                "code": "ACCESSOR_WEIGHTS_NON_NORMALIZED",
+                "message": "Weights accessor elements (at indices 4..7) have non-normalized sum: 1.5000000223517418.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/WEIGHTS_0"
+            },
+            {
+                "code": "ACCESSOR_WEIGHTS_NON_NORMALIZED",
+                "message": "Weights accessor elements (at indices 4..7) have non-normalized sum: 1.5000000223517418.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/WEIGHTS_1"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer",
+                "storage": "external",
+                "uri": "joints_weights_complex.bin",
+                "byteLength": 80
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": true,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 1,
+        "totalVertexCount": 2,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 8,
+        "maxAttributes": 5
+    }
+}

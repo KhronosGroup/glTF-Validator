@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -14,6 +13,8 @@
  * # See the License for the specific language governing permissions and
  * # limitations under the License.
  */
+
+// ignore_for_file: avoid_print
 
 import 'dart:async';
 import 'dart:convert';
@@ -31,7 +32,7 @@ const _kJsonEncoder = JsonEncoder.withIndent('    ');
 
 final _dropZone = querySelector('#dropZone');
 final _output = querySelector('#output');
-final InputElement _input = querySelector('#input');
+final _input = querySelector('#input') as InputElement; // ignore: avoid_as
 final _inputLink = querySelector('#inputLink');
 final _truncatedWarning = querySelector('#truncatedWarning');
 final _validityLabel = querySelector('#validityLabel');
@@ -140,8 +141,9 @@ Future<ValidationResult> _doValidate(List<File> files) async {
         final file = _getFileByUri(files, uri);
         if (file != null) {
           return _getFile(file);
+        } else {
+          throw GltfExternalResourceNotFoundException(uri.toString());
         }
-        return null;
       } else {
         return readerResult.buffer;
       }
@@ -150,9 +152,11 @@ Future<ValidationResult> _doValidate(List<File> files) async {
         final file = _getFileByUri(files, uri);
         if (file != null) {
           return _getFileStream(file);
+        } else {
+          throw GltfExternalResourceNotFoundException(uri.toString());
         }
-        return null;
       }
+      return null;
     });
 
     await resourcesLoader.load();

@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -44,7 +43,7 @@ class GlbReader implements GltfReader {
   static const int _CHUNK_UNKNOWN = 0xFFFFFFFF;
 
   @override
-  final String mimeType = 'model/gltf-binary';
+  String get mimeType => 'model/gltf-binary';
   final Uint8List _header = Uint8List(_HEADER_LENGTH);
 
   ByteData _headerByteData;

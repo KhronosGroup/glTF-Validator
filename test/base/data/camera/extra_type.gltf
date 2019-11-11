@@ -1,0 +1,22 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "cameras": [
+        {
+            "type": "perspective",
+            "perspective": {
+                "znear": 1,
+                "zfar": 10,
+                "yfov": 10,
+                "aspectRatio": 1
+            },
+            "orthographic": {
+                "znear": 1,
+                "zfar": 10,
+                "ymag": 1,
+                "xmag": 1
+            }
+        }
+    ]
+}

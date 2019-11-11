@@ -1,0 +1,45 @@
+{
+    "uri": "test/base/data/root/undefined_used_extensions.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNSATISFIED_DEPENDENCY",
+                "message": "Dependency failed. 'extensionsUsed' must be defined.",
+                "severity": 0,
+                "pointer": "/extensionsRequired"
+            },
+            {
+                "code": "UNUSED_EXTENSION_REQUIRED",
+                "message": "Unused extension 'KHR_extension' cannot be required.",
+                "severity": 0,
+                "pointer": "/extensionsRequired/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsRequired": [
+            "KHR_extension"
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

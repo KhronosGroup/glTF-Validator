@@ -1,0 +1,21 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {}
+    ],
+    "skins": [
+        {
+            "inverseBindMatrices": 0,
+            "joints": [0]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "MAT4",
+            "count": 2,
+            "componentType": 5126
+        }
+    ]
+}

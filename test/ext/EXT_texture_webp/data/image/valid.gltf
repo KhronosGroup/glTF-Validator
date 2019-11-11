@@ -1,0 +1,41 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "EXT_texture_webp"
+    ],
+    "images": [
+        {
+            "uri": "VP8_red.webp"
+        },
+        {
+            "uri": "VP8L_red.webp"
+        },
+        {
+            "uri": "VP8L_red_transparent.webp"
+        },
+        {
+            "uri": "VP8X_red_transparent.webp"
+        },
+        {
+            "uri": "data:image/webp;base64,UklGRhwAAABXRUJQVlA4TA8AAAAv/8AfAAcQ/Y/+ByKi/wEA"
+        },
+        {
+            "bufferView": 0,
+            "mimeType": "image/webp"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 36
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 36,
+            "uri": "data:application/gltf-buffer;base64,UklGRhwAAABXRUJQVlA4TA8AAAAv/8AfAAcQ/Y/+ByKi/wEA"
+        }
+    ]
+}

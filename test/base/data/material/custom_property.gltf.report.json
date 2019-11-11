@@ -1,0 +1,78 @@
+{
+    "uri": "test/base/data/material/custom_property.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 7,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/pbrMetallicRoughness/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/pbrMetallicRoughness/baseColorTexture/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/pbrMetallicRoughness/metallicRoughnessTexture/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/normalTexture/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/occlusionTexture/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/materials/0/emissiveTexture/customProperty"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 1,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": true,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

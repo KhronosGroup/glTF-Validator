@@ -1,0 +1,54 @@
+{
+    "uri": "test/base/data/accessor/unresolved_bufferviews.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 3,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNRESOLVED_REFERENCE",
+                "message": "Unresolved reference: 0.",
+                "severity": 0,
+                "pointer": "/accessors/0/bufferView"
+            },
+            {
+                "code": "UNRESOLVED_REFERENCE",
+                "message": "Unresolved reference: 1.",
+                "severity": 0,
+                "pointer": "/accessors/0/sparse/indices/bufferView"
+            },
+            {
+                "code": "UNRESOLVED_REFERENCE",
+                "message": "Unresolved reference: 1.",
+                "severity": 0,
+                "pointer": "/accessors/0/sparse/values/bufferView"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

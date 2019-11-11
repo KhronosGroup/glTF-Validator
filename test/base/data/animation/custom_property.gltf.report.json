@@ -1,0 +1,54 @@
+{
+    "uri": "test/base/data/animation/custom_property.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 4,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/animations/0/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/animations/0/channels/0/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/animations/0/channels/0/target/customProperty"
+            },
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/animations/0/samplers/0/customProperty"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 1,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

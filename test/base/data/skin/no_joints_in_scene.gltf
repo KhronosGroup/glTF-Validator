@@ -1,0 +1,59 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "children": [
+                1
+            ]
+        },
+        {},
+        {
+            "skin": 0,
+            "mesh": 0
+        }
+    ],
+    "skins": [
+        {
+            "joints": [0, 1]
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [2]
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "JOINTS_0": 1,
+                        "WEIGHTS_0": 2
+                    }
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "componentType": 5126,
+            "type": "VEC3",
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        },
+        {
+            "componentType": 5123,
+            "type": "VEC4",
+            "count": 3
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC4",
+            "count": 3
+        }
+    ]
+}

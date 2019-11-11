@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -34,9 +33,6 @@ class Buffer extends GltfChildOfRootProperty {
   Buffer._(this.uri, this.data, this.byteLength, this.hasUri, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({URI: uri, BYTE_LENGTH: byteLength});
 
   static Buffer fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -73,7 +69,7 @@ class Buffer extends GltfChildOfRootProperty {
                 name: URI, args: [uriData.mimeType]);
           }
         }
-        if (data != null && data.length != byteLength) {
+        if (data != null && byteLength != -1 && data.length != byteLength) {
           context.addIssue(DataError.bufferEmbeddedBytelengthMismatch,
               args: [data.length, byteLength], name: BYTE_LENGTH);
           byteLength = data.length;

@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,15 +21,15 @@ import 'dart:typed_data';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/gl.dart' as gl;
 
-class Accessor extends GltfChildOfRootProperty {
+abstract class Accessor<T extends num> extends GltfChildOfRootProperty {
   final int _bufferViewIndex;
   final int byteOffset;
   final int componentType;
   final int count;
   final String type;
   final bool normalized;
-  final List<num> max;
-  final List<num> min;
+  final List<T> max;
+  final List<T> min;
   final AccessorSparse sparse;
 
   final int componentLength;
@@ -38,6 +37,7 @@ class Accessor extends GltfChildOfRootProperty {
   BufferView _bufferView;
   int _byteStride = 0;
   bool _isUnit = false;
+  bool _isClamped = false;
   bool _isXyzSign = false;
   bool _containsCubicSpline;
   AccessorUsage _usage;
@@ -114,24 +114,13 @@ class Accessor extends GltfChildOfRootProperty {
 
   int get byteLength => byteStride * (count - 1) + elementLength;
 
+  bool get isFloat => gl.FLOAT == componentType;
+  bool get isClamped => _isClamped;
   bool get isUnit => _isUnit;
   bool get isXyzSign => _isXyzSign;
   bool get containsCubicSpline => _containsCubicSpline == true;
 
   AccessorUsage get usage => _usage;
-
-  @override
-  String toString([_]) => super.toString({
-        BUFFER_VIEW: _bufferViewIndex,
-        BYTE_OFFSET: byteOffset,
-        COMPONENT_TYPE: componentType,
-        COUNT: count,
-        TYPE: type,
-        NORMALIZED: normalized,
-        MAX: max,
-        MIN: min,
-        SPARSE: sparse
-      });
 
   static Accessor fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -192,19 +181,86 @@ class Accessor extends GltfChildOfRootProperty {
       }
     }
 
-    return Accessor._(
-        bufferViewIndex,
-        byteOffset,
-        componentType,
-        count,
-        type,
-        normalized,
-        max,
-        min,
-        sparse,
-        getName(map, context),
-        getExtensions(map, Accessor, context),
-        getExtras(map, context));
+    Accessor accessor;
+
+    switch (componentType) {
+      case gl.BYTE:
+      case gl.UNSIGNED_BYTE:
+      case gl.SHORT:
+      case gl.UNSIGNED_SHORT:
+      case gl.UNSIGNED_INT:
+        accessor = _AccessorInt._(
+            bufferViewIndex,
+            byteOffset,
+            componentType,
+            count,
+            type,
+            normalized,
+            max as List<int>,
+            min as List<int>,
+            sparse,
+            getName(map, context),
+            getExtensions(map, Accessor, context),
+            getExtras(map, context));
+
+        if (context.validate) {
+          // accessor.min
+          if (min != null) {
+            context.addElementChecker(
+                accessor,
+                MinIntegerChecker(
+                    context.getPointerString(), min as List<int>));
+          }
+
+          // accessor.max
+          if (max != null) {
+            context.addElementChecker(
+                accessor,
+                MaxIntegerChecker(
+                    context.getPointerString(), max as List<int>));
+          }
+        }
+        break;
+      default:
+        accessor = _AccessorFloat._(
+            bufferViewIndex,
+            byteOffset,
+            componentType,
+            count,
+            type,
+            normalized,
+            max as List<double>,
+            min as List<double>,
+            sparse,
+            getName(map, context),
+            getExtensions(map, Accessor, context),
+            getExtras(map, context));
+
+        if (context.validate) {
+          // NaN or Infinity
+          context.addElementChecker(
+              accessor, InvalidFloatChecker(context.getPointerString()));
+
+          // accessor.min
+          if (min != null) {
+            context.addElementChecker(
+                accessor,
+                MinFloatChecker(
+                    context.getPointerString(), min as List<double>));
+          }
+
+          // accessor.max
+          if (max != null) {
+            context.addElementChecker(
+                accessor,
+                MaxFloatChecker(
+                    context.getPointerString(), max as List<double>));
+          }
+        }
+        break;
+    }
+
+    return accessor;
   }
 
   @override
@@ -338,6 +394,8 @@ class Accessor extends GltfChildOfRootProperty {
     }
   }
 
+  void setClamped() => _isClamped = true;
+
   void setUnit() => _isUnit = true;
 
   void setXyzSign() => _isXyzSign = true;
@@ -351,7 +409,170 @@ class Accessor extends GltfChildOfRootProperty {
     return true;
   }
 
-  Iterable<num> getElements({bool normalize = false}) sync* {
+  Iterable<T> getElements();
+
+  Iterable<double> getElementsNormalized();
+
+  double normalizeValue(num value) {
+    if (!normalized) {
+      return value.toDouble();
+    }
+
+    final width = componentLength * 8;
+    if (componentType == gl.BYTE ||
+        componentType == gl.SHORT ||
+        componentType == gl.INT) {
+      // Signed
+      final divider = (1 << width - 1) - 1;
+      return math.max<double>(value / divider, -1);
+    } else {
+      // Unsigned
+      final divider = (1 << width) - 1;
+      return value / divider;
+    }
+  }
+
+  static bool _checkByteOffsetAndLength(int byteOffset, int componentLength,
+      int byteLength, BufferView bufferView,
+      [int _bufferViewIndex, Context context]) {
+    // Local offset
+    if (byteOffset == -1) {
+      return false;
+    }
+
+    if (byteOffset.remainder(componentLength) != 0) {
+      if (context != null) {
+        context.addIssue(SemanticError.accessorOffsetAlignment,
+            name: BYTE_OFFSET, args: [byteOffset, componentLength]);
+      } else {
+        return false;
+      }
+    }
+
+    // Total offset
+    if (bufferView.byteOffset == -1) {
+      return false;
+    }
+
+    final totalOffset = bufferView.byteOffset + byteOffset;
+    if (totalOffset.remainder(componentLength) != 0) {
+      if (context != null) {
+        context.addIssue(LinkError.accessorTotalOffsetAlignment,
+            args: [totalOffset, componentLength]);
+      } else {
+        return false;
+      }
+    }
+
+    // Length
+    if (byteOffset > bufferView.byteLength) {
+      if (context != null) {
+        context.addIssue(LinkError.accessorTooLong, name: BYTE_OFFSET, args: [
+          byteOffset,
+          byteLength,
+          _bufferViewIndex,
+          bufferView.byteLength
+        ]);
+      } else {
+        return false;
+      }
+    } else if (byteOffset + byteLength > bufferView.byteLength) {
+      if (context != null) {
+        context.addIssue(LinkError.accessorTooLong, args: [
+          byteOffset,
+          byteLength,
+          _bufferViewIndex,
+          bufferView.byteLength
+        ]);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static List<int> _typedViewIndices(
+      int componentType, ByteBuffer buffer, int offsetInBytes, int length) {
+    assert(gl.COMPONENT_TYPES.contains(componentType));
+    if (buffer == null ||
+        buffer.lengthInBytes <
+            offsetInBytes + gl.componentTypeLength(componentType) * length) {
+      return null;
+    }
+    switch (componentType) {
+      case gl.UNSIGNED_BYTE:
+        return Uint8List.view(buffer, offsetInBytes, length);
+      case gl.UNSIGNED_SHORT:
+        return Uint16List.view(buffer, offsetInBytes, length);
+      case gl.UNSIGNED_INT:
+        return Uint32List.view(buffer, offsetInBytes, length);
+      default:
+        return null;
+    }
+  }
+
+  static Float32List _typedViewFloat(
+      int componentType, ByteBuffer buffer, int offsetInBytes, int length) {
+    assert(gl.COMPONENT_TYPES.contains(componentType));
+    if (buffer == null ||
+        buffer.lengthInBytes <
+            offsetInBytes + gl.componentTypeLength(componentType) * length) {
+      return null;
+    }
+    switch (componentType) {
+      case gl.FLOAT:
+        return Float32List.view(buffer, offsetInBytes, length);
+      default:
+        return null;
+    }
+  }
+
+  static List<int> _typedViewInt(
+      int componentType, ByteBuffer buffer, int offsetInBytes, int length) {
+    assert(gl.COMPONENT_TYPES.contains(componentType));
+    if (buffer == null ||
+        buffer.lengthInBytes <
+            offsetInBytes + gl.componentTypeLength(componentType) * length) {
+      return null;
+    }
+    switch (componentType) {
+      case gl.BYTE:
+        return Int8List.view(buffer, offsetInBytes, length);
+      case gl.UNSIGNED_BYTE:
+        return Uint8List.view(buffer, offsetInBytes, length);
+      case gl.SHORT:
+        return Int16List.view(buffer, offsetInBytes, length);
+      case gl.UNSIGNED_SHORT:
+        return Uint16List.view(buffer, offsetInBytes, length);
+/*    case gl.INT:
+      return Int32List.view(buffer, offsetInBytes, length);*/
+      case gl.UNSIGNED_INT:
+        return Uint32List.view(buffer, offsetInBytes, length);
+      default:
+        return null;
+    }
+  }
+}
+
+class _AccessorInt extends Accessor<int> {
+  _AccessorInt._(
+      int _bufferViewIndex,
+      int byteOffset,
+      int componentType,
+      int count,
+      String type,
+      bool normalized,
+      List<int> max,
+      List<int> min,
+      AccessorSparse sparse,
+      String name,
+      Map<String, Object> extensions,
+      Object extras)
+      : super._(_bufferViewIndex, byteOffset, componentType, count, type,
+            normalized, max, min, sparse, name, extensions, extras);
+
+  @override
+  Iterable<int> getElements({bool normalize = false}) sync* {
     // Ensure required fields to not check for them each time
     if (componentType == -1 || count == -1 || type == null) {
       return;
@@ -360,7 +581,7 @@ class Accessor extends GltfChildOfRootProperty {
     final components = this.components;
     final elementsCount = count * components;
 
-    Iterable<num> elements;
+    Iterable<int> elements;
 
     if (_bufferView != null) {
       if (_bufferView.buffer?.data == null) {
@@ -371,13 +592,16 @@ class Accessor extends GltfChildOfRootProperty {
         return;
       }
 
-      if (!_checkByteOffsetAndLength(
+      if (!Accessor._checkByteOffsetAndLength(
           byteOffset, componentLength, byteLength, _bufferView)) {
         return;
       }
 
-      final view = _typedView(componentType, _bufferView.buffer.data.buffer,
-          _bufferView.byteOffset + byteOffset, byteLength ~/ componentLength);
+      final view = Accessor._typedViewInt(
+          componentType,
+          _bufferView.buffer.data.buffer,
+          _bufferView.byteOffset + byteOffset,
+          byteLength ~/ componentLength);
 
       if (view == null) {
         return;
@@ -428,7 +652,7 @@ class Accessor extends GltfChildOfRootProperty {
       }
     } else {
       // Base accessor is filled with zeros
-      elements = Iterable<num>.generate(elementsCount, (_) => 0);
+      elements = Iterable<int>.generate(elementsCount, (_) => 0);
     }
 
     if (sparse != null) {
@@ -450,13 +674,13 @@ class Accessor extends GltfChildOfRootProperty {
         return;
       }
 
-      if (!_checkByteOffsetAndLength(
+      if (!Accessor._checkByteOffsetAndLength(
               sparse.indices.byteOffset,
               gl.componentTypeLength(sparse.indices.componentType),
               gl.componentTypeLength(sparse.indices.componentType) *
                   sparse.count,
               sparse.indices._bufferView) ||
-          !_checkByteOffsetAndLength(
+          !Accessor._checkByteOffsetAndLength(
               sparse.values.byteOffset,
               componentLength,
               componentLength * ACCESSOR_TYPES_LENGTHS[type] * sparse.count,
@@ -464,17 +688,21 @@ class Accessor extends GltfChildOfRootProperty {
         return;
       }
 
-      final indices = _typedView(
+      final indices = Accessor._typedViewIndices(
           sparse.indices.componentType,
           sparse.indices._bufferView.buffer.data.buffer,
           sparse.indices._bufferView.byteOffset + sparse.indices.byteOffset,
           sparse.count);
 
-      final values = _typedView(
+      final values = Accessor._typedViewInt(
           componentType,
           sparse.values._bufferView.buffer.data.buffer,
           sparse.values._bufferView.byteOffset + sparse.values.byteOffset,
           sparse.count * components);
+
+      if (indices == null || values == null) {
+        return;
+      }
 
       final baseElements = elements;
 
@@ -502,107 +730,208 @@ class Accessor extends GltfChildOfRootProperty {
         }
       }();
     }
-
-    if (normalized && normalize) {
-      final width = componentLength * 8;
-      if (componentType == gl.BYTE ||
-          componentType == gl.SHORT ||
-          componentType == gl.INT) {
-        // Signed
-        final denom = 1 / ((1 << width - 1) - 1);
-        yield* elements.map((value) => math.max(value * denom, -1.0));
-      } else {
-        // Unsigned
-        final denom = 1 / ((1 << width) - 1);
-        yield* elements.map((value) => value * denom);
-      }
-    } else {
-      // Non-normalized
-      yield* elements;
-    }
+    yield* elements;
   }
 
-  double normalizeValue(num value) {
-    if (!normalized) {
-      return value.toDouble();
-    }
-
+  @override
+  Iterable<double> getElementsNormalized() sync* {
     final width = componentLength * 8;
     if (componentType == gl.BYTE ||
         componentType == gl.SHORT ||
         componentType == gl.INT) {
       // Signed
-      final divider = (1 << width - 1) - 1;
-      return math.max<double>(value / divider, -1);
+      final denom = 1 / ((1 << width - 1) - 1);
+      // TODO check if math.max could be replaced with something better
+      yield* getElements().map((value) => math.max(value * denom, -1));
     } else {
       // Unsigned
-      final divider = (1 << width) - 1;
-      return value / divider;
+      final denom = 1 / ((1 << width) - 1);
+      yield* getElements().map((value) => value * denom);
     }
   }
+}
 
-  static bool _checkByteOffsetAndLength(int byteOffset, int componentLength,
-      int byteLength, BufferView bufferView,
-      [int _bufferViewIndex, Context context]) {
-    // Local offset
-    if (byteOffset == -1) {
-      return false;
+class _AccessorFloat extends Accessor<double> {
+  _AccessorFloat._(
+      int _bufferViewIndex,
+      int byteOffset,
+      int componentType,
+      int count,
+      String type,
+      bool normalized,
+      List<double> max,
+      List<double> min,
+      AccessorSparse sparse,
+      String name,
+      Map<String, Object> extensions,
+      Object extras)
+      : super._(_bufferViewIndex, byteOffset, componentType, count, type,
+            normalized, max, min, sparse, name, extensions, extras);
+
+  @override
+  Iterable<double> getElements() sync* {
+    // Ensure required fields to not check for them each time
+    if (componentType == -1 || count == -1 || type == null) {
+      return;
     }
 
-    if (byteOffset.remainder(componentLength) != 0) {
-      if (context != null) {
-        context.addIssue(SemanticError.accessorOffsetAlignment,
-            name: BYTE_OFFSET, args: [byteOffset, componentLength]);
-      } else {
-        return false;
+    final components = this.components;
+    final elementsCount = count * components;
+
+    Iterable<double> elements;
+
+    if (_bufferView != null) {
+      if (_bufferView.buffer?.data == null) {
+        return;
       }
-    }
 
-    // Total offset
-    if (bufferView.byteOffset == null) {
-      return false;
-    }
-
-    final totalOffset = bufferView.byteOffset + byteOffset;
-    if (totalOffset.remainder(componentLength) != 0) {
-      if (context != null) {
-        context.addIssue(LinkError.accessorTotalOffsetAlignment,
-            args: [totalOffset, componentLength]);
-      } else {
-        return false;
+      if (byteStride < elementLength) {
+        return;
       }
+
+      if (!Accessor._checkByteOffsetAndLength(
+          byteOffset, componentLength, byteLength, _bufferView)) {
+        return;
+      }
+
+      final view = Accessor._typedViewFloat(
+          componentType,
+          _bufferView.buffer.data.buffer,
+          _bufferView.byteOffset + byteOffset,
+          byteLength ~/ componentLength);
+
+      if (view == null) {
+        return;
+      }
+
+      final length = view.length;
+      if (_isMatrixWithGaps) {
+        // type is either MAT2 or MAT3 here
+        // TODO: generalize to non-square matrices
+        final skip = byteStride ~/ componentLength - (type == MAT2 ? 8 : 12);
+        final rowCount = type == MAT2 ? 2 : 3;
+        final columnCount = rowCount;
+
+        elements = () sync* {
+          var index = 0;
+          var rowIndex = 0;
+          var columnIndex = 0;
+          while (index < length) {
+            yield view[index];
+            index++;
+            rowIndex++;
+            if (rowIndex == rowCount) {
+              index += 4 - rowIndex;
+              columnIndex++;
+              rowIndex = 0;
+              if (columnIndex == columnCount) {
+                columnIndex = 0;
+                index += skip;
+              }
+            }
+          }
+        }();
+      } else {
+        final skip = byteStride ~/ componentLength - components;
+        elements = (int length, int components, int skip) sync* {
+          var index = 0;
+          var componentIndex = 0;
+          while (index < length) {
+            yield view[index];
+            index++;
+            componentIndex++;
+            if (componentIndex == components) {
+              componentIndex = 0;
+              index += skip;
+            }
+          }
+        }(length, components, skip);
+      }
+    } else {
+      // Base accessor is filled with zeros
+      elements = Iterable<double>.generate(elementsCount, (_) => 0);
     }
 
-    // Length
-    if (bufferView.byteLength == -1) {
-      return false;
-    }
+    if (sparse != null) {
+      if (sparse.values.byteOffset == -1 ||
+          sparse.values._bufferView == null ||
+          sparse.values._bufferView.byteLength == -1 ||
+          sparse.values._bufferView.byteOffset == -1 ||
+          sparse.values._bufferView.buffer?.data == null ||
+          sparse.indices.componentType == -1 ||
+          sparse.indices.byteOffset == -1 ||
+          sparse.indices._bufferView == null ||
+          sparse.indices._bufferView.byteLength == -1 ||
+          sparse.indices._bufferView.byteOffset == -1 ||
+          sparse.indices._bufferView.buffer?.data == null) {
+        return;
+      }
 
-    if (byteOffset > bufferView.byteLength) {
-      if (context != null) {
-        context.addIssue(LinkError.accessorTooLong, name: BYTE_OFFSET, args: [
-          byteOffset,
-          byteLength,
-          _bufferViewIndex,
-          bufferView.byteLength
-        ]);
-      } else {
-        return false;
+      if (sparse.count > count) {
+        return;
       }
-    } else if (byteOffset + byteLength > bufferView.byteLength) {
-      if (context != null) {
-        context?.addIssue(LinkError.accessorTooLong, args: [
-          byteOffset,
-          byteLength,
-          _bufferViewIndex,
-          bufferView.byteLength
-        ]);
-      } else {
-        return false;
+
+      if (!Accessor._checkByteOffsetAndLength(
+              sparse.indices.byteOffset,
+              gl.componentTypeLength(sparse.indices.componentType),
+              gl.componentTypeLength(sparse.indices.componentType) *
+                  sparse.count,
+              sparse.indices._bufferView) ||
+          !Accessor._checkByteOffsetAndLength(
+              sparse.values.byteOffset,
+              componentLength,
+              componentLength * ACCESSOR_TYPES_LENGTHS[type] * sparse.count,
+              sparse.values._bufferView)) {
+        return;
       }
+
+      final indices = Accessor._typedViewIndices(
+          sparse.indices.componentType,
+          sparse.indices._bufferView.buffer.data.buffer,
+          sparse.indices._bufferView.byteOffset + sparse.indices.byteOffset,
+          sparse.count);
+
+      final values = Accessor._typedViewFloat(
+          componentType,
+          sparse.values._bufferView.buffer.data.buffer,
+          sparse.values._bufferView.byteOffset + sparse.values.byteOffset,
+          sparse.count * components);
+
+      if (indices == null || values == null) {
+        return;
+      }
+
+      final baseElements = elements;
+
+      elements = () sync* {
+        var index = 0;
+        var componentIndex = 0;
+        var sparsePosition = 0;
+        var sparseIndex = indices[0];
+        for (final element in baseElements) {
+          if (componentIndex == components) {
+            if (index == sparseIndex && sparsePosition != sparse.count - 1) {
+              sparsePosition++;
+              sparseIndex = indices[sparsePosition];
+            }
+            index++;
+            componentIndex = 0;
+          }
+
+          if (index == sparseIndex) {
+            yield values[sparsePosition * components + componentIndex];
+          } else {
+            yield element;
+          }
+          componentIndex++;
+        }
+      }();
     }
-    return true;
+    yield* elements;
   }
+
+  @override
+  Iterable<double> getElementsNormalized() => getElements();
 }
 
 class AccessorSparse extends GltfProperty {
@@ -614,29 +943,16 @@ class AccessorSparse extends GltfProperty {
       Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  @override
-  String toString([_]) =>
-      super.toString({COUNT: count, INDICES: indices, VALUES: values});
-
   List<int> get indicesTypedView {
     if (indices._bufferView?.buffer?.data == null) {
       return null;
     }
 
-    try {
-      /// Due to [indices.componentType],
-      /// runtime return type is always [List<int>].
-
-      // ignore: return_of_invalid_type
-      return _typedView(
-          indices.componentType,
-          indices._bufferView.buffer.data.buffer,
-          indices._bufferView.byteOffset + indices.byteOffset,
-          count);
-      // ignore: avoid_catching_errors
-    } on ArgumentError catch (_) {
-      return null;
-    }
+    return Accessor._typedViewIndices(
+        indices.componentType,
+        indices._bufferView.buffer.data.buffer,
+        indices._bufferView.byteOffset + indices.byteOffset,
+        count);
   }
 
   static AccessorSparse fromMap(Map<String, Object> map, Context context) {
@@ -674,13 +990,6 @@ class AccessorSparseIndices extends GltfProperty {
 
   BufferView get bufferView => _bufferView;
 
-  @override
-  String toString([_]) => super.toString({
-        BUFFER_VIEW: _bufferViewIndex,
-        BYTE_OFFSET: byteOffset,
-        COMPONENT_TYPE: componentType,
-      });
-
   static AccessorSparseIndices fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -714,10 +1023,6 @@ class AccessorSparseValues extends GltfProperty {
 
   BufferView get bufferView => _bufferView;
 
-  @override
-  String toString([_]) =>
-      super.toString({BUFFER_VIEW: _bufferViewIndex, BYTE_OFFSET: byteOffset});
-
   static AccessorSparseValues fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -737,25 +1042,203 @@ class AccessorSparseValues extends GltfProperty {
   }
 }
 
-List<num> _typedView(
-    int componentType, ByteBuffer buffer, int offsetInBytes, int length) {
-  assert(buffer != null);
-  switch (componentType) {
-    case gl.BYTE:
-      return Int8List.view(buffer, offsetInBytes, length);
-    case gl.UNSIGNED_BYTE:
-      return Uint8List.view(buffer, offsetInBytes, length);
-    case gl.SHORT:
-      return Int16List.view(buffer, offsetInBytes, length);
-    case gl.UNSIGNED_SHORT:
-      return Uint16List.view(buffer, offsetInBytes, length);
-/*    case gl.INT:
-      return Int32List.view(buffer, offsetInBytes, length);*/
-    case gl.UNSIGNED_INT:
-      return Uint32List.view(buffer, offsetInBytes, length);
-    case gl.FLOAT:
-      return Float32List.view(buffer, offsetInBytes, length);
-    default:
-      return null;
+class InvalidFloatChecker extends ElementChecker<double> {
+  InvalidFloatChecker(this.path);
+
+  @override
+  final String path;
+
+  @override
+  bool check(Context context, int index, int componentIndex, double value) {
+    if (value.isInfinite || value.isNaN) {
+      context.addIssue(DataError.accessorInvalidFloat,
+          name: path, args: [index, value]);
+      return false;
+    }
+    return true;
+  }
+}
+
+class MinFloatChecker extends ElementChecker<double> {
+  final List<int> _invalidMinCount;
+  final List<double> _computedMin;
+  final List<double> _providedMin;
+
+  @override
+  final String path;
+
+  MinFloatChecker(this.path, List<double> min)
+      : _invalidMinCount = List<int>.filled(min.length, 0),
+        _computedMin = List<double>(min.length),
+        _providedMin = min.toList(growable: false);
+
+  @override
+  bool check(Context context, int index, int componentIndex, double value) {
+    assert(componentIndex < _invalidMinCount.length);
+    if (index == componentIndex || _computedMin[componentIndex] > value) {
+      _computedMin[componentIndex] = value;
+    }
+
+    if (value < _providedMin[componentIndex]) {
+      ++_invalidMinCount[componentIndex];
+    }
+
+    return true;
+  }
+
+  @override
+  bool done(Context context) {
+    for (var c = 0; c < _computedMin.length; ++c) {
+      if (_providedMin[c] != _computedMin[c]) {
+        context.addIssue(DataError.accessorMinMismatch,
+            name: '$path/$MIN/$c', args: [_providedMin[c], _computedMin[c]]);
+
+        if (_invalidMinCount[c] > 0) {
+          context.addIssue(DataError.accessorElementOutOfMinBound,
+              name: '$path/$MIN/$c',
+              args: [_invalidMinCount[c], _providedMin[c]]);
+        }
+      }
+    }
+
+    return true;
+  }
+}
+
+class MaxFloatChecker extends ElementChecker<double> {
+  final List<int> _invalidMaxCount;
+  final List<double> _computedMax;
+  final List<double> _providedMax;
+
+  @override
+  final String path;
+
+  MaxFloatChecker(this.path, List<double> max)
+      : _invalidMaxCount = List<int>.filled(max.length, 0),
+        _computedMax = List<double>(max.length),
+        _providedMax = max.toList(growable: false);
+
+  @override
+  bool check(Context context, int index, int componentIndex, double value) {
+    assert(componentIndex < _invalidMaxCount.length);
+    if (index == componentIndex || _computedMax[componentIndex] < value) {
+      _computedMax[componentIndex] = value;
+    }
+
+    if (value > _providedMax[componentIndex]) {
+      ++_invalidMaxCount[componentIndex];
+    }
+
+    return true;
+  }
+
+  @override
+  bool done(Context context) {
+    for (var c = 0; c < _computedMax.length; ++c) {
+      if (_providedMax[c] != _computedMax[c]) {
+        context.addIssue(DataError.accessorMaxMismatch,
+            name: '$path/$MAX/$c', args: [_providedMax[c], _computedMax[c]]);
+
+        if (_invalidMaxCount[c] > 0) {
+          context.addIssue(DataError.accessorElementOutOfMaxBound,
+              name: '$path/$MAX/$c',
+              args: [_invalidMaxCount[c], _providedMax[c]]);
+        }
+      }
+    }
+
+    return true;
+  }
+}
+
+class MinIntegerChecker extends ElementChecker<int> {
+  final List<int> _invalidMinCount;
+  final List<int> _computedMin;
+  final List<int> _providedMin;
+
+  @override
+  final String path;
+
+  MinIntegerChecker(this.path, List<int> min)
+      : _invalidMinCount = List<int>.filled(min.length, 0),
+        _computedMin = List<int>(min.length),
+        _providedMin = min.toList(growable: false);
+
+  @override
+  bool check(Context context, int index, int componentIndex, int value) {
+    assert(componentIndex < _invalidMinCount.length);
+    if (index == componentIndex || _computedMin[componentIndex] > value) {
+      _computedMin[componentIndex] = value;
+    }
+
+    if (value < _providedMin[componentIndex]) {
+      ++_invalidMinCount[componentIndex];
+    }
+
+    return true;
+  }
+
+  @override
+  bool done(Context context) {
+    for (var c = 0; c < _computedMin.length; ++c) {
+      if (_providedMin[c] != _computedMin[c]) {
+        context.addIssue(DataError.accessorMinMismatch,
+            name: '$path/$MIN/$c', args: [_providedMin[c], _computedMin[c]]);
+
+        if (_invalidMinCount[c] > 0) {
+          context.addIssue(DataError.accessorElementOutOfMinBound,
+              name: '$path/$MIN/$c',
+              args: [_invalidMinCount[c], _providedMin[c]]);
+        }
+      }
+    }
+
+    return true;
+  }
+}
+
+class MaxIntegerChecker extends ElementChecker<int> {
+  final List<int> _invalidMaxCount;
+  final List<int> _computedMax;
+  final List<int> _providedMax;
+
+  @override
+  final String path;
+
+  MaxIntegerChecker(this.path, List<int> max)
+      : _invalidMaxCount = List<int>.filled(max.length, 0),
+        _computedMax = List<int>(max.length),
+        _providedMax = max.toList(growable: false);
+
+  @override
+  bool check(Context context, int index, int componentIndex, int value) {
+    assert(componentIndex < _invalidMaxCount.length);
+    if (index == componentIndex || _computedMax[componentIndex] < value) {
+      _computedMax[componentIndex] = value;
+    }
+
+    if (value > _providedMax[componentIndex]) {
+      ++_invalidMaxCount[componentIndex];
+    }
+
+    return true;
+  }
+
+  @override
+  bool done(Context context) {
+    for (var c = 0; c < _computedMax.length; ++c) {
+      if (_providedMax[c] != _computedMax[c]) {
+        context.addIssue(DataError.accessorMaxMismatch,
+            name: '$path/$MAX/$c', args: [_providedMax[c], _computedMax[c]]);
+
+        if (_invalidMaxCount[c] > 0) {
+          context.addIssue(DataError.accessorElementOutOfMaxBound,
+              name: '$path/$MAX/$c',
+              args: [_invalidMaxCount[c], _providedMax[c]]);
+        }
+      }
+    }
+
+    return true;
   }
 }

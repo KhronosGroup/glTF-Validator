@@ -1,0 +1,50 @@
+{
+    "uri": "test/base/data/buffer/extra_padding.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 1,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/buffers/0"
+            },
+            {
+                "code": "BUFFER_GLB_CHUNK_TOO_BIG",
+                "message": "GLB-stored BIN chunk contains 4 extra padding byte(s).",
+                "severity": 1,
+                "pointer": "/buffers/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer",
+                "storage": "glb",
+                "byteLength": 24
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

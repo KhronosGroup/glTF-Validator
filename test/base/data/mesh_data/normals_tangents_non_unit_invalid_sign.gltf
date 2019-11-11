@@ -1,0 +1,64 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2
+                    }
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "bufferView": 0
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 3,
+            "bufferView": 1
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 36
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 36,
+            "byteLength": 48
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 84,
+            "uri": "normals_tangents_non_unit_invalid_sign.bin"
+        }
+    ]
+}

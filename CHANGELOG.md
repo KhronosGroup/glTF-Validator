@@ -1,3 +1,137 @@
+## 2.0.0-dev.3.0 (November 2019)
+
+### New Features
+
+* Added support for `EXT_texture_webp` extension.
+
+  * When the extension is not declared in `extensionsUsed`, image objects with WebP data are reported with a new `IMAGE_NON_ENABLED_MIME_TYPE` error.
+
+* Added support for `KHR_quantized_geometry` extension.
+
+* Added `NON_REQUIRED_EXTENSION` error for extensions that cannot be optional (such as `KHR_quantized_geometry`).  
+  
+* Added vendor prefixes: `MESHOPT`, `POLUTROPON`, and `AGT` (#119).
+
+* Extension names are now validated to have an upper-case prefix separated from the rest on the name with underscore (new `INVALID_EXTENSION_NAME_FORMAT` warning). 
+
+* Referencing an image of type defined by an extension from the core objects now results in `TEXTURE_INVALID_IMAGE_MIME_TYPE` error.
+
+* Added `IMAGE_FEATURES_UNSUPPORTED` warning for images that contain features (like animation in WebP) not supported by glTF.
+
+* Validation report now includes color-space information for provided images.
+
+* Validation report `info` object now includes more information about asset's performance characteristics (see #120).
+
+* Vertex colors with values outside of `[0.0 .. 1.0]` range now issue `ACCESSOR_NON_CLAMPED` error.
+
+* Skinning validation (fixes #58):
+
+  * When a node with a skinned mesh is used in a scene, the skeleton's common root must be available in the same scene (`NODE_SKIN_NO_SCENE` error).
+
+  * The skeleton nodes of a skin must have a common root (`SKIN_NO_COMMON_ROOT` error).
+
+  * The `skin.skeleton` property, when present, must point to a common root (`SKIN_SKELETON_INVALID` error).
+
+  * Animation channels should not target a node with a skinned mesh (`ANIMATION_CHANNEL_TARGET_NODE_SKIN` warning).
+
+  * A node with a skinned mesh should be a root node (`NODE_SKINNED_MESH_NON_ROOT` warning).
+
+  * A node with a skinned mesh should not have local transforms (`NODE_SKINNED_MESH_LOCAL_TRANSFORMS` warning).
+  
+  * Vertex influences validation:
+
+    * All joints values must be within the range of joints in the skin (`ACCESSOR_JOINTS_INDEX_OOB` error).
+      
+    * No joint may have more than one non-zero weight for a given vertex (`ACCESSOR_JOINTS_INDEX_DUPLICATE` error).
+
+    * Weights must be non-negative (`ACCESSOR_WEIGHTS_NEGATIVE` error).
+  
+    * Weights for each vertex must be normalized to have a linear sum of `1.0` (`ACCESSOR_WEIGHTS_NON_NORMALIZED` error).
+  
+    * Unused joint values (i.e. joints with a weight of zero) should be set to zero (`ACCESSOR_JOINTS_USED_ZERO_WEIGHT` warning).
+
+### Integration updates
+
+  * Upgraded to the latest stable SDK. 
+
+  * Generated npm package no longer requires polyfills when using webpack with certain configurations (fixes #110).
+
+  * It is now possible to omit timestamps from validation reports.
+  
+  * Validation report now consistently uses lower-case enums.
+  
+  * Native executable binaries can now be compiled. See the [readme](README.md) for details (fixes #113).
+  
+  * Generated report filename is now `<asset>.report.json`.
+  
+  * Unit tests (300+) are now consistently stored: an asset and its validation report. Combined with provided JSON catalogs, they could be used for testing other glTF implementations.
+
+### Changes
+
+* Major refactoring of binary data validation. Now, mesh and animation accessor issues are attributed to the corresponding binding points rather than to accessor objects. This change makes validation reports more precise when accessors are reused. Namely:
+
+  * `ACCESSOR_ANIMATION_INPUT_NEGATIVE` and `ACCESSOR_ANIMATION_INPUT_NON_INCREASING` are attributed to `animation.sampler.input`.
+  
+  * `ANIMATION_SAMPLER_OUTPUT_ACCESSOR_NON_NORMALIZED_QUATERNION` (new) is attributed to `animation.channel.sampler`.  
+  
+  * `ACCESSOR_INVALID_SIGN` is attributed to `mesh.primitive.attributes.TANGENT`; its message is more sound now.
+  
+  * `ACCESSOR_VECTOR3_NON_UNIT` (renamed from `ACCESSOR_NON_UNIT`) is attributed to `mesh.primitive.attributes.NORMAL` or `mesh.primitive.attributes.TANGENT`.
+  
+  * `ACCESSOR_NON_CLAMPED` is attributed to `mesh.primitive.attributes.COLOR`.
+  
+  * `ACCESSOR_INVALID_IBM` is attributed to `skin.inverseBindMatrices`.
+  
+  * `ACCESSOR_INDEX_OOB`, `ACCESSOR_INDEX_PRIMITIVE_RESTART`, and `ACCESSOR_INDEX_TRIANGLE_DEGENERATE` are attributed to `mesh.primitive.indices`.
+
+* `ACCESSOR_INVALID_FLOAT` message is more specific.
+
+* Fixed incorrect message in `ACCESSOR_INDEX_OOB`.
+
+* `BUFFER_VIEW_TOO_LONG` is now attributed to `bufferView.byteLength` when `bufferView.byteOffset` fits the referenced buffer.
+
+* `FILE_NOT_FOUND` is renamed to `IO_ERROR`; its error messages are now more consistent across platforms.
+
+* Web drag-n-drop validator now issues an error when external resources are not available among dropped files.
+
+* `ACCESSOR_INDECOMPOSABLE_MATRIX` renamed to `ACCESSOR_INVALID_IBM`; IBM data is no longer checked for TRS decomposition.
+
+* Unused texture coordinates are now consistently reported as `UNUSED_OBJECT` with proper pointers regardless of material presence; `MESH_PRIMITIVE_UNUSED_TEXCOORD` is removed (fixes #117).
+
+* `MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH` now reports mismatching numbers.
+
+* Removed `BUFFER_NON_FIRST_GLB` warning (fixes #121).
+
+* Removed `ANIMATION_SAMPLER_OUTPUT_INTERPOLATION`.
+
+* Removed `WEB3D_quantized_attributes` and `CESIUM_RTC` extensions support.
+
+### Bugfixes
+
+* Fixed possible crash on empty input stream.
+
+* Fixed possible crash on unresolved animation sampler inputs.
+
+* `BUFFER_VIEW_TOO_LONG` is now correctly attributed to the invalid property.
+
+* When `buffer.byteLength` is undefined for an embedded buffer, `BUFFER_EMBEDDED_BYTELENGTH_MISMATCH` is no longer reported.
+
+* When `asset.version` is undefined or incorrect, `ASSET_MIN_VERSION_GREATER_THAN_VERSION`, `UNKNOWN_ASSET_MAJOR_VERSION`, and `UNKNOWN_ASSET_MINOR_VERSION` are no longer reported.
+
+* When reported, `UNKNOWN_ASSET_MAJOR_VERSION` and `UNKNOWN_ASSET_MINOR_VERSION` errors now point to `asset.version`.
+
+* `MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL` and `MESH_PRIMITIVE_TANGENT_POINTS` now point to tangent attribute instead of `primitive.attributes` object.
+
+* Numerical thresholds for unit-length vectors are now chosen to accommodate possibly-quantized values.
+
+* Fixed missing `UNRESOLVED_REFERENCE` errors for `KHR_lights_punctual` extension.
+
+* When the root `KHR_lights_punctual` (with `lights` array) extension object is not present, its node counterpart now issues `UNSATISFIED_DEPENDENCY` error.
+
+* Reported issues about invalid JSON syntax or invalid root object type no longer have JSON pointers.
+
+* Fixed incorrect message in `BUFFER_VIEW_TOO_BIG_BYTE_STRIDE`.
+
 ## 2.0.0-dev.2.7
 
 * Added `ACCESSOR_INDEX_PRIMITIVE_RESTART` (#102).

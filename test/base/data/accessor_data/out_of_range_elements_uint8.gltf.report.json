@@ -1,0 +1,117 @@
+{
+    "uri": "test/base/data/accessor_data/out_of_range_elements_uint8.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 12,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/0"
+            },
+            {
+                "code": "ACCESSOR_MIN_MISMATCH",
+                "message": "Declared minimum value for this component (3) does not match actual minimum (0).",
+                "severity": 0,
+                "pointer": "/accessors/0/min/0"
+            },
+            {
+                "code": "ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND",
+                "message": "Accessor contains 1 element(s) less than declared minimum value 3.",
+                "severity": 0,
+                "pointer": "/accessors/0/min/0"
+            },
+            {
+                "code": "ACCESSOR_MIN_MISMATCH",
+                "message": "Declared minimum value for this component (3) does not match actual minimum (1).",
+                "severity": 0,
+                "pointer": "/accessors/0/min/1"
+            },
+            {
+                "code": "ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND",
+                "message": "Accessor contains 1 element(s) less than declared minimum value 3.",
+                "severity": 0,
+                "pointer": "/accessors/0/min/1"
+            },
+            {
+                "code": "ACCESSOR_MIN_MISMATCH",
+                "message": "Declared minimum value for this component (3) does not match actual minimum (2).",
+                "severity": 0,
+                "pointer": "/accessors/0/min/2"
+            },
+            {
+                "code": "ACCESSOR_ELEMENT_OUT_OF_MIN_BOUND",
+                "message": "Accessor contains 1 element(s) less than declared minimum value 3.",
+                "severity": 0,
+                "pointer": "/accessors/0/min/2"
+            },
+            {
+                "code": "ACCESSOR_MAX_MISMATCH",
+                "message": "Declared maximum value for this component (4) does not match actual maximum (5).",
+                "severity": 0,
+                "pointer": "/accessors/0/max/0"
+            },
+            {
+                "code": "ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND",
+                "message": "Accessor contains 1 element(s) greater than declared maximum value 4.",
+                "severity": 0,
+                "pointer": "/accessors/0/max/0"
+            },
+            {
+                "code": "ACCESSOR_MAX_MISMATCH",
+                "message": "Declared maximum value for this component (4) does not match actual maximum (6).",
+                "severity": 0,
+                "pointer": "/accessors/0/max/1"
+            },
+            {
+                "code": "ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND",
+                "message": "Accessor contains 1 element(s) greater than declared maximum value 4.",
+                "severity": 0,
+                "pointer": "/accessors/0/max/1"
+            },
+            {
+                "code": "ACCESSOR_MAX_MISMATCH",
+                "message": "Declared maximum value for this component (4) does not match actual maximum (7).",
+                "severity": 0,
+                "pointer": "/accessors/0/max/2"
+            },
+            {
+                "code": "ACCESSOR_ELEMENT_OUT_OF_MAX_BOUND",
+                "message": "Accessor contains 1 element(s) greater than declared maximum value 4.",
+                "severity": 0,
+                "pointer": "/accessors/0/max/2"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer",
+                "storage": "external",
+                "uri": "out_of_range_elements_uint8.bin",
+                "byteLength": 6
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

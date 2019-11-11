@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -69,9 +68,6 @@ class KhrLightsPunctualGltf extends GltfProperty {
       this.lights, Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  @override
-  String toString([_]) => super.toString({LIGHTS: lights});
-
   static KhrLightsPunctualGltf fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -90,6 +86,8 @@ class KhrLightsPunctualGltf extends GltfProperty {
         context.path.removeLast();
       }
       context.path.removeLast();
+    } else {
+      lights = SafeList<KhrLightsPunctualLight>.empty(LIGHTS);
     }
 
     return KhrLightsPunctualGltf._(
@@ -124,15 +122,6 @@ class KhrLightsPunctualLight extends GltfChildOfRootProperty {
   KhrLightsPunctualLight._(this.color, this.intensity, this.spot, this.type,
       this.range, String name, Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({
-        COLOR: color,
-        INTENSITY: intensity,
-        SPOT: spot,
-        TYPE: type,
-        RANGE: range
-      });
 
   static KhrLightsPunctualLight fromMap(
       Map<String, Object> map, Context context) {
@@ -183,10 +172,6 @@ class KhrLightsPunctualLightSpot extends GltfProperty {
       Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  @override
-  String toString([_]) => super.toString(
-      {INNER_CONE_ANGLE: innerConeAngle, OUTER_CONE_ANGLE: outerConeAngle});
-
   static KhrLightsPunctualLightSpot fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -224,10 +209,6 @@ class KhrLightsPunctualNode extends GltfProperty {
       this._lightIndex, Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  @override
-  String toString([Map<String, Object> _]) =>
-      super.toString({LIGHT: _lightIndex});
-
   static KhrLightsPunctualNode fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -244,10 +225,6 @@ class KhrLightsPunctualNode extends GltfProperty {
   void link(Gltf gltf, Context context) {
     final lightsExtension = gltf.extensions[khrLightsPunctualExtension.name];
     if (lightsExtension is KhrLightsPunctualGltf) {
-      if (lightsExtension.lights == null) {
-        return;
-      }
-
       _light = lightsExtension.lights[_lightIndex];
 
       if (context.validate && _lightIndex != -1) {
@@ -258,6 +235,9 @@ class KhrLightsPunctualNode extends GltfProperty {
           _light.markAsUsed();
         }
       }
+    } else if (context.validate) {
+      context.addIssue(SchemaError.unsatisfiedDependency,
+          args: ['/$EXTENSIONS/${khrLightsPunctualExtension.name}']);
     }
   }
 

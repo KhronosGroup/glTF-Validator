@@ -1,0 +1,42 @@
+{
+    "uri": "test/base/data/glb/chunk_too_big.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "GLB_CHUNK_TOO_BIG",
+                "message": "Chunk (0x4e4f534a) length (28) does not fit total GLB length.",
+                "severity": 0,
+                "offset": 12
+            },
+            {
+                "code": "GLB_LENGTH_MISMATCH",
+                "message": "Declared length (13) does not match GLB length (48).",
+                "severity": 0,
+                "offset": 48
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

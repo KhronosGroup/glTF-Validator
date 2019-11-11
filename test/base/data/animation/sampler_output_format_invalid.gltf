@@ -1,0 +1,45 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "animations": [
+        {
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1
+                }
+            ],
+            "channels": [
+                {
+                    "target": {
+                        "node": 0,
+                        "path": "scale"
+                    },
+                    "sampler": 0
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "extras": {
+                "non_empty": true
+            }
+        }
+    ],
+    "accessors": [
+        {
+            "type": "SCALAR",
+            "componentType": 5126,
+            "count": 1,
+            "min": [0],
+            "max": [1]
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 1
+        }
+    ]
+}

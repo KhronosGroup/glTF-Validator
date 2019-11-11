@@ -1,0 +1,42 @@
+{
+    "uri": "test/base/data/mesh/accessor_unequal_count.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT",
+                "message": "All accessors of the same primitive must have the same count.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/COLOR_0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 1,
+        "totalVertexCount": 3,
+        "totalTriangleCount": 1,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 2
+    }
+}

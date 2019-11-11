@@ -1,0 +1,36 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "type": "VEC3",
+            "componentType": 5125,
+            "count": 2,
+            "min": [
+                3,
+                3,
+                3
+            ],
+            "max": [
+                4,
+                4,
+                4
+            ]
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 24
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 24,
+            "uri": "out_of_range_elements_uint32.bin"
+        }
+    ]
+}

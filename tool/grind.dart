@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -15,9 +14,7 @@
  * # limitations under the License.
  */
 
-// Copyright 2016 Google Inc. Use of this source code is governed by an
-// MIT-style license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
+// ignore_for_file: avoid_as
 
 import 'dart:async';
 import 'dart:convert';
@@ -29,10 +26,14 @@ import 'package:grinder/grinder.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
-final String _version =
-    loadYaml(File('pubspec.yaml').readAsStringSync())['version'];
+final _version =
+    loadYaml(File('pubspec.yaml').readAsStringSync())['version'] as String;
 
 Future<void> main(List<String> args) => grind(args);
+
+@Depends(npm, exe, web)
+@DefaultTask('Build all')
+void all() {}
 
 @Task('Generate ISSUES.md')
 void issues() {
@@ -49,7 +50,7 @@ void issues() {
       ..writeln('| Code | Message | Severity |')
       ..writeln('|------|---------|----------|');
 
-    final args = ['`%1`', '`%2`', '`%3`', '`%4`'];
+    final args = ['`%1`', '`%2`', '`%3`', '`%4`', '`%5`'];
     final argsWithArray = [
       '`%1`',
       ['`%a`', '`%b`', '`%c`'],
@@ -92,17 +93,23 @@ const _nodeSource = 'node';
 const _binSource = 'bin';
 const _webSource = 'web';
 
-@Task('Build Dart source snapshot.')
-void snapshot() {
-  // Use `release` for setting snapshot kind until
-  // https://github.com/dart-lang/build/issues/1127
-  _runBuild(_binSource, release: false);
-  delete(File(p.join(_getTarget(_binSource), 'gltf_validator.dart')));
-}
+@Task('Build native executable.')
+void exe() {
+  final dart2native = p.join(p.dirname(Platform.resolvedExecutable),
+      'dart2native${Platform.isWindows ? '.bat' : ''}');
 
-@Task('Build Dart application snapshot.')
-void snapshotApp() {
-  _runBuild(_binSource);
+  final output = p.join(_getTarget(_binSource),
+      'gltf_validator${Platform.isWindows ? '.exe' : ''}');
+
+  final targetDir = Directory(_getTarget(_binSource));
+  delete(targetDir);
+  targetDir.createSync();
+
+  run(dart2native, arguments: ['bin/gltf_validator.dart', '-v', '-o', output]);
+
+  if (Platform.isLinux || Platform.isMacOS) {
+    run('chmod', arguments: ['+x', output]);
+  }
 }
 
 @Task('Build web drag-n-drop version.')
@@ -128,8 +135,9 @@ void _npmBuild({bool release = true}) {
   _runBuild(_nodeSource, release: release);
 
   const packageJson = 'package.json';
-  final Map<String, Object> jsonMap =
-      json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync());
+  final jsonMap =
+      json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync())
+          as Map<String, Object>;
   jsonMap['version'] = _version;
 
   log('copying updated $packageJson to $_nodeTarget');

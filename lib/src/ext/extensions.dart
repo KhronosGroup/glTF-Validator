@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,30 +16,31 @@
 
 library gltf.extensions;
 
+import 'package:gltf/src/ext/KHR_quantized_geometry/khr_quantized_geometry.dart';
 import 'package:gltf/src/hash.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 
-//import 'package:gltf/src/ext/EXT_lights_image_based/ext_lights_image_based.dart';
+import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
-import 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
-import 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
+import 'package:meta/meta.dart';
 
-export 'package:gltf/src/ext/cesium_rtc/cesium_rtc.dart';
-export 'package:gltf/src/ext/web3d_quantized_attributes/web3d_quantized_attributes.dart';
-//export 'package:gltf/src/ext/EXT_lights_image_based/ext_lights_image_based.dart';
+export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
 
 class Extension {
-  const Extension(this.name, this.functions);
+  const Extension(this.name, this.functions,
+      {this.init, this.required = false});
 
   final String name;
   final Map<Type, ExtFuncs> functions;
+  final void Function() init;
+  final bool required;
 }
 
 class ExtFuncs {
@@ -48,6 +48,7 @@ class ExtFuncs {
   const ExtFuncs(this.fromMap);
 }
 
+@immutable
 class ExtensionTuple {
   final Type type;
   final String name;
@@ -67,39 +68,45 @@ class LinkableExtensionEntry {
   LinkableExtensionEntry(this.object, this.path);
 }
 
+class ResourceValidatableExtensionEntry {
+  final ResourceValidatable object;
+  final List<String> path;
+  ResourceValidatableExtensionEntry(this.object, this.path);
+}
+
 const List<Extension> kDefaultExtensions = <Extension>[
+  extTextureWebPExtension,
   khrLightsPunctualExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsUnlitExtension,
   khrTextureTransformExtension,
-  cesiumRtcExtension,
-  web3dQuantizedAttributesExtension
+  khrQuantizedGeometryExtension
 ];
 
 // https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md
-const List<String> kReservedPrefixes = <String>[
-  'KHR_',
-  'EXT_',
-  'ADOBE_',
-  'AGI_',
-  'AGT_',
-  'ALI_',
-  'AMZN_',
-  'AVR_',
-  'BLENDER_',
-  'CESIUM_',
-  'CVTOOLS_',
-  'FB_',
-  'GOOGLE_',
-  'LLQ_',
-  'MESHOPT_',
-  'MOZ_',
-  'MSFT_',
-  'NV_',
-  'OWLII_',
-  'POLUTROPON_',
-  'S8S_',
-  'SI_',
-  'SKFB_',
-  'WEB3D_'
-];
+const Set<String> kReservedPrefixes = <String>{
+  'KHR',
+  'EXT',
+  'ADOBE',
+  'AGI',
+  'AGT',
+  'ALI',
+  'AMZN',
+  'AVR',
+  'BLENDER',
+  'CESIUM',
+  'CVTOOLS',
+  'FB',
+  'GOOGLE',
+  'LLQ',
+  'MESHOPT',
+  'MOZ',
+  'MSFT',
+  'NV',
+  'OWLII',
+  'POLUTROPON',
+  'S8S',
+  'SI',
+  'SKFB',
+  'WEB3D'
+};

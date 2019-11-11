@@ -1,0 +1,26 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "EXT_texture_webp"
+    ],
+    "textures": [
+        {
+            "extensions": {
+                "EXT_texture_webp": {
+                    "source": 0
+                }
+            },
+            "source": 1
+        }
+    ],
+    "images": [
+        {
+            "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQYV2P4z/AfAAQAAf+I0P3MAAAAAElFTkSuQmCC"
+        },
+        {
+            "uri": "data:image/webp;base64,UklGRhwAAABXRUJQVlA4TA8AAAAv/8AfAAcQ/Y/+ByKi/wEA"
+        }
+    ]
+}

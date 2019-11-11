@@ -1,0 +1,21 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "byteLength": 1
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 1
+        }
+    ],
+    "images": [
+        {
+            "bufferView": 0
+        }
+    ]
+}

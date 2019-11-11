@@ -1,0 +1,50 @@
+{
+    "uri": "test/base/data/image/unrecognized_format.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 1,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/0"
+            },
+            {
+                "code": "IMAGE_UNRECOGNIZED_FORMAT",
+                "message": "Image format not recognized.",
+                "severity": 1,
+                "pointer": "/images/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/images/0",
+                "mimeType": null,
+                "storage": "external",
+                "uri": "unrecognized_format.png"
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

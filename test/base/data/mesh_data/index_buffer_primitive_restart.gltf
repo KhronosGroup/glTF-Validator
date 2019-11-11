@@ -1,0 +1,53 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 1
+                    },
+                    "mode": 4,
+                    "indices": 0
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "SCALAR",
+            "componentType": 5121,
+            "count": 3,
+            "bufferView": 0
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 256,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 3
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 3,
+            "uri": "index_buffer_primitive_restart.bin"
+        }
+    ]
+}

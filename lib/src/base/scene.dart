@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,9 +26,6 @@ class Scene extends GltfChildOfRootProperty {
       Object extras)
       : super(name, extensions, extras);
 
-  @override
-  String toString([_]) => super.toString({NODES: _nodesIndices});
-
   static Scene fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
       checkMembers(map, SCENE_MEMBERS, context);
@@ -55,6 +51,8 @@ class Scene extends GltfChildOfRootProperty {
         context.addIssue(LinkError.sceneNonRootNode,
             index: index, args: [nodeIndex]);
       }
+
+      node.addScene(this);
     });
   }
 }

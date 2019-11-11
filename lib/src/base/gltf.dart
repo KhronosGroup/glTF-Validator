@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -62,7 +61,6 @@ class Gltf extends GltfProperty {
   final SafeList<Mesh> meshes;
   final SafeList<Node> nodes;
   final SafeList<Sampler> samplers;
-  final int _sceneIndex;
   final Scene scene;
   final SafeList<Scene> scenes;
   final SafeList<Skin> skins;
@@ -82,7 +80,6 @@ class Gltf extends GltfProperty {
       this.meshes,
       this.nodes,
       this.samplers,
-      this._sceneIndex,
       this.scene,
       this.scenes,
       this.skins,
@@ -164,15 +161,15 @@ class Gltf extends GltfProperty {
 
     final asset = toValue<Asset>(ASSET, Asset.fromMap, req: true);
 
-    if (asset == null) {
+    if (asset?.version == null) {
       return null;
     } else if (asset.majorVersion != 2) {
       context.addIssue(SemanticError.unknownAssetMajorVersion,
-          args: [asset?.majorVersion]);
+          args: [asset?.majorVersion], name: VERSION);
       return null;
     } else if (asset.minorVersion > 0) {
       context.addIssue(SemanticError.unknownAssetMinorVersion,
-          args: [asset?.minorVersion]);
+          args: [asset?.minorVersion], name: VERSION);
     }
 
     final accessors = toSafeList<Accessor>(ACCESSORS, Accessor.fromMap);
@@ -229,7 +226,6 @@ class Gltf extends GltfProperty {
         meshes,
         nodes,
         samplers,
-        sceneIndex,
         scene,
         scenes,
         skins,
@@ -293,10 +289,10 @@ class Gltf extends GltfProperty {
       context.path.removeLast();
     }
 
-    // Check node tree loops and orphaned objects
+    // Check node tree loops, skins, and orphaned objects
     if (context.validate) {
       context.path.add(NODES);
-      final seenNodes = Set<Node>();
+      final seenNodes = <Node>{};
       gltf.nodes.forEachWithIndices((i, node) {
         if (!node.isJoint &&
             node.children == null &&
@@ -307,19 +303,38 @@ class Gltf extends GltfProperty {
           context.addIssue(SemanticError.nodeEmpty, index: i);
         }
 
-        if (node.parent == null) {
-          return;
-        }
-        seenNodes.clear();
-        var temp = node;
-        while (temp.parent != null) {
-          if (seenNodes.add(temp)) {
-            temp = temp.parent;
-          } else {
-            if (temp == node) {
-              context.addIssue(LinkError.nodeLoop, index: i);
+        // Node has a parent, check for loops
+        if (node.parent != null) {
+          seenNodes.clear();
+          var temp = node;
+          while (temp.parent != null) {
+            if (seenNodes.add(temp)) {
+              temp = temp.parent;
+            } else {
+              if (temp == node) {
+                context.addIssue(LinkError.nodeLoop, index: i);
+              }
+              break;
             }
-            break;
+          }
+        }
+
+        // Node has a skinned mesh, check hierarchy and scenes
+        if (node.skin != null) {
+          if (node.parent != null) {
+            context.addIssue(SemanticError.nodeSkinnedMeshNonRoot, index: i);
+          }
+
+          if (node.hasTransform) {
+            context.addIssue(SemanticError.nodeSkinnedMeshLocalTransforms,
+                index: i);
+          }
+
+          final topCommonRoot = node.skin.commonRoots
+              .firstWhere((root) => root.parent == null, orElse: () => null);
+          if (topCommonRoot != null &&
+              !node.scenes.every(topCommonRoot.scenes.contains)) {
+            context.addIssue(SemanticError.nodeSkinNoScene, index: i);
           }
         }
       });
@@ -377,24 +392,31 @@ class Gltf extends GltfProperty {
     return gltf;
   }
 
-  @override
-  String toString([_]) => super.toString({
-        ASSET: asset,
-        ACCESSORS: accessors,
-        ANIMATIONS: animations,
-        BUFFERS: buffers,
-        BUFFER_VIEWS: bufferViews,
-        CAMERAS: cameras,
-        IMAGES: images,
-        MATERIALS: materials,
-        MESHES: meshes,
-        NODES: nodes,
-        SAMPLERS: samplers,
-        SCENES: scenes,
-        SCENE: _sceneIndex,
-        SKINS: skins,
-        TEXTURES: textures,
-        EXTENSIONS_REQUIRED: extensionsRequired,
-        EXTENSIONS_USED: extensionsUsed
+  void validateResources(Context context) {
+    void validateResourcesInCollection(SafeList<ResourceValidatable> list) {
+      context.path
+        ..clear()
+        ..add(list.name);
+      list.forEachWithIndices((i, item) {
+        context.path.add(i.toString());
+        item.validateResources(this, context);
+        context.path.removeLast();
       });
+      context.path.removeLast();
+    }
+
+    // Only textures require this validation step for now.
+    validateResourcesInCollection(textures);
+
+    final extensions = context.resourceValidatableExtensions;
+    if (extensions != null) {
+      for (final entry in extensions) {
+        context.path
+          ..clear()
+          ..addAll(entry.path);
+        entry.object.validateResources(this, context);
+      }
+      context.path.clear();
+    }
+  }
 }

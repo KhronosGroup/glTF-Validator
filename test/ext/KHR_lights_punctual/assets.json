@@ -1,0 +1,29 @@
+{
+    "light": {
+        "name": "root.KHR_texture_transform",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "directional_light_with_range.gltf": "Directional light with range",
+            "empty_light_object.gltf": "Empty light object",
+            "empty_lights_array.gltf": "Empty lights array",
+            "empty_object.gltf": "Empty extension object",
+            "spot_invalid_angles.gltf": "Invalid spot angles",
+            "spot_light_without_spot_object.gltf": "Spot light without spot object",
+            "spot_object_with_non_spot_light.gltf": "Spot object defined for non-spot light",
+            "unknown_type.gltf": "Unknown light type",
+            "valid.gltf": "Valid"
+        }
+    },
+    "node": {
+        "name": "node.KHR_texture_transform",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_object.gltf": "Empty object",
+            "unexpected_extension.gltf": "Unexpected extension object location",
+            "unresolved_light_empty_root_array.gltf": "Unresolved light - empty root array",
+            "unresolved_light_empty_root_ext.gltf": "Unresolved light - empty root extension",
+            "unresolved_light_no_root_ext.gltf": "Unresolved light - no root extension",
+            "valid.gltf": "Valid"
+        }
+    }
+}

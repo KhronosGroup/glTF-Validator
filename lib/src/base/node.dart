@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,6 +29,7 @@ class Node extends GltfChildOfRootProperty {
   final Quaternion rotation;
   final Vector3 scale;
   final List<double> weights;
+  final Set<Scene> _scenes = <Scene>{};
 
   Camera _camera;
   List<Node> _children;
@@ -53,19 +53,6 @@ class Node extends GltfChildOfRootProperty {
       Map<String, Object> extensions,
       Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({
-        CAMERA: _cameraIndex,
-        CHILDREN: _childrenIndices,
-        SKIN: _skinIndex,
-        MATRIX: matrix?.storage.toString(),
-        MESH: _meshIndex,
-        ROTATION: rotation,
-        SCALE: scale,
-        TRANSLATION: translation,
-        WEIGHTS: weights
-      });
 
   static Node fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -97,7 +84,8 @@ class Node extends GltfChildOfRootProperty {
       if (rotationList != null) {
         rotation = Quaternion(
             rotationList[0], rotationList[1], rotationList[2], rotationList[3]);
-        if (context.validate && (rotation.length - 1.0).abs() > 0.000005) {
+        if (context.validate &&
+            (1.0 - rotation.length).abs() > unitLengthThresholdVec4) {
           context.addIssue(SemanticError.rotationNonUnit, name: ROTATION);
         }
       }
@@ -164,6 +152,12 @@ class Node extends GltfChildOfRootProperty {
   Mesh get mesh => _mesh;
   Node get parent => _parent;
   Skin get skin => _skin;
+  Iterable<Scene> get scenes => _scenes;
+
+  bool get hasTransform => !((matrix == null || matrix.isIdentity()) &&
+      (translation == null || translation.isZero) &&
+      (rotation == null || rotation.isDefault) &&
+      (scale == null || scale.isOne));
 
   @override
   void link(Gltf gltf, Context context) {
@@ -206,7 +200,7 @@ class Node extends GltfChildOfRootProperty {
 
             if (_skin != null) {
               if (_mesh.primitives
-                  .any((primitive) => primitive.jointsCount == 0)) {
+                  .every((primitive) => primitive.jointsCount == 0)) {
                 context.addIssue(LinkError.nodeSkinWithNonSkinnedMesh);
               }
             } else {
@@ -232,6 +226,15 @@ class Node extends GltfChildOfRootProperty {
         }
         node._parent = this;
       });
+    }
+  }
+
+  void addScene(Scene scene) {
+    _scenes.add(scene);
+    if (children != null) {
+      for (final node in children) {
+        node.addScene(scene);
+      }
     }
   }
 }

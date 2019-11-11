@@ -1,0 +1,28 @@
+{
+    "uri": "test/base/data/glb/zero_length.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "GLB_LENGTH_TOO_SMALL",
+                "message": "Declared GLB length (0) is too small.",
+                "severity": 0,
+                "offset": 8
+            },
+            {
+                "code": "GLB_LENGTH_MISMATCH",
+                "message": "Declared length (0) does not match GLB length (12).",
+                "severity": 0,
+                "offset": 12
+            }
+        ],
+        "truncated": false
+    },
+    "info": null
+}

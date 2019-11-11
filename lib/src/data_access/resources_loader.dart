@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,7 +25,7 @@ import 'package:gltf/src/data_access/validate_accessors.dart';
 import 'package:meta/meta.dart';
 
 typedef SequentialFetchFunction = Stream<List<int>> Function(Uri uri);
-typedef BytesFetchFunction = FutureOr<List<int>> Function([Uri uri]);
+typedef BytesFetchFunction = FutureOr<Uint8List> Function([Uri uri]);
 
 enum _Storage { DataUri, BufferView, GLB, External }
 
@@ -68,12 +67,16 @@ class ResourcesLoader {
   ResourcesLoader(this.context, this.gltf,
       {@required this.externalBytesFetch, @required this.externalStreamFetch});
 
-  Future<void> load({bool mustValidateAccessorData}) async {
+  Future<void> load({bool validateAccessorData = true}) async {
     try {
       await _loadBuffers();
       await _loadImages();
-      if (context.validate && (mustValidateAccessorData != false)) {
-        validateAccessorsData(gltf, context);
+      if (context.validate) {
+        if (validateAccessorData) {
+          validateAccessorsData(gltf, context);
+        }
+
+        gltf.validateResources(context);
       }
     } on IssuesLimitExceededException catch (_) {
       return;
@@ -104,18 +107,12 @@ class ResourcesLoader {
             // Data URI
             info.storage = _Storage.DataUri;
             return buffer.data;
-          } else if (context.isGlb && !buffer.hasUri) {
+          } else if (context.isGlb && i == 0 && !buffer.hasUri) {
             // GLB Buffer
             info.storage = _Storage.GLB;
             final data = externalBytesFetch();
-            if (context.validate) {
-              if (i != 0) {
-                context.addIssue(LinkError.bufferNonFirstGlb);
-              }
-
-              if (data == null) {
-                context.addIssue(LinkError.bufferMissingGlbData);
-              }
+            if (context.validate && data == null) {
+              context.addIssue(LinkError.bufferMissingGlbData);
             }
             return data;
           }
@@ -129,7 +126,7 @@ class ResourcesLoader {
         data = await _fetchBuffer(buffer) as Uint8List;
       } on Exception catch (e) {
         // likely IO error
-        context.addIssue(IoError.fileNotFound, args: [e], name: URI);
+        context.addIssue(IoError.ioError, args: [e], name: URI);
       }
 
       if (data != null) {
@@ -138,7 +135,7 @@ class ResourcesLoader {
           context.addIssue(DataError.bufferExternalBytelengthMismatch,
               args: [data.length, buffer.byteLength]);
         } else {
-          if (buffer.uri == null) {
+          if (context.isGlb && i == 0 && !buffer.hasUri) {
             final paddedLength = padLength(buffer.byteLength);
             if (data.length > paddedLength) {
               context.addIssue(DataError.bufferGlbChunkTooBig,
@@ -188,12 +185,23 @@ class ResourcesLoader {
         return null;
       }
 
-      final imageDataStream = _fetchImageData(image);
+      Stream<List<int>> imageDataStream;
+      try {
+        imageDataStream = _fetchImageData(image);
+      } on Exception catch (e) {
+        // likely IO error
+        context.addIssue(IoError.ioError, args: [e], name: URI);
+      }
 
       ImageInfo imageInfo;
       if (imageDataStream != null) {
         try {
           imageInfo = await ImageInfo.parseStreamAsync(imageDataStream);
+          if (context.validate &&
+              !imageMimeTypes.contains(imageInfo.mimeType)) {
+            context.addIssue(DataError.imageNonEnabledMimeType,
+                args: [imageInfo.mimeType]);
+          }
         } on UnsupportedImageFormatException catch (_) {
           context.addIssue(DataError.imageUnrecognizedFormat);
         } on UnexpectedEndOfStreamException catch (_) {
@@ -201,8 +209,8 @@ class ResourcesLoader {
         } on InvalidDataFormatException catch (e) {
           context.addIssue(DataError.imageDataInvalid, args: [e]);
         } on Exception catch (e) {
-          // likely IO error
-          context.addIssue(IoError.fileNotFound, args: [e], name: URI);
+          // TODO: refactor npm wrapper to remove this
+          context.addIssue(IoError.ioError, args: [e], name: URI);
         }
         if (imageInfo != null) {
           resourceInfo.mimeType = imageInfo.mimeType;
@@ -217,6 +225,12 @@ class ResourcesLoader {
             if (!isPot(imageInfo.width) || !isPot(imageInfo.height)) {
               context.addIssue(DataError.imageNonPowerOfTwoDimensions,
                   args: [imageInfo.width, imageInfo.height]);
+            }
+
+            if (imageInfo.hasCustomColorInfo ||
+                imageInfo.hasAnimation ||
+                imageInfo.hasNonSquarePixels) {
+              context.addIssue(DataError.imageFeaturesUnsupported);
             }
           }
 

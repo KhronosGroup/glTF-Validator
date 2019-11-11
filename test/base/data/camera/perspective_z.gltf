@@ -1,0 +1,16 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "cameras": [
+        {
+            "type": "perspective",
+            "perspective": {
+                "znear": 10,
+                "zfar": 1,
+                "yfov": 10,
+                "aspectRatio": 1
+            }
+        }
+    ]
+}

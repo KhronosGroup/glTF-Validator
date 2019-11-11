@@ -1,5 +1,5 @@
-/* PrismJS 1.9.0
-http://prismjs.com/download.html?themes=prism-coy&languages=json */
+/* PrismJS 1.17.1
+https://prismjs.com/download.html#themes=prism-coy&languages=json */
 /**
  * prism.js Coy theme for JavaScript, CoffeeScript, CSS and HTML
  * Based on https://github.com/tshedor/workshop-wp-theme (Example: http://workshop.kansan.com/category/sessions/basics or http://workshop.timshedor.com/category/sessions/basics);
@@ -11,6 +11,7 @@ pre[class*="language-"] {
 	color: black;
 	background: none;
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
@@ -48,12 +49,13 @@ pre[class*="language-"]>code {
 
 code[class*="language"] {
 	max-height: inherit;
+	height: inherit;
 	padding: 0 1em;
 	display: block;
 	overflow: auto;
 }
 
-/* Margin bottom to accomodate shadow */
+/* Margin bottom to accommodate shadow */
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
 	background-color: #fdfdfd;
@@ -199,15 +201,15 @@ pre[class*="language-"]:after {
 }
 
 /* Plugin styles: Line Numbers */
-pre[class*="language-"].line-numbers {
+pre[class*="language-"].line-numbers.line-numbers {
 	padding-left: 0;
 }
 
-pre[class*="language-"].line-numbers code {
+pre[class*="language-"].line-numbers.line-numbers code {
 	padding-left: 3.8em;
 }
 
-pre[class*="language-"].line-numbers .line-numbers-rows {
+pre[class*="language-"].line-numbers.line-numbers .line-numbers-rows {
 	left: 0;
 }
 

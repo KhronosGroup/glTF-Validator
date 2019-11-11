@@ -1,0 +1,78 @@
+{
+    "uri": "test/base/data/root/invalid_array_elements.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "validatedAt": null,
+    "issues": {
+        "numErrors": 8,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value 'material' is not a 'object'.",
+                "severity": 0,
+                "pointer": "/materials/0"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value null is not a 'object'.",
+                "severity": 0,
+                "pointer": "/materials/1"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value 0 is not a 'object'.",
+                "severity": 0,
+                "pointer": "/materials/2"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value false is not a 'object'.",
+                "severity": 0,
+                "pointer": "/materials/3"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value 'sampler' is not a 'object'.",
+                "severity": 0,
+                "pointer": "/samplers/0"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value null is not a 'object'.",
+                "severity": 0,
+                "pointer": "/samplers/1"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value 0 is not a 'object'.",
+                "severity": 0,
+                "pointer": "/samplers/2"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value false is not a 'object'.",
+                "severity": 0,
+                "pointer": "/samplers/3"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 4,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}
