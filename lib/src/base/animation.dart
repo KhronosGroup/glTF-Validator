@@ -202,9 +202,9 @@ class Animation extends GltfChildOfRootProperty {
                   context.addElementChecker(
                       accessor,
                       QuaternionFloatChecker(context.getPointerString(),
+                          accessor.isFloat ? null : accessor.normalizeValue,
                           hasTangents:
-                              CUBICSPLINE == channel._sampler.interpolation,
-                          normalizeValue: accessor.normalizeValue));
+                              CUBICSPLINE == channel._sampler.interpolation));
                   context.path.removeLast();
                 }
               }
@@ -396,8 +396,8 @@ class QuaternionFloatChecker<T extends num> extends ElementChecker<T> {
   @override
   final String path;
 
-  QuaternionFloatChecker(this.path,
-      {this.hasTangents = false, this.normalizeValue});
+  QuaternionFloatChecker(this.path, this.normalizeValue,
+      {this.hasTangents = false});
 
   // used only for quaternions with cubic spline tangents
   // 0-3  - in tangent

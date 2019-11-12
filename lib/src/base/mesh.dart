@@ -351,7 +351,9 @@ class MeshPrimitive extends GltfProperty {
           accessor.setUnit();
           context.path.add(NORMAL);
           context.addElementChecker(
-              accessor, UnitVec3FloatChecker(context.getPointerString()));
+              accessor,
+              UnitVec3FloatChecker(context.getPointerString(),
+                  accessor.isFloat ? null : accessor.normalizeValue));
           context.path.removeLast();
         } else if (semantic == TANGENT) {
           accessor
@@ -359,7 +361,9 @@ class MeshPrimitive extends GltfProperty {
             ..setXyzSign();
           context.path.add(TANGENT);
           context.addElementChecker(
-              accessor, UnitVec3SignFloatChecker(context.getPointerString()));
+              accessor,
+              UnitVec3SignFloatChecker(context.getPointerString(),
+                  accessor.isFloat ? null : accessor.normalizeValue));
           context.path.removeLast();
         } else if (semantic.startsWith('${COLOR_}_') &&
             gl.FLOAT == accessor.componentType) {

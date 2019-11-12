@@ -762,18 +762,21 @@ abstract class ElementChecker<T extends num> {
   bool done(Context context) => true;
 }
 
-class UnitVec3FloatChecker extends ElementChecker<double> {
-  UnitVec3FloatChecker(this.path);
+class UnitVec3FloatChecker extends ElementChecker<num> {
+  UnitVec3FloatChecker(this.path, this.normalizeValue);
 
   double _sum = 0;
 
   @override
   final String path;
 
+  final double Function(num value) normalizeValue;
+
   @override
-  bool check(Context context, int index, int componentIndex, double value) {
+  bool check(Context context, int index, int componentIndex, num value) {
     assert(componentIndex < 3);
-    _sum += value * value;
+    final v = normalizeValue != null ? normalizeValue(value) : value;
+    _sum += v * v;
     if (2 == componentIndex) {
       if ((sqrt(_sum) - 1.0).abs() > unitLengthThresholdVec3) {
         context.addIssue(DataError.accessorVector3NonUnit,
@@ -786,24 +789,27 @@ class UnitVec3FloatChecker extends ElementChecker<double> {
   }
 }
 
-class UnitVec3SignFloatChecker extends ElementChecker<double> {
-  UnitVec3SignFloatChecker(this.path);
+class UnitVec3SignFloatChecker extends ElementChecker<num> {
+  UnitVec3SignFloatChecker(this.path, this.normalizeValue);
 
   double _sum = 0;
 
   @override
   final String path;
 
+  final double Function(num value) normalizeValue;
+
   @override
-  bool check(Context context, int index, int componentIndex, double value) {
+  bool check(Context context, int index, int componentIndex, num value) {
     assert(componentIndex < 4);
+    final v = normalizeValue != null ? normalizeValue(value) : value;
     if (3 == componentIndex) {
-      if (1.0 != value && -1.0 != value) {
+      if (1.0 != v && -1.0 != v) {
         context.addIssue(DataError.accessorInvalidSign,
-            name: path, args: [index - 3, index, value]);
+            name: path, args: [index - 3, index, v]);
       }
     } else {
-      _sum += value * value;
+      _sum += v * v;
       if (2 == componentIndex) {
         if ((sqrt(_sum) - 1.0).abs() > unitLengthThresholdVec3) {
           context.addIssue(DataError.accessorVector3NonUnit,

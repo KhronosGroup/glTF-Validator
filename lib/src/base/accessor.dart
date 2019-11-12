@@ -414,7 +414,7 @@ abstract class Accessor<T extends num> extends GltfChildOfRootProperty {
   Iterable<double> getElementsNormalized();
 
   double normalizeValue(num value) {
-    if (!normalized) {
+    if (!normalized || gl.FLOAT == componentType) {
       return value.toDouble();
     }
 
