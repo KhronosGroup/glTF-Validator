@@ -52,6 +52,23 @@ void _init() {
     AccessorFormat(VEC2, SHORT, normalized: true),
     AccessorFormat(VEC2, UNSIGNED_SHORT)
   ]);
+
+  morphAttributeAccessorFormats[POSITION].addAll(const [
+    AccessorFormat(VEC3, BYTE),
+    AccessorFormat(VEC3, BYTE, normalized: true),
+    AccessorFormat(VEC3, SHORT),
+    AccessorFormat(VEC3, SHORT, normalized: true)
+  ]);
+
+  morphAttributeAccessorFormats[NORMAL].addAll(const [
+    AccessorFormat(VEC3, BYTE, normalized: true),
+    AccessorFormat(VEC3, SHORT, normalized: true)
+  ]);
+
+  morphAttributeAccessorFormats[TANGENT].addAll(const [
+    AccessorFormat(VEC3, BYTE, normalized: true),
+    AccessorFormat(VEC3, SHORT, normalized: true)
+  ]);
 }
 
 const Extension khrQuantizedGeometryExtension = Extension(
