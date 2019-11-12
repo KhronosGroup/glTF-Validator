@@ -303,7 +303,8 @@ class InfluencesChecker {
               name: '$path/${WEIGHTS_}_$i',
               args: [_index, _componentIndex, weight]);
         } else if (unique) {
-          _sum += weight;
+          // keep sum within float32 precision
+          _sum = doubleToSingle(_sum + weight);
         }
       } else if (joint != 0) {
         context.addIssue(DataError.accessorJointsUsedZeroWeight,
@@ -313,7 +314,15 @@ class InfluencesChecker {
     }
 
     if (4 == ++_componentIndex) {
-      final threshold = unitSumThresholdStep * (_currentIndices.length - 1);
+      // Threshold depends on the number of used joints
+      //   step ~= 1/255
+      //   1..2 elements - 0 * step
+      //   3..4 elements - 1 * step
+      //   5..6 elements - 2 * step
+      //   7..8 elements - 3 * step
+
+      final threshold =
+          unitSumThresholdStep * (((_currentIndices.length + 1) >> 1) - 1);
       if ((_sum - 1.0).abs() > threshold) {
         for (var i = 0; i < jointsIterators.length; i++) {
           context.addIssue(DataError.accessorWeightsNonNormalized,

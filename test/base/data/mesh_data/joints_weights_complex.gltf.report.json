@@ -47,13 +47,13 @@
             },
             {
                 "code": "ACCESSOR_WEIGHTS_NON_NORMALIZED",
-                "message": "Weights accessor elements (at indices 4..7) have non-normalized sum: 1.5000000223517418.",
+                "message": "Weights accessor elements (at indices 4..7) have non-normalized sum: 1.5.",
                 "severity": 0,
                 "pointer": "/meshes/0/primitives/0/attributes/WEIGHTS_0"
             },
             {
                 "code": "ACCESSOR_WEIGHTS_NON_NORMALIZED",
-                "message": "Weights accessor elements (at indices 4..7) have non-normalized sum: 1.5000000223517418.",
+                "message": "Weights accessor elements (at indices 4..7) have non-normalized sum: 1.5.",
                 "severity": 0,
                 "pointer": "/meshes/0/primitives/0/attributes/WEIGHTS_1"
             }

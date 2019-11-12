@@ -365,7 +365,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
           wrongMemberFound = true;
         }
         if (singlePrecision) {
-          result[i] = _doubleToSingle(v.toDouble());
+          result[i] = doubleToSingle(v.toDouble());
         } else {
           result[i] = v.toDouble();
         }
@@ -686,7 +686,7 @@ class SafeList<T> extends ListBase<T> {
 }
 
 final _float = Float32List(1);
-double _doubleToSingle(double value) {
+double doubleToSingle(double value) {
   _float[0] = value;
   return _float[0];
 }
