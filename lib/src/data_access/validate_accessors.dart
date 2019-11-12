@@ -127,7 +127,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
       // joints/weights pair covers a subset of primitive influences
       final jointsIterators = List<Iterator<int>>(primitive.jointsCount);
-      final weightsIterators = List<Iterator<num>>(primitive.jointsCount);
+      final weightsIterators = List<Iterator<double>>(primitive.jointsCount);
       for (var i = 0; i < primitive.jointsCount; i++) {
         final jointsAccessor =
             _guardAccessor(primitive.attributes['${JOINTS_}_$i']);
@@ -237,7 +237,7 @@ void _processAccessorElements(Context context) {
 
 class InfluencesChecker {
   final List<Iterator<int>> jointsIterators;
-  final List<Iterator<num>> weightsIterators;
+  final List<Iterator<double>> weightsIterators;
   final int maxJointIndex;
   final int limitingSkinIndex;
   final String path;
@@ -249,6 +249,7 @@ class InfluencesChecker {
   bool _done = false;
 
   double _sum = 0;
+  double _threshold = 0;
   final Set<int> _currentIndices = <int>{};
 
   InfluencesChecker(this.path,
@@ -305,6 +306,7 @@ class InfluencesChecker {
         } else if (unique) {
           // keep sum within float32 precision
           _sum = doubleToSingle(_sum + weight);
+          _threshold += 2e-7;
         }
       } else if (joint != 0) {
         context.addIssue(DataError.accessorJointsUsedZeroWeight,
@@ -314,16 +316,7 @@ class InfluencesChecker {
     }
 
     if (4 == ++_componentIndex) {
-      // Threshold depends on the number of used joints
-      //   step ~= 1/255
-      //   1..2 elements - 0 * step
-      //   3..4 elements - 1 * step
-      //   5..6 elements - 2 * step
-      //   7..8 elements - 3 * step
-
-      final threshold =
-          unitSumThresholdStep * (((_currentIndices.length + 1) >> 1) - 1);
-      if ((_sum - 1.0).abs() > threshold) {
+      if ((_sum - 1.0).abs() > _threshold) {
         for (var i = 0; i < jointsIterators.length; i++) {
           context.addIssue(DataError.accessorWeightsNonNormalized,
               name: '$path/${WEIGHTS_}_$i', args: [_index - 3, _index, _sum]);
@@ -331,6 +324,7 @@ class InfluencesChecker {
       }
       _currentIndices.clear();
       _componentIndex = 0;
+      _threshold = 0;
       _sum = 0;
     }
     _index++;
