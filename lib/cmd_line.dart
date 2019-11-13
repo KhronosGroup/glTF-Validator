@@ -25,7 +25,7 @@ import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart';
 import 'package:isolate/load_balancer.dart';
 import 'package:isolate/isolate_runner.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
 const int kErrorCode = 1;
@@ -227,7 +227,7 @@ Future<void> run(List<String> args) async {
 
     final it = Directory(input).listSync(recursive: true).where((entry) {
       if (entry is File) {
-        final ext = path.extension(entry.path);
+        final ext = p.extension(entry.path);
         return (ext == '.gltf') || (ext == '.glb');
       }
       return false;
@@ -283,7 +283,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final reader = GltfReader.filename(file.openRead(), task.filename, context);
 
   if (reader == null) {
-    final ext = path.extension(task.filename).toLowerCase();
+    final ext = p.extension(task.filename).toLowerCase();
     errPipe.write('Error while loading ${file.path}...\n'
         'Unknown file extension `$ext`.\n');
     watch.stop();
@@ -302,7 +302,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final validationResult = ValidationResult(
       Uri.file(opts.absolutePath
           ? task.filename
-          : path.relative(task.filename, from: _cwd)),
+          : p.relative(task.filename, from: _cwd)),
       context,
       readerResult,
       writeTimestamp: opts.writeTimestamp);
@@ -362,7 +362,7 @@ ResourcesLoader getFileResourceValidator(
     Context context, Uri absoluteUri, GltfReaderResult readerResult) {
   // Check file stat to not bother with FileSystem exceptions
   File fileGuarded(Uri uri) {
-    final f = File.fromUri(absoluteUri.resolveUri(uri));
+    final f = File(p.fromUri(absoluteUri.resolveUri(uri)));
     if (f.statSync().type == FileSystemEntityType.file) {
       return f;
     } else {
