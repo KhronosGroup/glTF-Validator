@@ -14,13 +14,13 @@
  * # limitations under the License.
  */
 
-library gltf.extensions.khr_quantized_geometry;
+library gltf.extensions.khr_mesh_quantization;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
 import 'package:gltf/src/gl.dart';
 
-const String KHR_QUANTIZED_GEOMETRY = 'KHR_quantized_geometry';
+const String KHR_MESH_QUANTIZATION = 'KHR_mesh_quantization';
 
 void _init() {
   attributeAccessorFormats[POSITION].addAll(const [
@@ -71,6 +71,6 @@ void _init() {
   ]);
 }
 
-const Extension khrQuantizedGeometryExtension = Extension(
-    KHR_QUANTIZED_GEOMETRY, <Type, ExtFuncs>{},
+const Extension khrMeshQuantizationExtension = Extension(
+    KHR_MESH_QUANTIZATION, <Type, ExtFuncs>{},
     init: _init, required: true);

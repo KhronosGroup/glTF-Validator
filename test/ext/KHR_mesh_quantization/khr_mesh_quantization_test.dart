@@ -17,26 +17,27 @@
 import 'dart:async';
 
 import 'package:test/test.dart';
-import 'package:gltf/gltf.dart';
+
+import 'package:gltf/src/gl.dart';
+import 'package:gltf/src/base/gltf_property.dart';
 
 import '../../utils.dart';
 
 //ignore_for_file: avoid_as
 
 Future main() async {
-  await compareReports('test/ext/KHR_quantized_geometry');
+  await compareReports('test/ext/KHR_mesh_quantization');
 
   group('Evaluate valid objects', () {
     test('mesh.primitive', () async {
       final gltf = (await read(
-              'ext/KHR_materials_unlit/data/material/valid.gltf',
+              'ext/KHR_mesh_quantization/data/primitive/valid.gltf',
               ignoreUnused: true))
           .gltf;
 
-      final unlit = gltf.materials[0].extensions['KHR_materials_unlit']
-          as KhrMaterialsUnlit;
-
-      expect(unlit.extensions, isEmpty);
+      final attributes = gltf.meshes[0].primitives[0].attributes;
+      expect(AccessorFormat.fromAccessor(attributes['POSITION']),
+          const AccessorFormat('VEC3', UNSIGNED_BYTE, normalized: true));
     });
   });
 }

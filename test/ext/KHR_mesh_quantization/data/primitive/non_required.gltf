@@ -3,7 +3,7 @@
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_quantized_geometry"
+        "KHR_mesh_quantization"
     ],
     "accessors": [
         {

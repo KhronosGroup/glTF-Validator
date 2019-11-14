@@ -1,5 +1,5 @@
 {
-    "uri": "test/ext/KHR_quantized_geometry/data/primitive/unexpected_extension.gltf",
+    "uri": "test/ext/KHR_mesh_quantization/data/primitive/non_required.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
     "validatedAt": null,
@@ -10,10 +10,10 @@
         "numHints": 0,
         "messages": [
             {
-                "code": "UNEXPECTED_EXTENSION_OBJECT",
-                "message": "Unexpected location for this extension.",
+                "code": "NON_REQUIRED_EXTENSION",
+                "message": "Extension 'KHR_mesh_quantization' cannot be optional.",
                 "severity": 0,
-                "pointer": "/accessors/0/extensions/KHR_quantized_geometry"
+                "pointer": "/extensionsUsed/0"
             },
             {
                 "code": "UNUSED_OBJECT",
@@ -27,10 +27,7 @@
     "info": {
         "version": "2.0",
         "extensionsUsed": [
-            "KHR_quantized_geometry"
-        ],
-        "extensionsRequired": [
-            "KHR_quantized_geometry"
+            "KHR_mesh_quantization"
         ],
         "animationCount": 0,
         "materialCount": 0,
