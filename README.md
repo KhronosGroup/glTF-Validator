@@ -36,7 +36,7 @@ NPM package: https://www.npmjs.com/package/gltf-validator
   - KHR_lights_punctual
   - KHR_materials_pbrSpecularGlossiness
   - KHR_materials_unlit
-  - KHR_quantized_geometry
+  - KHR_mesh_quantization
   - KHR_texture_transform
 - [Full list of detectable issues](ISSUES.md).
 

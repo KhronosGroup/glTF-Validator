@@ -6,7 +6,7 @@
 
   * When the extension is not declared in `extensionsUsed`, image objects with WebP data are reported with a new `IMAGE_NON_ENABLED_MIME_TYPE` error.
 
-* Added support for `KHR_quantized_geometry` extension.
+* Added support for `KHR_mesh_quantization` extension.
 
 * Added `NON_REQUIRED_EXTENSION` error for extensions that cannot be optional (such as `KHR_quantized_geometry`).  
   
