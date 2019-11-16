@@ -58,6 +58,8 @@
 
   * It is now possible to omit timestamps from validation reports.
   
+  * It is now possible to set the number of used threads for directory validation (cmd-line tool only).
+  
   * Validation report now consistently uses lower-case enums.
   
   * Native executable binaries can now be compiled. See the [readme](README.md) for details (fixes #113).

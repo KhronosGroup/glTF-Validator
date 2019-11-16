@@ -19,6 +19,8 @@ library gltf.cmd_line;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+
 import 'package:args/args.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
@@ -27,6 +29,8 @@ import 'package:isolate/load_balancer.dart';
 import 'package:isolate/isolate_runner.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
+
+// ignore_for_file: avoid_as
 
 const int kErrorCode = 1;
 
@@ -41,6 +45,7 @@ class ValidatorOptions {
   static const String kWriteTimestamp = 'write-timestamp';
   static const String kAbsolutePath = 'absolute-path';
   static const String kMessages = 'messages';
+  static const String kThreads = 'threads';
 
   static const String kConfig = 'config';
 
@@ -49,20 +54,23 @@ class ValidatorOptions {
   final bool absolutePath;
   final bool messages;
   final bool printAll;
+  final int threads;
 
   ValidatorOptions(
       {this.validateResources = false,
       this.writeTimestamp = false,
       this.absolutePath = false,
       this.messages = false,
-      this.printAll = false});
+      this.printAll = false,
+      this.threads = 0});
 
   factory ValidatorOptions.fromArgs(ArgResults args) => ValidatorOptions(
       validateResources: args[kValidateResources] == true,
       messages: args[kMessages] == true,
       writeTimestamp: args[kWriteTimestamp] == true,
       absolutePath: args[kAbsolutePath] == true,
-      printAll: args[kAll] == true);
+      printAll: args[kAll] == true,
+      threads: max(int.tryParse((args[kThreads] ?? '') as String) ?? 0, 0));
 }
 
 class ValidationTask {
@@ -182,7 +190,11 @@ Future<void> run(List<String> args) async {
     ..addOption(ValidatorOptions.kConfig,
         abbr: 'c',
         help: 'YAML configuration file with validation options. '
-            'See docs/config-example.yaml for details.');
+            'See docs/config-example.yaml for details.')
+    ..addOption(ValidatorOptions.kThreads,
+        abbr: 'h',
+        help: 'The number of threads for directory validation. '
+            'Set to 0 (default) for auto selection.');
 
   try {
     argResult = parser.parse(args);
@@ -217,9 +229,11 @@ Future<void> run(List<String> args) async {
   }
 
   if (FileSystemEntity.isDirectorySync(input)) {
-    final balancer = await LoadBalancer.create(
-        Platform.numberOfProcessors, IsolateRunner.spawn);
-//        1, IsolateRunner.spawn);
+    final threads = 0 == validatorOptions.threads
+        ? Platform.numberOfProcessors
+        : validatorOptions.threads;
+    final balancer = await LoadBalancer.create(threads, IsolateRunner.spawn);
+    errPipe.write('Using $threads thread(s).\n');
 
     var activeTasks = 0;
     var foundErrors = false;

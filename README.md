@@ -60,6 +60,7 @@ Shell return code will be non-zero if at least one error was found.
 -m, --[no-]messages              Print issue messages to stderr. Otherwise, only total number of issues will be printed.
 -a, --[no-]all                   Print all issue messages to stderr. Otherwise, only errors will be printed. Implies --messages.
 -c, --config                     YAML configuration file with validation options. See docs/config-example.yaml for details.
+-h, --threads                    The number of threads for directory validation. Set to 0 (default) for auto selection.
 ```
 
 ## Building
