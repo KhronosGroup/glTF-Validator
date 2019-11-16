@@ -18,56 +18,56 @@ library gltf.extensions.khr_mesh_quantization;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
-import 'package:gltf/src/gl.dart';
+import 'package:gltf/src/gl.dart' as gl;
 
 const String KHR_MESH_QUANTIZATION = 'KHR_mesh_quantization';
 
 void _init() {
   attributeAccessorFormats[POSITION].addAll(const [
-    AccessorFormat(VEC3, BYTE),
-    AccessorFormat(VEC3, BYTE, normalized: true),
-    AccessorFormat(VEC3, UNSIGNED_BYTE),
-    AccessorFormat(VEC3, UNSIGNED_BYTE, normalized: true),
-    AccessorFormat(VEC3, SHORT),
-    AccessorFormat(VEC3, SHORT, normalized: true),
-    AccessorFormat(VEC3, UNSIGNED_SHORT),
-    AccessorFormat(VEC3, UNSIGNED_SHORT, normalized: true)
+    AccessorFormat(VEC3, gl.BYTE),
+    AccessorFormat(VEC3, gl.BYTE, normalized: true),
+    AccessorFormat(VEC3, gl.UNSIGNED_BYTE),
+    AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
+    AccessorFormat(VEC3, gl.SHORT),
+    AccessorFormat(VEC3, gl.SHORT, normalized: true),
+    AccessorFormat(VEC3, gl.UNSIGNED_SHORT),
+    AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true)
   ]);
 
   attributeAccessorFormats[NORMAL].addAll(const [
-    AccessorFormat(VEC3, BYTE, normalized: true),
-    AccessorFormat(VEC3, SHORT, normalized: true)
+    AccessorFormat(VEC3, gl.BYTE, normalized: true),
+    AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 
   attributeAccessorFormats[TANGENT].addAll(const [
-    AccessorFormat(VEC4, BYTE, normalized: true),
-    AccessorFormat(VEC4, SHORT, normalized: true)
+    AccessorFormat(VEC4, gl.BYTE, normalized: true),
+    AccessorFormat(VEC4, gl.SHORT, normalized: true)
   ]);
 
   attributeAccessorFormats[TEXCOORD_].addAll(const [
-    AccessorFormat(VEC2, BYTE),
-    AccessorFormat(VEC2, BYTE, normalized: true),
-    AccessorFormat(VEC2, UNSIGNED_BYTE),
-    AccessorFormat(VEC2, SHORT),
-    AccessorFormat(VEC2, SHORT, normalized: true),
-    AccessorFormat(VEC2, UNSIGNED_SHORT)
+    AccessorFormat(VEC2, gl.BYTE),
+    AccessorFormat(VEC2, gl.BYTE, normalized: true),
+    AccessorFormat(VEC2, gl.UNSIGNED_BYTE),
+    AccessorFormat(VEC2, gl.SHORT),
+    AccessorFormat(VEC2, gl.SHORT, normalized: true),
+    AccessorFormat(VEC2, gl.UNSIGNED_SHORT)
   ]);
 
   morphAttributeAccessorFormats[POSITION].addAll(const [
-    AccessorFormat(VEC3, BYTE),
-    AccessorFormat(VEC3, BYTE, normalized: true),
-    AccessorFormat(VEC3, SHORT),
-    AccessorFormat(VEC3, SHORT, normalized: true)
+    AccessorFormat(VEC3, gl.BYTE),
+    AccessorFormat(VEC3, gl.BYTE, normalized: true),
+    AccessorFormat(VEC3, gl.SHORT),
+    AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 
   morphAttributeAccessorFormats[NORMAL].addAll(const [
-    AccessorFormat(VEC3, BYTE, normalized: true),
-    AccessorFormat(VEC3, SHORT, normalized: true)
+    AccessorFormat(VEC3, gl.BYTE, normalized: true),
+    AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 
   morphAttributeAccessorFormats[TANGENT].addAll(const [
-    AccessorFormat(VEC3, BYTE, normalized: true),
-    AccessorFormat(VEC3, SHORT, normalized: true)
+    AccessorFormat(VEC3, gl.BYTE, normalized: true),
+    AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 }
 
