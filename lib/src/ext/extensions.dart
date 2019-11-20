@@ -91,6 +91,7 @@ const Set<String> kReservedPrefixes = <String>{
   'ADOBE',
   'AGI',
   'AGT',
+  'ALCM',
   'ALI',
   'AMZN',
   'AVR',
@@ -109,5 +110,6 @@ const Set<String> kReservedPrefixes = <String>{
   'S8S',
   'SI',
   'SKFB',
+  'SKYLINE',
   'WEB3D'
 };
