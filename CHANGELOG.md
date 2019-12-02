@@ -14,6 +14,8 @@
 
 * Added vendor prefixes: `ALCM` and `SKYLINE`.
 
+* Added `FOXIT` vendor prefix.
+
 * Extension names are now validated to have an upper-case prefix separated from the rest on the name with underscore (new `INVALID_EXTENSION_NAME_FORMAT` warning). 
 
 * Referencing an image of type defined by an extension from the core objects now results in `TEXTURE_INVALID_IMAGE_MIME_TYPE` error.

@@ -99,6 +99,7 @@ const Set<String> kReservedPrefixes = <String>{
   'CESIUM',
   'CVTOOLS',
   'FB',
+  'FOXIT',
   'GOOGLE',
   'LLQ',
   'MESHOPT',
