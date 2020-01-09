@@ -2,7 +2,6 @@
     "uri": "test/ext/EXT_texture_webp/data/image/valid.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -69,8 +68,8 @@
                     "width": 256,
                     "height": 128,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -83,8 +82,8 @@
                     "width": 256,
                     "height": 128,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -97,8 +96,8 @@
                     "width": 256,
                     "height": 128,
                     "format": "rgba",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -111,8 +110,8 @@
                     "width": 256,
                     "height": 128,
                     "format": "rgba",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -124,21 +123,21 @@
                     "width": 256,
                     "height": 128,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
             {
                 "pointer": "/images/5",
                 "mimeType": "image/webp",
-                "storage": "bufferView",
+                "storage": "buffer-view",
                 "image": {
                     "width": 256,
                     "height": 128,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             }

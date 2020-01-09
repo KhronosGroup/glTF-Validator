@@ -52,25 +52,28 @@ class ImageInfo {
   Map<String, Object> toMap() => <String, Object>{
         'width': width,
         'height': height,
-        'format': const [
-          null,
-          'rgb',
-          'rgba',
-          'luminance',
-          'luminance-alpha'
-        ][format.index],
-        'primaries': const [
-          null,
-          'sRGB',
-          'custom',
-        ][colorPrimaries.index],
-        'transfer': const [
-          null,
-          'linear',
-          'sRGB',
-          'custom',
-        ][colorTransfer.index],
-        'bits': bits
+        if (format != Format.Unknown)
+          'format': const [
+            null,
+            'rgb',
+            'rgba',
+            'luminance',
+            'luminance-alpha'
+          ][format.index],
+        if (colorPrimaries != _ColorPrimaries.Unknown)
+          'primaries': const [
+            null,
+            'srgb',
+            'custom',
+          ][colorPrimaries.index],
+        if (colorTransfer != _ColorTransfer.Unknown)
+          'transfer': const [
+            null,
+            'linear',
+            'srgb',
+            'custom',
+          ][colorTransfer.index],
+        if (bits > 0) 'bits': bits
       };
 
   static Future<ImageInfo> parseStreamAsync(Stream<List<int>> data) {

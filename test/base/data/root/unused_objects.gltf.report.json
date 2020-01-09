@@ -2,7 +2,6 @@
     "uri": "test/base/data/root/unused_objects.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -89,13 +88,11 @@
         "resources": [
             {
                 "pointer": "/buffers/0",
-                "mimeType": "application/gltf-buffer",
-                "storage": null
+                "mimeType": "application/gltf-buffer"
             },
             {
                 "pointer": "/buffers/1",
-                "mimeType": "application/gltf-buffer",
-                "storage": null
+                "mimeType": "application/gltf-buffer"
             },
             {
                 "pointer": "/images/0",
@@ -105,8 +102,8 @@
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -118,8 +115,8 @@
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             }

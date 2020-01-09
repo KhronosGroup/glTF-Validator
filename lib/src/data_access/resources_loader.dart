@@ -41,12 +41,17 @@ class ResourceInfo {
 
   Map<String, Object> toMap() {
     assert(pointer != null);
-    const storageString = <String>['data-uri', 'bufferView', 'glb', 'external'];
+    const storageString = <String>[
+      'data-uri',
+      'buffer-view',
+      'glb',
+      'external'
+    ];
 
     final map = <String, Object>{
       'pointer': pointer,
-      'mimeType': mimeType,
-      'storage': storage != null ? storageString[storage.index] : null
+      if (mimeType != null) 'mimeType': mimeType,
+      if (storage != null) 'storage': storageString[storage.index]
     };
 
     addToMapIfNotNull(map, 'uri', uri);
@@ -90,6 +95,10 @@ class ResourcesLoader {
 
     for (var i = 0; i < gltf.buffers.length; i++) {
       final buffer = gltf.buffers[i];
+      if (buffer == null) {
+        continue;
+      }
+
       context.path.add(i.toString());
 
       final info = ResourceInfo(context.getPointerString())
@@ -157,6 +166,10 @@ class ResourcesLoader {
 
     for (var i = 0; i < gltf.images.length; i++) {
       final image = gltf.images[i];
+      if (image == null) {
+        continue;
+      }
+
       context.path.add(i.toString());
 
       final resourceInfo = ResourceInfo(context.getPointerString());

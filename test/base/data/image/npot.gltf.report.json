@@ -2,7 +2,6 @@
     "uri": "test/base/data/image/npot.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -36,8 +35,8 @@
                     "width": 5,
                     "height": 3,
                     "format": "rgba",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             }

@@ -34,11 +34,11 @@ class ValidationResult {
 
   Map<String, Object> toMap() {
     final map = <String, Object>{
-      'uri': uri.toString(),
-      'mimeType': readerResult?.mimeType,
+      if (uri != null) 'uri': uri.toString(),
+      if (readerResult?.mimeType != null) 'mimeType': readerResult?.mimeType,
       'validatorVersion': kGltfValidatorVersion,
-      'validatedAt':
-          writeTimestamp ? DateTime.now().toUtc().toIso8601String() : null
+      if (writeTimestamp)
+        'validatedAt': DateTime.now().toUtc().toIso8601String()
     };
 
     final issues = context.issues;
@@ -61,7 +61,7 @@ class ValidationResult {
 
     map['issues'] = issuesMap;
 
-    map['info'] = _getGltfInfoMap();
+    addToMapIfNotNull(map, 'info', _getGltfInfoMap());
 
     return map;
   }
@@ -81,11 +81,13 @@ class ValidationResult {
     addToMapIfNotNull(map, GENERATOR, root.asset.generator);
 
     if (root.extensionsUsed.isNotEmpty) {
-      map[EXTENSIONS_USED] = root.extensionsUsed;
+      map[EXTENSIONS_USED] =
+          root.extensionsUsed.toSet().toList(growable: false);
     }
 
     if (root.extensionsRequired.isNotEmpty) {
-      map[EXTENSIONS_REQUIRED] = root.extensionsRequired;
+      map[EXTENSIONS_REQUIRED] =
+          root.extensionsRequired.toSet().toList(growable: false);
     }
 
     if (context.resources.isNotEmpty) {

@@ -2,7 +2,6 @@
     "uri": "test/base/data/image/custom_property.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 1,
@@ -36,8 +35,8 @@
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             }

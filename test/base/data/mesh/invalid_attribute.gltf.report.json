@@ -2,7 +2,6 @@
     "uri": "test/base/data/mesh/invalid_attribute.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 2,
         "numWarnings": 0,

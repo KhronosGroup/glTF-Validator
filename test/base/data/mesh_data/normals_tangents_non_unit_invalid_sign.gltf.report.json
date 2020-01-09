@@ -2,7 +2,6 @@
     "uri": "test/base/data/mesh_data/normals_tangents_non_unit_invalid_sign.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 3,
         "numWarnings": 0,

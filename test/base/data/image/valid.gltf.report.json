@@ -2,7 +2,6 @@
     "uri": "test/base/data/image/valid.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -67,8 +66,8 @@
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -80,34 +79,34 @@
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
             {
                 "pointer": "/images/2",
                 "mimeType": "image/png",
-                "storage": "bufferView",
+                "storage": "buffer-view",
                 "image": {
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
             {
                 "pointer": "/images/3",
                 "mimeType": "image/png",
-                "storage": "bufferView",
+                "storage": "buffer-view",
                 "image": {
                     "width": 1,
                     "height": 1,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             },
@@ -120,8 +119,6 @@
                     "width": 2,
                     "height": 2,
                     "format": "rgb",
-                    "primaries": null,
-                    "transfer": null,
                     "bits": 8
                 }
             }

@@ -2,7 +2,6 @@
     "uri": "test/base/data/accessor/alignment.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 6,
         "numWarnings": 0,
@@ -77,8 +76,7 @@
         "resources": [
             {
                 "pointer": "/buffers/0",
-                "mimeType": "application/gltf-buffer",
-                "storage": null
+                "mimeType": "application/gltf-buffer"
             }
         ],
         "animationCount": 0,

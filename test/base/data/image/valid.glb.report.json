@@ -2,7 +2,6 @@
     "uri": "test/base/data/image/valid.glb",
     "mimeType": "model/gltf-binary",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -30,13 +29,13 @@
             {
                 "pointer": "/images/0",
                 "mimeType": "image/png",
-                "storage": "bufferView",
+                "storage": "buffer-view",
                 "image": {
                     "width": 2,
                     "height": 2,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             }

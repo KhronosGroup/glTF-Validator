@@ -2,7 +2,6 @@
     "uri": "test/base/data/accessor_data/out_of_range_elements_uint16.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 12,
         "numWarnings": 0,

@@ -2,7 +2,6 @@
     "uri": "test/base/data/animation_data/invalid_input_values.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 3,
         "numWarnings": 0,

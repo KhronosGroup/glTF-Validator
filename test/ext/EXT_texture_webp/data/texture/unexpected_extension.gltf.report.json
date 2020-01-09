@@ -2,7 +2,6 @@
     "uri": "test/ext/EXT_texture_webp/data/texture/unexpected_extension.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
@@ -38,8 +37,8 @@
                     "width": 256,
                     "height": 128,
                     "format": "rgb",
-                    "primaries": "sRGB",
-                    "transfer": "sRGB",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
                     "bits": 8
                 }
             }

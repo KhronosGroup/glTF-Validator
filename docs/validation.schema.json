@@ -15,19 +15,12 @@
     },
     "properties": {
         "uri": {
-            "oneOf": [
-                {
-                    "const": null
-                },
-                {
-                    "type": "string",
-                    "format": "uri-reference",
-                    "description": "URI of validated asset."
-                }
-            ]
+            "type": "string",
+            "format": "uri-reference",
+            "description": "URI of validated asset."
         },
         "mimeType": {
-            "description": "MIME type of validated asset.",
+            "description": "MIME type of validated asset. Undefined when file format is not recognized.",
             "oneOf": [
                 {
                     "const": "model/gltf+json",
@@ -36,10 +29,6 @@
                 {
                     "const": "model/gltf-binary",
                     "description": "glTF asset in GLB container."
-                },
-                {
-                    "const": null,
-                    "description": "Unrecognized file format."
                 }
             ]
         },
@@ -49,15 +38,8 @@
         },
         "validatedAt": {
             "description": "UTC timestamp of validation time.",
-            "oneOf": [
-                {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                {
-                    "const": null
-                }
-            ]
+            "type": "string",
+            "format": "date-time"
         },
         "issues": {
             "type": "object",
@@ -149,6 +131,7 @@
         },
         "info": {
             "type": "object",
+            "description": "An object containing various metrics about the validated asset. May be undefined for invalid inputs.",
             "properties": {
                 "version": {
                     "type": "string",
@@ -208,18 +191,11 @@
                                     {
                                         "const": "external",
                                         "description": "Resource is stored externally."
-                                    },
-                                    {
-                                        "const": null,
-                                        "description": "Resource storage type is unknown."
                                     }
                                 ]
                             },
                             "mimeType": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
+                                "type": "string"
                             },
                             "byteLength": {
                                 "$ref": "#/definitions/positiveInteger",
@@ -250,14 +226,12 @@
                                     },
                                     "primaries": {
                                         "enum": [
-                                            null,
                                             "srgb",
                                             "custom"
                                         ]
                                     },
                                     "transfer": {
                                         "enum": [
-                                            null,
                                             "linear",
                                             "srgb",
                                             "custom"
@@ -269,20 +243,15 @@
                                 },
                                 "required": [
                                     "width",
-                                    "height",
-                                    "format",
-                                    "bits",
-                                    "primaries",
-                                    "transfer"
+                                    "height"
                                 ]
                             }
                         }
                     },
                     "required": [
-                        "pointer",
-                        "storage",
-                        "mimeType"
-                    ]
+                        "pointer"
+                    ],
+                    "minItems": 1
                 }
             },
             "required": [
@@ -291,9 +260,7 @@
         }
     },
     "required": [
-        "uri",
-        "mimeType",
         "validatorVersion",
-        "validatedAt"
+        "issues"
     ]
 }

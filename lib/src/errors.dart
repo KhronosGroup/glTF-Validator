@@ -791,7 +791,7 @@ class Issue {
 
   const Issue(this.type, this._args,
       {this.pointer, this.offset, this.severityOverride})
-      : assert(pointer == null || offset == null);
+      : assert((pointer == null) ^ (offset == null));
 
   String get message =>
       (type.message != null) ? type.message(_args).trimRight() : type.code;

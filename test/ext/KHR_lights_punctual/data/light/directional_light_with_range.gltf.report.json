@@ -2,7 +2,6 @@
     "uri": "test/ext/KHR_lights_punctual/data/light/directional_light_with_range.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,

@@ -2,7 +2,6 @@
     "uri": "test/base/data/accessor/unresolved_bufferviews.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 3,
         "numWarnings": 0,

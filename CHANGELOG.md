@@ -138,6 +138,8 @@
 
 * Fixed incorrect message in `BUFFER_VIEW_TOO_BIG_BYTE_STRIDE`.
 
+* Fixed possible crash on invalid buffer or image objects (#125).
+
 ## 2.0.0-dev.2.7
 
 * Added `ACCESSOR_INDEX_PRIMITIVE_RESTART` (#102).

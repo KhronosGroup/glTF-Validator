@@ -2,7 +2,6 @@
     "uri": "test/base/data/mesh/empty_object.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.0",
-    "validatedAt": null,
     "issues": {
         "numErrors": 13,
         "numWarnings": 0,
