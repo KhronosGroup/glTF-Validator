@@ -12,7 +12,7 @@ Validation is performed against [glTF 2.0](https://github.com/KhronosGroup/glTF/
 
 Validator writes a validation report (in JSON-format) with all found issues and asset stats.
 
-Live drag-n-drop tool: http://github.khronos.org/glTF-Validator
+Live drag-n-drop tool: https://github.khronos.org/glTF-Validator
 
 NPM package: https://www.npmjs.com/package/gltf-validator
 
@@ -70,7 +70,7 @@ Shell return code will be non-zero if at least one error was found.
 2. Add Dart SDK `bin` folder to your PATH.
 
 ### Drag-n-Drop Web Tool
-To build a drag-n-drop online validation tool (as hosted [here](http://github.khronos.org/glTF-Validator/)), follow these steps after installation:
+To build a drag-n-drop online validation tool (as hosted [here](https://github.khronos.org/glTF-Validator/)), follow these steps after installation:
 1. Run `pub run grinder web`.
 2. All needed files will be written to `build/web` directory.
 
