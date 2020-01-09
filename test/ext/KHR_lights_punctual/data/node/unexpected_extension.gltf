@@ -1,0 +1,30 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_lights_punctual"
+    ],
+    "extensions": {
+        "KHR_lights_punctual": {
+            "lights": [
+                {
+                    "type": "directional"
+                }
+            ]
+        }
+    },
+    "nodes": [
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [0],
+            "extensions": {
+                "KHR_lights_punctual": {
+                    "light": 0
+                }
+            }
+        }
+    ]
+}

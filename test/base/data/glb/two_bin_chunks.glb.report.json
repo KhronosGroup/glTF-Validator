@@ -1,0 +1,26 @@
+{
+    "uri": "test/base/data/glb/two_bin_chunks.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "GLB_UNEXPECTED_FIRST_CHUNK",
+                "message": "First chunk must be of JSON type. Found 0x004e4942 instead.",
+                "severity": 0,
+                "offset": 12
+            },
+            {
+                "code": "GLB_DUPLICATE_CHUNK",
+                "message": "Chunk of type 0x004e4942 has already been used.",
+                "severity": 0,
+                "offset": 24
+            }
+        ],
+        "truncated": false
+    }
+}

@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,14 +29,6 @@ class Asset extends GltfProperty {
   Asset._(this.copyright, this.generator, this.version, this.minVersion,
       Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({
-        COPYRIGHT: copyright,
-        GENERATOR: generator,
-        VERSION: version,
-        MIN_VERSION: minVersion
-      });
 
   int get majorVersion {
     if (version == null || !versionRegexp.hasMatch(version)) {
@@ -80,7 +71,7 @@ class Asset extends GltfProperty {
         getExtensions(map, Asset, context),
         getExtras(map, context));
 
-    if (context.validate && asset.minVersion != null) {
+    if (context.validate && asset.minVersion != null && asset.version != null) {
       // Check that minVersion isn't greater than version
       if (asset.majorMinVersion > asset.majorVersion ||
           (asset.majorMinVersion == asset.majorVersion &&

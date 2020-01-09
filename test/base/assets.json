@@ -1,0 +1,347 @@
+{
+    "json": {
+        "name": "JSON file Format",
+        "tests": {
+            "bom.gltf": "Starting with BOM",
+            "empty_file.gltf": "Empty file",
+            "invalid_object.gltf": "Invalid root type",
+            "invalid_syntax.gltf": "Invalid syntax"
+        }
+    },
+    "glb": {
+        "name": "GLB file format",
+        "tests": {
+            "bom.glb": "JSON chunk starts with BOM",
+            "chunk_too_big.glb": "Chunk bigger than GLB",
+            "empty_file.glb": "Empty file",
+            "empty_json_chunk.glb": "Empty JSON chunk",
+            "empty_json_object.glb": "Empty JSON object",
+            "invalid_json_chunk.glb": "Invalid JSON chunk",
+            "invalid_magic.glb": "Invalid magic",
+            "invalid_version.glb": "Invalid version",
+            "json_and_two_buffers.glb": "JSON and two buffers",
+            "length_mismatch.glb": "Total length mismatch",
+            "misplaced_bin_chunk.glb": "Misplaced BIN chunk",
+            "no_header.glb": "Unexpected end of header",
+            "only_bin_chunk.glb": "Only BIN chunk",
+            "only_header.glb": "Only header present",
+            "truncated_chunk_data.glb": "Truncated chunk data",
+            "truncated_chunk_header.glb": "Truncated chunk header",
+            "two_bin_chunks.glb": "Two BIN chunks",
+            "two_empty_bin_chunks.glb": "Two empty BIN chunks",
+            "two_empty_json_chunks.glb": "Two empty JSON chunks",
+            "two_valid_json_chunks.glb": "Two valid JSON chunks",
+            "unaligned_chunk.glb": "Unaligned chunk",
+            "unknown_chunk.glb": "Unknown chunk",
+            "valid.glb": "Valid",
+            "valid_buffer.glb": "Valid with buffer",
+            "zero_chunk_header.glb": "Zero chunk header",
+            "zero_length.glb": "Zero total length"
+        }
+    },
+    "asset": {
+        "name": "Asset",
+        "tests": {
+            "1_0_version.gltf": "Unknown major version",
+            "2_1_version.gltf": "Unknown minor version",
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty",
+            "invalid_version.gltf": "Invalid version string",
+            "min_version_invalid.gltf": "Invalid minimum version",
+            "min_version_valid.gltf": "Valid minVersion",
+            "valid.gltf": "Valid"
+        }
+    },
+    "buffer": {
+        "name": "Buffer",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "data_uri.glb": "Data URI used in GLB",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "extra_padding.glb": "Extra_padding",
+            "invalid_object.gltf": "Invalid Buffer object",
+            "invalid_uri_data.glb": "Invalid Data URI in GLB",
+            "invalid_uri_data.gltf": "Invalid Data URI",
+            "invalid_uri_data_bytelength.gltf": "Invalid Data URI Bytelength",
+            "invalid_uri_data_mime.gltf": "Invalid Data URI MIME",
+            "invalid_uri_scheme.gltf": "Invalid URI",
+            "no_bin_chunk.glb": "No BIN chunk",
+            "non_relative_uri.gltf": "Non-relative URI",
+            "not_found.gltf": "External buffer file not found",
+            "valid.glb": "Valid GLB",
+            "valid.gltf": "Valid",
+            "valid_placeholder.glb": "Valid GLB with placeholder buffer object",
+            "wrong_bytelength.glb": "Wrong byteLength",
+            "zero_bytelength.gltf": "Zero byteLength"
+        }
+    },
+    "buffer_view": {
+        "name": "Buffer View",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "invalid_length.gltf": "Invalid length",
+            "invalid_stride_multiple.gltf": "Invalid stride - multiple of 4",
+            "invalid_stride_too_big.gltf": "Invalid stride - too big",
+            "invalid_stride_wrong_target.gltf": "Invalid stride - wrong target",
+            "unresolved_buffer.gltf": "Unresolved buffer",
+            "valid.gltf": "Valid",
+            "zero_bytelength.gltf": "Zero byteLength"
+        }
+    },
+    "camera": {
+        "name": "Camera",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_objects.gltf": "Empty objects",
+            "extra_type.gltf": "Extra type",
+            "orthographic_xy.gltf": "Orthographic XY",
+            "orthographic_z.gltf": "Orthographic Z",
+            "perspective_z.gltf": "Perspective Z",
+            "valid.gltf": "Valid"
+        }
+    },
+    "image": {
+        "name": "Image",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "data_uri.glb": "Data URI is used in GLB",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "invalid_data_uri.gltf": "Invalid Data URI",
+            "invalid_data_uri_mime_type.gltf": "Invalid Data URI MIME type",
+            "invalid_image_data.gltf": "Invalid image data",
+            "invalid_object.gltf": "Invalid Image object",
+            "invalid_uri_scheme.gltf": "Invalid URI",
+            "missing_mime_type_buffer_view.gltf": "Missing MIME type with buffer view",
+            "not_found.gltf": "Image not found",
+            "npot.gltf": "Image with NPoT dimensions",
+            "png_eos.gltf": "Unexpected end of PNG stream",
+            "unrecognized_format.gltf": "Unrecognized image format",
+            "unresolved_buffer_view.gltf": "Unresolved buffer view",
+            "valid.glb": "Valid GLB",
+            "valid.gltf": "Valid"
+        }
+    },
+    "sampler": {
+        "name": "Sampler",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "valid.gltf": "Valid"
+        }
+    },
+    "texture": {
+        "name": "Texture",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "unresolved_sampler.gltf": "Unresolved sampler",
+            "unresolved_source.gltf": "Unresolved source",
+            "valid.gltf": "Valid"
+        }
+    },
+    "material": {
+        "name": "Material",
+        "tests": {
+            "alpha_modes.gltf": "Alpha modes",
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "multiple_extensions.gltf": "Multiple extensions",
+            "unresolved_basecolor.gltf": "Unresolved base color texture",
+            "unresolved_emissive.gltf": "Unresolved emissive texture",
+            "unresolved_mr.gltf": "Unresolved MR texture",
+            "unresolved_normal.gltf": "Unresolved normal texture",
+            "unresolved_occlusion.gltf": "Unresolved occlusion texture",
+            "valid.gltf": "Valid"
+        }
+    },
+    "accessor": {
+        "name": "Accessor",
+        "tests": {
+            "alignment.gltf": "Alignment",
+            "byteoffset_no_bufferview.gltf": "Byte offset with no buffer view",
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "float_normalized.gltf": "Float normalized",
+            "integer_written_as_float.gltf": "Integer written as float",
+            "invalid_sparse_count_and_stride.gltf": "Invalid sparse count and stride",
+            "matrix_alignment.gltf": "Matrix alignment",
+            "small_stride.gltf": "Small stride",
+            "unresolved_bufferviews.gltf": "Unresolved buffer views",
+            "valid.gltf": "Valid"
+        }
+    },
+    "accessor_data": {
+        "name": "Accessor Data",
+        "tests": {
+            "invalid_elements_float.gltf": "Invalid float32 values",
+            "out_of_range_elements_float.gltf": "Min/max errors for float32",
+            "out_of_range_elements_sint8.gltf": "Min/max errors for sint8",
+            "out_of_range_elements_sint16.gltf": "Min/max errors for sint16",
+            "out_of_range_elements_uint8.gltf": "Min/max errors for uint8",
+            "out_of_range_elements_uint16.gltf": "Min/max errors for uint16",
+            "out_of_range_elements_uint32.gltf": "Min/max errors for uint32"
+        }
+    },
+    "mesh": {
+        "name": "Mesh",
+        "tests": {
+            "accessor_unaligned.gltf": "Accessor unaligned",
+            "accessor_unequal_count.gltf": "Accessor unequal count",
+            "accessor_without_bytestride.gltf": "Accessor without byte stride",
+            "bufferview_target_override.gltf": "Bufferview target override",
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_object.gltf": "Empty object",
+            "indices_bytestride.gltf": "Indices accessor with byte stride",
+            "indices_invalid_format.gltf": "Indices accessor invalid format",
+            "invalid_attribute.gltf": "Invalid attribute",
+            "invalid_indexed_attribute.gltf": "Invalid indexed attribute",
+            "invalid_tangent.gltf": "Invalid tangent",
+            "morph_attribute_invalid_count.gltf": "Morph attribute invalid count",
+            "morph_attribute_no_base.gltf": "Morph attribute without base attribute",
+            "morph_position_accessor_no_bounds.gltf": "Morph position accessor no bounds",
+            "morph_unequal_targets_count.gltf": "Morph unequal targets count",
+            "morph_weights_wrong_count.gltf": "Morph weights wrong count",
+            "position_accessor_invalid_format.gltf": "Position accessor invalid format",
+            "position_accessor_no_bounds.gltf": "Position accessor no bounds",
+            "primitive_incompatible_mode.gltf": "Primitive incompatible mode",
+            "primitive_no_position.gltf": "Primitive no position",
+            "unequal_joints.gltf": "Unequal joints per primitive",
+            "unresolved_indices.gltf": "Unresolved indices",
+            "unresolved_material.gltf": "Unresolved material",
+            "unresolved_morph_positions.gltf": "Unresolved morph positions",
+            "unresolved_positions.gltf": "Unresolved positions",
+            "uv.gltf": "UVs",
+            "valid.gltf": "Valid"
+        }
+    },
+    "mesh_data": {
+        "name": "Mesh Data",
+        "tests": {
+            "index_buffer_degenerate_triangle.gltf": "Degenerate triangles",
+            "index_buffer_oob.gltf": "Index values OOB",
+            "index_buffer_primitive_restart.gltf": "Index buffer with primitive restart value",
+            "normals_tangents_non_unit_invalid_sign.gltf": "Non-unit normals and tangents, invalid sign",
+            "colors_non_clamped.gltf": "Non-clamped vertex colors",
+            "joints_weights_complex.gltf": "Complex joints/weights data check"
+        }
+    },
+    "node": {
+        "name": "Node",
+        "tests": {
+            "custom_property.gltf": "Custom Property",
+            "empty_array.gltf": "Empty array",
+            "empty_children_array.gltf": "Empty children array",
+            "matrix_default.gltf": "Default transform matrix",
+            "matrix_indecomposable.gltf": "Indecomposable matrix",
+            "matrix_trs.gltf": "TRS with matrix",
+            "node_loop.gltf": "Node loop",
+            "node_parent_override.gltf": "Node parent override",
+            "node_skin_without_skinned_mesh.gltf": "Node skin without skinned mesh",
+            "node_skinned_mesh_without_skin.gltf": "Node skinned mesh without skin",
+            "node_weights_invalid.gltf": "Node weights invalid",
+            "rotation_non_unit.gltf": "Non-unit rotation quaternion",
+            "skin_with_no_mesh.gltf": "Skin with no mesh",
+            "unresolved_camera.gltf": "Unresolved camera",
+            "unresolved_child_node.gltf": "Unresolved child node",
+            "unresolved_mesh.gltf": "Unresolved mesh",
+            "unresolved_skin.gltf": "Unresolved skin",
+            "valid.gltf": "Valid",
+            "weights_with_no_mesh.gltf": "Weights with no mesh"
+        }
+    },
+    "skin": {
+        "name": "Skin",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_joints_array.gltf": "Empty joints array",
+            "empty_object.gltf": "Empty object",
+            "ibm_invalid_count.gltf": "IBM accessor invalid count",
+            "ibm_invalid_format.gltf": "IBM accessor invalid format",
+            "ignored_animated_transform.gltf": "Node with a skinned mesh targeted with TRS animation",
+            "ignored_local_transform.gltf": "Node with a skinned mesh with local transforms",
+            "ignored_parent_transform.gltf": "Node with a skinned mesh that is not a root",
+            "no_common_root.gltf": "No common root",
+            "no_joints_in_scene.gltf": "Skinned mesh with unreachable joints",
+            "skeleton_invalid.gltf": "Invalid skeleton node",
+            "unresolved_ibm.gltf": "Unresolved IBM accessor",
+            "unresolved_joint.gltf": "Unresolved joint index",
+            "unresolved_skeleton.gltf": "Unresolved skeleton",
+            "valid.gltf": "Valid"
+        }
+    },
+    "skin_data": {
+        "name": "Skin Data",
+        "tests": {
+            "invalid_ibm.gltf": "Invalid values in IBM elements"
+        }
+    },
+    "scene": {
+        "name": "Scene",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_nodes_array.gltf": "Empty nodes array",
+            "non_root_node.gltf": "Non-root node",
+            "unresolved_default_scene.gltf": "Unresolved IBM accessor",
+            "unresolved_node.gltf": "Unresolved joint index",
+            "valid.gltf": "Valid"
+        }
+    },
+    "animation": {
+        "name": "Animation",
+        "tests": {
+            "channel_duplicate_targets.gltf": "Channel duplicate targets",
+            "channel_node_matrix.gltf": "Channel node matrix",
+            "channel_node_no_morphs.gltf": "Channel node no morphs",
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty array",
+            "empty_objects.gltf": "Empty objects",
+            "sampler_input_format_invalid.gltf": "Sampler input format invalid",
+            "sampler_input_no_bounds.gltf": "Sampler input without bounds",
+            "sampler_output_count_invalid.gltf": "Sampler output count invalid",
+            "sampler_output_format_invalid.gltf": "Sampler output format invalid",
+            "sampler_too_few_cubic_frames.gltf": "Sampler too few cubic frames",
+            "unresolved_channel_sampler.gltf": "Unresolved channel sampler",
+            "unresolved_channel_target.gltf": "Unresolved channel target",
+            "unresolved_sampler_input.gltf": "Unresolved sampler input",
+            "unresolved_sampler_output.gltf": "Unresolved sampler output",
+            "valid.gltf": "Valid"
+        }
+    },
+    "animation_data": {
+        "name": "Animation Data",
+        "tests": {
+            "invalid_input_values.gltf": "Channel duplicate targets",
+            "quaternion_non_unit_values.gltf": "Non-normalized quaternion value",
+            "quaternion_cubic_non_unit_values.gltf": "Non-normalized quaternion value with cubic spline interpolation"
+        }
+    },
+    "root": {
+        "name": "Root glTF object",
+        "tests": {
+            "duplicate_extension_entry.gltf": "Duplicate extension entry",
+            "empty_object.gltf": "Empty object",
+            "extensions_non_objects.gltf": "Non-object extensions",
+            "extras_non_object.gltf": "Non-object extras",
+            "invalid_array_elements.gltf": "Invalid array elements",
+            "invalid_collection_type.gltf": "Invalid collection type",
+            "invalid_extension_name.gltf": "Invalid extension name",
+            "named_objects.gltf": "Valid named objects",
+            "undefined_used_extensions.gltf": "Undefined used extensions array",
+            "unreserved_extension_prefix.gltf": "Unreserved extension prefix",
+            "unused_objects.gltf": "Unused objects",
+            "valid.gltf": "Valid"
+        }
+    }
+}

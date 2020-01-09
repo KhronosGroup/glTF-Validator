@@ -1,15 +1,14 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
- * # Licensed under the Apache License, Version 2.0 (the 'License');
+ * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
  * # You may obtain a copy of the License at
  * #
  * #     http://www.apache.org/licenses/LICENSE-2.0
  * #
  * # Unless required by applicable law or agreed to in writing, software
- * # distributed under the License is distributed on an 'AS IS' BASIS,
+ * # distributed under the License is distributed on an "AS IS" BASIS,
  * # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * # See the License for the specific language governing permissions and
  * # limitations under the License.
@@ -18,6 +17,7 @@
 library gltf.utils;
 
 import 'dart:collection';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:vector_math/vector_math.dart';
@@ -82,6 +82,7 @@ int getUint(Map<String, Object> map, String name, Context context,
     Iterable<int> list}) {
   assert(min != null && min >= 0);
   assert(max == -1 || max >= min);
+  assert(list == null || list.every((v) => v >= 0));
   final value = _getGuarded(map, name, _kInteger, context);
   if (value is int) {
     if (list != null) {
@@ -224,7 +225,7 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
     }
     if (context.validate) {
       context.path.add(name);
-      final uniqueItems = Set<int>();
+      final uniqueItems = <int>{};
       for (var i = 0; i < value.length; i++) {
         final v = value[i];
         if (v is int && v >= 0) {
@@ -364,7 +365,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
           wrongMemberFound = true;
         }
         if (singlePrecision) {
-          result[i] = _doubleToSingle(v.toDouble());
+          result[i] = doubleToSingle(v.toDouble());
         } else {
           result[i] = v.toDouble();
         }
@@ -448,7 +449,7 @@ List<String> getStringList(
     if (context.validate) {
       var wrongMemberFound = false;
       context.path.add(name);
-      final uniqueItems = Set<String>();
+      final uniqueItems = <String>{};
       for (var i = 0; i < value.length; i++) {
         final v = value[i];
         if (v is String) {
@@ -555,6 +556,12 @@ Map<String, Object> getExtensions(
             .add(LinkableExtensionEntry(
                 object, context.path.toList(growable: false)));
       }
+
+      if (object is ResourceValidatable) {
+        context.resourceValidatableExtensions.add(
+            ResourceValidatableExtensionEntry(
+                object, context.path.toList(growable: false)));
+      }
       context.path.removeLast();
     }
   }
@@ -631,18 +638,6 @@ void addToMapIfNotNull(Map<String, Object> map, String key, Object value) {
   }
 }
 
-/// Clones a map without `null` values and calls `toString` on it.
-String mapToString(Map<String, Object> map) {
-  final result = <String, Object>{};
-  for (final key in map.keys) {
-    final value = map[key];
-    if (value != null) {
-      result[key] = value;
-    }
-  }
-  return result.toString();
-}
-
 class SafeList<T> extends ListBase<T> {
   final List<T> _list;
   final int _length;
@@ -691,7 +686,7 @@ class SafeList<T> extends ListBase<T> {
 }
 
 final _float = Float32List(1);
-double _doubleToSingle(double value) {
+double doubleToSingle(double value) {
   _float[0] = value;
   return _float[0];
 }
@@ -745,5 +740,102 @@ List<int> createTypedIntList(int type, int length) {
       return Uint32List(length);
     default:
       throw ArgumentError();
+  }
+}
+
+extension QuaternionIsDefault on Quaternion {
+  bool get isDefault => x == 0 && y == 0 && z == 0 && w == 1;
+}
+
+extension Vector3IsOneOrZero on Vector3 {
+  bool get isOne => x == 1 && y == 1 && z == 1;
+
+  bool get isZero => x == 0 && y == 0 && z == 0;
+}
+
+abstract class ElementChecker<T extends num> {
+  const ElementChecker();
+  String get path => '';
+
+  bool check(Context context, int index, int componentIndex, T value);
+
+  bool done(Context context) => true;
+}
+
+class UnitVec3FloatChecker extends ElementChecker<num> {
+  UnitVec3FloatChecker(this.path, this.normalizeValue);
+
+  double _sum = 0;
+
+  @override
+  final String path;
+
+  final double Function(num value) normalizeValue;
+
+  @override
+  bool check(Context context, int index, int componentIndex, num value) {
+    assert(componentIndex < 3);
+    final v = normalizeValue != null ? normalizeValue(value) : value;
+    _sum += v * v;
+    if (2 == componentIndex) {
+      if ((sqrt(_sum) - 1.0).abs() > unitLengthThresholdVec3) {
+        context.addIssue(DataError.accessorVector3NonUnit,
+            name: path, args: [index - 2, index, sqrt(_sum)]);
+      }
+      _sum = 0.0;
+    }
+
+    return true;
+  }
+}
+
+class UnitVec3SignFloatChecker extends ElementChecker<num> {
+  UnitVec3SignFloatChecker(this.path, this.normalizeValue);
+
+  double _sum = 0;
+
+  @override
+  final String path;
+
+  final double Function(num value) normalizeValue;
+
+  @override
+  bool check(Context context, int index, int componentIndex, num value) {
+    assert(componentIndex < 4);
+    final v = normalizeValue != null ? normalizeValue(value) : value;
+    if (3 == componentIndex) {
+      if (1.0 != v && -1.0 != v) {
+        context.addIssue(DataError.accessorInvalidSign,
+            name: path, args: [index - 3, index, v]);
+      }
+    } else {
+      _sum += v * v;
+      if (2 == componentIndex) {
+        if ((sqrt(_sum) - 1.0).abs() > unitLengthThresholdVec3) {
+          context.addIssue(DataError.accessorVector3NonUnit,
+              name: path, args: [index - 2, index, sqrt(_sum)]);
+        }
+        _sum = 0.0;
+      }
+    }
+
+    return true;
+  }
+}
+
+class ClampedRangeFloatChecker extends ElementChecker<double> {
+  const ClampedRangeFloatChecker(this.path);
+
+  @override
+  final String path;
+
+  @override
+  bool check(Context context, int index, int componentIndex, double value) {
+    if (1.0 < value || 0.0 > value) {
+      context.addIssue(DataError.accessorNonClamped,
+          name: path, args: [index, value]);
+    }
+
+    return true;
   }
 }

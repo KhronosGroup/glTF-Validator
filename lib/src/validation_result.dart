@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,18 +24,21 @@ import 'package:gltf/src/gltf_reader.dart';
 import 'package:gltf/src/utils.dart';
 
 class ValidationResult {
-  final Uri absoluteUri;
+  final Uri uri;
   final Context context;
   final GltfReaderResult readerResult;
+  final bool writeTimestamp;
 
-  ValidationResult(this.absoluteUri, this.context, this.readerResult);
+  ValidationResult(this.uri, this.context, this.readerResult,
+      {this.writeTimestamp = true});
 
   Map<String, Object> toMap() {
     final map = <String, Object>{
-      'uri': absoluteUri.toString(),
-      'mimeType': readerResult?.mimeType,
+      if (uri != null) 'uri': uri.toString(),
+      if (readerResult?.mimeType != null) 'mimeType': readerResult?.mimeType,
       'validatorVersion': kGltfValidatorVersion,
-      'validatedAt': DateTime.now().toUtc().toIso8601String()
+      if (writeTimestamp)
+        'validatedAt': DateTime.now().toUtc().toIso8601String()
     };
 
     final issues = context.issues;
@@ -59,7 +61,7 @@ class ValidationResult {
 
     map['issues'] = issuesMap;
 
-    map['info'] = _getGltfInfoMap();
+    addToMapIfNotNull(map, 'info', _getGltfInfoMap());
 
     return map;
   }
@@ -79,19 +81,21 @@ class ValidationResult {
     addToMapIfNotNull(map, GENERATOR, root.asset.generator);
 
     if (root.extensionsUsed.isNotEmpty) {
-      map[EXTENSIONS_USED] = root.extensionsUsed;
+      map[EXTENSIONS_USED] =
+          root.extensionsUsed.toSet().toList(growable: false);
     }
 
     if (root.extensionsRequired.isNotEmpty) {
-      map[EXTENSIONS_REQUIRED] = root.extensionsRequired;
+      map[EXTENSIONS_REQUIRED] =
+          root.extensionsRequired.toSet().toList(growable: false);
     }
 
     if (context.resources.isNotEmpty) {
       map['resources'] = context.resources;
     }
 
-    map['hasAnimations'] = root.animations.isNotEmpty;
-    map['hasMaterials'] = root.materials.isNotEmpty;
+    map['animationCount'] = root.animations.length;
+    map['materialCount'] = root.materials.length;
     map['hasMorphTargets'] = root.meshes.any((mesh) =>
         mesh.primitives != null &&
         mesh.primitives.any((primitive) => primitive.targets != null));
@@ -99,19 +103,32 @@ class ValidationResult {
     map['hasTextures'] = root.textures.isNotEmpty;
     map['hasDefaultScene'] = root.scene != null;
 
-    var primitivesCount = 0;
-    var maxAttributesUsed = 0;
+    var drawCallCount = 0;
+    var maxAttributes = 0;
+    var maxUVs = 0;
+    var maxInfluences = 0;
+    var totalVertexCount = 0;
+    var totalTriangleCount = 0;
     for (final mesh in root.meshes) {
       if (mesh.primitives != null) {
-        primitivesCount += mesh.primitives.length;
+        drawCallCount += mesh.primitives.length;
         for (final primitive in mesh.primitives) {
-          maxAttributesUsed =
-              max(maxAttributesUsed, primitive.attributes.length);
+          if (primitive.vertexCount != -1) {
+            totalVertexCount += primitive.vertexCount;
+          }
+          totalTriangleCount += primitive.trianglesCount;
+          maxAttributes = max(maxAttributes, primitive.attributes.length);
+          maxUVs = max(maxUVs, primitive.texcoordCount);
+          maxInfluences = max(maxInfluences, primitive.jointsCount * 4);
         }
       }
     }
-    map['primitivesCount'] = primitivesCount;
-    map['maxAttributesUsed'] = maxAttributesUsed;
+    map['drawCallCount'] = drawCallCount;
+    map['totalVertexCount'] = totalVertexCount;
+    map['totalTriangleCount'] = totalTriangleCount;
+    map['maxUVs'] = maxUVs;
+    map['maxInfluences'] = maxInfluences;
+    map['maxAttributes'] = maxAttributes;
 
     return map;
   }

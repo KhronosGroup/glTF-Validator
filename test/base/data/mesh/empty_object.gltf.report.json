@@ -1,0 +1,137 @@
+{
+    "uri": "test/base/data/mesh/empty_object.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 13,
+        "numWarnings": 0,
+        "numInfos": 5,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'primitives' must be defined.",
+                "severity": 0,
+                "pointer": "/meshes/0"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value {} is not a 'array'.",
+                "severity": 0,
+                "pointer": "/meshes/1/primitives"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/2/primitives"
+            },
+            {
+                "code": "ARRAY_TYPE_MISMATCH",
+                "message": "Type mismatch. Array element [] is not a 'object'.",
+                "severity": 0,
+                "pointer": "/meshes/3/primitives"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'attributes' must be defined.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/0"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value [] is not a 'object'.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/1/attributes"
+            },
+            {
+                "code": "TYPE_MISMATCH",
+                "message": "Type mismatch. Property value {} is not a 'array'.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/1/targets"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/2/attributes"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/2/targets"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/3/attributes"
+            },
+            {
+                "code": "ARRAY_TYPE_MISMATCH",
+                "message": "Type mismatch. Array element [] is not a 'object'.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/3/targets"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/4/attributes"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/4/primitives/4/targets/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/2"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/3"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/4"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 5,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

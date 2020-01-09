@@ -2,9 +2,35 @@
     "asset": {
         "version": "2.0"
     },
+    "textures": [
+        {}
+    ],
     "materials": [
         {
-            "customProperty": true
+            "customProperty": true,
+            "pbrMetallicRoughness": {
+                "customProperty": true,
+                "baseColorTexture": {
+                    "index": 0,
+                    "customProperty": true
+                },
+                "metallicRoughnessTexture": {
+                    "index": 0,
+                    "customProperty": true
+                }
+            },
+            "normalTexture": {
+                "index": 0,
+                "customProperty": true
+            },
+            "occlusionTexture": {
+                "index": 0,
+                "customProperty": true
+            },
+            "emissiveTexture": {
+                "index": 0,
+                "customProperty": true
+            }
         }
     ]
 }

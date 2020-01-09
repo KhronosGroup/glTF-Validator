@@ -1,0 +1,34 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_pbrSpecularGlossiness"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_pbrSpecularGlossiness": {
+                    "diffuseFactor": [
+                        0.1, 0.2, 0.3, 0.4
+                    ],
+                    "diffuseTexture": {
+                        "index": 0
+                    },
+                    "specularFactor": [
+                        0.5, 0.6, 0.7
+                    ],
+                    "glossinessFactor": 0.8,
+                    "specularGlossinessTexture": {
+                        "index": 1
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        }, {
+        }
+    ]
+}

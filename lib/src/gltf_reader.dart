@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -84,6 +83,13 @@ abstract class GltfReader {
 
     subscription = stream.listen((data) {
       if (!formatDetected) {
+        if (data.isEmpty) {
+          subscription.cancel();
+          controller.close();
+          completer.completeError(const GltfInvalidFormatException());
+          return;
+        }
+
         final byte = data[0];
         if (g == byte) {
           completer.complete(GlbReader(controller.stream, context));
@@ -117,7 +123,7 @@ abstract class GltfReader {
 
 class GltfJsonReader implements GltfReader {
   @override
-  final String mimeType = _kMimeType;
+  String get mimeType => _kMimeType;
 
   final Stream<List<int>> stream;
   StreamSubscription<List<int>> _subscription;
@@ -146,7 +152,8 @@ class GltfJsonReader implements GltfReader {
           _abort();
         }
       } else {
-        _context.addIssue(SchemaError.typeMismatch, args: [result, 'object']);
+        _context.addIssue(SchemaError.typeMismatch,
+            noPointer: true, args: [result, 'object']);
         _abort();
       }
     });
@@ -166,6 +173,7 @@ class GltfJsonReader implements GltfReader {
       /// So we can check only the first byte of the first data chunk.
       if (data.isNotEmpty && 0xEF == data[0]) {
         context.addIssue(SchemaError.invalidJson,
+            noPointer: true,
             args: ['BOM found at the beginning of UTF-8 stream.']);
       }
       _isFirstChunk = false;
@@ -174,7 +182,7 @@ class GltfJsonReader implements GltfReader {
       _byteSink.addSlice(data, 0, data.length, false);
       _subscription.resume();
     } on FormatException catch (e) {
-      context.addIssue(SchemaError.invalidJson, args: [e]);
+      context.addIssue(SchemaError.invalidJson, noPointer: true, args: [e]);
       _abort();
     }
   }
@@ -190,7 +198,7 @@ class GltfJsonReader implements GltfReader {
     try {
       _byteSink.close();
     } on FormatException catch (e) {
-      context.addIssue(SchemaError.invalidJson, args: [e]);
+      context.addIssue(SchemaError.invalidJson, noPointer: true, args: [e]);
       _abort();
     }
   }
@@ -206,7 +214,7 @@ class GltfJsonReader implements GltfReader {
     try {
       parsedJson = json.decode(jsonString);
     } on FormatException catch (e) {
-      context?.addIssue(SchemaError.invalidJson, args: [e]);
+      context?.addIssue(SchemaError.invalidJson, noPointer: true, args: [e]);
       return null;
     }
 
@@ -218,7 +226,8 @@ class GltfJsonReader implements GltfReader {
         return null;
       }
     } else {
-      context?.addIssue(SchemaError.typeMismatch, args: [parsedJson, 'object']);
+      context?.addIssue(SchemaError.typeMismatch,
+          noPointer: true, args: [parsedJson, 'object']);
       return null;
     }
   }
@@ -229,4 +238,12 @@ class GltfInvalidFormatException implements Exception {
 
   @override
   String toString() => 'Invalid data: could not detect glTF format.';
+}
+
+class GltfExternalResourceNotFoundException implements Exception {
+  final String path;
+  GltfExternalResourceNotFoundException(this.path);
+
+  @override
+  String toString() => 'Resource not found ($path).';
 }

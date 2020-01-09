@@ -1,0 +1,137 @@
+{
+    "uri": "test/base/data/root/unused_objects.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 0,
+        "numInfos": 12,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/animations/0/samplers/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/6"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/buffers/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/bufferViews/2"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/cameras/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/samplers/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/skins/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/textures/1"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer"
+            },
+            {
+                "pointer": "/buffers/1",
+                "mimeType": "application/gltf-buffer"
+            },
+            {
+                "pointer": "/images/0",
+                "mimeType": "image/png",
+                "storage": "data-uri",
+                "image": {
+                    "width": 1,
+                    "height": 1,
+                    "format": "rgb",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
+                    "bits": 8
+                }
+            },
+            {
+                "pointer": "/images/1",
+                "mimeType": "image/png",
+                "storage": "data-uri",
+                "image": {
+                    "width": 1,
+                    "height": 1,
+                    "format": "rgb",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
+                    "bits": 8
+                }
+            }
+        ],
+        "animationCount": 1,
+        "materialCount": 2,
+        "hasMorphTargets": false,
+        "hasSkins": true,
+        "hasTextures": true,
+        "hasDefaultScene": false,
+        "drawCallCount": 2,
+        "totalVertexCount": 48,
+        "totalTriangleCount": 20,
+        "maxUVs": 1,
+        "maxInfluences": 0,
+        "maxAttributes": 3
+    }
+}

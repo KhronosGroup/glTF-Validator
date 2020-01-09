@@ -19,7 +19,7 @@
         "3d"
     ],
     "devDependencies": {
-        "documentation": "^5.3.3",
+        "documentation": "^12.1.3",
         "replace-between": "0.0.8"
     },
     "scripts": {

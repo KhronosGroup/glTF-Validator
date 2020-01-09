@@ -1,0 +1,125 @@
+{
+    "uri": "test/ext/EXT_texture_webp/data/image/undeclared_extension.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 3,
+        "numWarnings": 2,
+        "numInfos": 3,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "VALUE_NOT_IN_LIST",
+                "message": "Invalid value 'image/webp'. Valid values are ('image/jpeg', 'image/png').",
+                "severity": 1,
+                "pointer": "/images/1/uri"
+            },
+            {
+                "code": "VALUE_NOT_IN_LIST",
+                "message": "Invalid value 'image/webp'. Valid values are ('image/jpeg', 'image/png').",
+                "severity": 1,
+                "pointer": "/images/2/mimeType"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/2"
+            },
+            {
+                "code": "IMAGE_NON_ENABLED_MIME_TYPE",
+                "message": "'image/webp' MIME type requires an extension.",
+                "severity": 0,
+                "pointer": "/images/0"
+            },
+            {
+                "code": "IMAGE_NON_ENABLED_MIME_TYPE",
+                "message": "'image/webp' MIME type requires an extension.",
+                "severity": 0,
+                "pointer": "/images/1"
+            },
+            {
+                "code": "IMAGE_NON_ENABLED_MIME_TYPE",
+                "message": "'image/webp' MIME type requires an extension.",
+                "severity": 0,
+                "pointer": "/images/2"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer",
+                "storage": "data-uri",
+                "byteLength": 36
+            },
+            {
+                "pointer": "/images/0",
+                "mimeType": "image/webp",
+                "storage": "external",
+                "uri": "VP8_red.webp",
+                "image": {
+                    "width": 256,
+                    "height": 128,
+                    "format": "rgb",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
+                    "bits": 8
+                }
+            },
+            {
+                "pointer": "/images/1",
+                "mimeType": "image/webp",
+                "storage": "data-uri",
+                "image": {
+                    "width": 256,
+                    "height": 128,
+                    "format": "rgb",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
+                    "bits": 8
+                }
+            },
+            {
+                "pointer": "/images/2",
+                "mimeType": "image/webp",
+                "storage": "buffer-view",
+                "image": {
+                    "width": 256,
+                    "height": 128,
+                    "format": "rgb",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
+                    "bits": 8
+                }
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

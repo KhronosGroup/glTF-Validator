@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -28,9 +27,6 @@ const List<String> KHR_MATERIALS_UNLIT_MEMBERS = <String>[];
 class KhrMaterialsUnlit extends GltfProperty {
   KhrMaterialsUnlit._(Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({});
 
   static KhrMaterialsUnlit fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {

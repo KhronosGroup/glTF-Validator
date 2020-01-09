@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,8 +16,9 @@
 
 library gltf.base.animation;
 
+import 'dart:math';
+
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:gltf/src/hash.dart';
 
 class Animation extends GltfChildOfRootProperty {
   final SafeList<AnimationChannel> channels;
@@ -27,10 +27,6 @@ class Animation extends GltfChildOfRootProperty {
   Animation._(this.channels, this.samplers, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) =>
-      super.toString({CHANNELS: channels, SAMPLERS: samplers});
 
   static Animation fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -93,30 +89,32 @@ class Animation extends GltfChildOfRootProperty {
               ?.setUsage(BufferViewUsage.Other, INPUT, context);
 
           if (context.validate) {
+            context.path.add(INPUT);
             final inputFormat = AccessorFormat.fromAccessor(sampler._input);
             if (inputFormat != ANIMATION_SAMPLER_INPUT_FORMAT) {
               context.addIssue(
                   LinkError.animationSamplerInputAccessorInvalidFormat,
-                  name: INPUT,
                   args: [
                     inputFormat,
                     [ANIMATION_SAMPLER_INPUT_FORMAT]
                   ]);
+            } else {
+              context.addElementChecker(sampler._input,
+                  AnimationInputChecker(context.getPointerString()));
             }
 
             if (sampler._input.min == null || sampler._input.max == null) {
               context.addIssue(
-                  LinkError.animationSamplerInputAccessorWithoutBounds,
-                  name: INPUT);
+                  LinkError.animationSamplerInputAccessorWithoutBounds);
             }
 
             if (sampler.interpolation == CUBICSPLINE &&
                 sampler._input.count < 2) {
               context.addIssue(
                   LinkError.animationSamplerInputAccessorTooFewElements,
-                  name: INPUT,
                   args: [CUBICSPLINE, 2, sampler._input.count]);
             }
+            context.path.removeLast();
           }
         }
       }
@@ -130,13 +128,8 @@ class Animation extends GltfChildOfRootProperty {
               .setUsage(AccessorUsage.AnimationOutput, OUTPUT, context);
           sampler._output.bufferView
               ?.setUsage(BufferViewUsage.Other, OUTPUT, context);
-
-          if (!sampler._output.trySetInterpolation(
-                  cubic: sampler.interpolation == CUBICSPLINE) &&
-              context.validate) {
-            context.addIssue(LinkError.animationSamplerOutputInterpolation,
-                name: OUTPUT);
-          }
+          sampler._output
+              .trySetInterpolation(cubic: CUBICSPLINE == sampler.interpolation);
         }
       }
 
@@ -168,6 +161,11 @@ class Animation extends GltfChildOfRootProperty {
                 if (channel.target._node.matrix != null) {
                   context.addIssue(LinkError.animationChannelTargetNodeMatrix);
                 }
+
+                if (channel.target._node.skin != null) {
+                  context.addIssue(SemanticError.animationChannelTargetNodeSkin,
+                      name: PATH);
+                }
                 break;
               case WEIGHTS:
                 if (channel.target._node?.mesh?.primitives?.first?.targets ==
@@ -190,6 +188,26 @@ class Animation extends GltfChildOfRootProperty {
           channel._sampler.markAsUsed();
           if (channel.target != null && channel._sampler._output != null) {
             if (channel.target.path == ROTATION) {
+              if (context.validate) {
+                final accessor = channel._sampler._output;
+                // TODO warn when there're more than two equal
+                // consequential animation frames
+
+                // TODO warn when interpolation may produce zero-length
+                // quaternions
+
+                // quaternion animation output
+                if (accessor.components == 4) {
+                  context.path.add(SAMPLER);
+                  context.addElementChecker(
+                      accessor,
+                      QuaternionFloatChecker(context.getPointerString(),
+                          accessor.isFloat ? null : accessor.normalizeValue,
+                          hasTangents:
+                              CUBICSPLINE == channel._sampler.interpolation));
+                  context.path.removeLast();
+                }
+              }
               channel._sampler._output.setUnit();
             }
 
@@ -206,26 +224,28 @@ class Animation extends GltfChildOfRootProperty {
                     args: [outputFormat, validFormats, channel.target.path]);
               }
 
-              if (channel._sampler._input?.count != -1 &&
+              if (channel._sampler._input != null &&
+                  channel._sampler._input.count != -1 &&
                   channel._sampler._output.count != -1 &&
                   channel._sampler.interpolation != null) {
-                var outputCount = channel._sampler._input.count;
+                var expectedCount = channel._sampler._input.count;
 
                 if (channel._sampler.interpolation == CUBICSPLINE) {
-                  outputCount *= 3;
+                  expectedCount *= 3;
                 }
 
                 if (channel.target.path == WEIGHTS) {
                   final targetsCount = channel
                       .target._node?.mesh?.primitives?.first?.targets?.length;
-                  outputCount *= targetsCount ?? 0;
+                  expectedCount *= targetsCount ?? 0;
                 }
 
-                if (outputCount != channel._sampler._output.count) {
+                if (expectedCount != 0 &&
+                    expectedCount != channel._sampler._output.count) {
                   context.addIssue(
                       LinkError.animationSamplerOutputAccessorInvalidCount,
                       name: SAMPLER,
-                      args: [outputCount, channel._sampler._output.count]);
+                      args: [expectedCount, channel._sampler._output.count]);
                 }
               }
             }
@@ -233,7 +253,8 @@ class Animation extends GltfChildOfRootProperty {
         }
 
         for (var j = i + 1; j < channels.length; j++) {
-          if (channel.target != null && channel.target == channels[j].target) {
+          if (channel.target != null &&
+              channel.target.isSameAs(channels[j].target)) {
             context.addIssue(LinkError.animationDuplicateTargets,
                 name: TARGET, args: [j]);
           }
@@ -280,10 +301,6 @@ class AnimationChannel extends GltfProperty {
         getExtensions(map, AnimationChannel, context),
         getExtras(map, context));
   }
-
-  @override
-  String toString([_]) =>
-      super.toString({SAMPLER: _samplerIndex, TARGET: target});
 }
 
 class AnimationChannelTarget extends GltfProperty {
@@ -312,17 +329,8 @@ class AnimationChannelTarget extends GltfProperty {
         getExtras(map, context));
   }
 
-  @override
-  String toString([_]) => super.toString({NODE: _nodeIndex, PATH: path});
-
-  @override
-  int get hashCode => hash2(_nodeIndex.hashCode, path.hashCode);
-
-  @override
-  bool operator ==(Object other) =>
-      other is AnimationChannelTarget &&
-      _nodeIndex == other._nodeIndex &&
-      path == other.path;
+  bool isSameAs(AnimationChannelTarget other) =>
+      other != null && _nodeIndex == other._nodeIndex && path == other.path;
 }
 
 class AnimationSampler extends GltfProperty {
@@ -353,8 +361,74 @@ class AnimationSampler extends GltfProperty {
         getExtensions(map, AnimationSampler, context),
         getExtras(map, context));
   }
+}
+
+class AnimationInputChecker extends ElementChecker<double> {
+  AnimationInputChecker(this.path);
+
+  double _lastValue = 0;
 
   @override
-  String toString([_]) => super.toString(
-      {INPUT: _inputIndex, INTERPOLATION: interpolation, OUTPUT: _outputIndex});
+  final String path;
+
+  @override
+  bool check(Context context, int index, int componentIndex, double value) {
+    assert(componentIndex == 0);
+    if (value < 0.0) {
+      context.addIssue(DataError.accessorAnimationInputNegative,
+          name: path, args: [index, value]);
+    } else {
+      if (index != 0 && value <= _lastValue) {
+        context.addIssue(DataError.accessorAnimationInputNonIncreasing,
+            name: path, args: [index, value, _lastValue]);
+      }
+      _lastValue = value;
+    }
+
+    return true;
+  }
+}
+
+class QuaternionFloatChecker<T extends num> extends ElementChecker<T> {
+  final bool hasTangents;
+  final double Function(num value) normalizeValue;
+
+  @override
+  final String path;
+
+  QuaternionFloatChecker(this.path, this.normalizeValue,
+      {this.hasTangents = false});
+
+  // used only for quaternions with cubic spline tangents
+  // 0-3  - in tangent
+  // 4-7  - actual value
+  // 8-11 - out tangent
+  int _fullComponentIndex = 0;
+
+  double _sum = 0;
+
+  @override
+  bool check(Context context, int index, int componentIndex, T value) {
+    assert(componentIndex < 4);
+
+    if (!hasTangents || 4 == 4 & _fullComponentIndex) {
+      final v = normalizeValue != null ? normalizeValue(value) : value;
+      _sum += v * v;
+      if (3 == componentIndex) {
+        if ((sqrt(_sum) - 1.0).abs() > unitLengthThresholdVec4) {
+          context.addIssue(
+              DataError.accessorAnimationSamplerOutputNonNormalizedQuaternion,
+              name: path,
+              args: [index - 3, index, sqrt(_sum)]);
+        }
+        _sum = 0;
+      }
+    }
+
+    if (++_fullComponentIndex == 12) {
+      _fullComponentIndex = 0;
+    }
+
+    return true;
+  }
 }

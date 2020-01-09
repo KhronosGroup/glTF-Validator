@@ -1,0 +1,45 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "COLOR_0": 1
+                    }
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [0, 0, 0],
+            "max": [1, 1, 1],
+            "bufferView": 0
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5123,
+            "count": 3,
+            "normalized": true,
+            "bufferView": 0
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 128
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 128
+        }
+    ]
+}

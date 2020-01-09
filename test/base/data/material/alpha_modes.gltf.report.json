@@ -1,0 +1,59 @@
+{
+    "uri": "test/base/data/material/alpha_modes.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 2,
+        "numInfos": 3,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "MATERIAL_ALPHA_CUTOFF_INVALID_MODE",
+                "message": "Alpha cutoff is supported only for 'MASK' alpha mode.",
+                "severity": 1,
+                "pointer": "/materials/1/alphaCutoff"
+            },
+            {
+                "code": "MATERIAL_ALPHA_CUTOFF_INVALID_MODE",
+                "message": "Alpha cutoff is supported only for 'MASK' alpha mode.",
+                "severity": 1,
+                "pointer": "/materials/2/alphaCutoff"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/2"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 3,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

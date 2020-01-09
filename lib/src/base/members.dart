@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,6 +19,7 @@ library gltf.base.members;
 import 'package:gltf/src/base/accessor.dart';
 import 'package:gltf/src/gl.dart' as gl;
 import 'package:gltf/src/hash.dart';
+import 'package:meta/meta.dart';
 
 const String GLTF = 'glTF';
 
@@ -314,7 +314,8 @@ const List<String> IMAGE_MEMBERS = <String>[BUFFER_VIEW, MIME_TYPE, URI, NAME];
 const String IMAGE_JPEG = 'image/jpeg';
 const String IMAGE_PNG = 'image/png';
 
-const List<String> IMAGE_MIME_TYPES = <String>[IMAGE_JPEG, IMAGE_PNG];
+// Not a constant since extensions can append to it
+List<String> imageMimeTypes = <String>[IMAGE_JPEG, IMAGE_PNG];
 
 // Material
 const String PBR_METALLIC_ROUGHNESS = 'pbrMetallicRoughness';
@@ -479,40 +480,40 @@ const List<String> ATTRIBUTE_SEMANTIC_ARRAY_MEMBERS = <String>[
   WEIGHTS_
 ];
 
-const Map<String, List<AccessorFormat>> ATTRIBUTES_ACCESSORS =
-    <String, List<AccessorFormat>>{
-  POSITION: [AccessorFormat(VEC3, gl.FLOAT)],
-  NORMAL: [AccessorFormat(VEC3, gl.FLOAT)],
-  TANGENT: [AccessorFormat(VEC4, gl.FLOAT)],
-  TEXCOORD_: [
-    AccessorFormat(VEC2, gl.FLOAT),
-    AccessorFormat(VEC2, gl.UNSIGNED_BYTE, normalized: true),
-    AccessorFormat(VEC2, gl.UNSIGNED_SHORT, normalized: true)
-  ],
-  COLOR_: [
-    AccessorFormat(VEC3, gl.FLOAT),
-    AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
-    AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true),
-    AccessorFormat(VEC4, gl.FLOAT),
-    AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
-    AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
-  ],
-  JOINTS_: [
-    AccessorFormat(VEC4, gl.UNSIGNED_BYTE),
-    AccessorFormat(VEC4, gl.UNSIGNED_SHORT)
-  ],
-  WEIGHTS_: [
-    AccessorFormat(VEC4, gl.FLOAT),
-    AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
-    AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
-  ]
+Map<String, Set<AccessorFormat>> attributeAccessorFormats =
+    <String, Set<AccessorFormat>>{
+  POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
+  NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
+  TANGENT: {const AccessorFormat(VEC4, gl.FLOAT)},
+  TEXCOORD_: {
+    const AccessorFormat(VEC2, gl.FLOAT),
+    const AccessorFormat(VEC2, gl.UNSIGNED_BYTE, normalized: true),
+    const AccessorFormat(VEC2, gl.UNSIGNED_SHORT, normalized: true)
+  },
+  COLOR_: {
+    const AccessorFormat(VEC3, gl.FLOAT),
+    const AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
+    const AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true),
+    const AccessorFormat(VEC4, gl.FLOAT),
+    const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+    const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+  },
+  JOINTS_: {
+    const AccessorFormat(VEC4, gl.UNSIGNED_BYTE),
+    const AccessorFormat(VEC4, gl.UNSIGNED_SHORT)
+  },
+  WEIGHTS_: {
+    const AccessorFormat(VEC4, gl.FLOAT),
+    const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+    const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+  }
 };
 
-const Map<String, List<AccessorFormat>> MORPH_ATTRIBUTES_ACCESSORS =
-    <String, List<AccessorFormat>>{
-  POSITION: [AccessorFormat(VEC3, gl.FLOAT)],
-  NORMAL: [AccessorFormat(VEC3, gl.FLOAT)],
-  TANGENT: [AccessorFormat(VEC3, gl.FLOAT)],
+Map<String, Set<AccessorFormat>> morphAttributeAccessorFormats =
+    <String, Set<AccessorFormat>>{
+  POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
+  NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
+  TANGENT: {const AccessorFormat(VEC3, gl.FLOAT)},
 };
 
 const Map<int, String> ATTRIBUTE_TYPES = <int, String>{
@@ -525,6 +526,7 @@ const Map<int, String> ATTRIBUTE_TYPES = <int, String>{
   gl.FLOAT_MAT4: MAT4
 };
 
+@immutable
 class AccessorFormat {
   final String type;
   final int componentType;

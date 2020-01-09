@@ -1,0 +1,37 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_mesh_quantization"
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5121,
+            "normalized": true,
+            "count": 3,
+            "min": [
+                0,
+                0,
+                0
+            ],
+            "max": [
+                255,
+                255,
+                255
+            ]
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,6 +26,9 @@ class Skin extends GltfChildOfRootProperty {
   Accessor _inverseBindMatrices;
   List<Node> _joints;
   Node _skeleton;
+  final Set<Node> _commonRoots = <Node>{};
+
+  Iterable<Node> get commonRoots => _commonRoots;
 
   Skin._(
       this._inverseBindMatricesIndex,
@@ -40,13 +42,6 @@ class Skin extends GltfChildOfRootProperty {
   Accessor get inverseBindMatrices => _inverseBindMatrices;
   List<Node> get joints => _joints;
   Node get skeleton => _skeleton;
-
-  @override
-  String toString([_]) => super.toString({
-        INVERSE_BIND_MATRICES: _inverseBindMatricesIndex,
-        SKELETON: _skeletonIndex,
-        JOINTS: _jointsIndices
-      });
 
   static Skin fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -74,8 +69,24 @@ class Skin extends GltfChildOfRootProperty {
       resolveNodeList(_jointsIndices, _joints, gltf.nodes, JOINTS, context,
           (node, nodeIndex, index) {
         node.isJoint = true;
-        // TODO: possible restrictions on joint nodes
+
+        final parents = <Node>{};
+
+        var temp = node;
+        while (temp != null && parents.add(temp)) {
+          temp = temp.parent;
+        }
+
+        if (_commonRoots.isEmpty) {
+          _commonRoots.addAll(parents);
+        } else {
+          _commonRoots.retainWhere(parents.contains);
+        }
       });
+
+      if (_commonRoots.isEmpty) {
+        context.addIssue(SemanticError.skinNoCommonRoot, name: JOINTS);
+      }
     }
 
     if (_inverseBindMatricesIndex != -1) {
@@ -89,28 +100,56 @@ class Skin extends GltfChildOfRootProperty {
             ?.setUsage(BufferViewUsage.IBM, INVERSE_BIND_MATRICES, context);
 
         if (context.validate) {
+          context.path.add(INVERSE_BIND_MATRICES);
+
           final format = AccessorFormat.fromAccessor(_inverseBindMatrices);
           if (format != SKIN_IBM_FORMAT) {
-            context.addIssue(LinkError.skinIbmInvalidFormat,
-                name: INVERSE_BIND_MATRICES,
-                args: [
-                  format,
-                  [SKIN_IBM_FORMAT]
-                ]);
+            context.addIssue(LinkError.skinIbmInvalidFormat, args: [
+              format,
+              [SKIN_IBM_FORMAT]
+            ]);
           }
 
           if (_joints != null && _inverseBindMatrices.count != _joints.length) {
             context.addIssue(LinkError.invalidIbmAccessorCount,
-                name: INVERSE_BIND_MATRICES,
                 args: [_joints.length, _inverseBindMatrices.count]);
           }
+
+          context.addElementChecker(_inverseBindMatrices,
+              IbmMatrixFloatChecker(context.getPointerString()));
+          context.path.removeLast();
         }
       }
     }
 
-    if (_skeletonIndex != -1 && _skeleton == null) {
-      context.addIssue(LinkError.unresolvedReference,
-          name: SKELETON, args: [_skeletonIndex]);
+    if (context.validate && _skeletonIndex != -1) {
+      if (_skeleton == null) {
+        context.addIssue(LinkError.unresolvedReference,
+            name: SKELETON, args: [_skeletonIndex]);
+      } else if (!_commonRoots.contains(_skeleton)) {
+        context.addIssue(SemanticError.skinSkeletonInvalid, name: SKELETON);
+      }
     }
+  }
+}
+
+class IbmMatrixFloatChecker extends ElementChecker<double> {
+  IbmMatrixFloatChecker(this.path);
+
+  @override
+  final String path;
+
+  @override
+  bool check(Context context, int index, int componentIndex, double value) {
+    assert(componentIndex < 16);
+    if (3 == componentIndex && 0 != value ||
+        7 == componentIndex && 0 != value ||
+        11 == componentIndex && 0 != value ||
+        15 == componentIndex && 1 != value) {
+      context.addIssue(DataError.accessorInvalidInverseBindMatrix,
+          name: path, args: [index, componentIndex, value]);
+    }
+
+    return true;
   }
 }

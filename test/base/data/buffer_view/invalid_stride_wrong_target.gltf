@@ -1,0 +1,19 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "uri": "data:application/octet-stream;base64,AAAAAA==",
+            "byteLength": 4
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 4,
+            "byteStride": 4,
+            "target": 34963
+        }
+    ]
+}

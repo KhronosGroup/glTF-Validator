@@ -1,0 +1,25 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "bufferView": 0,
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 1
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 16,
+            "byteStride": 4
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 28
+        }
+    ]
+}

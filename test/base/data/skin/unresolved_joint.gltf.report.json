@@ -1,0 +1,47 @@
+{
+    "uri": "test/base/data/skin/unresolved_joint.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNRESOLVED_REFERENCE",
+                "message": "Unresolved reference: 0.",
+                "severity": 0,
+                "pointer": "/skins/0/joints/0"
+            },
+            {
+                "code": "SKIN_NO_COMMON_ROOT",
+                "message": "Joints do not have a common root.",
+                "severity": 0,
+                "pointer": "/skins/0/joints"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/skins/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": true,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "uri": "test/base/data/mesh/invalid_indexed_attribute.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 8,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/TEXCOORD_00"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/TEXCOORD_01"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/INVALID_"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/INVALID_1_1"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/INVALID_11"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/INVALID_D"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INVALID_ATTRIBUTE",
+                "message": "Invalid attribute name.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes/"
+            },
+            {
+                "code": "MESH_PRIMITIVE_INDEXED_SEMANTIC_CONTINUITY",
+                "message": "Indices for indexed attribute semantic 'TEXCOORD' must start with 0 and be continuous. Total expected indices: 2, total provided indices: 1.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/attributes"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 1,
+        "totalVertexCount": 3,
+        "totalTriangleCount": 1,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 9
+    }
+}

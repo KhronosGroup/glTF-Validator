@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -29,14 +28,6 @@ class Sampler extends GltfChildOfRootProperty {
   Sampler._(this.magFilter, this.minFilter, this.wrapS, this.wrapT, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString({
-        MAG_FILTER: magFilter,
-        MIN_FILTER: minFilter,
-        WRAP_S: wrapS,
-        WRAP_T: wrapT
-      });
 
   static Sampler fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {

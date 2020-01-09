@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -56,15 +55,6 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
       Object extras)
       : super(extensions, extras);
 
-  @override
-  String toString([_]) => super.toString({
-        DIFFUSE_FACTOR: diffuseFactor,
-        DIFFUSE_TEXTURE: diffuseTexture,
-        SPECULAR_FACTOR: specularFactor,
-        GLOSSINESS_FACTOR: glossinessFactor,
-        SPECULAR_GLOSSINESS_TEXTURE: specularGlossinessTexture
-      });
-
   static KhrMaterialsPbrSpecularGlossiness fromMap(
       Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -95,7 +85,7 @@ class KhrMaterialsPbrSpecularGlossiness extends GltfProperty {
         getExtras(map, context));
 
     context.registerObjectsOwner(pbrSg,
-        [diffuseTexture, specularGlossinessTexture]..addAll(extensions.values));
+        [diffuseTexture, specularGlossinessTexture, ...extensions.values]);
 
     return pbrSg;
   }

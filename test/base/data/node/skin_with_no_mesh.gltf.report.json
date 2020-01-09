@@ -1,0 +1,47 @@
+{
+    "uri": "test/base/data/node/skin_with_no_mesh.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 2,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNSATISFIED_DEPENDENCY",
+                "message": "Dependency failed. 'mesh' must be defined.",
+                "severity": 0,
+                "pointer": "/nodes/0/skin"
+            },
+            {
+                "code": "NODE_EMPTY",
+                "message": "Empty node encountered.",
+                "severity": 2,
+                "pointer": "/nodes/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": true,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

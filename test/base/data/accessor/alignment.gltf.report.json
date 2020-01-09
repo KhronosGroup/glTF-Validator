@@ -1,0 +1,95 @@
+{
+    "uri": "test/base/data/accessor/alignment.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 6,
+        "numWarnings": 0,
+        "numInfos": 4,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "ACCESSOR_OFFSET_ALIGNMENT",
+                "message": "Offset 1 is not a multiple of componentType length 4.",
+                "severity": 0,
+                "pointer": "/accessors/0/byteOffset"
+            },
+            {
+                "code": "ACCESSOR_TOTAL_OFFSET_ALIGNMENT",
+                "message": "Accessor's total byteOffset 3 isn't a multiple of componentType length 4.",
+                "severity": 0,
+                "pointer": "/accessors/0"
+            },
+            {
+                "code": "ACCESSOR_TOTAL_OFFSET_ALIGNMENT",
+                "message": "Accessor's total byteOffset 6 isn't a multiple of componentType length 4.",
+                "severity": 0,
+                "pointer": "/accessors/1"
+            },
+            {
+                "code": "ACCESSOR_TOTAL_OFFSET_ALIGNMENT",
+                "message": "Accessor's total byteOffset 34 isn't a multiple of componentType length 4.",
+                "severity": 0,
+                "pointer": "/accessors/2"
+            },
+            {
+                "code": "ACCESSOR_TOO_LONG",
+                "message": "Accessor (offset: 32, length: 12) does not fit referenced bufferView [0] length 16.",
+                "severity": 0,
+                "pointer": "/accessors/2/byteOffset"
+            },
+            {
+                "code": "ACCESSOR_TOO_LONG",
+                "message": "Accessor (offset: 0, length: 60) does not fit referenced bufferView [0] length 16.",
+                "severity": 0,
+                "pointer": "/accessors/3"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/2"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/3"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer"
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

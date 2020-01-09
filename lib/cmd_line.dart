@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,40 +19,58 @@ library gltf.cmd_line;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+
 import 'package:args/args.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart';
 import 'package:isolate/load_balancer.dart';
 import 'package:isolate/isolate_runner.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
+
+// ignore_for_file: avoid_as
 
 const int kErrorCode = 1;
 
 StringSink outPipe = stdout;
 StringSink errPipe = stderr;
 
+final _cwd = Directory.current.path;
+
 class ValidatorOptions {
-  static const String kAllIssues = 'all-issues';
+  static const String kAll = 'all';
   static const String kValidateResources = 'validate-resources';
-  static const String kPlainText = 'plain-text';
+  static const String kWriteTimestamp = 'write-timestamp';
+  static const String kAbsolutePath = 'absolute-path';
+  static const String kMessages = 'messages';
+  static const String kThreads = 'threads';
 
   static const String kConfig = 'config';
 
   final bool validateResources;
-  final bool printIssues;
-  final bool printNonErrors;
+  final bool writeTimestamp;
+  final bool absolutePath;
+  final bool messages;
+  final bool printAll;
+  final int threads;
 
   ValidatorOptions(
       {this.validateResources = false,
-      this.printIssues = false,
-      this.printNonErrors = false});
+      this.writeTimestamp = false,
+      this.absolutePath = false,
+      this.messages = false,
+      this.printAll = false,
+      this.threads = 0});
 
   factory ValidatorOptions.fromArgs(ArgResults args) => ValidatorOptions(
       validateResources: args[kValidateResources] == true,
-      printIssues: args[kPlainText] == true,
-      printNonErrors: args[kAllIssues] == true);
+      messages: args[kMessages] == true,
+      writeTimestamp: args[kWriteTimestamp] == true,
+      absolutePath: args[kAbsolutePath] == true,
+      printAll: args[kAll] == true,
+      threads: max(int.tryParse((args[kThreads] ?? '') as String) ?? 0, 0));
 }
 
 class ValidationTask {
@@ -110,6 +127,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
           return entry;
         } else {
           abort("$kYamlError each entry in '$kIgnore' must be a string.");
+          return null;
         }
       }, growable: false);
     } else if (yamlIgnoredIssues != null) {
@@ -151,18 +169,32 @@ Future<void> run(List<String> args) async {
         help: 'Validate contents of embedded and/or '
             'referenced resources (buffers, images).',
         defaultsTo: false)
-    ..addFlag(ValidatorOptions.kPlainText,
-        abbr: 'p',
-        help: 'Print issues in plain text form to stderr.',
+    ..addFlag(ValidatorOptions.kWriteTimestamp,
+        abbr: 't',
+        help: 'Write UTC timestamp to the validation report.',
         defaultsTo: false)
-    ..addFlag(ValidatorOptions.kAllIssues,
+    ..addFlag(ValidatorOptions.kAbsolutePath,
+        abbr: 'p',
+        help: 'Write absolute asset path to the validation report.',
+        defaultsTo: false)
+    ..addFlag(ValidatorOptions.kMessages,
+        abbr: 'm',
+        help: 'Print issue messages to stderr. '
+            'Otherwise, only total number of issues will be printed.',
+        defaultsTo: false)
+    ..addFlag(ValidatorOptions.kAll,
         abbr: 'a',
-        help: 'Print all issues to plain text output.',
+        help: 'Print all issue messages to stderr. '
+            'Otherwise, only errors will be printed. Implies --messages.',
         defaultsTo: false)
     ..addOption(ValidatorOptions.kConfig,
         abbr: 'c',
         help: 'YAML configuration file with validation options. '
-            'See docs/config-example.yaml for details.');
+            'See docs/config-example.yaml for details.')
+    ..addOption(ValidatorOptions.kThreads,
+        abbr: 'h',
+        help: 'The number of threads for directory validation. '
+            'Set to 0 (default) for auto selection.');
 
   try {
     argResult = parser.parse(args);
@@ -176,7 +208,7 @@ Future<void> run(List<String> args) async {
       ..write('\n\n')
       ..write('Usage: gltf_validator [<options>] <input>\n\n'
           'Validation report will be written to '
-          '`<asset_filename>_report.json`.\n'
+          '`<asset_filename>.report.json`.\n'
           'If <input> is a directory, validation reports will be recursively '
           'created for each glTF asset.\n\n'
           'Validation log will be printed to stderr.\n\n'
@@ -197,8 +229,11 @@ Future<void> run(List<String> args) async {
   }
 
   if (FileSystemEntity.isDirectorySync(input)) {
-    final balancer = await LoadBalancer.create(
-        Platform.numberOfProcessors, IsolateRunner.spawn);
+    final threads = 0 == validatorOptions.threads
+        ? Platform.numberOfProcessors
+        : validatorOptions.threads;
+    final balancer = await LoadBalancer.create(threads, IsolateRunner.spawn);
+    errPipe.write('Using $threads thread(s).\n');
 
     var activeTasks = 0;
     var foundErrors = false;
@@ -206,7 +241,7 @@ Future<void> run(List<String> args) async {
 
     final it = Directory(input).listSync(recursive: true).where((entry) {
       if (entry is File) {
-        final ext = path.extension(entry.path);
+        final ext = p.extension(entry.path);
         return (ext == '.gltf') || (ext == '.glb');
       }
       return false;
@@ -262,7 +297,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final reader = GltfReader.filename(file.openRead(), task.filename, context);
 
   if (reader == null) {
-    final ext = path.extension(task.filename).toLowerCase();
+    final ext = p.extension(task.filename).toLowerCase();
     errPipe.write('Error while loading ${file.path}...\n'
         'Unknown file extension `$ext`.\n');
     watch.stop();
@@ -278,18 +313,23 @@ Future<bool> _processFile(ValidationTask task) async {
     return true;
   }
 
-  final validationResult =
-      ValidationResult(Uri.file(task.filename), context, readerResult);
+  final validationResult = ValidationResult(
+      Uri.file(opts.absolutePath
+          ? task.filename
+          : p.relative(task.filename, from: _cwd)),
+      context,
+      readerResult,
+      writeTimestamp: opts.writeTimestamp);
 
   if (readerResult?.gltf != null && opts.validateResources) {
-    final resourcesLoader = getFileResourceValidator(
-        context, validationResult.absoluteUri, readerResult);
+    final resourcesLoader =
+        getFileResourceValidator(context, validationResult.uri, readerResult);
     await resourcesLoader.load();
   }
 
   watch.stop();
 
-  final reportPath = '${path.withoutExtension(task.filename)}_report.json';
+  final reportPath = '${task.filename}.report.json';
 
   // ignore: unawaited_futures
   File(reportPath).writeAsString(
@@ -308,7 +348,7 @@ Future<bool> _processFile(ValidationTask task) async {
         'Hints: ${hints.length}\n'
         'Time: ${watch.elapsedMilliseconds}ms\n\n');
 
-  if (opts.printIssues) {
+  if (opts.messages || opts.printAll) {
     void writeIssues(List<Issue> issues, String title) {
       if (issues.isEmpty) {
         return;
@@ -321,7 +361,7 @@ Future<bool> _processFile(ValidationTask task) async {
     }
 
     writeIssues(errors, 'Errors');
-    if (opts.printNonErrors) {
+    if (opts.printAll) {
       writeIssues(warnings, 'Warnings');
       writeIssues(infos, 'Infos');
       writeIssues(hints, 'Hints');
@@ -333,19 +373,31 @@ Future<bool> _processFile(ValidationTask task) async {
 }
 
 ResourcesLoader getFileResourceValidator(
-        Context context, Uri absoluteUri, GltfReaderResult readerResult) =>
-    ResourcesLoader(context, readerResult.gltf, externalBytesFetch: ([uri]) {
-      if (uri == null) {
-        // GLB-stored buffer
-        return readerResult.buffer;
-      }
-      if (isNonRelativeUri(uri)) {
-        return null;
-      }
-      return File.fromUri(absoluteUri.resolveUri(uri)).readAsBytes();
-    }, externalStreamFetch: (uri) {
-      if (isNonRelativeUri(uri)) {
-        return null;
-      }
-      return File.fromUri(absoluteUri.resolveUri(uri)).openRead();
-    });
+    Context context, Uri absoluteUri, GltfReaderResult readerResult) {
+  // Check file stat to not bother with FileSystem exceptions
+  File fileGuarded(Uri uri) {
+    final f = File(p.fromUri(absoluteUri.resolveUri(uri)));
+    if (f.statSync().type == FileSystemEntityType.file) {
+      return f;
+    } else {
+      throw GltfExternalResourceNotFoundException(uri.toString());
+    }
+  }
+
+  return ResourcesLoader(context, readerResult.gltf,
+      externalBytesFetch: ([uri]) {
+    if (uri == null) {
+      // GLB-stored buffer
+      return readerResult.buffer;
+    }
+    if (isNonRelativeUri(uri)) {
+      return null;
+    }
+    return fileGuarded(uri).readAsBytes();
+  }, externalStreamFetch: (uri) {
+    if (isNonRelativeUri(uri)) {
+      return null;
+    }
+    return fileGuarded(uri).openRead();
+  });
+}

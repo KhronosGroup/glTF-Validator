@@ -1,0 +1,13 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "textures": [
+        {
+            "extensions": {
+                "EXT_texture_webp": {
+                }
+            }
+        }
+    ]
+}

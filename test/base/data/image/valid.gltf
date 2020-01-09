@@ -1,0 +1,44 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "uri": "magenta.png",
+            "byteLength": 69
+        },
+        {
+            "uri": "data:application/octet-stream;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQYV2P4z/AfAAQAAf+I0P3MAAAAAElFTkSuQmCC",
+            "byteLength": 69
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 69
+        },
+        {
+            "buffer": 1,
+            "byteLength": 69
+        }
+    ],
+    "images": [
+        {
+            "uri": "magenta.png"
+        },
+        {
+            "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQYV2P4z/AfAAQAAf+I0P3MAAAAAElFTkSuQmCC"
+        },
+        {
+            "bufferView": 0,
+            "mimeType": "image/png"
+        },
+        {
+            "bufferView": 1,
+            "mimeType": "image/png"
+        },
+        {
+            "uri": "cyan.jpg"
+        }
+    ]
+}

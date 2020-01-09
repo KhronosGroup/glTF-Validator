@@ -1,0 +1,10 @@
+{
+    "primitive": {
+        "name": "mesh.primitive.attributes",
+        "tests": {
+            "non_required.gltf": "Extension must be required",
+            "unexpected_extension.gltf": "Unexpected extension object",
+            "valid.gltf": "Valid"
+        }
+    }
+}

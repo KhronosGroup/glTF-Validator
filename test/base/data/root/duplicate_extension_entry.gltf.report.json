@@ -1,0 +1,47 @@
+{
+    "uri": "test/base/data/root/duplicate_extension_entry.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "DUPLICATE_ELEMENTS",
+                "message": "Duplicate element.",
+                "severity": 0,
+                "pointer": "/extensionsUsed/1"
+            },
+            {
+                "code": "DUPLICATE_ELEMENTS",
+                "message": "Duplicate element.",
+                "severity": 0,
+                "pointer": "/extensionsRequired/1"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": [
+            "KHR_materials_unlit"
+        ],
+        "extensionsRequired": [
+            "KHR_materials_unlit"
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "cameras": [
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 1,
+                "zfar": 2,
+                "ymag": 0,
+                "xmag": 1
+            }
+        },
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 1,
+                "zfar": 2,
+                "ymag": 1,
+                "xmag": 0
+            }
+        }
+    ]
+}

@@ -1,0 +1,95 @@
+{
+    "uri": "test/base/data/animation/empty_objects.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 10,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'channels' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/0"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'samplers' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/0"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/animations/1/channels"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/animations/1/samplers"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'sampler' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/channels/0"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'target' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/channels/0"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'sampler' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/channels/1"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'path' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/channels/1/target"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'input' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/samplers/0"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'output' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/samplers/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/animations/2/channels/0/samplers/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 3,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

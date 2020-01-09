@@ -4,7 +4,6 @@
     },
     "buffers": [
         {
-            "uri": "one_byte.bin",
             "byteLength": 1,
             "customProperty": true
         }

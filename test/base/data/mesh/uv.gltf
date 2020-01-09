@@ -16,19 +16,17 @@
                     }
                 },
                 {
-                    "attributes": {
-                        "POSITION": 0,
-                        "TEXCOORD_00": 1,
-                        "TEXCOORD_01": 1,
-                        "TEXCOORD_1": 1
-                    }
-                },
-                {
                     "material": 0,
                     "attributes": {
                         "POSITION": 0,
                         "TEXCOORD_0": 1,
                         "TEXCOORD_1": 1
+                    }
+                },
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "TEXCOORD_0": 1
                     }
                 }
             ]

@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,6 +18,8 @@
 
 library gltf.error;
 
+import 'package:meta/meta.dart';
+
 typedef ErrorFunction = String Function(List args);
 
 enum Severity { Error, Warning, Information, Hint }
@@ -31,11 +32,24 @@ abstract class IssueType {
   IssueType(this.code, this.message, this.severity);
 }
 
+// These values are slightly greater
+// than the maximum error from signed 8-bit quantization
+const unitLengthThresholdVec3 = 0.00674;
+const unitLengthThresholdVec4 = 0.00769;
+
+// This value is slightly greater
+// than the maximum error from unsigned 8-bit quantization
+// 1..2 elements - 0 * step
+// 3..4 elements - 1 * step
+// 5..6 elements - 2 * step
+// ...
+const unitSumThresholdStep = 0.0039216;
+
 class DataError extends IssueType {
   static final DataError bufferEmbeddedBytelengthMismatch = DataError._(
       'BUFFER_EMBEDDED_BYTELENGTH_MISMATCH',
-      (args) => 'Actual data length ${args[0]} is not equal to '
-          'the declared buffer byteLength ${args[1]}.');
+      (args) => 'Actual Data URI encoded data length ${args[0]} is not equal '
+          'to the declared buffer byteLength ${args[1]}.');
 
   static final DataError bufferExternalBytelengthMismatch = DataError._(
       'BUFFER_EXTERNAL_BYTELENGTH_MISMATCH',
@@ -68,30 +82,42 @@ class DataError extends IssueType {
       (args) => 'Accessor contains ${args[0]} '
           'element(s) greater than declared maximum value ${args[1]}.');
 
-  static final DataError accessorNonUnit = DataError._(
-      'ACCESSOR_NON_UNIT',
-      (args) => 'Accessor element at index ${args[0]} '
-          'is not of unit length: ${args[1]}.');
+  static final DataError accessorVector3NonUnit = DataError._(
+      'ACCESSOR_VECTOR3_NON_UNIT',
+      (args) => 'Vector3 at accessor indices ${args[0]}..${args[1]} '
+          'is not of unit length: ${args[2]}.');
 
   static final DataError accessorInvalidSign = DataError._(
       'ACCESSOR_INVALID_SIGN',
+      (args) => 'Vector3 with sign at accessor indices '
+          '${args[0]}..${args[1]} '
+          'has invalid w component: ${args[2]}. Must be 1.0 or -1.0.');
+
+  static final DataError accessorAnimationSamplerOutputNonNormalizedQuaternion =
+      DataError._(
+          'ACCESSOR_ANIMATION_SAMPLER_OUTPUT_NON_NORMALIZED_QUATERNION',
+          (args) => 'Animation sampler output accessor element at indices '
+              '${args[0]}..${args[1]} is not of unit length: ${args[2]}.');
+
+  static final DataError accessorNonClamped = DataError._(
+      'ACCESSOR_NON_CLAMPED',
       (args) => 'Accessor element at index ${args[0]} '
-          'has invalid w component: ${args[1]}. Must be 1.0 or -1.0.');
+          'is not clamped to 0..1 range: ${args[1]}.');
 
   static final DataError accessorInvalidFloat = DataError._(
       'ACCESSOR_INVALID_FLOAT',
-      (args) => 'Accessor element at index ${args[0]} '
-          'is NaN or Infinity.');
+      (args) => 'Accessor element at index ${args[0]} is ${args[1]}.');
 
   static final DataError accessorIndexOob = DataError._(
       'ACCESSOR_INDEX_OOB',
       (args) => 'Indices accessor element at index ${args[0]} '
-          'has vertex index ${args[1]} that exceeds number of '
-          'available vertices ${args[2]}.');
+          'has value ${args[1]} that is greater than the maximum vertex '
+          'index available (${args[2]}).');
 
   static final DataError accessorIndexTriangleDegenerate = DataError._(
       'ACCESSOR_INDEX_TRIANGLE_DEGENERATE',
-      (args) => 'Indices accessor contains ${args[0]} degenerate triangles.',
+      (args) => 'Indices accessor contains ${args[0]} degenerate triangles '
+          '(out of ${args[1]}).',
       Severity.Information);
 
   static final DataError accessorIndexPrimitiveRestart = DataError._(
@@ -121,10 +147,10 @@ class DataError extends IssueType {
           'is greater than or equal to '
           'the number of accessor elements: ${args[1]} >= ${args[2]}.');
 
-  static final DataError indecomposableMatrix = DataError._(
-      'ACCESSOR_INDECOMPOSABLE_MATRIX',
-      (args) => 'Matrix element at index '
-          '${args[0]} is not decomposable to TRS.');
+  static final DataError accessorInvalidInverseBindMatrix = DataError._(
+      'ACCESSOR_INVALID_IBM',
+      (args) => 'Matrix element at index ${args[0]} '
+          '(component index ${args[1]}) contains invalid value: ${args[2]}.');
 
   static final DataError imageDataInvalid = DataError._(
       'IMAGE_DATA_INVALID', (args) => 'Image data is invalid. ${args[0]}');
@@ -142,13 +168,53 @@ class DataError extends IssueType {
       (args) => 'Image format not recognized.',
       Severity.Warning);
 
+  static final DataError imageNonEnabledMimeType = DataError._(
+      'IMAGE_NON_ENABLED_MIME_TYPE',
+      (args) => '${_q(args[0])} MIME type requires an extension.',
+      Severity.Error);
+
   static final DataError imageNonPowerOfTwoDimensions = DataError._(
       'IMAGE_NPOT_DIMENSIONS',
       (args) => 'Image has non-power-of-two dimensions: ${args[0]}x${args[1]}.',
       Severity.Information);
 
+  static final DataError imageFeaturesUnsupported = DataError._(
+      'IMAGE_FEATURES_UNSUPPORTED',
+      (args) => 'Image contains unsupported features like non-default '
+          'colorspace information, non-square pixels, or animation.',
+      Severity.Warning);
+
   static final DataError dataUriGlb = DataError._('DATA_URI_GLB',
       (args) => 'Data URI is used in GLB container.', Severity.Information);
+
+  static final DataError accessorJointsIndexOob = DataError._(
+      'ACCESSOR_JOINTS_INDEX_OOB',
+      (args) => 'Joints accessor element at index ${args[0]} '
+          '(component index ${args[1]}) has value ${args[2]} that is greater '
+          'than the maximum joint index (${args[3]}) set by skin ${args[4]}.');
+
+  static final DataError accessorJointsIndexDuplicate = DataError._(
+      'ACCESSOR_JOINTS_INDEX_DUPLICATE',
+      (args) => 'Joints accessor element at index ${args[0]} '
+          '(component index ${args[1]}) has value ${args[2]} that is already '
+          'in use for the vertex.');
+
+  static final DataError accessorWeightsNegative = DataError._(
+      'ACCESSOR_WEIGHTS_NEGATIVE',
+      (args) => 'Weights accessor element at index ${args[0]} '
+          '(component index ${args[1]}) has negative value ${args[2]}.');
+
+  static final DataError accessorWeightsNonNormalized = DataError._(
+      'ACCESSOR_WEIGHTS_NON_NORMALIZED',
+      (args) => 'Weights accessor elements (at indices ${args[0]}..${args[1]}) '
+          'have non-normalized sum: ${args[2]}.');
+
+  static final DataError accessorJointsUsedZeroWeight = DataError._(
+      'ACCESSOR_JOINTS_USED_ZERO_WEIGHT',
+      (args) => 'Joints accessor element at index ${args[0]} '
+          '(component index ${args[1]}) is used with zero weight but has '
+          'non-zero value (${args[2]}).',
+      Severity.Warning);
 
   DataError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
@@ -156,8 +222,8 @@ class DataError extends IssueType {
 }
 
 class IoError extends IssueType {
-  static final IoError fileNotFound =
-      IoError._('FILE_NOT_FOUND', (args) => 'File not found. ${args[0]}');
+  static final IoError ioError =
+      IoError._('IO_ERROR', (args) => args[0].toString());
 
   IoError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
@@ -185,7 +251,7 @@ class SchemaError extends IssueType {
       'INVALID_JSON', (args) => 'Invalid JSON data. Parser output: ${args[0]}');
 
   static final SchemaError invalidUri = SchemaError._('INVALID_URI',
-      (args) => 'Invalid URI ${_q(args[0])}. Parser output: ${args[1]}');
+      (args) => 'Invalid URI ${_q(args[0])}. Parser output:\n${args[1]}');
 
   static final SchemaError emptyEntity =
       SchemaError._('EMPTY_ENTITY', (args) => 'Entity cannot be empty.');
@@ -276,6 +342,11 @@ class SemanticError extends IssueType {
       (args) => 'Sparse accessor overrides more elements (${args[0]}) '
           'than the base accessor contains (${args[1]}).');
 
+  static final SemanticError animationChannelTargetNodeSkin = SemanticError._(
+      'ANIMATION_CHANNEL_TARGET_NODE_SKIN',
+      (args) => 'Animated TRS properties will not affect a skinned mesh.',
+      Severity.Warning);
+
   static final SemanticError bufferDataUriMimeTypeInvalid = SemanticError._(
       'BUFFER_DATA_URI_MIME_TYPE_INVALID',
       (args) =>
@@ -285,7 +356,7 @@ class SemanticError extends IssueType {
   static final SemanticError bufferViewTooBigByteStride = SemanticError._(
       'BUFFER_VIEW_TOO_BIG_BYTE_STRIDE',
       (args) => "Buffer view's byteStride (${args[0]}) is "
-          'smaller than byteLength (${args[1]}).');
+          'greater than byteLength (${args[1]}).');
 
   static final SemanticError bufferViewInvalidByteStride = SemanticError._(
       'BUFFER_VIEW_INVALID_BYTE_STRIDE',
@@ -341,8 +412,8 @@ class SemanticError extends IssueType {
   static final SemanticError meshPrimitiveJointsWeightsMismatch =
       SemanticError._(
           'MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH',
-          (args) => 'Number of JOINTS attribute semantics '
-              'must match number of WEIGHTS.');
+          (args) => 'Number of JOINTS attribute semantics (${args[0]}) '
+              'does not match the number of WEIGHTS (${args[1]}).');
 
   static final SemanticError meshPrimitiveTangentPoints = SemanticError._(
       'MESH_PRIMITIVE_TANGENT_POINTS',
@@ -374,17 +445,48 @@ class SemanticError extends IssueType {
       'UNUSED_EXTENSION_REQUIRED',
       (args) => 'Unused extension ${_q(args[0])} cannot be required.');
 
+  static final SemanticError nonRequiredExtension = SemanticError._(
+      'NON_REQUIRED_EXTENSION',
+      (args) => 'Extension ${_q(args[0])} cannot be optional.');
+
   static final SemanticError unreservedExtensionPrefix = SemanticError._(
       'UNRESERVED_EXTENSION_PREFIX',
       (args) => 'Extension uses unreserved extension prefix ${_q(args[0])}.',
       Severity.Warning);
 
+  static final SemanticError invalidExtensionNameFormat = SemanticError._(
+      'INVALID_EXTENSION_NAME_FORMAT',
+      (args) => 'Extension name has invalid format.',
+      Severity.Warning);
+
   static final SemanticError nodeEmpty = SemanticError._(
       'NODE_EMPTY', (args) => 'Empty node encountered.', Severity.Information);
 
+  static final SemanticError nodeSkinnedMeshNonRoot = SemanticError._(
+      'NODE_SKINNED_MESH_NON_ROOT',
+      (args) => 'Node with a skinned mesh is not root. '
+          'Parent transforms will not affect a skinned mesh.',
+      Severity.Warning);
+
+  static final SemanticError nodeSkinnedMeshLocalTransforms = SemanticError._(
+      'NODE_SKINNED_MESH_LOCAL_TRANSFORMS',
+      (args) => 'Local transforms will not affect a skinned mesh.',
+      Severity.Warning);
+
+  static final SemanticError nodeSkinNoScene = SemanticError._(
+      'NODE_SKIN_NO_SCENE',
+      (args) => 'A node with a skinned mesh is used in a scene that does not '
+          'contain joint nodes.');
+
+  static final SemanticError skinNoCommonRoot = SemanticError._(
+      'SKIN_NO_COMMON_ROOT', (args) => 'Joints do not have a common root.');
+
+  static final SemanticError skinSkeletonInvalid = SemanticError._(
+      'SKIN_SKELETON_INVALID', (args) => 'Skeleton node is not a common root.');
+
   static final SemanticError nonRelativeUri = SemanticError._(
       'NON_RELATIVE_URI',
-      (args) => 'Non-relative URI found: ${args[0]}.',
+      (args) => 'Non-relative URI found: ${_q(args[0])}.',
       Severity.Warning);
 
   static final SemanticError multipleExtensions = SemanticError._(
@@ -443,7 +545,7 @@ class LinkError extends IssueType {
   static final LinkError animationChannelTargetNodeMatrix = LinkError._(
       'ANIMATION_CHANNEL_TARGET_NODE_MATRIX',
       (args) => 'Animation channel cannot target TRS properties '
-          'of node with defined matrix.');
+          'of a node with defined matrix.');
 
   static final LinkError animationChannelTargetNodeWeightsNoMorphs =
       LinkError._(
@@ -478,19 +580,11 @@ class LinkError extends IssueType {
               'interpolation must have at least ${args[1]} elements. '
               'Got ${args[2]}.');
 
-  static final LinkError animationSamplerOutputInterpolation = LinkError._(
-      'ANIMATION_SAMPLER_OUTPUT_INTERPOLATION',
-      (args) => 'The same output accessor cannot be used '
-          'both for spline and linear data.');
-
   static final LinkError animationSamplerOutputAccessorInvalidCount =
       LinkError._(
           'ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT',
           (args) => 'Animation sampler output accessor of count '
               '${args[0]} expected. Found ${args[1]}.');
-
-  static final LinkError bufferNonFirstGlb = LinkError._('BUFFER_NON_FIRST_GLB',
-      (args) => 'Buffer referring to GLB binary chunk must be the first.');
 
   static final LinkError bufferMissingGlbData = LinkError._(
       'BUFFER_MISSING_GLB_DATA',
@@ -556,12 +650,6 @@ class LinkError extends IssueType {
           'Texture binding ${_q(args[0])} '
           'needs \'TEXCOORD_${args[1]}\' attribute.');
 
-  static final LinkError meshPrimitiveUnusedTexcoord = LinkError._(
-      'MESH_PRIMITIVE_UNUSED_TEXCOORD',
-      (args) => 'Material does not use texture coordinates sets '
-          'with indices ${(args[1] as Iterable).map(_mbq)}.',
-      Severity.Information);
-
   static final LinkError meshPrimitiveUnequalAccessorsCount = LinkError._(
       'MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT',
       (args) =>
@@ -604,9 +692,15 @@ class LinkError extends IssueType {
       (args) => 'Invalid IBM accessor format ${_q(args[0])}. '
           'Must be one of ${(args[1] as Iterable).map(_q)}. ');
 
+  static final LinkError textureInvalidImageMimeType = LinkError._(
+      'TEXTURE_INVALID_IMAGE_MIME_TYPE',
+      (args) => 'Invalid MIME type ${_q(args[0])} for the texture '
+          'source. Valid MIME types are ${(args[1] as Iterable).map(_q)}.',
+      Severity.Error);
+
   static final LinkError undeclaredExtension = LinkError._(
       'UNDECLARED_EXTENSION',
-      (args) => 'Extension was not declared in extensionsUsed.');
+      (args) => 'Extension is not declared in extensionsUsed.');
 
   static final LinkError unexpectedExtensionObject = LinkError._(
       'UNEXPECTED_EXTENSION_OBJECT',
@@ -687,6 +781,7 @@ class GlbError extends IssueType {
       : super(type, message, severity);
 }
 
+@immutable
 class Issue {
   final IssueType type;
   final Severity severityOverride;
@@ -694,12 +789,12 @@ class Issue {
   final int offset;
   final List _args;
 
-  Issue(this.type, this._args,
+  const Issue(this.type, this._args,
       {this.pointer, this.offset, this.severityOverride})
-      : assert(pointer == null || offset == null);
+      : assert((pointer == null) ^ (offset == null));
 
   String get message =>
-      (type.message != null) ? type.message(_args) : type.code;
+      (type.message != null) ? type.message(_args).trimRight() : type.code;
 
   Severity get severity => severityOverride ?? type.severity;
 

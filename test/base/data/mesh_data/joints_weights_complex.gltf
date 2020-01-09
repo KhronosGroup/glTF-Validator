@@ -1,0 +1,108 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "children": [1, 2, 3, 4, 5, 6, 7, 8]
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+            "mesh": 0,
+            "skin": 0
+        },
+        {
+            "mesh": 0,
+            "skin": 1
+        }
+    ],
+    "skins": [
+        {
+            "joints": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        },
+        {
+            "joints": [0, 2, 3, 4, 5, 6, 7, 8]
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "JOINTS_0": 1,
+                        "JOINTS_1": 2,
+                        "WEIGHTS_0": 3,
+                        "WEIGHTS_1": 4
+                    },
+                    "mode": 0
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 2,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5121,
+            "count": 2,
+            "bufferView": 0
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5121,
+            "count": 2,
+            "bufferView": 0,
+            "byteOffset": 4
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 2,
+            "bufferView": 0,
+            "byteOffset": 8
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 2,
+            "bufferView": 0,
+            "byteOffset": 24
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 80,
+            "byteStride": 40,
+            "target": 34962
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 80,
+            "uri": "joints_weights_complex.bin"
+        }
+    ]
+}

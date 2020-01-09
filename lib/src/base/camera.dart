@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,10 +26,6 @@ class Camera extends GltfChildOfRootProperty {
   Camera._(this.type, this.orthographic, this.perspective, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) => super.toString(
-      {TYPE: type, ORTHOGRAPHIC: orthographic, PERSPECTIVE: perspective});
 
   static Camera fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -105,10 +100,6 @@ class CameraOrthographic extends GltfProperty {
         getExtensions(map, CameraOrthographic, context),
         getExtras(map, context));
   }
-
-  @override
-  String toString([_]) =>
-      super.toString({XMAG: xmag, YMAG: ymag, ZFAR: zfar, ZNEAR: znear});
 }
 
 class CameraPerspective extends GltfProperty {
@@ -141,8 +132,4 @@ class CameraPerspective extends GltfProperty {
         getExtensions(map, CameraPerspective, context),
         getExtras(map, context));
   }
-
-  @override
-  String toString([_]) => super.toString(
-      {ASPECT_RATIO: aspectRatio, YFOV: yfov, ZFAR: zfar, ZNEAR: znear});
 }

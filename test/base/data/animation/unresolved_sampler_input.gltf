@@ -1,0 +1,38 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "animations": [
+        {
+            "samplers": [
+                {
+                    "input": 1,
+                    "output": 0
+                }
+            ],
+            "channels": [
+                {
+                    "sampler": 0,
+                    "target": {
+                        "node": 0,
+                        "path": "scale"
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "extras": {
+                "non_empty": true
+            }
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 1
+        }
+    ]
+}

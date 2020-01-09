@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,29 +19,61 @@ library gltf.data_access.image_decoder;
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:gltf/src/gl.dart' as gl;
+
+enum _ImageCodec { JPEG, PNG, WebP }
+
+enum _ColorPrimaries { Unknown, sRGB, Custom }
+
+enum _ColorTransfer { Unknown, Linear, sRGB, Custom }
+
+enum Format { Unknown, RGB, RGBA, Luminance, LuminanceAlpha }
 
 class ImageInfo {
   final String mimeType;
   final int bits;
-  final int format;
+  final Format format;
   final int width;
   final int height;
+  final _ColorPrimaries colorPrimaries;
+  final _ColorTransfer colorTransfer;
+  final bool hasNonSquarePixels;
+  final bool hasAnimation;
 
-  ImageInfo._(this.mimeType, this.bits, this.format, this.width, this.height);
+  bool get hasCustomColorInfo =>
+      colorPrimaries == _ColorPrimaries.Custom ||
+      colorTransfer == _ColorTransfer.Custom;
 
-  static const _kFormats = <int, String>{
-    gl.RGB: 'RGB',
-    gl.RGBA: 'RGBA',
-    gl.LUMINANCE: 'LUMINANCE',
-    gl.LUMINANCE_ALPHA: 'LUMINANCE_ALPHA'
-  };
+  ImageInfo._(this.mimeType, this.bits, this.format, this.width, this.height,
+      {this.colorPrimaries = _ColorPrimaries.Unknown,
+      this.colorTransfer = _ColorTransfer.Unknown,
+      this.hasNonSquarePixels = false,
+      this.hasAnimation = false});
 
   Map<String, Object> toMap() => <String, Object>{
         'width': width,
         'height': height,
-        'format': _kFormats[format],
-        'bits': bits
+        if (format != Format.Unknown)
+          'format': const [
+            null,
+            'rgb',
+            'rgba',
+            'luminance',
+            'luminance-alpha'
+          ][format.index],
+        if (colorPrimaries != _ColorPrimaries.Unknown)
+          'primaries': const [
+            null,
+            'srgb',
+            'custom',
+          ][colorPrimaries.index],
+        if (colorTransfer != _ColorTransfer.Unknown)
+          'transfer': const [
+            null,
+            'linear',
+            'srgb',
+            'custom',
+          ][colorTransfer.index],
+        if (bits > 0) 'bits': bits
       };
 
   static Future<ImageInfo> parseStreamAsync(Stream<List<int>> data) {
@@ -66,6 +97,9 @@ class ImageInfo {
             case _ImageCodec.PNG:
               decoder = PngInfoDecoder(subscription, completer);
               break;
+            case _ImageCodec.WebP:
+              decoder = WebPInfoDecoder(subscription, completer);
+              break;
             default:
               subscription.cancel();
               completer.completeError(const UnsupportedImageFormatException());
@@ -88,6 +122,7 @@ class ImageInfo {
   static _ImageCodec _detectCodec(List<int> firstChunk) {
     const JPEG = <int>[0xFF, 0xD8];
     const PNG = <int>[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+    const WEBP = <int>[0x52, 0x49, 0x46, 0x46];
 
     bool beginsWith(List<int> a, List<int> b) {
       for (var i = 0; i < b.length; i++) {
@@ -104,22 +139,31 @@ class ImageInfo {
     if (beginsWith(firstChunk, PNG)) {
       return _ImageCodec.PNG;
     }
+    if (beginsWith(firstChunk, WEBP)) {
+      return _ImageCodec.WebP;
+    }
     return null;
   }
 }
-
-enum _ImageCodec { JPEG, PNG }
 
 abstract class ImageInfoDecoder implements Sink<List<int>> {
   final Completer<ImageInfo> completer;
   final StreamSubscription<List<int>> subscription;
   ImageInfoDecoder(this.subscription, this.completer);
   String get mimeType;
+
+  @override
+  void close() {
+    subscription.cancel();
+    if (!completer.isCompleted) {
+      completer.completeError(const UnexpectedEndOfStreamException());
+    }
+  }
 }
 
 class JpegInfoDecoder extends ImageInfoDecoder {
   @override
-  final String mimeType = 'image/jpeg';
+  String get mimeType => 'image/jpeg';
 
   JpegInfoDecoder(StreamSubscription<List<int>> subscription,
       Completer<ImageInfo> completer)
@@ -129,7 +173,6 @@ class JpegInfoDecoder extends ImageInfoDecoder {
   int _type = 0;
   int _segmentLength = 0;
   int _segmentIndex = 0;
-  int _availableDataLength = 0;
 
   Uint8List _sofBuffer;
 
@@ -145,6 +188,7 @@ class JpegInfoDecoder extends ImageInfoDecoder {
 
   void _add(List<int> data) {
     var index = 0;
+    var availableDataLength = 0;
 
     // States
     const START = 0x00;
@@ -223,23 +267,23 @@ class JpegInfoDecoder extends ImageInfoDecoder {
           break;
 
         case SEGMENT:
-          _availableDataLength =
+          availableDataLength =
               min(data.length - index, _segmentLength - _segmentIndex - 2);
           if (isSOF(_type)) {
             _sofBuffer.setRange(_segmentIndex,
-                _segmentIndex += _availableDataLength, data, index);
+                _segmentIndex += availableDataLength, data, index);
 
             if (_segmentIndex == _segmentLength - 2) {
               _parseSof();
               return;
             }
           } else {
-            _segmentIndex += _availableDataLength;
+            _segmentIndex += availableDataLength;
             if (_segmentIndex == _segmentLength - 2) {
               _state = MARKER_START;
             }
           }
-          index += _availableDataLength;
+          index += availableDataLength;
           continue;
       }
       index++;
@@ -253,39 +297,20 @@ class JpegInfoDecoder extends ImageInfoDecoder {
     final height = data[1] << 8 | data[2];
     final width = data[3] << 8 | data[4];
 
-    var format = -1;
+    var format = Format.Unknown;
     if (data[5] == 3) {
-      format = gl.RGB;
+      format = Format.RGB;
     } else if (data[5] == 1) {
-      format = gl.LUMINANCE;
+      format = Format.Luminance;
     }
 
     completer.complete(ImageInfo._(mimeType, bits, format, width, height));
   }
-
-  @override
-  void close() {
-    subscription.cancel();
-    if (!completer.isCompleted) {
-      completer.completeError(const UnexpectedEndOfStreamException());
-    }
-  }
 }
-
-/*
-* TODO Check for non-square pixels (`pHYs`)
-*
-* TODO Check for custom colorspaces:
-*   `cHRM` https://www.w3.org/TR/PNG/#11cHRM
-*   `gAMA` https://www.w3.org/TR/PNG/#11gAMA
-*   `iCCP` https://www.w3.org/TR/PNG/#11iCCP
-*   `sRGB` https://www.w3.org/TR/PNG/#11sRGB
-*
-* */
 
 class PngInfoDecoder extends ImageInfoDecoder {
   @override
-  final String mimeType = 'image/png';
+  String get mimeType => 'image/png';
 
   PngInfoDecoder(StreamSubscription<List<int>> subscription,
       Completer<ImageInfo> completer)
@@ -302,19 +327,25 @@ class PngInfoDecoder extends ImageInfoDecoder {
   int _chunkDataIndex = 0;
 
   int _state = 0;
-  int _availableDataLength = 0;
 
+  bool _hasHeader = false;
   bool _hasTrns = false;
 
-  final Uint8List _headerChunkData = Uint8List(13); // IHDR length
+  _ColorTransfer _transfer = _ColorTransfer.Unknown;
+  _ColorPrimaries _primaries = _ColorPrimaries.Unknown;
+
+  bool _hasNonSquarePixels = false;
+
+  final Uint8List _headerChunkBytes = Uint8List(13); // IHDR length
+  final Uint8List _chunkBytes = Uint8List(32); // cHRM length
 
   @override
   void add(List<int> data) {
-    var index = 0;
+    const wrongChunkLengthException =
+        InvalidDataFormatException('Wrong chunk length.');
 
-    const IHDR = 0x49484452;
-    const TRNS = 0x74524E53;
-    const IDAT = 0x49444154;
+    var index = 0;
+    var availableDataLength = 0;
 
     const START = 0;
     const CHUNK_LENGTH = 1;
@@ -352,11 +383,48 @@ class PngInfoDecoder extends ImageInfoDecoder {
           _chunkType = (_chunkType << 8) | byte;
           _chunkTypeIndex++;
           if (_chunkTypeIndex == 4) {
-            if (_chunkType == TRNS) {
-              _hasTrns = true;
-            } else if (_chunkType == IDAT) {
-              _parseIHDR();
-              return;
+            switch (_chunkType) {
+              case _PngChunk.IHDR:
+                if (_chunkLength != 13) {
+                  _abort(wrongChunkLengthException);
+                  return;
+                }
+                _hasHeader = true;
+                break;
+              case _PngChunk.tRNS:
+                _hasTrns = true;
+                break;
+              case _PngChunk.cHRM:
+                if (_chunkLength != 32) {
+                  _abort(wrongChunkLengthException);
+                  return;
+                }
+                break;
+              case _PngChunk.sRGB:
+                if (_chunkLength != 1) {
+                  _abort(wrongChunkLengthException);
+                  return;
+                }
+                break;
+              case _PngChunk.pHYs:
+                if (_chunkLength != 9) {
+                  _abort(wrongChunkLengthException);
+                  return;
+                }
+                break;
+              case _PngChunk.gAMA:
+                if (_chunkLength != 4) {
+                  _abort(wrongChunkLengthException);
+                  return;
+                }
+                break;
+              case _PngChunk.iCCP:
+                _transfer = _ColorTransfer.Custom;
+                _primaries = _ColorPrimaries.Custom;
+                break;
+              case _PngChunk.IDAT:
+                _parseIHDR();
+                return;
             }
 
             if (_chunkLength == 0) {
@@ -368,20 +436,58 @@ class PngInfoDecoder extends ImageInfoDecoder {
           break;
 
         case CHUNK_DATA:
-          _availableDataLength =
+          availableDataLength =
               min(data.length - index, _chunkLength - _chunkDataIndex);
-          if (_chunkType == IHDR) {
-            _headerChunkData.setRange(_chunkDataIndex,
-                _chunkDataIndex += _availableDataLength, data, index);
-          } else {
-            _chunkDataIndex += _availableDataLength;
+          switch (_chunkType) {
+            case _PngChunk.IHDR:
+              _headerChunkBytes.setRange(_chunkDataIndex,
+                  _chunkDataIndex += availableDataLength, data, index);
+              break;
+
+            case _PngChunk.cHRM:
+            case _PngChunk.gAMA:
+            case _PngChunk.pHYs:
+              _chunkBytes.setRange(_chunkDataIndex,
+                  _chunkDataIndex += availableDataLength, data, index);
+              break;
+
+            case _PngChunk.sRGB:
+              // The chunk contains one byte describing rendering intent
+              // 0 - perceptual
+              // 1 - relative colorimetric
+              // 2 - saturation-preserving
+              // 3 - absolute colorimetric
+              _transfer = _ColorTransfer.sRGB;
+              _primaries = _ColorPrimaries.sRGB;
+
+              _chunkDataIndex++;
+              break;
+
+            default:
+              _chunkDataIndex += availableDataLength;
           }
 
           if (_chunkDataIndex == _chunkLength) {
+            switch (_chunkType) {
+              case _PngChunk.cHRM:
+                if (_primaries == _ColorPrimaries.Unknown) {
+                  _checkChrm();
+                }
+                break;
+              case _PngChunk.gAMA:
+                if (_transfer == _ColorTransfer.Unknown) {
+                  _checkGama();
+                }
+                break;
+              case _PngChunk.pHYs:
+                _checkPhys();
+                break;
+            }
+
             _state = CHUNK_CRC;
           }
 
-          index += _availableDataLength;
+          index += availableDataLength;
           continue;
 
         case CHUNK_CRC:
@@ -399,37 +505,233 @@ class PngInfoDecoder extends ImageInfoDecoder {
   void _parseIHDR() {
     subscription.cancel();
 
-    final data = _headerChunkData;
+    if (!_hasHeader) {
+      completer.completeError(
+          const InvalidDataFormatException('PNG header not found.'));
+    }
 
-    final width = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
-    final height = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
-    final bits = data[8];
+    final data = _headerChunkBytes.buffer.asByteData();
 
-    var format = -1;
-    switch (data[9]) {
+    final width = data.getUint32(0, Endian.big);
+    final height = data.getUint32(4, Endian.big);
+    final bits = data.getUint8(8);
+
+    var format = Format.Unknown;
+    switch (data.getUint8(9)) {
       case 0: // Greyscale
-        format = _hasTrns ? gl.LUMINANCE_ALPHA : gl.LUMINANCE;
+        format = _hasTrns ? Format.LuminanceAlpha : Format.Luminance;
         break;
       case 2: // Truecolor
       case 3: // Indexed color
-        format = _hasTrns ? gl.RGBA : gl.RGB;
+        format = _hasTrns ? Format.RGBA : Format.RGB;
         break;
       case 4: // Greyscale with alpha
-        format = gl.LUMINANCE_ALPHA;
+        format = Format.LuminanceAlpha;
         break;
       case 6: // Truecolor with alpha
-        format = gl.RGBA;
+        format = Format.RGBA;
         break;
     }
 
-    completer.complete(ImageInfo._(mimeType, bits, format, width, height));
+    // No primaries defined, assume sRGB
+    if (_primaries == _ColorPrimaries.Unknown) {
+      _primaries = _ColorPrimaries.sRGB;
+    }
+
+    // No transfer function defined, assume sRGB
+    if (_transfer == _ColorTransfer.Unknown) {
+      _transfer = _ColorTransfer.sRGB;
+    }
+
+    completer.complete(ImageInfo._(mimeType, bits, format, width, height,
+        colorPrimaries: _primaries,
+        colorTransfer: _transfer,
+        hasNonSquarePixels: _hasNonSquarePixels));
   }
 
-  @override
-  void close() {
+  void _checkGama() {
+    // sRGB chunk overrides gAMA chunk
+    if (_transfer == _ColorTransfer.sRGB) {
+      return;
+    }
+
+    // The value is encoded as a four-byte PNG unsigned integer,
+    // representing gamma times 100000.
+
+    // Default value is 45455 (1/2.2); linear (1) is also allowed
+    switch (_chunkBytes.buffer.asByteData().getUint32(0, Endian.big)) {
+      case 45455:
+        _transfer = _ColorTransfer.sRGB;
+        break;
+      case 100000:
+        _transfer = _ColorTransfer.Linear;
+        break;
+      default:
+        _transfer = _ColorTransfer.Custom;
+    }
+  }
+
+  void _checkPhys() {
+    // Check that pixels are square
+    final byteData = _chunkBytes.buffer.asByteData();
+    final pixelsPerXUnit = byteData.getUint32(0, Endian.big);
+    final pixelsPerYUnit = byteData.getUint32(4, Endian.big);
+
+    if (pixelsPerXUnit != pixelsPerYUnit) {
+      _hasNonSquarePixels = true;
+    }
+  }
+
+  void _checkChrm() {
+    // sRGB chunk overrides cHRM chunk
+    if (_primaries == _ColorPrimaries.sRGB) {
+      return;
+    }
+
+    // Each value is encoded as a four-byte PNG unsigned integer,
+    // representing the x or y value times 100000.
+
+    // Default values are
+
+    // White point x 31270
+    // White point y 32900
+    // Red         x 64000
+    // Red         y 33000
+    // Green       x 30000
+    // Green       y 60000
+    // Blue        x 15000
+    // Blue        y  6000
+
+    final data = _chunkBytes.buffer.asByteData();
+
+    if (data.getUint32(0, Endian.big) == 31270 &&
+        data.getUint32(4, Endian.big) == 32900 &&
+        data.getUint32(8, Endian.big) == 64000 &&
+        data.getUint32(12, Endian.big) == 33000 &&
+        data.getUint32(16, Endian.big) == 30000 &&
+        data.getUint32(20, Endian.big) == 60000 &&
+        data.getUint32(24, Endian.big) == 15000 &&
+        data.getUint32(28, Endian.big) == 6000) {
+      _primaries = _ColorPrimaries.sRGB;
+    } else {
+      _primaries = _ColorPrimaries.Custom;
+    }
+  }
+
+  void _abort(Object error) {
     subscription.cancel();
     if (!completer.isCompleted) {
-      completer.completeError(const UnexpectedEndOfStreamException());
+      completer.completeError(error);
+    }
+  }
+}
+
+class WebPInfoDecoder extends ImageInfoDecoder {
+  @override
+  String get mimeType => 'image/webp';
+
+  // Accumulate no more than 30 bytes of WebP header
+  final Uint8List _buffer = Uint8List(30);
+  int _bufferIndex = 0;
+
+  WebPInfoDecoder(StreamSubscription<List<int>> subscription,
+      Completer<ImageInfo> completer)
+      : super(subscription, completer);
+
+  @override
+  void add(List<int> bytes) {
+    final availableDataLength =
+        min(bytes.length, _buffer.length - _bufferIndex);
+    _buffer.setRange(_bufferIndex, _bufferIndex += availableDataLength, bytes);
+
+    // We need 30 bytes for VP8 and VP8X, but only 25 for VP8L.
+    if (_bufferIndex < 25 || _bufferIndex < 30 && _buffer[0xF] != 0x4C) {
+      return;
+    }
+
+    subscription.cancel();
+
+    const RIFF = 0x52494646;
+    const WEBP = 0x57454250;
+    const VP8_ = 0x56503820;
+    const VP8L = 0x5650384C;
+    const VP8X = 0x56503858;
+
+    final byteData = _buffer.buffer.asByteData();
+
+    // RIFF size WEBP
+    if (byteData.getUint32(0, Endian.big) != RIFF ||
+        byteData.getUint32(8, Endian.big) != WEBP) {
+      _abort(const InvalidDataFormatException('Wrong WebP header.'));
+      return;
+    }
+
+    var format = Format.Unknown;
+    var width = -1;
+    var height = -1;
+    var hasCustomColorInfo = false;
+    var hasAnimation = false;
+
+    // 4 bytes with chunk type followed by its size
+    final type = byteData.getUint32(12, Endian.big);
+    switch (type) {
+      case VP8_:
+        // Skipping first 6 bytes of VP8 bitstream
+
+        // No alpha channel
+        format = Format.RGB;
+
+        // 14 bits of width
+        width = byteData.getUint16(26, Endian.little) & 0x3FFF;
+
+        // 14 bits of height
+        height = byteData.getUint16(28, Endian.little) & 0x3FFF;
+        break;
+      case VP8L:
+        // Skipping the first byte of VP8L bitstream
+
+        // 1-based, 14 bits of width, LSB-packed
+        width = 1;
+        width += _buffer[21] | ((_buffer[22] & 0x3F) << 8);
+
+        // 1-based, 14 bits of height, LSB-packed
+        height = 1;
+        height += (_buffer[22] >> 6) |
+            (_buffer[23] << 2) |
+            ((_buffer[24] & 0xF) << 10);
+
+        // alpha_is_used
+        format = _buffer[24] & 0x10 == 0x10 ? Format.RGBA : Format.RGB;
+        break;
+      case VP8X:
+        // Used features byte
+        final features = _buffer[20];
+        hasAnimation = features & 2 == 2;
+        hasCustomColorInfo = features & 0x20 == 0x20;
+        format = features & 0x10 == 0x10 ? Format.RGBA : Format.RGB;
+
+        // 1-based, 24 bits of width
+        width = (_buffer[24] | (_buffer[25] << 8) | (_buffer[26] << 16)) + 1;
+
+        // 1-based, 24 bits of height
+        height = (_buffer[27] | (_buffer[28] << 8) | (_buffer[29] << 16)) + 1;
+        break;
+      default:
+        _abort(const InvalidDataFormatException('Wrong WebP header.'));
+        return;
+    }
+    completer.complete(ImageInfo._(mimeType, 8, format, width, height,
+        colorTransfer:
+            hasCustomColorInfo ? _ColorTransfer.Custom : _ColorTransfer.sRGB,
+        colorPrimaries:
+            hasCustomColorInfo ? _ColorPrimaries.Custom : _ColorPrimaries.sRGB,
+        hasAnimation: hasAnimation));
+  }
+
+  void _abort(Object error) {
+    subscription.cancel();
+    if (!completer.isCompleted) {
+      completer.completeError(error);
     }
   }
 }
@@ -448,4 +750,15 @@ class InvalidDataFormatException implements Exception {
 
   @override
   String toString() => message;
+}
+
+abstract class _PngChunk {
+  static const int IHDR = 0x49484452;
+  static const int IDAT = 0x49444154;
+  static const int tRNS = 0x74524E53;
+  static const int cHRM = 0x6348524D;
+  static const int sRGB = 0x73524742;
+  static const int iCCP = 0x69434350;
+  static const int gAMA = 0x67414D41;
+  static const int pHYs = 0x70485973;
 }

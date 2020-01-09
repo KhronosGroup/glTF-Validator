@@ -2,20 +2,11 @@ targets:
   $default:
     sources:
       - "pubspec.yaml"
-      - "bin/gltf_validator.dart"
       - "lib/**"
       - "node/gltf_validator.dart"
       - "tool/**"
       - "web/**"
     builders:
-      "|version_builder":
-        enabled: True
-      "|snapshot_builder":
-        generate_for:
-          - bin/**.dart
-        release_options:
-          # Keep this under release_options until https://github.com/dart-lang/build/issues/1127
-          snapshot_kind: app-jit
       build_node_compilers|entrypoint:
         generate_for:
           - node/**.dart
@@ -24,12 +15,13 @@ targets:
         release_options:
           dart2js_args:
             - --minify
-            - --categories=Server
+            - --lax-runtime-type-to-string
+            - --server-mode
             - --trust-primitives
             - --omit-implicit-checks
         dev_options:
           dart2js_args:
-            - --categories=Server
+            - --server-mode
             - -DGLTF_VALIDATOR_DEBUG=true
       build_web_compilers|entrypoint:
         generate_for:
@@ -38,23 +30,8 @@ targets:
           compiler: dart2js
           dart2js_args:
           - --minify
+          - --lax-runtime-type-to-string
           - --no-source-maps
           - --trust-primitives
           - --omit-implicit-checks
-
-builders:
-  version_builder:
-    build_to: source
-    import: tool/version_builder.dart
-    builder_factories:
-      - versionBuilder
-    build_extensions:
-      "$lib$":
-        - gltf.g.dart
-  snapshot_builder:
-    import: tool/snapshot_builder.dart
-    builder_factories:
-      - snapshotBuilder
-    build_extensions:
-      ".dart":
-        - .snapshot
+          - --omit-as-casts

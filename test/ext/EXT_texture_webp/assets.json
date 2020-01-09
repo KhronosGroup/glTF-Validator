@@ -1,0 +1,21 @@
+{
+    "image": {
+        "name": "image",
+        "tests": {
+            "undeclared_extension.gltf": "WebP images used with no extension declared",
+            "valid.gltf": "Valid"
+        }
+    },
+    "texture": {
+        "name": "texture.EXT_texture_webp",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_object.gltf": "Empty object",
+            "invalid_image_mime_type.gltf": "WebP image used from the core texture & PNG image used from WebP extension object",
+            "undeclared_extension.gltf": "Extension object is not declared",
+            "unexpected_extension.gltf": "Unexpected extension object",
+            "unresolved_source.gltf": "Unresolved WebP texture source",
+            "valid.gltf": "Valid"
+        }
+    }
+}

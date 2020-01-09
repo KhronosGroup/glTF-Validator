@@ -1,0 +1,207 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "scenes": [
+    {
+      "name": "Scene name",
+      "nodes": [
+        0, 1
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Node name"
+    },
+    {
+      "mesh": 0,
+      "camera": 0,
+      "skin": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Mesh name",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 2,
+            "TEXCOORD_0": 3,
+            "JOINTS_0": 6,
+            "WEIGHTS_0": 7
+          },
+          "indices": 0,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "accessors": [
+    {
+      "name": "Accessor name",
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 36,
+      "max": [
+        23
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 24,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 288,
+      "componentType": 5126,
+      "count": 24,
+      "max": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "min": [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      "type": "VEC3"
+    },
+    {
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC2"
+    },
+    {
+      "componentType": 5126,
+      "count": 1,
+      "type": "SCALAR",
+      "min": [
+        0
+      ],
+      "max": [
+        1
+      ]
+    },
+    {
+      "componentType": 5126,
+      "count": 1,
+      "type": "VEC3"
+    },
+    {
+      "componentType": 5123,
+      "count": 24,
+      "type": "VEC4"
+    },
+    {
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC4"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material name",
+      "normalTexture": {
+        "index": 0
+      }
+    }
+  ],
+  "bufferViews": [
+    {
+      "name": "Buffer view name",
+      "buffer": 0,
+      "byteOffset": 576,
+      "byteLength": 72,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 576,
+      "byteStride": 12,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "name": "Buffer name",
+      "byteLength": 648
+    }
+  ],
+  "animations": [
+    {
+      "name": "Animation name",
+      "samplers": [
+        {
+          "input": 4,
+          "output": 5
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "path": "translation"
+          }
+        }
+      ]
+    }
+  ],
+  "cameras": [
+    {
+      "name": "Camera name",
+      "type": "perspective",
+      "perspective": {
+        "znear": 0.1,
+        "yfov": 1.5
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "Texture name",
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "Image name",
+      "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQYV2P4z/AfAAQAAf+I0P3MAAAAAElFTkSuQmCC"
+    }
+  ],
+  "samplers": [
+    {
+      "name": "Sampler name"
+    }
+  ],
+  "skins": [
+    {
+      "name": "Skin name",
+      "joints": [
+        0
+      ]
+    }
+  ]
+}

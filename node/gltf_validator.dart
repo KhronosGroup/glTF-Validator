@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -62,6 +61,7 @@ abstract class _JSValidationOptions {
   external ExternalResourceFunction get externalResourceFunction;
 
   external bool get validateAccessorData;
+  external bool get writeTimestamp;
   external int get maxIssues;
   external List get ignoredIssues;
   external Object get severityOverrides;
@@ -105,7 +105,7 @@ Future<Map<String, Object>> validateBytes(
   if (data is! Uint8List) {
     throw ArgumentError('data: Argument must be a Uint8Array.');
   }
-  final _JSValidationOptions _options = _checkOptionsObject(options);
+  final _options = _checkOptionsObject(options);
   final context = _getContextFromOptions(_options);
 
   GltfReaderResult readerResult;
@@ -124,7 +124,7 @@ Future<Map<String, Object>> validateString(String json, Object options) async {
   if (json is! String) {
     throw ArgumentError('json: Argument must be a string.');
   }
-  final _JSValidationOptions _options = _checkOptionsObject(options);
+  final _options = _checkOptionsObject(options);
   final context = _getContextFromOptions(_options);
 
   final readerResult = GltfJsonReader.readFromJsonString(json, context);
@@ -132,7 +132,7 @@ Future<Map<String, Object>> validateString(String json, Object options) async {
   return _validateResourcesAndGetReport(_options, context, readerResult);
 }
 
-Object _checkOptionsObject(Object options) {
+_JSValidationOptions _checkOptionsObject(Object options) {
   if (options != null &&
       (options is num ||
           options is bool ||
@@ -140,7 +140,8 @@ Object _checkOptionsObject(Object options) {
           options is List)) {
     throw ArgumentError('options: Value must be an object.');
   }
-  return options;
+  // ignore: avoid_as
+  return options as _JSValidationOptions;
 }
 
 Future<Map<String, Object>> _validateResourcesAndGetReport(
@@ -149,7 +150,6 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
     GltfReaderResult result) async {
   Uri uri;
   ExternalResourceFunction externalResourceFunction;
-  bool validateAccessorData;
 
   if (options != null) {
     uri = _getUri(options.uri);
@@ -166,17 +166,22 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
         options.validateAccessorData is! bool) {
       throw ArgumentError(
           'options.validateAccessorData: Value must be a boolean.');
-    } else {
-      validateAccessorData = options.validateAccessorData;
+    }
+
+    if (options.writeTimestamp != null && options.writeTimestamp is! bool) {
+      throw ArgumentError('options.writeTimestamp: Value must be a boolean.');
     }
   }
 
-  if (result?.gltf != null) {
+  if (result?.gltf != null && externalResourceFunction != null) {
     final loader =
         _getResourcesLoader(context, result, externalResourceFunction);
-    await loader.load(mustValidateAccessorData: validateAccessorData);
+    await loader.load(
+        validateAccessorData: options.validateAccessorData ?? true);
   }
-  return ValidationResult(uri, context, result).toMap();
+  return ValidationResult(uri, context, result,
+          writeTimestamp: options.writeTimestamp ?? true)
+      .toMap();
 }
 
 Uri _getUri(Object uri) {
@@ -234,7 +239,7 @@ Context _getContextFromOptions(_JSValidationOptions options) {
 
       severityOverrides = <String, Severity>{};
 
-      for (final String key in _getKeys(options.severityOverrides)) {
+      for (final key in _getKeys(options.severityOverrides).cast<String>()) {
         final Object value = getProperty(options.severityOverrides, key);
         if (value is int && value >= 0 && value <= 3) {
           severityOverrides[key] = Severity.values[value];
@@ -257,10 +262,6 @@ Context _getContextFromOptions(_JSValidationOptions options) {
 ResourcesLoader _getResourcesLoader(Context context,
     GltfReaderResult readerResult, ExternalResourceFunction getResource) {
   Future<Uint8List> getBytes(Uri uri) {
-    if (getResource == null) {
-      return null;
-    }
-
     final completer = Completer<Uint8List>();
     getResource(uri.toString()).then(allowInterop((Object o) {
       if (o is Uint8List) {

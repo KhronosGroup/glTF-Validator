@@ -1,0 +1,20 @@
+{
+    "uri": "test/base/data/glb/truncated_chunk_header.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "GLB_UNEXPECTED_END_OF_CHUNK_HEADER",
+                "message": "Unexpected end of chunk header.",
+                "severity": 0,
+                "offset": 13
+            }
+        ],
+        "truncated": false
+    }
+}

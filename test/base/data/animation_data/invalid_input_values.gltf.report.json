@@ -1,0 +1,56 @@
+{
+    "uri": "test/base/data/animation_data/invalid_input_values.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 3,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "ACCESSOR_ANIMATION_INPUT_NEGATIVE",
+                "message": "Animation input accessor element at index 0 is negative: -1.0.",
+                "severity": 0,
+                "pointer": "/animations/0/samplers/0/input"
+            },
+            {
+                "code": "ACCESSOR_ANIMATION_INPUT_NON_INCREASING",
+                "message": "Animation input accessor element at index 1 is less than or equal to previous: 0.0 <= 0.0.",
+                "severity": 0,
+                "pointer": "/animations/0/samplers/0/input"
+            },
+            {
+                "code": "ACCESSOR_ANIMATION_INPUT_NON_INCREASING",
+                "message": "Animation input accessor element at index 3 is less than or equal to previous: 1.0 <= 1.0.",
+                "severity": 0,
+                "pointer": "/animations/0/samplers/0/input"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer",
+                "storage": "external",
+                "uri": "invalid_input_values.bin",
+                "byteLength": 16
+            }
+        ],
+        "animationCount": 1,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

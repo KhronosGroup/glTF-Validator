@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,8 +16,11 @@
 
 library gltf.base.mesh;
 
+import 'dart:typed_data';
+
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/gl.dart' as gl;
+import 'package:meta/meta.dart';
 
 class Mesh extends GltfChildOfRootProperty {
   final SafeList<MeshPrimitive> primitives;
@@ -27,10 +29,6 @@ class Mesh extends GltfChildOfRootProperty {
   Mesh._(this.primitives, this.weights, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
-
-  @override
-  String toString([_]) =>
-      super.toString({PRIMITIVES: primitives, WEIGHTS: weights});
 
   static Mesh fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -242,15 +240,13 @@ class MeshPrimitive extends GltfProperty {
       }
 
       if (!hasNormal && hasTangent) {
-        context.addIssue(SemanticError.meshPrimitiveTangentWithoutNormal);
+        context.addIssue(SemanticError.meshPrimitiveTangentWithoutNormal,
+            name: TANGENT);
       }
 
       if (hasTangent && mode == gl.POINTS) {
-        context.addIssue(SemanticError.meshPrimitiveTangentPoints);
-      }
-
-      if (jointsCount != weightsCount) {
-        context.addIssue(SemanticError.meshPrimitiveJointsWeightsMismatch);
+        context.addIssue(SemanticError.meshPrimitiveTangentPoints,
+            name: TANGENT);
       }
 
       /// Check for indexed semantics continuity -
@@ -270,11 +266,20 @@ class MeshPrimitive extends GltfProperty {
       weightsCount = checkContinuity(maxWeights, weightsCount, WEIGHTS_);
       texcoordCount = checkContinuity(maxTexcoord, texcoordCount, TEXCOORD_);
 
+      if (jointsCount != weightsCount) {
+        context.addIssue(SemanticError.meshPrimitiveJointsWeightsMismatch,
+            args: [jointsCount, weightsCount]);
+
+        // Block joints data from further processing
+        jointsCount = 0;
+        weightsCount = 0;
+      }
+
       context.path.removeLast();
     }
 
     void checkMorphTargetAttributeSemanticName(String semantic) {
-      if (!MORPH_ATTRIBUTES_ACCESSORS.containsKey(semantic) &&
+      if (!morphAttributeAccessorFormats.containsKey(semantic) &&
           !semantic.startsWith('_')) {
         context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
             name: semantic);
@@ -307,14 +312,17 @@ class MeshPrimitive extends GltfProperty {
   Accessor get indices => _indices;
   Material get material => _material;
 
-  @override
-  String toString([_]) => super.toString({
-        ATTRIBUTES: _attributesIndices,
-        INDICES: _indicesIndex,
-        MATERIAL: _materialIndex,
-        MODE: mode,
-        TARGETS: _targetsIndices
-      });
+  int get trianglesCount {
+    switch (mode) {
+      case gl.TRIANGLES:
+        return count ~/ 3;
+      case gl.TRIANGLE_STRIP:
+      case gl.TRIANGLE_FAN:
+        return count > 2 ? count - 2 : 0;
+      default:
+        return 0;
+    }
+  }
 
   @override
   void link(Gltf gltf, Context context) {
@@ -341,10 +349,29 @@ class MeshPrimitive extends GltfProperty {
 
         if (semantic == NORMAL) {
           accessor.setUnit();
+          context.path.add(NORMAL);
+          context.addElementChecker(
+              accessor,
+              UnitVec3FloatChecker(context.getPointerString(),
+                  accessor.isFloat ? null : accessor.normalizeValue));
+          context.path.removeLast();
         } else if (semantic == TANGENT) {
           accessor
             ..setUnit()
             ..setXyzSign();
+          context.path.add(TANGENT);
+          context.addElementChecker(
+              accessor,
+              UnitVec3SignFloatChecker(context.getPointerString(),
+                  accessor.isFloat ? null : accessor.normalizeValue));
+          context.path.removeLast();
+        } else if (semantic.startsWith('${COLOR_}_') &&
+            gl.FLOAT == accessor.componentType) {
+          accessor.setClamped();
+          context.path.add(semantic);
+          context.addElementChecker(
+              accessor, ClampedRangeFloatChecker(context.getPointerString()));
+          context.path.removeLast();
         }
 
         if (context.validate) {
@@ -356,7 +383,7 @@ class MeshPrimitive extends GltfProperty {
           }
 
           final format = AccessorFormat.fromAccessor(accessor);
-          final validFormats = ATTRIBUTES_ACCESSORS[semantic.split('_')[0]];
+          final validFormats = attributeAccessorFormats[semantic.split('_')[0]];
           if (validFormats != null && !validFormats.contains(format)) {
             context.addIssue(
                 LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
@@ -391,7 +418,7 @@ class MeshPrimitive extends GltfProperty {
             accessor.bufferView.effectiveByteStride = accessor.elementLength;
           }
 
-          accessor.bufferView.checkAccessorRefs(accessor, semantic, context);
+          _checkAccessorRefs(accessor, semantic, context);
         }
       });
       context.path.removeLast();
@@ -411,20 +438,34 @@ class MeshPrimitive extends GltfProperty {
             ?.setUsage(BufferViewUsage.IndexBuffer, INDICES, context);
 
         if (context.validate) {
+          context.path.add(INDICES);
           if (indices.bufferView != null &&
               indices.bufferView.byteStride != -1) {
-            context.addIssue(
-                LinkError.meshPrimitiveIndicesAccessorWithByteStride,
-                name: INDICES);
+            context
+                .addIssue(LinkError.meshPrimitiveIndicesAccessorWithByteStride);
           }
 
           final format = AccessorFormat.fromAccessor(indices);
           if (!MESH_PRIMITIVE_INDICES_FORMATS.contains(format)) {
             context.addIssue(
                 LinkError.meshPrimitiveIndicesAccessorInvalidFormat,
-                name: INDICES,
                 args: [format, MESH_PRIMITIVE_INDICES_FORMATS]);
+          } else {
+            final maxVertexIndex = vertexCount != -1 ? vertexCount - 1 : -1;
+            final modesMask = mode != -1 ? 1 << mode : -1;
+
+            if (modesMask != 0 && maxVertexIndex >= -1) {
+              context.addElementChecker(
+                  indices,
+                  IndexBufferIntegerChecker(
+                      path: context.getPointerString(),
+                      maxVertexIndex: maxVertexIndex,
+                      totalTriangles: _count ~/ 3,
+                      modesMask: modesMask,
+                      componentType: indices.componentType));
+            }
           }
+          context.path.removeLast();
         }
       }
     }
@@ -449,33 +490,34 @@ class MeshPrimitive extends GltfProperty {
 
     _material = gltf.materials[_materialIndex];
 
-    if (context.validate && _materialIndex != -1) {
-      if (_material == null) {
-        context.addIssue(LinkError.unresolvedReference,
-            name: MATERIAL, args: [_materialIndex]);
-      } else {
-        _material.markAsUsed();
+    if (context.validate) {
+      final unusedTexCoords =
+          List<int>.generate(texcoordCount, (i) => i, growable: false);
 
-        final unusedTexCoords =
-            List<int>.generate(texcoordCount, (i) => i, growable: false);
+      if (_materialIndex != -1) {
+        if (_material == null) {
+          context.addIssue(LinkError.unresolvedReference,
+              name: MATERIAL, args: [_materialIndex]);
+        } else {
+          _material.markAsUsed();
 
-        _material.texCoordIndices.forEach((pointer, texCoord) {
-          if (texCoord != -1) {
-            if (texCoord + 1 > texcoordCount) {
-              context.addIssue(LinkError.meshPrimitiveTooFewTexcoords,
-                  name: MATERIAL, args: [pointer, texCoord]);
-            } else {
-              // mark as used
-              unusedTexCoords[texCoord] = -1;
+          _material.texCoordIndices.forEach((pointer, texCoord) {
+            if (texCoord != -1) {
+              if (texCoord + 1 > texcoordCount) {
+                context.addIssue(LinkError.meshPrimitiveTooFewTexcoords,
+                    name: MATERIAL, args: [pointer, texCoord]);
+              } else {
+                // mark as used
+                unusedTexCoords[texCoord] = -1;
+              }
             }
-          }
-        });
-
-        if (unusedTexCoords.any((i) => i != -1)) {
-          context.addIssue(LinkError.meshPrimitiveUnusedTexcoord,
-              name: MATERIAL,
-              args: [null, unusedTexCoords.where((i) => i != -1)]);
+          });
         }
+      }
+
+      for (final unusedIndex in unusedTexCoords.where((i) => i != -1)) {
+        context.addIssue(LinkError.unusedObject,
+            name: '$ATTRIBUTES/${TEXCOORD_}_$unusedIndex');
       }
     }
 
@@ -525,7 +567,7 @@ class MeshPrimitive extends GltfProperty {
               }
 
               final format = AccessorFormat.fromAccessor(accessor);
-              final validFormats = MORPH_ATTRIBUTES_ACCESSORS[semantic];
+              final validFormats = morphAttributeAccessorFormats[semantic];
 
               if (validFormats != null && !validFormats.contains(format)) {
                 context.addIssue(
@@ -554,8 +596,7 @@ class MeshPrimitive extends GltfProperty {
                     accessor.elementLength;
               }
 
-              accessor.bufferView
-                  .checkAccessorRefs(accessor, semantic, context);
+              _checkAccessorRefs(accessor, semantic, context);
             }
           }
 
@@ -565,5 +606,101 @@ class MeshPrimitive extends GltfProperty {
       }
       context.path.removeLast();
     }
+  }
+
+  void _checkAccessorRefs(Accessor accessor, String semantic, Context context) {
+    if (accessor.bufferView.byteStride == -1) {
+      final accessors = context.bufferViewAccessors
+          .putIfAbsent(accessor.bufferView, () => <Accessor>{});
+      if (accessors.add(accessor) && accessors.length > 1) {
+        context.addIssue(LinkError.meshPrimitiveAccessorWithoutByteStride,
+            name: semantic);
+      }
+    }
+  }
+}
+
+class IndexBufferIntegerChecker extends ElementChecker<int> {
+  /*
+  TODO
+  points - warn on duplicates
+  lines - degenerate (v(2n)=v(2n+1)), duplicates (incl. reversed)
+  line_loop, line_stripe - degenerate (v(n)=v(n+1)),
+  triangles - degenerate (v1=v2 | v2=v3 | v1=v3), duplicates (order-aware)
+  triangle_strip - degenerate (v1=v2=v3), duplicates (order-aware)
+  triangle_fan - ???
+ */
+
+  final int maxVertexIndex;
+  final int totalTriangles;
+  final int primitiveRestartIndex;
+
+  final bool isPoints;
+  final bool isLines;
+  final bool isLineLoop;
+  final bool isLineStrip;
+  final bool isTriangles;
+  final bool isTriangleStrip;
+  final bool isTriangleFan;
+
+  int _vertexIndex = 0;
+  int _degenerateTriangles = 0;
+
+  final _triangle = Uint32List(3);
+
+  @override
+  final String path;
+
+  IndexBufferIntegerChecker(
+      {@required this.path,
+      @required this.maxVertexIndex,
+      @required this.totalTriangles,
+      @required int componentType,
+      @required int modesMask})
+      : primitiveRestartIndex = gl.typeMax(componentType),
+        isPoints = 1 == 1 & modesMask,
+        isLines = 2 == 2 & modesMask,
+        isLineLoop = 4 == 4 & modesMask,
+        isLineStrip = 8 == 8 & modesMask,
+        isTriangles = 16 == 16 & modesMask,
+        isTriangleStrip = 32 == 32 & modesMask,
+        isTriangleFan = 64 == 64 & modesMask;
+
+  @override
+  bool check(Context context, int index, int componentIndex, int value) {
+    assert(componentIndex == 0);
+    if (value > maxVertexIndex) {
+      context.addIssue(DataError.accessorIndexOob,
+          name: path, args: [index, value, maxVertexIndex]);
+    }
+
+    if (value == primitiveRestartIndex) {
+      context.addIssue(DataError.accessorIndexPrimitiveRestart,
+          name: path, args: [value, index]);
+    }
+
+    if (isTriangles) {
+      _triangle[_vertexIndex] = value;
+      if (++_vertexIndex == 3) {
+        _vertexIndex = 0;
+        if (_triangle[0] == _triangle[1] ||
+            _triangle[1] == _triangle[2] ||
+            _triangle[2] == _triangle[0]) {
+          ++_degenerateTriangles;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  @override
+  bool done(Context context) {
+    if (_degenerateTriangles > 0) {
+      context.addIssue(DataError.accessorIndexTriangleDegenerate,
+          name: path, args: [_degenerateTriangles, totalTriangles]);
+    }
+
+    return true;
   }
 }

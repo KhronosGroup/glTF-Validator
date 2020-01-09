@@ -1,6 +1,5 @@
 /*
- * # Copyright (c) 2016-2017 The Khronos Group Inc.
- * # Copyright (c) 2016 Alexey Knyazev
+ * # Copyright (c) 2016-2019 The Khronos Group Inc.
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -37,17 +36,13 @@ class Image extends GltfChildOfRootProperty {
 
   BufferView get bufferView => _bufferView;
 
-  @override
-  String toString([_]) => super
-      .toString({BUFFER_VIEW: _bufferViewIndex, MIME_TYPE: mimeType, URI: uri});
-
   static Image fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
       checkMembers(map, IMAGE_MEMBERS, context);
     }
 
     final bufferViewIndex = getIndex(map, BUFFER_VIEW, context, req: false);
-    var mimeType = getString(map, MIME_TYPE, context, list: IMAGE_MIME_TYPES);
+    var mimeType = getString(map, MIME_TYPE, context, list: imageMimeTypes);
     final uriString = getString(map, URI, context, req: false);
 
     if (context.validate) {
@@ -82,10 +77,9 @@ class Image extends GltfChildOfRootProperty {
 
         // Re-assign `mimeType` only if it wasn't set in JSON
         if (mimeType == null) {
-          if (context.validate &&
-              !IMAGE_MIME_TYPES.contains(uriData.mimeType)) {
+          if (context.validate && !imageMimeTypes.contains(uriData.mimeType)) {
             context.addIssue(SchemaError.valueNotInList,
-                name: MIME_TYPE, args: [uriData.mimeType, IMAGE_MIME_TYPES]);
+                name: URI, args: [uriData.mimeType, imageMimeTypes]);
           }
           mimeType = uriData.mimeType;
         }

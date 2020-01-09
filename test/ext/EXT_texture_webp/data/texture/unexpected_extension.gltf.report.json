@@ -1,0 +1,59 @@
+{
+    "uri": "test/ext/EXT_texture_webp/data/texture/unexpected_extension.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.0",
+    "issues": {
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNEXPECTED_EXTENSION_OBJECT",
+                "message": "Unexpected location for this extension.",
+                "severity": 0,
+                "pointer": "/images/0/extensions/EXT_texture_webp"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/images/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": [
+            "EXT_texture_webp"
+        ],
+        "resources": [
+            {
+                "pointer": "/images/0",
+                "mimeType": "image/webp",
+                "storage": "data-uri",
+                "image": {
+                    "width": 256,
+                    "height": 128,
+                    "format": "rgb",
+                    "primaries": "srgb",
+                    "transfer": "srgb",
+                    "bits": 8
+                }
+            }
+        ],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}
