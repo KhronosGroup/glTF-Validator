@@ -13,13 +13,9 @@ dependencies:
   yaml: '^2.2.0'
 
 dev_dependencies:
-  build_runner: '^1.7.2'
-  build_web_compilers: '^2.7.1'
-  build_node_compilers: #'^0.2.4'
-    git:
-      url: git://github.com/lexaknyazev/node-interop.git
-      path: build_node_compilers
-      ref: rename
+  build_runner: '^1.7.3'
+  build_web_compilers: '^2.7.2'
+  build_node_compilers: '^0.2.4'
   build_version: '^2.0.1'
   grinder: '^0.8.3+1'
   js: '^0.6.1+1'
@@ -28,7 +24,7 @@ dev_dependencies:
   test: '^1.9.4'
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: '>=2.7.0 <3.0.0'
 
 executables:
   gltf_validator:
