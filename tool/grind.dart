@@ -106,10 +106,6 @@ void exe() {
   targetDir.createSync(recursive: true);
 
   run(dart2native, arguments: ['bin/gltf_validator.dart', '-v', '-o', output]);
-
-  if (Platform.isLinux || Platform.isMacOS) {
-    run('chmod', arguments: ['+x', output]);
-  }
 }
 
 @Task('Build web drag-n-drop version.')
