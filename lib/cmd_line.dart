@@ -236,7 +236,7 @@ Future<void> run(List<String> args) async {
     errPipe.write('Using $threads thread(s).\n');
 
     var activeTasks = 0;
-    var foundErrors = false;
+    final assetsWithErrors = <String>[];
     final watch = Stopwatch()..start();
 
     final it = Directory(input).listSync(recursive: true).where((entry) {
@@ -250,21 +250,25 @@ Future<void> run(List<String> args) async {
     void spawn() {
       if (it.moveNext()) {
         ++activeTasks;
+        final assetFile = it.current;
         balancer
             .run(
                 _processFile,
-                ValidationTask(it.current.absolute.path, validatorOptions,
+                ValidationTask(assetFile.absolute.path, validatorOptions,
                     validationOptions))
             .then((hasErrors) {
           if (hasErrors) {
-            foundErrors = true;
+            assetsWithErrors.add(assetFile.path);
           }
         }).whenComplete(() {
           spawn();
           if (--activeTasks == 0) {
             watch.stop();
             errPipe.write('Elapsed total: ${watch.elapsedMilliseconds}ms\n');
-            if (foundErrors) {
+            if (assetsWithErrors.isNotEmpty) {
+              errPipe
+                ..write('\nAssets with errors:\n')
+                ..write(assetsWithErrors.map((a) => '\t$a\n').join(''));
               exitCode = kErrorCode;
             }
           }
