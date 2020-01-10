@@ -329,12 +329,6 @@ Future<bool> _processFile(ValidationTask task) async {
 
   watch.stop();
 
-  final reportPath = '${task.filename}.report.json';
-
-  // ignore: unawaited_futures
-  File(reportPath).writeAsString(
-      const JsonEncoder.withIndent('    ').convert(validationResult.toMap()));
-
   final errors = validationResult.context.errors.toList(growable: false);
   final warnings = validationResult.context.warnings.toList(growable: false);
   final infos = validationResult.context.infos.toList(growable: false);
@@ -368,6 +362,10 @@ Future<bool> _processFile(ValidationTask task) async {
     }
   }
   errPipe.write(sb.toString());
+
+  await File('${task.filename}.report.json').writeAsString(
+      const JsonEncoder.withIndent('    ').convert(validationResult.toMap()),
+      flush: true);
 
   return errors.isNotEmpty;
 }
