@@ -1,4 +1,4 @@
-## 2.0.0-dev.3.0 (November 2019)
+## 2.0.0-dev.3.0 (January 2020)
 
 ### New Features
 
