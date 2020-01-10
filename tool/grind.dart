@@ -102,7 +102,7 @@ void exe() {
       'gltf_validator${Platform.isWindows ? '.exe' : ''}');
 
   final targetDir = Directory(_getTarget(_binSource));
-  delete(targetDir);
+  targetDir.deleteSync(recursive: true);
   targetDir.createSync(recursive: true);
 
   run(dart2native, arguments: ['bin/gltf_validator.dart', '-v', '-o', output]);
