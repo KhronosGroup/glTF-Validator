@@ -177,10 +177,10 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
     final loader =
         _getResourcesLoader(context, result, externalResourceFunction);
     await loader.load(
-        validateAccessorData: options.validateAccessorData ?? true);
+        validateAccessorData: options?.validateAccessorData ?? true);
   }
   return ValidationResult(uri, context, result,
-          writeTimestamp: options.writeTimestamp ?? true)
+          writeTimestamp: options?.writeTimestamp ?? true)
       .toMap();
 }
 
