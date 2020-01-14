@@ -268,7 +268,7 @@ Future<void> run(List<String> args) async {
             if (assetsWithErrors.isNotEmpty) {
               errPipe
                 ..write('\nAssets with errors:\n')
-                ..write(assetsWithErrors.map((a) => '\t$a\n').join(''));
+                ..writeAll(assetsWithErrors.map<String>((a) => '\t$a\n'));
               exitCode = kErrorCode;
             }
           }
