@@ -1,3 +1,17 @@
+## 2.0.0-dev.3.1
+
+### New Features
+
+* (CLI) When validating a directory, the validator now additionally lists assets with errors in the end.
+
+### Bugfixes
+
+* (CLI) Await until the report is written and flushed to disk (#126).
+
+* (npm) Fixed crash on missing validation options JS object (introduced in `2.0.0-dev.3.0`).
+
+* (npm) Fixed compatibility with Web Workers (was broken in `2.0.0-dev.3.0`).
+
 ## 2.0.0-dev.3.0 (January 2020)
 
 ### New Features

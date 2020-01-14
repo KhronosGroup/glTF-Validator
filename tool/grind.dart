@@ -130,6 +130,16 @@ void _npmBuild({bool release = true}) {
   delete(_nodeTargetDir);
   _runBuild(_nodeSource, release: release);
 
+  // TODO: remove this patch after upstream update
+  {
+    final file = File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
+    file.writeAsStringSync(file.readAsStringSync().replaceFirst(
+        '!dartNodePreambleSelf.window',
+        '!dartNodePreambleSelf.window&&'
+            '!(\'undefined\'!==typeof WorkerGlobalScope&&'
+            'dartNodePreambleSelf instanceof WorkerGlobalScope)'));
+  }
+
   const packageJson = 'package.json';
   final jsonMap =
       json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync())
