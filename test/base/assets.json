@@ -295,6 +295,7 @@
             "non_root_node.gltf": "Non-root node",
             "unresolved_default_scene.gltf": "Unresolved IBM accessor",
             "unresolved_node.gltf": "Unresolved joint index",
+            "unresolved_child_node.gltf": "Unresolved child node",
             "valid.gltf": "Valid"
         }
     },
