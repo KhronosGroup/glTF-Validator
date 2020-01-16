@@ -347,33 +347,6 @@ class MeshPrimitive extends GltfProperty {
         accessor.bufferView
             ?.setUsage(BufferViewUsage.VertexBuffer, semantic, context);
 
-        if (semantic == NORMAL) {
-          accessor.setUnit();
-          context.path.add(NORMAL);
-          context.addElementChecker(
-              accessor,
-              UnitVec3FloatChecker(context.getPointerString(),
-                  accessor.isFloat ? null : accessor.normalizeValue));
-          context.path.removeLast();
-        } else if (semantic == TANGENT) {
-          accessor
-            ..setUnit()
-            ..setXyzSign();
-          context.path.add(TANGENT);
-          context.addElementChecker(
-              accessor,
-              UnitVec3SignFloatChecker(context.getPointerString(),
-                  accessor.isFloat ? null : accessor.normalizeValue));
-          context.path.removeLast();
-        } else if (semantic.startsWith('${COLOR_}_') &&
-            gl.FLOAT == accessor.componentType) {
-          accessor.setClamped();
-          context.path.add(semantic);
-          context.addElementChecker(
-              accessor, ClampedRangeFloatChecker(context.getPointerString()));
-          context.path.removeLast();
-        }
-
         if (context.validate) {
           if (semantic == POSITION &&
               (accessor.min == null || accessor.max == null)) {
@@ -384,11 +357,40 @@ class MeshPrimitive extends GltfProperty {
 
           final format = AccessorFormat.fromAccessor(accessor);
           final validFormats = attributeAccessorFormats[semantic.split('_')[0]];
-          if (validFormats != null && !validFormats.contains(format)) {
-            context.addIssue(
-                LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
-                name: semantic,
-                args: [format, validFormats]);
+          if (validFormats != null) {
+            if (!validFormats.contains(format)) {
+              context.addIssue(
+                  LinkError.meshPrimitiveAttributesAccessorInvalidFormat,
+                  name: semantic,
+                  args: [format, validFormats]);
+            } else {
+              if (semantic == NORMAL) {
+                accessor.setUnit();
+                context.path.add(NORMAL);
+                context.addElementChecker(
+                    accessor,
+                    UnitVec3FloatChecker(context.getPointerString(),
+                        accessor.isFloat ? null : accessor.normalizeValue));
+                context.path.removeLast();
+              } else if (semantic == TANGENT) {
+                accessor
+                  ..setUnit()
+                  ..setXyzSign();
+                context.path.add(TANGENT);
+                context.addElementChecker(
+                    accessor,
+                    UnitVec3SignFloatChecker(context.getPointerString(),
+                        accessor.isFloat ? null : accessor.normalizeValue));
+                context.path.removeLast();
+              } else if (semantic.startsWith('${COLOR_}_') &&
+                  gl.FLOAT == accessor.componentType) {
+                accessor.setClamped();
+                context.path.add(semantic);
+                context.addElementChecker(accessor,
+                    ClampedRangeFloatChecker(context.getPointerString()));
+                context.path.removeLast();
+              }
+            }
           }
 
           if ((accessor.byteOffset != -1 &&

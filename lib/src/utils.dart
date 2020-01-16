@@ -398,7 +398,7 @@ List<int> getGlIntList(Map<String, Object> map, String name, Context context,
   if (value is List<Object>) {
     if (value.length != length) {
       context.addIssue(SchemaError.arrayLengthNotInList, name: name, args: [
-        value,
+        value.length,
         [length]
       ]);
       return null;

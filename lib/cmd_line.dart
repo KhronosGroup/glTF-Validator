@@ -210,7 +210,7 @@ Future<void> run(List<String> args) async {
           'Validation report will be written to '
           '`<asset_filename>.report.json`.\n'
           'If <input> is a directory, validation reports will be recursively '
-          'created for each glTF asset.\n\n'
+          'created for each *.gltf or *.glb asset.\n\n'
           'Validation log will be printed to stderr.\n\n'
           'Shell return code will be non-zero '
           'if at least one error was found.\n')
@@ -219,7 +219,7 @@ Future<void> run(List<String> args) async {
     return;
   }
 
-  final input = argResult.rest[0];
+  final input = File(argResult.rest[0]).absolute.path;
   ValidationOptions validationOptions;
   final validatorOptions = ValidatorOptions.fromArgs(argResult);
 
@@ -228,12 +228,13 @@ Future<void> run(List<String> args) async {
     validationOptions = _getValidationOptionsFromYaml(configFile);
   }
 
-  if (FileSystemEntity.isDirectorySync(input)) {
+  if (FileSystemEntity.isDirectorySync(input) &&
+      Directory(input).statSync().type == FileSystemEntityType.directory) {
     final threads = 0 == validatorOptions.threads
         ? Platform.numberOfProcessors
         : validatorOptions.threads;
     final balancer = await LoadBalancer.create(threads, IsolateRunner.spawn);
-    errPipe.write('Using $threads thread(s).\n');
+    errPipe.write('Using $threads thread(s).\n\n');
 
     var activeTasks = 0;
     final assetsWithErrors = <String>[];
@@ -253,9 +254,9 @@ Future<void> run(List<String> args) async {
         final assetFile = it.current;
         balancer
             .run(
-                _processFile,
-                ValidationTask(assetFile.absolute.path, validatorOptions,
-                    validationOptions))
+                _processFileZoned,
+                ValidationTask(
+                    assetFile.path, validatorOptions, validationOptions))
             .then((hasErrors) {
           if (hasErrors) {
             assetsWithErrors.add(assetFile.path);
@@ -280,20 +281,36 @@ Future<void> run(List<String> args) async {
       spawn();
     }
   } else if (FileSystemEntity.isFileSync(input)) {
-    if (await _processFile(
+    if (await _processFileZoned(
         ValidationTask(input, validatorOptions, validationOptions))) {
       exitCode = kErrorCode;
     }
   } else {
-    errPipe.write('Can not open $input\n');
+    errPipe.write('$input is neither a file nor a directory.\n');
     exitCode = kErrorCode;
   }
 }
 
-Future<bool> _processFile(ValidationTask task) async {
-  final watch = Stopwatch()..start();
+Future<bool> _processFileZoned(ValidationTask task) {
+  // Run validation task in a separate zone catching
+  // all uncaught runtime errors.
+  final resultCompleter = Completer<bool>();
+  runZoned(() {
+    _processFile(task).then(resultCompleter.complete);
+  }, onError: (Object error, StackTrace stackTrace) {
+    errPipe.write('${task.filename} '
+        'caused an uncaught runtime error:\n$error\n$stackTrace\n');
+    resultCompleter.complete(false);
+  });
+  return resultCompleter.future;
+}
 
+Future<bool> _processFile(ValidationTask task) async {
   final file = File(task.filename);
+  if (file.statSync().type != FileSystemEntityType.file) {
+    errPipe.write('${task.filename} cannot be loaded - check permissions.\n\n');
+    return false;
+  }
 
   final opts = task.validatorOptions;
   final context = Context(options: task.validationOptions);
@@ -301,22 +318,14 @@ Future<bool> _processFile(ValidationTask task) async {
   final reader = GltfReader.filename(file.openRead(), task.filename, context);
 
   if (reader == null) {
-    final ext = p.extension(task.filename).toLowerCase();
-    errPipe.write('Error while loading ${file.path}...\n'
-        'Unknown file extension `$ext`.\n');
-    watch.stop();
+    errPipe
+        .write('${task.filename} cannot be loaded - unknown file extension.\n');
     return true;
   }
 
-  GltfReaderResult readerResult;
-  try {
-    readerResult = await reader.read();
-  } on FileSystemException catch (e) {
-    errPipe.write('Error while loading ${file.path}...\n$e\n');
-    watch.stop();
-    return true;
-  }
-
+  final watch = Stopwatch()..start();
+  final readerResult = await reader.read();
+  watch.stop();
   final validationResult = ValidationResult(
       Uri.file(opts.absolutePath
           ? task.filename
@@ -328,10 +337,10 @@ Future<bool> _processFile(ValidationTask task) async {
   if (readerResult?.gltf != null && opts.validateResources) {
     final resourcesLoader =
         getFileResourceValidator(context, validationResult.uri, readerResult);
+    watch.start();
     await resourcesLoader.load();
+    watch.stop();
   }
-
-  watch.stop();
 
   final errors = validationResult.context.errors.toList(growable: false);
   final warnings = validationResult.context.warnings.toList(growable: false);
@@ -339,7 +348,7 @@ Future<bool> _processFile(ValidationTask task) async {
   final hints = validationResult.context.hints.toList(growable: false);
 
   final sb = StringBuffer()
-    ..write('Loaded ${file.path}\n'
+    ..write('${file.path}\n'
         'Errors: ${errors.length}, '
         'Warnings: ${warnings.length}, '
         'Infos: ${infos.length}, '
