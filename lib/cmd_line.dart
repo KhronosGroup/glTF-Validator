@@ -219,7 +219,7 @@ Future<void> run(List<String> args) async {
     return;
   }
 
-  final input = File(argResult.rest[0]).absolute.path;
+  final input = p.normalize(p.absolute(argResult.rest[0]));
   ValidationOptions validationOptions;
   final validatorOptions = ValidatorOptions.fromArgs(argResult);
 
@@ -251,15 +251,13 @@ Future<void> run(List<String> args) async {
     void spawn() {
       if (it.moveNext()) {
         ++activeTasks;
-        final assetFile = it.current;
+        final assetPath = it.current.path;
         balancer
-            .run(
-                _processFileZoned,
-                ValidationTask(
-                    assetFile.path, validatorOptions, validationOptions))
+            .run(_processFileZoned,
+                ValidationTask(assetPath, validatorOptions, validationOptions))
             .then((hasErrors) {
           if (hasErrors) {
-            assetsWithErrors.add(assetFile.path);
+            assetsWithErrors.add(assetPath);
           }
         }).whenComplete(() {
           spawn();
