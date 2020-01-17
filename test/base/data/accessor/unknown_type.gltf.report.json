@@ -1,0 +1,53 @@
+{
+    "uri": "test/base/data/accessor/unknown_type.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.1",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 2,
+        "numInfos": 2,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "VALUE_NOT_IN_LIST",
+                "message": "Invalid value 'NotaVEC3'. Valid values are ('SCALAR', 'VEC2', 'VEC3', 'VEC4', 'MAT2', 'MAT3', 'MAT4').",
+                "severity": 1,
+                "pointer": "/accessors/0/type"
+            },
+            {
+                "code": "VALUE_NOT_IN_LIST",
+                "message": "Invalid value 'NotaVEC3'. Valid values are ('SCALAR', 'VEC2', 'VEC3', 'VEC4', 'MAT2', 'MAT3', 'MAT4').",
+                "severity": 1,
+                "pointer": "/accessors/1/type"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/accessors/1"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

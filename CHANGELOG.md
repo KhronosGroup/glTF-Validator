@@ -1,3 +1,29 @@
+## 2.0.0-dev.3.1
+
+### New Features
+
+* (CLI) When validating a directory, the validator now additionally lists assets with errors in the end.
+
+* (CLI) Usage info and runtime errors are more accurate now.
+
+### Bugfixes
+
+* Fixed crash on unresolved node children used in a scene (introduced in `2.0.0-dev.3.0`).
+
+* Fixed incorrect error message in `ARRAY_LENGTH_NOT_IN_LIST` for accessors of integer component type.
+
+* `ARRAY_LENGTH_NOT_IN_LIST` no longer reported for accessors of unknown type.
+
+* IBM and attribute accessor data is no longer validated when the accessors have invalid formats.
+
+* (CLI) Uncaught runtime errors no longer hang directory validation.
+
+* (CLI) Await until the report is written and flushed to disk (#126).
+
+* (npm) Fixed crash on missing validation options JS object (introduced in `2.0.0-dev.3.0`).
+
+* (npm) Fixed compatibility with Web Workers (was broken in `2.0.0-dev.3.0`).
+
 ## 2.0.0-dev.3.0 (January 2020)
 
 ### New Features

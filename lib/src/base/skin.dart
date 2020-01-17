@@ -108,15 +108,15 @@ class Skin extends GltfChildOfRootProperty {
               format,
               [SKIN_IBM_FORMAT]
             ]);
+          } else {
+            context.addElementChecker(_inverseBindMatrices,
+                IbmMatrixFloatChecker(context.getPointerString()));
           }
 
           if (_joints != null && _inverseBindMatrices.count != _joints.length) {
             context.addIssue(LinkError.invalidIbmAccessorCount,
                 args: [_joints.length, _inverseBindMatrices.count]);
           }
-
-          context.addElementChecker(_inverseBindMatrices,
-              IbmMatrixFloatChecker(context.getPointerString()));
           context.path.removeLast();
         }
       }

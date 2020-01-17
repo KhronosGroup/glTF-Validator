@@ -180,7 +180,7 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
         validateAccessorData: options.validateAccessorData ?? true);
   }
   return ValidationResult(uri, context, result,
-          writeTimestamp: options.writeTimestamp ?? true)
+          writeTimestamp: options?.writeTimestamp ?? true)
       .toMap();
 }
 

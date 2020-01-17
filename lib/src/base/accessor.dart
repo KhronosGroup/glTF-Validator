@@ -151,15 +151,17 @@ abstract class Accessor<T extends num> extends GltfChildOfRootProperty {
     List<num> max;
     List<num> min;
     if (type != null && componentType != -1) {
-      final length = ACCESSOR_TYPES_LENGTHS[type] ?? -1;
-      if (componentType == gl.FLOAT) {
-        min = getFloatList(map, MIN, context,
-            lengthsList: [length], singlePrecision: true);
-        max = getFloatList(map, MAX, context,
-            lengthsList: [length], singlePrecision: true);
-      } else {
-        min = getGlIntList(map, MIN, context, componentType, length);
-        max = getGlIntList(map, MAX, context, componentType, length);
+      final length = ACCESSOR_TYPES_LENGTHS[type];
+      if (length != null) {
+        if (componentType == gl.FLOAT) {
+          min = getFloatList(map, MIN, context,
+              lengthsList: [length], singlePrecision: true);
+          max = getFloatList(map, MAX, context,
+              lengthsList: [length], singlePrecision: true);
+        } else {
+          min = getGlIntList(map, MIN, context, componentType, length);
+          max = getGlIntList(map, MAX, context, componentType, length);
+        }
       }
     }
 
@@ -369,7 +371,7 @@ abstract class Accessor<T extends num> extends GltfChildOfRootProperty {
                     values.byteOffset,
                     componentLength,
                     componentLength *
-                        ACCESSOR_TYPES_LENGTHS[type] *
+                        (ACCESSOR_TYPES_LENGTHS[type] ?? 0) *
                         sparse.count,
                     values._bufferView,
                     values._bufferViewIndex,
@@ -683,7 +685,9 @@ class _AccessorInt extends Accessor<int> {
           !Accessor._checkByteOffsetAndLength(
               sparse.values.byteOffset,
               componentLength,
-              componentLength * ACCESSOR_TYPES_LENGTHS[type] * sparse.count,
+              componentLength *
+                  (ACCESSOR_TYPES_LENGTHS[type] ?? 0) *
+                  sparse.count,
               sparse.values._bufferView)) {
         return;
       }
@@ -880,7 +884,9 @@ class _AccessorFloat extends Accessor<double> {
           !Accessor._checkByteOffsetAndLength(
               sparse.values.byteOffset,
               componentLength,
-              componentLength * ACCESSOR_TYPES_LENGTHS[type] * sparse.count,
+              componentLength *
+                  (ACCESSOR_TYPES_LENGTHS[type] ?? 0) *
+                  sparse.count,
               sparse.values._bufferView)) {
         return;
       }

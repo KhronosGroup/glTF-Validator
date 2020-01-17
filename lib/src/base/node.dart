@@ -233,7 +233,7 @@ class Node extends GltfChildOfRootProperty {
     _scenes.add(scene);
     if (children != null) {
       for (final node in children) {
-        node.addScene(scene);
+        node?.addScene(scene);
       }
     }
   }
