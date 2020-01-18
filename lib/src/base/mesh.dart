@@ -279,7 +279,7 @@ class MeshPrimitive extends GltfProperty {
     }
 
     void checkMorphTargetAttributeSemanticName(String semantic) {
-      if (!morphAttributeAccessorFormats.containsKey(semantic) &&
+      if (!context.morphAttributeAccessorFormats.containsKey(semantic) &&
           !semantic.startsWith('_')) {
         context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
             name: semantic);
@@ -356,7 +356,8 @@ class MeshPrimitive extends GltfProperty {
           }
 
           final format = AccessorFormat.fromAccessor(accessor);
-          final validFormats = attributeAccessorFormats[semantic.split('_')[0]];
+          final validFormats =
+              context.attributeAccessorFormats[semantic.split('_')[0]];
           if (validFormats != null) {
             if (!validFormats.contains(format)) {
               context.addIssue(
@@ -569,7 +570,8 @@ class MeshPrimitive extends GltfProperty {
               }
 
               final format = AccessorFormat.fromAccessor(accessor);
-              final validFormats = morphAttributeAccessorFormats[semantic];
+              final validFormats =
+                  context.morphAttributeAccessorFormats[semantic];
 
               if (validFormats != null && !validFormats.contains(format)) {
                 context.addIssue(

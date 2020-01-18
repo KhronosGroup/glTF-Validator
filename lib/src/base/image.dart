@@ -42,7 +42,8 @@ class Image extends GltfChildOfRootProperty {
     }
 
     final bufferViewIndex = getIndex(map, BUFFER_VIEW, context, req: false);
-    var mimeType = getString(map, MIME_TYPE, context, list: imageMimeTypes);
+    var mimeType =
+        getString(map, MIME_TYPE, context, list: context.imageMimeTypes);
     final uriString = getString(map, URI, context, req: false);
 
     if (context.validate) {
@@ -77,9 +78,10 @@ class Image extends GltfChildOfRootProperty {
 
         // Re-assign `mimeType` only if it wasn't set in JSON
         if (mimeType == null) {
-          if (context.validate && !imageMimeTypes.contains(uriData.mimeType)) {
+          if (context.validate &&
+              !context.imageMimeTypes.contains(uriData.mimeType)) {
             context.addIssue(SchemaError.valueNotInList,
-                name: URI, args: [uriData.mimeType, imageMimeTypes]);
+                name: URI, args: [uriData.mimeType, context.imageMimeTypes]);
           }
           mimeType = uriData.mimeType;
         }

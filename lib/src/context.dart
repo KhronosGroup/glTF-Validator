@@ -21,6 +21,7 @@ import 'dart:collection';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/gl.dart' as gl;
 
 class ValidationOptions {
   final int maxIssues;
@@ -191,7 +192,7 @@ class Context {
       });
 
       if (extension.init != null) {
-        extension.init();
+        extension.init(this);
       }
 
       if (validate &&
@@ -253,6 +254,44 @@ class Context {
   void setGlb() {
     _isGlb = true;
   }
+
+  final List<String> imageMimeTypes = <String>[IMAGE_JPEG, IMAGE_PNG];
+
+  final Map<String, Set<AccessorFormat>> attributeAccessorFormats =
+      <String, Set<AccessorFormat>>{
+    POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
+    NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
+    TANGENT: {const AccessorFormat(VEC4, gl.FLOAT)},
+    TEXCOORD_: {
+      const AccessorFormat(VEC2, gl.FLOAT),
+      const AccessorFormat(VEC2, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC2, gl.UNSIGNED_SHORT, normalized: true)
+    },
+    COLOR_: {
+      const AccessorFormat(VEC3, gl.FLOAT),
+      const AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true),
+      const AccessorFormat(VEC4, gl.FLOAT),
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+    },
+    JOINTS_: {
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT)
+    },
+    WEIGHTS_: {
+      const AccessorFormat(VEC4, gl.FLOAT),
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+    }
+  };
+
+  final Map<String, Set<AccessorFormat>> morphAttributeAccessorFormats =
+      <String, Set<AccessorFormat>>{
+    POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
+    NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
+    TANGENT: {const AccessorFormat(VEC3, gl.FLOAT)},
+  };
 }
 
 class IssuesLimitExceededException implements Exception {

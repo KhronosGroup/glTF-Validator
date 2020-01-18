@@ -22,8 +22,8 @@ import 'package:gltf/src/gl.dart' as gl;
 
 const String KHR_MESH_QUANTIZATION = 'KHR_mesh_quantization';
 
-void _init() {
-  attributeAccessorFormats[POSITION].addAll(const [
+void _init(Context context) {
+  context.attributeAccessorFormats[POSITION].addAll(const [
     AccessorFormat(VEC3, gl.BYTE),
     AccessorFormat(VEC3, gl.BYTE, normalized: true),
     AccessorFormat(VEC3, gl.UNSIGNED_BYTE),
@@ -34,17 +34,17 @@ void _init() {
     AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true)
   ]);
 
-  attributeAccessorFormats[NORMAL].addAll(const [
+  context.attributeAccessorFormats[NORMAL].addAll(const [
     AccessorFormat(VEC3, gl.BYTE, normalized: true),
     AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 
-  attributeAccessorFormats[TANGENT].addAll(const [
+  context.attributeAccessorFormats[TANGENT].addAll(const [
     AccessorFormat(VEC4, gl.BYTE, normalized: true),
     AccessorFormat(VEC4, gl.SHORT, normalized: true)
   ]);
 
-  attributeAccessorFormats[TEXCOORD_].addAll(const [
+  context.attributeAccessorFormats[TEXCOORD_].addAll(const [
     AccessorFormat(VEC2, gl.BYTE),
     AccessorFormat(VEC2, gl.BYTE, normalized: true),
     AccessorFormat(VEC2, gl.UNSIGNED_BYTE),
@@ -53,19 +53,19 @@ void _init() {
     AccessorFormat(VEC2, gl.UNSIGNED_SHORT)
   ]);
 
-  morphAttributeAccessorFormats[POSITION].addAll(const [
+  context.morphAttributeAccessorFormats[POSITION].addAll(const [
     AccessorFormat(VEC3, gl.BYTE),
     AccessorFormat(VEC3, gl.BYTE, normalized: true),
     AccessorFormat(VEC3, gl.SHORT),
     AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 
-  morphAttributeAccessorFormats[NORMAL].addAll(const [
+  context.morphAttributeAccessorFormats[NORMAL].addAll(const [
     AccessorFormat(VEC3, gl.BYTE, normalized: true),
     AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
 
-  morphAttributeAccessorFormats[TANGENT].addAll(const [
+  context.morphAttributeAccessorFormats[TANGENT].addAll(const [
     AccessorFormat(VEC3, gl.BYTE, normalized: true),
     AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);

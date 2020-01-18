@@ -1,3 +1,9 @@
+## 2.0.0-dev.3.2
+
+### Bugfixes
+
+* Validating an asset with an extension that alters allowed enum values (like MIME types for images or vertex formats for accessors) no longer affects subsequent validation runs (introduced in `2.0.0-dev.3.0`).
+
 ## 2.0.0-dev.3.1
 
 ### New Features
