@@ -129,25 +129,21 @@ class Context {
   final StringBuffer _sb = StringBuffer();
 
   String getPointerString([String token]) {
-    if (path.isEmpty) {
-      if (token == null) {
-        return '/';
-      } else if (token.startsWith('/')) {
-        return token;
-      } else {
-        return '/$token';
-      }
-    }
-
-    var i = 0;
-    _sb..write('/')..write(path[0]);
-
-    while (++i < path.length) {
-      _sb..write('/')..write(path[i]);
+    if (path.isEmpty && token != null && token.startsWith('/')) {
+      return token; // Special case: token is already a pointer string
     }
 
     if (token != null) {
-      _sb..write('/')..write(token);
+      path.add(token);
+    }
+
+    _sb
+      ..write('/')
+      ..writeAll(
+          path.map((s) => s.replaceAll('~', '~0').replaceAll('/', '~1')), '/');
+
+    if (token != null) {
+      path.removeLast();
     }
 
     final result = _sb.toString();
@@ -169,10 +165,10 @@ class Context {
       final prefix = _extNameFormat.firstMatch(extensionName)?.group(1);
       if (prefix == null) {
         addIssue(SemanticError.invalidExtensionNameFormat,
-            name: '$EXTENSIONS_USED/$i');
+            name: '/$EXTENSIONS_USED/$i');
       } else if (!kReservedPrefixes.contains(prefix)) {
         addIssue(SemanticError.unreservedExtensionPrefix,
-            name: '$EXTENSIONS_USED/$i', args: [prefix]);
+            name: '/$EXTENSIONS_USED/$i', args: [prefix]);
       }
 
       final extension = _userExtensions.firstWhere(
@@ -183,7 +179,7 @@ class Context {
 
       if (extension == null) {
         addIssue(LinkError.unsupportedExtension,
-            name: '$EXTENSIONS_USED/$i', args: [extensionName]);
+            name: '/$EXTENSIONS_USED/$i', args: [extensionName]);
         continue;
       }
 
@@ -199,7 +195,7 @@ class Context {
           extension.required &&
           !extensionsRequired.contains(extensionName)) {
         addIssue(SemanticError.nonRequiredExtension,
-            name: '$EXTENSIONS_USED/$i', args: [extensionName]);
+            name: '/$EXTENSIONS_USED/$i', args: [extensionName]);
       }
 
       _extensionsLoaded.add(extensionName);
@@ -210,7 +206,7 @@ class Context {
         final value = extensionsRequired[i];
         if (!extensionsUsed.contains(value)) {
           addIssue(SemanticError.unusedExtensionRequired,
-              name: '$EXTENSIONS_REQUIRED/$i', args: [value]);
+              name: '/$EXTENSIONS_REQUIRED/$i', args: [value]);
         }
       }
     }

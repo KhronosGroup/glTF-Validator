@@ -519,8 +519,10 @@ class MeshPrimitive extends GltfProperty {
       }
 
       for (final unusedIndex in unusedTexCoords.where((i) => i != -1)) {
-        context.addIssue(LinkError.unusedObject,
-            name: '$ATTRIBUTES/${TEXCOORD_}_$unusedIndex');
+        context
+          ..path.add(ATTRIBUTES)
+          ..addIssue(LinkError.unusedObject, name: '${TEXCOORD_}_$unusedIndex')
+          ..path.removeLast();
       }
     }
 
