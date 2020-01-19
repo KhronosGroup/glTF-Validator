@@ -140,7 +140,9 @@ class Context {
     _sb
       ..write('/')
       ..writeAll(
-          path.map((s) => s.replaceAll('~', '~0').replaceAll('/', '~1')), '/');
+          path.map<String>(
+              (s) => s.replaceAll('~', '~0').replaceAll('/', '~1')),
+          '/');
 
     if (token != null) {
       path.removeLast();
