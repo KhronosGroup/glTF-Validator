@@ -205,6 +205,7 @@
             "indices_bytestride.gltf": "Indices accessor with byte stride",
             "indices_invalid_format.gltf": "Indices accessor invalid format",
             "invalid_attribute.gltf": "Invalid attribute",
+            "invalid_attribute_escaped_name.gltf": "Invalid attribute with special chars",
             "invalid_indexed_attribute.gltf": "Invalid indexed attribute",
             "invalid_tangent.gltf": "Invalid tangent",
             "morph_attribute_invalid_count.gltf": "Morph attribute invalid count",
@@ -332,6 +333,8 @@
     "root": {
         "name": "Root glTF object",
         "tests": {
+            "custom_property.gltf": "Custom property",
+            "custom_property_escaped_name.gltf": "Custom property with special chars",
             "duplicate_extension_entry.gltf": "Duplicate extension entry",
             "empty_object.gltf": "Empty object",
             "extensions_non_objects.gltf": "Non-object extensions",

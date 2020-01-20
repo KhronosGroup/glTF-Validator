@@ -26,8 +26,8 @@ const Extension extTextureWebPExtension = Extension('EXT_texture_webp',
     <Type, ExtFuncs>{Texture: ExtFuncs(ExtTextureWebPTexture.fromMap)},
     init: _init);
 
-void _init() {
-  imageMimeTypes.add(IMAGE_WEBP);
+void _init(Context context) {
+  context.imageMimeTypes.add(IMAGE_WEBP);
 }
 
 const List<String> EXT_TEXTURE_WEBP_TEXTURE_MEMBERS = <String>[SOURCE];

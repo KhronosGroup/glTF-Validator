@@ -21,6 +21,7 @@ import 'dart:collection';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/ext/extensions.dart';
+import 'package:gltf/src/gl.dart' as gl;
 
 class ValidationOptions {
   final int maxIssues;
@@ -128,25 +129,23 @@ class Context {
   final StringBuffer _sb = StringBuffer();
 
   String getPointerString([String token]) {
-    if (path.isEmpty) {
-      if (token == null) {
-        return '/';
-      } else if (token.startsWith('/')) {
-        return token;
-      } else {
-        return '/$token';
-      }
-    }
-
-    var i = 0;
-    _sb..write('/')..write(path[0]);
-
-    while (++i < path.length) {
-      _sb..write('/')..write(path[i]);
+    if (path.isEmpty && token != null && token.startsWith('/')) {
+      return token; // Special case: token is already a pointer string
     }
 
     if (token != null) {
-      _sb..write('/')..write(token);
+      path.add(token);
+    }
+
+    _sb
+      ..write('/')
+      ..writeAll(
+          path.map<String>(
+              (s) => s.replaceAll('~', '~0').replaceAll('/', '~1')),
+          '/');
+
+    if (token != null) {
+      path.removeLast();
     }
 
     final result = _sb.toString();
@@ -168,10 +167,10 @@ class Context {
       final prefix = _extNameFormat.firstMatch(extensionName)?.group(1);
       if (prefix == null) {
         addIssue(SemanticError.invalidExtensionNameFormat,
-            name: '$EXTENSIONS_USED/$i');
+            name: '/$EXTENSIONS_USED/$i');
       } else if (!kReservedPrefixes.contains(prefix)) {
         addIssue(SemanticError.unreservedExtensionPrefix,
-            name: '$EXTENSIONS_USED/$i', args: [prefix]);
+            name: '/$EXTENSIONS_USED/$i', args: [prefix]);
       }
 
       final extension = _userExtensions.firstWhere(
@@ -182,7 +181,7 @@ class Context {
 
       if (extension == null) {
         addIssue(LinkError.unsupportedExtension,
-            name: '$EXTENSIONS_USED/$i', args: [extensionName]);
+            name: '/$EXTENSIONS_USED/$i', args: [extensionName]);
         continue;
       }
 
@@ -191,14 +190,14 @@ class Context {
       });
 
       if (extension.init != null) {
-        extension.init();
+        extension.init(this);
       }
 
       if (validate &&
           extension.required &&
           !extensionsRequired.contains(extensionName)) {
         addIssue(SemanticError.nonRequiredExtension,
-            name: '$EXTENSIONS_USED/$i', args: [extensionName]);
+            name: '/$EXTENSIONS_USED/$i', args: [extensionName]);
       }
 
       _extensionsLoaded.add(extensionName);
@@ -209,7 +208,7 @@ class Context {
         final value = extensionsRequired[i];
         if (!extensionsUsed.contains(value)) {
           addIssue(SemanticError.unusedExtensionRequired,
-              name: '$EXTENSIONS_REQUIRED/$i', args: [value]);
+              name: '/$EXTENSIONS_REQUIRED/$i', args: [value]);
         }
       }
     }
@@ -253,6 +252,44 @@ class Context {
   void setGlb() {
     _isGlb = true;
   }
+
+  final List<String> imageMimeTypes = <String>[IMAGE_JPEG, IMAGE_PNG];
+
+  final Map<String, Set<AccessorFormat>> attributeAccessorFormats =
+      <String, Set<AccessorFormat>>{
+    POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
+    NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
+    TANGENT: {const AccessorFormat(VEC4, gl.FLOAT)},
+    TEXCOORD_: {
+      const AccessorFormat(VEC2, gl.FLOAT),
+      const AccessorFormat(VEC2, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC2, gl.UNSIGNED_SHORT, normalized: true)
+    },
+    COLOR_: {
+      const AccessorFormat(VEC3, gl.FLOAT),
+      const AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true),
+      const AccessorFormat(VEC4, gl.FLOAT),
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+    },
+    JOINTS_: {
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT)
+    },
+    WEIGHTS_: {
+      const AccessorFormat(VEC4, gl.FLOAT),
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+    }
+  };
+
+  final Map<String, Set<AccessorFormat>> morphAttributeAccessorFormats =
+      <String, Set<AccessorFormat>>{
+    POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
+    NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
+    TANGENT: {const AccessorFormat(VEC3, gl.FLOAT)},
+  };
 }
 
 class IssuesLimitExceededException implements Exception {

@@ -40,7 +40,7 @@ class Extension {
 
   final String name;
   final Map<Type, ExtFuncs> functions;
-  final void Function() init;
+  final void Function(Context) init;
   final bool required;
 }
 

@@ -314,9 +314,6 @@ const List<String> IMAGE_MEMBERS = <String>[BUFFER_VIEW, MIME_TYPE, URI, NAME];
 const String IMAGE_JPEG = 'image/jpeg';
 const String IMAGE_PNG = 'image/png';
 
-// Not a constant since extensions can append to it
-List<String> imageMimeTypes = <String>[IMAGE_JPEG, IMAGE_PNG];
-
 // Material
 const String PBR_METALLIC_ROUGHNESS = 'pbrMetallicRoughness';
 const String NORMAL_TEXTURE = 'normalTexture';
@@ -479,42 +476,6 @@ const List<String> ATTRIBUTE_SEMANTIC_ARRAY_MEMBERS = <String>[
   TEXCOORD_,
   WEIGHTS_
 ];
-
-Map<String, Set<AccessorFormat>> attributeAccessorFormats =
-    <String, Set<AccessorFormat>>{
-  POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
-  NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
-  TANGENT: {const AccessorFormat(VEC4, gl.FLOAT)},
-  TEXCOORD_: {
-    const AccessorFormat(VEC2, gl.FLOAT),
-    const AccessorFormat(VEC2, gl.UNSIGNED_BYTE, normalized: true),
-    const AccessorFormat(VEC2, gl.UNSIGNED_SHORT, normalized: true)
-  },
-  COLOR_: {
-    const AccessorFormat(VEC3, gl.FLOAT),
-    const AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
-    const AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true),
-    const AccessorFormat(VEC4, gl.FLOAT),
-    const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
-    const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
-  },
-  JOINTS_: {
-    const AccessorFormat(VEC4, gl.UNSIGNED_BYTE),
-    const AccessorFormat(VEC4, gl.UNSIGNED_SHORT)
-  },
-  WEIGHTS_: {
-    const AccessorFormat(VEC4, gl.FLOAT),
-    const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
-    const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
-  }
-};
-
-Map<String, Set<AccessorFormat>> morphAttributeAccessorFormats =
-    <String, Set<AccessorFormat>>{
-  POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
-  NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
-  TANGENT: {const AccessorFormat(VEC3, gl.FLOAT)},
-};
 
 const Map<int, String> ATTRIBUTE_TYPES = <int, String>{
   gl.FLOAT: SCALAR,

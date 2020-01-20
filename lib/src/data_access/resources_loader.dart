@@ -211,7 +211,7 @@ class ResourcesLoader {
         try {
           imageInfo = await ImageInfo.parseStreamAsync(imageDataStream);
           if (context.validate &&
-              !imageMimeTypes.contains(imageInfo.mimeType)) {
+              !context.imageMimeTypes.contains(imageInfo.mimeType)) {
             context.addIssue(DataError.imageNonEnabledMimeType,
                 args: [imageInfo.mimeType]);
           }
