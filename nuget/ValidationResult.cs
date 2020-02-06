@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace glTF2Validator
 {
@@ -9,64 +11,49 @@ namespace glTF2Validator
     /// </summary>
     public sealed class ValidationReport
     {
-        internal ValidationReport(string srcPath, string rawReport)
+        public static ValidationReport Parse(string json)
         {
-            var lines = rawReport.Split('\n');
-
-            var status = 0;
-
-            var www = new List<string>();
-            var eee = new List<string>();
-
-            foreach (var l in lines)
+            var options = new JsonSerializerOptions
             {
-                if (l == "\tWarnings:") { status = 1; continue; }
-                if (l == "\tErrors:") { status = 2; continue; }
+                AllowTrailingCommas = true
+            };
 
-                if (status == 1) www.Add(l.Trim());
-                if (status == 2) eee.Add(l.Trim());
-            }
-
-            FilePath = srcPath;
-            RawReport = rawReport;
-            Warnings = www;
-            Errors = eee;
+            return JsonSerializer.Deserialize<ValidationReport>(json, options);
         }
 
-        /// <summary>
-        /// Gets the file path from which this report was originated.
-        /// </summary>
-        public string FilePath { get; private set; }
+        public string uri { get; set; }
+        public string mimeType { get; set; }
+        public string validatorVersion { get; set; }
 
-        /// <summary>
-        /// Gets the original report as emitted by gltf-validator.
-        /// </summary>
-        public string RawReport { get; private set; }
+        public ValidationIssues issues { get; set; }
 
-        /// <summary>
-        /// Gets the warnings as a list.
-        /// </summary>
-        public IReadOnlyList<String> Warnings { get; private set; }
+        public ValidationInfo info { get; set; }
+    }
 
-        /// <summary>
-        /// Gets the errors as a list.
-        /// </summary>
-        public IReadOnlyList<String> Errors { get; private set; }
+    public sealed class ValidationIssues
+    {
+        public int numErrors { get; set; }
+        public int numWarnings { get; set; }
+        public int numInfos { get; set; }
+        public int numHints { get; set; }
+        public string[] messages { get; set; }
+        public bool truncated { get; set; }
+    }
 
-        
-        /// <summary>
-        /// True if warnings were found.
-        /// </summary>
-        public bool HasWarnings => Warnings.Count > 0;
-
-        /// <summary>
-        /// True if errors were found.
-        /// </summary>
-        public bool HasErrors => Errors.Count > 0;
-
-        public override string ToString()
-        {
-            return RawReport;
-        }
+    public sealed class ValidationInfo
+    {
+        public string version { get; set; }
+        public string generator { get; set; }
+        public int animationCount { get; set; }
+        public int materialCount { get; set; }
+        public bool hasMorphTargets { get; set; }
+        public bool hasSkins { get; set; }
+        public bool hasTextures { get; set; }
+        public bool hasDefaultScene { get; set; }
+        public int drawCallCount { get; set; }
+        public int totalTriangleCount { get; set; }
+        public int maxUVs { get; set; }
+        public int maxInfluences { get; set; }
+        public int maxAttributes { get; set; }
     }
 }

@@ -22,4 +22,9 @@
     <Content Include="..\build\bin\gltf_validator" Link="gltf_validator" CopyToOutputDirectory="PreserveNewest" />    
   </ItemGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+  </ItemGroup>
+
 </Project>

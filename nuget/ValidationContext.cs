@@ -56,9 +56,9 @@ namespace glTF2Validator
             if (!System.IO.Path.IsPathRooted(gltfFilePath)) gltfFilePath = System.IO.Path.GetFullPath(gltfFilePath);
 
             var psi = new System.Diagnostics.ProcessStartInfo(ValidatorExePath);
-            psi.Arguments = $"-p -r -a \"{gltfFilePath}\"";
+            psi.Arguments = $"-p -r -a -o \"{gltfFilePath}\"";
             psi.UseShellExecute = false;
-            psi.RedirectStandardError = true;
+            psi.RedirectStandardOutput = true;
 
             using (var p = System.Diagnostics.Process.Start(psi))
             {
@@ -67,11 +67,11 @@ namespace glTF2Validator
                     try { p.Kill(); } catch { }
                 }
 
-                var rawReport = p.StandardError.ReadToEnd();
+                var jsonReport = p.StandardOutput.ReadToEnd();
 
-                if (string.IsNullOrWhiteSpace(rawReport)) return null;
+                if (string.IsNullOrWhiteSpace(jsonReport)) return null;
 
-                return new ValidationReport(gltfFilePath, rawReport);
+                return ValidationReport.Parse(jsonReport);
             }
         }
     }
