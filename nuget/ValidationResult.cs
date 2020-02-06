@@ -13,12 +13,7 @@ namespace glTF2Validator
     {
         public static ValidationReport Parse(string json)
         {
-            var options = new JsonSerializerOptions
-            {
-                AllowTrailingCommas = true
-            };
-
-            return JsonSerializer.Deserialize<ValidationReport>(json, options);
+            return JsonSerializer.Deserialize<ValidationReport>(json);
         }
 
         public string uri { get; set; }
