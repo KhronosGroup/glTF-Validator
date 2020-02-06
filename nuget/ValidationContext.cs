@@ -47,6 +47,8 @@ namespace glTF2Validator
         /// <returns>A report.</returns>
         public static ValidationReport ValidateFile(string gltfFilePath)
         {
+            if (!System.IO.File.Exists(gltfFilePath)) throw new ArgumentException($"File {gltfFilePath} not found.", nameof(gltfFilePath));
+
             if (string.IsNullOrWhiteSpace(ValidatorExePath)) return null;
 
             if (!System.IO.File.Exists(ValidatorExePath)) throw new System.IO.FileNotFoundException(ValidatorExePath);
@@ -58,18 +60,19 @@ namespace glTF2Validator
             psi.UseShellExecute = false;
             psi.RedirectStandardError = true;
 
-            var p = System.Diagnostics.Process.Start(psi);
-
-            if (!p.WaitForExit(TimeOut.Milliseconds))
+            using (var p = System.Diagnostics.Process.Start(psi))
             {
-                try { p.Kill(); } catch { }
+                if (!p.WaitForExit(TimeOut.Milliseconds))
+                {
+                    try { p.Kill(); } catch { }
+                }
+
+                var rawReport = p.StandardError.ReadToEnd();
+
+                if (string.IsNullOrWhiteSpace(rawReport)) return null;
+
+                return new ValidationReport(gltfFilePath, rawReport);
             }
-
-            var rawReport = p.StandardError.ReadToEnd();
-
-            if (string.IsNullOrWhiteSpace(rawReport)) return null;
-
-            return new ValidationReport(gltfFilePath, rawReport);
         }
     }
 }
