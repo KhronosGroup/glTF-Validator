@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    
+    <RepositoryUrl>https://github.com/KhronosGroup/glTF-Validator</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/KhronosGroup/glTF-Validator</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <!-- These files must exist before compiling this library -->
+    <Content Include="..\build\bin\gltf_validator.exe" Link="gltf_validator.exe" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\build\bin\gltf_validator" Link="gltf_validator" CopyToOutputDirectory="PreserveNewest" />    
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>
