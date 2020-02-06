@@ -19,9 +19,7 @@ namespace glTF2Validator
         public string uri { get; set; }
         public string mimeType { get; set; }
         public string validatorVersion { get; set; }
-
         public ValidationIssues issues { get; set; }
-
         public ValidationInfo info { get; set; }
     }
 
@@ -31,8 +29,16 @@ namespace glTF2Validator
         public int numWarnings { get; set; }
         public int numInfos { get; set; }
         public int numHints { get; set; }
-        public string[] messages { get; set; }
+        public ValidationMessage[] messages { get; set; }
         public bool truncated { get; set; }
+    }
+
+    public sealed class ValidationMessage
+    {
+        public string code { get; set; }
+        public string message { get; set; }
+        public int severity { get; set; }
+        public string pointer { get; set; }
     }
 
     public sealed class ValidationInfo
