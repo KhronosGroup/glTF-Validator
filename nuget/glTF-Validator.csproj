@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    
+
     <RepositoryUrl>https://github.com/KhronosGroup/glTF-Validator</RepositoryUrl>
     <PackageProjectUrl>https://github.com/KhronosGroup/glTF-Validator</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
@@ -13,18 +13,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Authors>The Khronos Group, Inc.</Authors>
+    <Company>The Khronos Group, Inc.</Company>
+    <Product>glTF-Validator .NET Wrapper</Product>
+    <Version>2.0.0-dev</Version>
   </PropertyGroup>
-
-
-  <ItemGroup>
-    <!-- These files must exist before compiling this library -->
-    <Content Include="..\build\bin\gltf_validator.exe" Link="gltf_validator.exe" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="..\build\bin\gltf_validator" Link="gltf_validator" CopyToOutputDirectory="PreserveNewest" />    
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="compiled\*" />
+    <EmbeddedResource Remove="compiled\README.md" />
+  </ItemGroup>
 </Project>

@@ -29,3 +29,11 @@ pubspec.lock
 
 # Node Modules
 node/node_modules/
+
+# NuGet package
+nuget/.vs/**
+nuget/Backup
+nuget/bin/**
+nuget/compiled/gltf*
+nuget/obj/**
+nuget/*.user
