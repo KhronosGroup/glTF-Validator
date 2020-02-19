@@ -90,7 +90,7 @@ namespace Khronos.glTF2.Validator
             }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                Process.Start("chmod", $"+x {_embeddedValidatorPath}");
+                Process.Start("chmod", $@"+x ""{_embeddedValidatorPath}""");
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Khronos.glTF2.Validator
         /// </exception>
         /// <exception cref="TimeoutException">Thrown when validation takes longer than allowed time.</exception>
         /// <exception cref="ApplicationException">Thrown when the validator encounters unhandled runtime error.</exception>
-        public async ValueTask<ValidationReport> ValidateAsync(string path, string customValidatorPath = "",
+        public async Task<ValidationReport> ValidateAsync(string path, string customValidatorPath = "",
             bool validateResources = true, TimeSpan timeout = default)
         {
             if (string.IsNullOrWhiteSpace(path))
