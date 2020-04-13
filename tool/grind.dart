@@ -133,11 +133,19 @@ void _npmBuild({bool release = true}) {
   // TODO: remove this patch after upstream update
   {
     final file = File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
-    file.writeAsStringSync(file.readAsStringSync().replaceFirst(
-        '!dartNodePreambleSelf.window',
-        '!dartNodePreambleSelf.window&&'
-            '!(\'undefined\'!==typeof WorkerGlobalScope&&'
-            'dartNodePreambleSelf instanceof WorkerGlobalScope)'));
+    var text = file.readAsStringSync();
+    text = text.replaceFirst(
+      '!dartNodePreambleSelf.window',
+      '!dartNodePreambleSelf.window&&'
+          '!(\'undefined\'!==typeof WorkerGlobalScope&&'
+          'dartNodePreambleSelf instanceof WorkerGlobalScope)');
+
+    // Prevent webpack error when reassigning require
+    // Note: this also breaks require and will need to be fixed to import
+    // dependencies
+    text = text.replaceFirst('self.require=require,', '');
+
+    file.writeAsStringSync(text);
   }
 
   const packageJson = 'package.json';
