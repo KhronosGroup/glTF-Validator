@@ -52,7 +52,7 @@ class Context {
       : options = options ?? ValidationOptions() {
     _extensionsLoadedView = UnmodifiableListView(_extensionsLoaded);
     _extensionsUsedView = UnmodifiableListView(_extensionsUsed);
-    _extensionsFunctionsView = UnmodifiableMapView(_extensionsFunctions);
+    _extensionDescriptorsView = UnmodifiableMapView(_extensionDescriptors);
     _resourcesView = UnmodifiableListView(_resources);
   }
 
@@ -90,11 +90,11 @@ class Context {
   bool _isTruncated = false;
   bool get isTruncated => _isTruncated;
 
-  final Map<ExtensionTuple, ExtFuncs> _extensionsFunctions =
-      <ExtensionTuple, ExtFuncs>{};
-  Map<ExtensionTuple, ExtFuncs> _extensionsFunctionsView;
-  Map<ExtensionTuple, ExtFuncs> get extensionsFunctions =>
-      _extensionsFunctionsView;
+  final Map<ExtensionTuple, ExtensionDescriptor> _extensionDescriptors =
+      <ExtensionTuple, ExtensionDescriptor>{};
+  Map<ExtensionTuple, ExtensionDescriptor> _extensionDescriptorsView;
+  Map<ExtensionTuple, ExtensionDescriptor> get extensionDescriptors =>
+      _extensionDescriptorsView;
 
   final List<String> _extensionsUsed = <String>[];
   List<String> _extensionsUsedView;
@@ -186,7 +186,7 @@ class Context {
       }
 
       extension.functions?.forEach((type, funcs) {
-        _extensionsFunctions[ExtensionTuple(type, extension.name)] = funcs;
+        _extensionDescriptors[ExtensionTuple(type, extension.name)] = funcs;
       });
 
       if (extension.init != null) {

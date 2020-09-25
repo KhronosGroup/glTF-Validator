@@ -36,6 +36,7 @@
 |BUFFER_VIEW_INVALID_BYTE_STRIDE|Only buffer views with raw vertex data can have byteStride.|Error|
 |BUFFER_VIEW_TOO_BIG_BYTE_STRIDE|Buffer view's byteStride (`%1`) is greater than byteLength (`%2`).|Error|
 |CAMERA_XMAG_YMAG_ZERO|xmag and ymag must not be zero.|Warning|
+|CAMERA_YFOV_GEQUAL_PI|yfov should be less than Pi.|Warning|
 |CAMERA_ZFAR_LEQUAL_ZNEAR|zfar must be greater than znear.|Error|
 |EXTRA_PROPERTY|This property should not be defined as it will not be used.|Information|
 |INTEGER_WRITTEN_AS_FLOAT|Integer value is written with fractional part: `%1`.|Warning|
@@ -52,7 +53,7 @@
 |MESH_PRIMITIVE_NO_POSITION|No POSITION attribute found.|Warning|
 |MESH_PRIMITIVE_TANGENT_POINTS|TANGENT attribute defined for POINTS rendering mode.|Warning|
 |MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL|TANGENT attribute without NORMAL found.|Warning|
-|MULTIPLE_EXTENSIONS|Multiple extensions are defined for this object: ('`%a`', '`%b`', '`%c`').|Warning|
+|MULTIPLE_EXTENSIONS|This extension may be incompatible with other extensions for the object.|Warning|
 |NODE_EMPTY|Empty node encountered.|Information|
 |NODE_MATRIX_DEFAULT|Do not specify default transform matrix.|Information|
 |NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
@@ -88,6 +89,7 @@
 |BUFFER_MISSING_GLB_DATA|Buffer refers to an unresolved GLB binary chunk.|Error|
 |BUFFER_VIEW_TARGET_OVERRIDE|Override of previously set bufferView target or usage. Initial: '`%1`', new: '`%2`'.|Error|
 |BUFFER_VIEW_TOO_LONG|BufferView does not fit buffer (`%1`) byteLength (`%2`).|Error|
+|IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views containing image data.|Error|
 |INVALID_IBM_ACCESSOR_COUNT|Accessor of count `%1` expected. Found `%2`.|Error|
 |MESH_PRIMITIVE_ACCESSOR_UNALIGNED|Vertex attribute data must be aligned to 4-byte boundaries.|Error|
 |MESH_PRIMITIVE_ACCESSOR_WITHOUT_BYTESTRIDE|bufferView.byteStride must be defined when two or more accessors use the same buffer view.|Error|
@@ -106,6 +108,7 @@
 |NODE_SKIN_WITH_NON_SKINNED_MESH|Node has skin defined, but mesh has no joints data.|Error|
 |NODE_WEIGHTS_INVALID|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
 |SCENE_NON_ROOT_NODE|Node `%1` is not a root node.|Error|
+|SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views used by IBM accessors.|Error|
 |SKIN_IBM_INVALID_FORMAT|Invalid IBM accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`'). |Error|
 |TEXTURE_INVALID_IMAGE_MIME_TYPE|Invalid MIME type '`%1`' for the texture source. Valid MIME types are ('`%a`', '`%b`', '`%c`').|Error|
 |UNDECLARED_EXTENSION|Extension is not declared in extensionsUsed.|Error|

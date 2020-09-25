@@ -176,7 +176,7 @@ Future<void> run(List<String> args) async {
         abbr: 'r',
         help: 'Validate contents of embedded and/or '
             'referenced resources (buffers, images).',
-        defaultsTo: false)
+        defaultsTo: true)
     ..addFlag(ValidatorOptions.kWriteTimestamp,
         abbr: 't',
         help: 'Write UTC timestamp to the validation report.',

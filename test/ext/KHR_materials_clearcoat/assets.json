@@ -1,0 +1,10 @@
+{
+    "material": {
+        "name": "material.KHR_materials_clearcoat",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "unexpected_extension.gltf": "Unexpected extension object location",
+            "valid.gltf": "Valid"
+        }
+    }
+}

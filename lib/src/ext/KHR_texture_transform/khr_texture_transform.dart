@@ -71,8 +71,8 @@ class KhrTextureTransform extends GltfProperty {
 }
 
 const Extension khrTextureTransformExtension =
-    Extension(KHR_TEXTURE_TRANSFORM, <Type, ExtFuncs>{
-  TextureInfo: ExtFuncs(KhrTextureTransform.fromMap),
-  NormalTextureInfo: ExtFuncs(KhrTextureTransform.fromMap),
-  OcclusionTextureInfo: ExtFuncs(KhrTextureTransform.fromMap),
+    Extension(KHR_TEXTURE_TRANSFORM, <Type, ExtensionDescriptor>{
+  TextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
+  NormalTextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
+  OcclusionTextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
 });

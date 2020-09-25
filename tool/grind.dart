@@ -69,7 +69,7 @@ void issues() {
       try {
         message = issueType.message(args);
         // ignore: avoid_catching_errors
-      } on CastError catch (_) {
+      } on TypeError catch (_) {
         message = issueType.message(argsWithArray);
       }
       sb.writeln('|${issueType.code}|$message|'
@@ -130,14 +130,11 @@ void _npmBuild({bool release = true}) {
   delete(_nodeTargetDir);
   _runBuild(_nodeSource, release: release);
 
-  // TODO: remove this patch after upstream update
+  // Do not redefine require to avoid webpack complaints
   {
     final file = File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
-    file.writeAsStringSync(file.readAsStringSync().replaceFirst(
-        '!dartNodePreambleSelf.window',
-        '!dartNodePreambleSelf.window&&'
-            '!(\'undefined\'!==typeof WorkerGlobalScope&&'
-            'dartNodePreambleSelf instanceof WorkerGlobalScope)'));
+    file.writeAsStringSync(
+        file.readAsStringSync().replaceFirst('self.require=require,', ''));
   }
 
   const packageJson = 'package.json';
@@ -174,23 +171,18 @@ void npmPublish() {
   run(npmExecutable, arguments: ['publish'], workingDirectory: _nodeTarget);
 }
 
-final _args = ['build', '--delete-conflicting-outputs', '--output'];
-
 void _runBuild(String dir, {bool release = true, String defineOption}) {
   final target = _getTarget(dir);
   delete(Directory(target));
 
-  _args.add(_getOutput(dir));
-
-  if (release) {
-    _args.add('--release');
-  }
-
-  if (defineOption != null) {
-    _args..add('--define')..add(defineOption);
-  }
-
-  Pub.run('build_runner', arguments: _args);
+  Pub.run('build_runner', arguments: [
+    'build',
+    '--delete-conflicting-outputs',
+    '--output',
+    _getOutput(dir),
+    if (release) '--release',
+    if (defineOption != null) ...['--define', defineOption]
+  ]);
 
   delete(File(p.join(target, '.build.manifest')));
   delete(File(p.join(target, '.packages')));

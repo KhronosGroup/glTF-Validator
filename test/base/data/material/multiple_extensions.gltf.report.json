@@ -1,24 +1,54 @@
 {
     "uri": "test/base/data/material/multiple_extensions.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.3",
     "issues": {
         "numErrors": 0,
-        "numWarnings": 1,
-        "numInfos": 1,
+        "numWarnings": 4,
+        "numInfos": 3,
         "numHints": 0,
         "messages": [
             {
                 "code": "MULTIPLE_EXTENSIONS",
-                "message": "Multiple extensions are defined for this object: ('KHR_materials_unlit', 'KHR_materials_pbrSpecularGlossiness').",
+                "message": "This extension may be incompatible with other extensions for the object.",
                 "severity": 1,
-                "pointer": "/materials/0/extensions"
+                "pointer": "/materials/0/extensions/KHR_materials_unlit"
+            },
+            {
+                "code": "MULTIPLE_EXTENSIONS",
+                "message": "This extension may be incompatible with other extensions for the object.",
+                "severity": 1,
+                "pointer": "/materials/1/extensions/KHR_materials_pbrSpecularGlossiness"
+            },
+            {
+                "code": "MULTIPLE_EXTENSIONS",
+                "message": "This extension may be incompatible with other extensions for the object.",
+                "severity": 1,
+                "pointer": "/materials/2/extensions/KHR_materials_unlit"
+            },
+            {
+                "code": "MULTIPLE_EXTENSIONS",
+                "message": "This extension may be incompatible with other extensions for the object.",
+                "severity": 1,
+                "pointer": "/materials/2/extensions/KHR_materials_pbrSpecularGlossiness"
             },
             {
                 "code": "UNUSED_OBJECT",
                 "message": "This object may be unused.",
                 "severity": 2,
                 "pointer": "/materials/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/2"
             }
         ],
         "truncated": false
@@ -26,11 +56,13 @@
     "info": {
         "version": "2.0",
         "extensionsUsed": [
-            "KHR_materials_unlit",
-            "KHR_materials_pbrSpecularGlossiness"
+            "KHR_materials_clearcoat",
+            "KHR_materials_pbrSpecularGlossiness",
+            "KHR_materials_transmission",
+            "KHR_materials_unlit"
         ],
         "animationCount": 0,
-        "materialCount": 1,
+        "materialCount": 3,
         "hasMorphTargets": false,
         "hasSkins": false,
         "hasTextures": false,

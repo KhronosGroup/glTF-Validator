@@ -510,7 +510,7 @@ String getName(Map<String, Object> map, Context context) =>
 
 Map<String, Object> getExtensions(
     Map<String, Object> map, Type type, Context context,
-    {bool warnOnMultipleExtensions = false, Type overriddenType}) {
+    {Type overriddenType}) {
   final extensions = <String, Object>{};
   final extensionMaps = getMap(map, EXTENSIONS, context);
 
@@ -519,11 +519,6 @@ Map<String, Object> getExtensions(
   }
 
   context.path.add(EXTENSIONS);
-
-  if (warnOnMultipleExtensions && extensionMaps.length > 1) {
-    context.addIssue(SemanticError.multipleExtensions,
-        args: [null, extensionMaps.keys]);
-  }
 
   for (final extension in extensionMaps.keys) {
     // Fetch extension JSON map first to ensure schema compliance.
@@ -537,17 +532,21 @@ Map<String, Object> getExtensions(
       continue;
     }
 
-    final functions =
-        context.extensionsFunctions[ExtensionTuple(type, extension)];
+    final extensionDescriptor =
+        context.extensionDescriptors[ExtensionTuple(type, extension)];
 
-    if (functions == null) {
+    if (extensionDescriptor == null) {
       context.addIssue(LinkError.unexpectedExtensionObject, name: extension);
       continue;
     }
 
+    if (extensionMaps.length > 1 && extensionDescriptor.standalone) {
+      context.addIssue(SemanticError.multipleExtensions, name: extension);
+    }
+
     if (extensionMap != null) {
       context.path.add(extension);
-      final object = functions.fromMap(extensionMap, context);
+      final object = extensionDescriptor.fromMap(extensionMap, context);
       extensions[extension] = object;
       if (object is Linkable) {
         context.linkableExtensions

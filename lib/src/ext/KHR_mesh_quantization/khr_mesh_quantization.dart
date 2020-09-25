@@ -72,5 +72,5 @@ void _init(Context context) {
 }
 
 const Extension khrMeshQuantizationExtension = Extension(
-    KHR_MESH_QUANTIZATION, <Type, ExtFuncs>{},
+    KHR_MESH_QUANTIZATION, <Type, ExtensionDescriptor>{},
     init: _init, required: true);

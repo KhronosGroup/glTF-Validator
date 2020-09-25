@@ -19,11 +19,11 @@ library gltf_validator_npm;
 
 import 'dart:async';
 import 'dart:typed_data';
+
+import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
-
-import 'package:gltf/gltf.dart';
 
 typedef ExternalResourceFunction = Promise<Object> Function(String filename);
 
@@ -58,12 +58,17 @@ abstract class Exports {
 @anonymous
 abstract class _JSValidationOptions {
   external Object get uri;
+
   external ExternalResourceFunction get externalResourceFunction;
 
   external bool get validateAccessorData;
+
   external bool get writeTimestamp;
+
   external int get maxIssues;
+
   external List get ignoredIssues;
+
   external Object get severityOverrides;
 }
 
@@ -77,8 +82,9 @@ void main() {
   const kDebug =
       bool.fromEnvironment('GLTF_VALIDATOR_DEBUG', defaultValue: false);
 
-  void onError(Object e, StackTrace st, Function reject) =>
-      kDebug ? reject(st.toString()) : reject(e.toString());
+  void onError(Object e, StackTrace st, Function reject) => kDebug
+      ? reject((st.toString().isEmpty ? e : st).toString())
+      : reject(e.toString());
 
   exports.validateBytes = allowInterop((Uint8List data, Object options) =>
       Promise<Object>(allowInterop((resolve, reject) {
@@ -173,11 +179,11 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
     }
   }
 
-  if (result?.gltf != null && externalResourceFunction != null) {
+  if (result?.gltf != null) {
     final loader =
         _getResourcesLoader(context, result, externalResourceFunction);
     await loader.load(
-        validateAccessorData: options.validateAccessorData ?? true);
+        validateAccessorData: options?.validateAccessorData ?? true);
   }
   return ValidationResult(uri, context, result,
           writeTimestamp: options?.writeTimestamp ?? true)
@@ -263,35 +269,42 @@ ResourcesLoader _getResourcesLoader(Context context,
     GltfReaderResult readerResult, ExternalResourceFunction getResource) {
   Future<Uint8List> getBytes(Uri uri) {
     final completer = Completer<Uint8List>();
-    getResource(uri.toString()).then(allowInterop((Object o) {
-      if (o is Uint8List) {
-        completer.complete(o);
-      } else {
-        completer
-            .completeError(ArgumentError('options.externalResourceFunction: '
-                'Promise must be fulfilled with Uint8Array.'));
-      }
-    }),
-        allowInterop((Object e) =>
-            completer.completeError(NodeException(e.toString()))));
-
+    final promise = getResource(uri.toString());
+    if (promise?.then == null) {
+      completer.completeError(ArgumentError(
+          'options.externalResourceFunction: Function must return a Promise.'));
+    } else {
+      promise.then(allowInterop((Object o) {
+        if (o is Uint8List) {
+          completer.complete(o);
+        } else {
+          completer
+              .completeError(ArgumentError('options.externalResourceFunction: '
+                  'Promise must be fulfilled with Uint8Array.'));
+        }
+      }),
+          allowInterop((Object e) =>
+              completer.completeError(NodeException(e.toString()))));
+    }
     return completer.future;
   }
 
   return ResourcesLoader(context, readerResult.gltf,
       externalBytesFetch: ([uri]) {
-        if (uri == null) {
+        if (context.isGlb && uri == null) {
           // GLB-stored buffer
           return readerResult.buffer;
         }
-        return getBytes(uri);
+        return getResource != null ? getBytes(uri) : null;
       },
       externalStreamFetch: (uri) => getBytes(uri)?.asStream());
 }
 
 class NodeException implements Exception {
   final String message;
+
   const NodeException(this.message);
+
   @override
   String toString() => 'Node Exception: $message';
 }

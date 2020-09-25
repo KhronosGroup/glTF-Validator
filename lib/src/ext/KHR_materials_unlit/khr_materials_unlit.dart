@@ -39,5 +39,7 @@ class KhrMaterialsUnlit extends GltfProperty {
   }
 }
 
-const Extension khrMaterialsUnlitExtension = Extension(KHR_MATERIALS_UNLIT,
-    <Type, ExtFuncs>{Material: ExtFuncs(KhrMaterialsUnlit.fromMap)});
+const Extension khrMaterialsUnlitExtension = Extension(
+    KHR_MATERIALS_UNLIT, <Type, ExtensionDescriptor>{
+  Material: ExtensionDescriptor(KhrMaterialsUnlit.fromMap, standalone: true)
+});

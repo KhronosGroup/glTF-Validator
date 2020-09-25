@@ -1,0 +1,17 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_transmission"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_transmission": {
+                    "customProperty": true
+                }
+            }
+        }
+    ]
+}

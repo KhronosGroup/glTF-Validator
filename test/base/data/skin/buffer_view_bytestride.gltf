@@ -1,0 +1,36 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "skins": [
+        {
+            "inverseBindMatrices": 0,
+            "joints": [
+                0
+            ]
+        }
+    ],
+    "nodes": [
+        {}
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "type": "MAT4",
+            "componentType": 5126,
+            "count": 1
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 256,
+            "byteStride": 128
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 256
+        }
+    ]
+}

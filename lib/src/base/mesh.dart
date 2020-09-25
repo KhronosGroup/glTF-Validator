@@ -549,6 +549,8 @@ class MeshPrimitive extends GltfProperty {
             if (context.validate) {
               accessor.setUsage(
                   AccessorUsage.VertexAttribute, semantic, context);
+              accessor.bufferView
+                  ?.setUsage(BufferViewUsage.VertexBuffer, semantic, context);
 
               final baseAccessor = attributes[semantic];
 

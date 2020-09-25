@@ -72,8 +72,7 @@ class Material extends GltfChildOfRootProperty {
 
     final doubleSided = getBool(map, DOUBLE_SIDED, context);
 
-    final extensions =
-        getExtensions(map, Material, context, warnOnMultipleExtensions: true);
+    final extensions = getExtensions(map, Material, context);
 
     final material = Material._(
         pbrMetallicRoughness,
