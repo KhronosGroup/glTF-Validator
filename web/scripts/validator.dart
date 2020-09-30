@@ -102,6 +102,8 @@ void _validate(List<File> files) {
         _dropZone.classes.add('invalid');
         _validityLabel.text = 'The asset contains errors.';
       }
+    } else {
+      _validityLabel.text = 'No glTF asset provided.';
     }
   });
 }

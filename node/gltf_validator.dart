@@ -61,8 +61,6 @@ abstract class _JSValidationOptions {
 
   external ExternalResourceFunction get externalResourceFunction;
 
-  external bool get validateAccessorData;
-
   external bool get writeTimestamp;
 
   external int get maxIssues;
@@ -168,12 +166,6 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
       externalResourceFunction = options.externalResourceFunction;
     }
 
-    if (options.validateAccessorData != null &&
-        options.validateAccessorData is! bool) {
-      throw ArgumentError(
-          'options.validateAccessorData: Value must be a boolean.');
-    }
-
     if (options.writeTimestamp != null && options.writeTimestamp is! bool) {
       throw ArgumentError('options.writeTimestamp: Value must be a boolean.');
     }
@@ -182,8 +174,7 @@ Future<Map<String, Object>> _validateResourcesAndGetReport(
   if (result?.gltf != null) {
     final loader =
         _getResourcesLoader(context, result, externalResourceFunction);
-    await loader.load(
-        validateAccessorData: options?.validateAccessorData ?? true);
+    await loader.load();
   }
   return ValidationResult(uri, context, result,
           writeTimestamp: options?.writeTimestamp ?? true)
@@ -280,7 +271,7 @@ ResourcesLoader _getResourcesLoader(Context context,
         } else {
           completer
               .completeError(ArgumentError('options.externalResourceFunction: '
-                  'Promise must be fulfilled with Uint8Array.'));
+                  'Promise must be fulfilled with Uint8Array or rejected.'));
         }
       }),
           allowInterop((Object e) =>
@@ -289,15 +280,22 @@ ResourcesLoader _getResourcesLoader(Context context,
     return completer.future;
   }
 
+  final missingFunctionException = Exception('options.externalResourceFunction '
+      'is required to load this resource.');
+
   return ResourcesLoader(context, readerResult.gltf,
       externalBytesFetch: ([uri]) {
         if (context.isGlb && uri == null) {
           // GLB-stored buffer
           return readerResult.buffer;
         }
-        return getResource != null ? getBytes(uri) : null;
+        return getResource != null
+            ? getBytes(uri)
+            : Future.error(missingFunctionException);
       },
-      externalStreamFetch: (uri) => getBytes(uri)?.asStream());
+      externalStreamFetch: (uri) => getResource != null
+          ? getBytes(uri).asStream()
+          : Stream.error(missingFunctionException));
 }
 
 class NodeException implements Exception {

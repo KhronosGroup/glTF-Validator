@@ -10,7 +10,7 @@
 
 * Added new `IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE` error for images using buffer views with defined `byteStride`.
 
-* Added new vendor prefixes: `ANIMECH`, `GRIFFEL`, `MAXAR`, `MPEG`, `PANDA3D`, `PTC`, `SEIN`, `SPECTRUM`, `TRYON`.
+* Added new vendor prefixes: `ANIMECH`, `GRIFFEL`, `MAXAR`, `MPEG`, `PANDA3D`, `PTC`, `SEIN`, `SPECTRUM`, `TRYON`, and `VRMC`.
 
 ### Changes
 
@@ -26,12 +26,18 @@
 
 * Fixed missing JS API error messages when the validator is compiled in debug mode.
 
+* Web drag-n-drop tool now shows a correct message when no glTF assets were provided.
+
 ### Integration updates
 
-  * npm version no longer re-defines `require` (#139).
+  * npm tool no longer re-defines `require` (#139).
 
-  * npm version no longer requires `options.externalResourceFunction` for GLB or assets with embedded data (#138).
-  
+  * npm tool no longer requires `options.externalResourceFunction` for GLB or assets with embedded data (#138).
+
+  * `options.validateAccessorData` npm tool flag is removed, accessors' data validation is always enabled.
+
+  * npm tool now reports `IO_ERROR` for external resources when `options.externalResourceFunction` is not provided.
+
   * CLI tool now supports `--stdout` flag for writing a single validation report to STDOUT instead of a new file.
 
   * CLI tool validates binary data by default (#138).
