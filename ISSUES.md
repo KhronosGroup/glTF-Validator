@@ -108,7 +108,7 @@
 |NODE_SKIN_WITH_NON_SKINNED_MESH|Node has skin defined, but mesh has no joints data.|Error|
 |NODE_WEIGHTS_INVALID|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
 |SCENE_NON_ROOT_NODE|Node `%1` is not a root node.|Error|
-|SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views used by IBM accessors.|Error|
+|SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views used by inverse bind matrices accessors.|Error|
 |SKIN_IBM_INVALID_FORMAT|Invalid IBM accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`'). |Error|
 |TEXTURE_INVALID_IMAGE_MIME_TYPE|Invalid MIME type '`%1`' for the texture source. Valid MIME types are ('`%a`', '`%b`', '`%c`').|Error|
 |UNDECLARED_EXTENSION|Extension is not declared in extensionsUsed.|Error|

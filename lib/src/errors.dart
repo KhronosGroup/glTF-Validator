@@ -703,7 +703,7 @@ class LinkError extends IssueType {
   static final LinkError skinIbmAccessorWithByteStride = LinkError._(
       'SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE',
       (args) => 'bufferView.byteStride must not be defined for '
-          'buffer views used by IBM accessors.');
+          'buffer views used by inverse bind matrices accessors.');
 
   static final LinkError textureInvalidImageMimeType = LinkError._(
       'TEXTURE_INVALID_IMAGE_MIME_TYPE',
