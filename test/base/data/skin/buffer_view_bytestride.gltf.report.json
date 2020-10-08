@@ -10,7 +10,7 @@
         "messages": [
             {
                 "code": "SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE",
-                "message": "bufferView.byteStride must not be defined for buffer views used by IBM accessors.",
+                "message": "bufferView.byteStride must not be defined for buffer views used by inverse bind matrices accessors.",
                 "severity": 0,
                 "pointer": "/skins/0/inverseBindMatrices"
             },

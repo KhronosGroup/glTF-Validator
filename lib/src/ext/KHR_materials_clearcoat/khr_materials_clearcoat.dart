@@ -12,16 +12,16 @@ const String KHR_MATERIALS_CLEARCOAT = 'KHR_materials_clearcoat';
 
 const String CLEARCOAT_FACTOR = 'clearcoatFactor';
 const String CLEARCOAT_TEXTURE = 'clearcoatTexture';
-const String CLEARCOATROUGHNESS_FACTOR = 'clearcoatRoughnessFactor';
-const String CLEARCOATROUGHNESS_TEXTURE = 'clearcoatRoughnessTexture';
-const String CLEARCOATNORMAL_TEXTURE = 'clearcoatNormalTexture';
+const String CLEARCOAT_ROUGHNESS_FACTOR = 'clearcoatRoughnessFactor';
+const String CLEARCOAT_ROUGHNESS_TEXTURE = 'clearcoatRoughnessTexture';
+const String CLEARCOAT_NORMAL_TEXTURE = 'clearcoatNormalTexture';
 
 const List<String> KHR_MATERIALS_CLEARCOAT_MEMBERS = <String>[
   CLEARCOAT_FACTOR,
   CLEARCOAT_TEXTURE,
-  CLEARCOATROUGHNESS_FACTOR,
-  CLEARCOATROUGHNESS_TEXTURE,
-  CLEARCOATNORMAL_TEXTURE
+  CLEARCOAT_ROUGHNESS_FACTOR,
+  CLEARCOAT_ROUGHNESS_TEXTURE,
+  CLEARCOAT_NORMAL_TEXTURE
 ];
 
 class KhrMaterialsClearcoat extends GltfProperty {
@@ -53,12 +53,12 @@ class KhrMaterialsClearcoat extends GltfProperty {
     final clearcoatTexture = getObjectFromInnerMap<TextureInfo>(
         map, CLEARCOAT_TEXTURE, context, TextureInfo.fromMap);
     final clearcoatRoughnessFactor = getFloat(
-        map, CLEARCOATROUGHNESS_FACTOR, context,
+        map, CLEARCOAT_ROUGHNESS_FACTOR, context,
         min: 0, max: 1, def: 0);
     final clearcoatRoughnessTexture = getObjectFromInnerMap<TextureInfo>(
-        map, CLEARCOATROUGHNESS_TEXTURE, context, TextureInfo.fromMap);
+        map, CLEARCOAT_ROUGHNESS_TEXTURE, context, TextureInfo.fromMap);
     final clearcoatNormalTexture = getObjectFromInnerMap<NormalTextureInfo>(
-        map, CLEARCOATNORMAL_TEXTURE, context, NormalTextureInfo.fromMap);
+        map, CLEARCOAT_NORMAL_TEXTURE, context, NormalTextureInfo.fromMap);
 
     final extensions = getExtensions(map, KhrMaterialsClearcoat, context);
 
@@ -90,13 +90,13 @@ class KhrMaterialsClearcoat extends GltfProperty {
     }
 
     if (clearcoatRoughnessTexture != null) {
-      context.path.add(CLEARCOATROUGHNESS_TEXTURE);
+      context.path.add(CLEARCOAT_ROUGHNESS_TEXTURE);
       clearcoatRoughnessTexture.link(gltf, context);
       context.path.removeLast();
     }
 
     if (clearcoatNormalTexture != null) {
-      context.path.add(CLEARCOATNORMAL_TEXTURE);
+      context.path.add(CLEARCOAT_NORMAL_TEXTURE);
       clearcoatNormalTexture.link(gltf, context);
       context.path.removeLast();
     }
