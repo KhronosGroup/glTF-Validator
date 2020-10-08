@@ -2,7 +2,7 @@
 
 ### New Features
 
-* Added support for new PBR extensions: `KHR_materials_clearcoat` and `KHR_materials_transmission`.
+* Added support for new PBR extensions: `KHR_materials_clearcoat`, `KHR_materials_transmission`, and `KHR_materials_sheen`.
 
 * Added `CAMERA_YFOV_GEQUAL_PI` validation warning (#140).
 
