@@ -22,6 +22,8 @@
 
 * Fixed an endless loop on assets with a node loop within a scene (#141).
 
+* Fixed wrong pointer for undeclared root extensions (#150).
+
 * Fixed building all targets at once (`pub run grinder` with no args).
 
 * Fixed missing JS API error messages when the validator is compiled in debug mode.

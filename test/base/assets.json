@@ -343,6 +343,7 @@
             "duplicate_extension_entry.gltf": "Duplicate extension entry",
             "empty_object.gltf": "Empty object",
             "extensions_non_objects.gltf": "Non-object extensions",
+            "extensions_undeclared_wrong_pointer.gltf": "Issue 150: Wrong pointer for undeclared root extensions",
             "extras_non_object.gltf": "Non-object extras",
             "invalid_array_elements.gltf": "Invalid array elements",
             "invalid_collection_type.gltf": "Invalid collection type",

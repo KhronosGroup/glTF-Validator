@@ -1,0 +1,11 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "textures": [
+        { }
+    ],
+    "extensions": {
+        "EXT_undeclared_extension": { }
+    }
+}
