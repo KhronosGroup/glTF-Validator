@@ -133,6 +133,7 @@ const Set<String> kReservedPrefixes = <String>{
   'SKYLINE',
   'SPECTRUM',
   'TRYON',
+  'UX3D',
   'VRMC',
   'WEB3D'
 };

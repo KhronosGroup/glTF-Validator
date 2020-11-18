@@ -10,7 +10,7 @@
 
 * Added new `IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE` error for images using buffer views with defined `byteStride`.
 
-* Added new vendor prefixes: `ANIMECH`, `GRIFFEL`, `MAXAR`, `MPEG`, `PANDA3D`, `PTC`, `SEIN`, `SPECTRUM`, `TRYON`, and `VRMC`.
+* Added new vendor prefixes: `ANIMECH`, `GRIFFEL`, `MAXAR`, `MPEG`, `PANDA3D`, `PTC`, `SEIN`, `SPECTRUM`, `TRYON`, `UX3D`, and `VRMC`.
 
 ### Changes
 
