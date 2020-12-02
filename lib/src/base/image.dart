@@ -102,6 +102,10 @@ class Image extends GltfChildOfRootProperty {
             name: BUFFER_VIEW, args: [_bufferViewIndex]);
       } else {
         _bufferView.setUsage(BufferViewUsage.Image, BUFFER_VIEW, context);
+        if (_bufferView.byteStride != -1) {
+          context.addIssue(LinkError.imageBufferViewWithByteStride,
+              name: BUFFER_VIEW);
+        }
       }
     }
   }

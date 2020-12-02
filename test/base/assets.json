@@ -100,6 +100,7 @@
             "extra_type.gltf": "Extra type",
             "orthographic_xy.gltf": "Orthographic XY",
             "orthographic_z.gltf": "Orthographic Z",
+            "perspective_yfov.gltf": "Perspective Y FoV",
             "perspective_z.gltf": "Perspective Z",
             "valid.gltf": "Valid"
         }
@@ -107,6 +108,7 @@
     "image": {
         "name": "Image",
         "tests": {
+            "buffer_view_bytestride.gltf": "Image using a buffer view with defined byteStride",
             "custom_property.gltf": "Custom property",
             "data_uri.glb": "Data URI is used in GLB",
             "empty_array.gltf": "Empty array",
@@ -210,6 +212,7 @@
             "invalid_tangent.gltf": "Invalid tangent",
             "morph_attribute_invalid_count.gltf": "Morph attribute invalid count",
             "morph_attribute_no_base.gltf": "Morph attribute without base attribute",
+            "morph_bufferview_target_override.gltf": "Morph target accessor overriding buffer view target",
             "morph_position_accessor_no_bounds.gltf": "Morph position accessor no bounds",
             "morph_unequal_targets_count.gltf": "Morph unequal targets count",
             "morph_weights_wrong_count.gltf": "Morph weights wrong count",
@@ -247,6 +250,7 @@
             "matrix_indecomposable.gltf": "Indecomposable matrix",
             "matrix_trs.gltf": "TRS with matrix",
             "node_loop.gltf": "Node loop",
+            "node_loop_scene.gltf": "Node loop with a scene",
             "node_parent_override.gltf": "Node parent override",
             "node_skin_without_skinned_mesh.gltf": "Node skin without skinned mesh",
             "node_skinned_mesh_without_skin.gltf": "Node skinned mesh without skin",
@@ -264,6 +268,7 @@
     "skin": {
         "name": "Skin",
         "tests": {
+            "buffer_view_bytestride.gltf": "Skin using an IBM accessor using a buffer view with defined byteStride",
             "custom_property.gltf": "Custom property",
             "empty_array.gltf": "Empty array",
             "empty_joints_array.gltf": "Empty joints array",
@@ -338,6 +343,7 @@
             "duplicate_extension_entry.gltf": "Duplicate extension entry",
             "empty_object.gltf": "Empty object",
             "extensions_non_objects.gltf": "Non-object extensions",
+            "extensions_undeclared_wrong_pointer.gltf": "Issue 150: Wrong pointer for undeclared root extensions",
             "extras_non_object.gltf": "Non-object extras",
             "invalid_array_elements.gltf": "Invalid array elements",
             "invalid_collection_type.gltf": "Invalid collection type",

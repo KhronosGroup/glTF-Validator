@@ -22,8 +22,11 @@ import 'package:gltf/src/utils.dart';
 
 const String IMAGE_WEBP = 'image/webp';
 
-const Extension extTextureWebPExtension = Extension('EXT_texture_webp',
-    <Type, ExtFuncs>{Texture: ExtFuncs(ExtTextureWebPTexture.fromMap)},
+const Extension extTextureWebPExtension = Extension(
+    'EXT_texture_webp',
+    <Type, ExtensionDescriptor>{
+      Texture: ExtensionDescriptor(ExtTextureWebPTexture.fromMap)
+    },
     init: _init);
 
 void _init(Context context) {

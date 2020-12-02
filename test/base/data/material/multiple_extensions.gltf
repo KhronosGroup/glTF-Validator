@@ -3,10 +3,28 @@
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_materials_unlit",
-        "KHR_materials_pbrSpecularGlossiness"
+        "KHR_materials_clearcoat",
+        "KHR_materials_pbrSpecularGlossiness",
+        "KHR_materials_transmission",
+        "KHR_materials_unlit"
     ],
     "materials": [
+        {
+            "extensions": {
+                "KHR_materials_clearcoat": {
+                },
+                "KHR_materials_unlit": {
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_materials_pbrSpecularGlossiness": {
+                },
+                "KHR_materials_transmission": {
+                }
+            }
+        },
         {
             "extensions": {
                 "KHR_materials_unlit": {

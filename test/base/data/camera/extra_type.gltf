@@ -8,7 +8,7 @@
             "perspective": {
                 "znear": 1,
                 "zfar": 10,
-                "yfov": 10,
+                "yfov": 1.5,
                 "aspectRatio": 1
             },
             "orthographic": {

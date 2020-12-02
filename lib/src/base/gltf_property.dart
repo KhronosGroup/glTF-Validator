@@ -33,24 +33,26 @@ abstract class Linkable {
   void link(Gltf gltf, Context context);
 }
 
-// ignore: one_member_abstracts
-abstract class ResourceValidatable {
-  void validateResources(Gltf gltf, Context context);
-}
-
-abstract class GltfProperty implements Linkable {
-  final Map<String, Object> extensions;
-  final Object extras;
-
+mixin Usable {
   bool _isUsed = false;
-
-  GltfProperty(this.extensions, this.extras);
 
   bool get isUsed => _isUsed;
 
   void markAsUsed() {
     _isUsed = true;
   }
+}
+
+// ignore: one_member_abstracts
+abstract class ResourceValidatable {
+  void validateResources(Gltf gltf, Context context);
+}
+
+abstract class GltfProperty with Usable implements Linkable {
+  final Map<String, Object> extensions;
+  final Object extras;
+
+  GltfProperty(this.extensions, this.extras);
 
   @override
   void link(Gltf gltf, Context context) {}

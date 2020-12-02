@@ -21,7 +21,10 @@ import 'package:gltf/src/base/gltf_property.dart';
 
 import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
+import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
+import 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
+import 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
 import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
@@ -29,7 +32,10 @@ import 'package:meta/meta.dart';
 
 export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
+export 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
+export 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
+export 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 export 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
@@ -39,14 +45,15 @@ class Extension {
       {this.init, this.required = false});
 
   final String name;
-  final Map<Type, ExtFuncs> functions;
+  final Map<Type, ExtensionDescriptor> functions;
   final void Function(Context) init;
   final bool required;
 }
 
-class ExtFuncs {
+class ExtensionDescriptor {
   final FromMapFunction<Object> fromMap;
-  const ExtFuncs(this.fromMap);
+  const ExtensionDescriptor(this.fromMap, {this.standalone = false});
+  final bool standalone;
 }
 
 @immutable
@@ -78,7 +85,10 @@ class ResourceValidatableExtensionEntry {
 const List<Extension> kDefaultExtensions = <Extension>[
   extTextureWebPExtension,
   khrLightsPunctualExtension,
+  khrMaterialsClearcoatExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
+  khrMaterialsTransmissionExtension,
+  khrMaterialsSheenExtension,
   khrMaterialsUnlitExtension,
   khrMeshQuantizationExtension,
   khrTextureTransformExtension
@@ -94,25 +104,37 @@ const Set<String> kReservedPrefixes = <String>{
   'ALCM',
   'ALI',
   'AMZN',
+  'ANIMECH',
   'AVR',
   'BLENDER',
   'CAPTURE',
   'CESIUM',
   'CVTOOLS',
+  'EPIC',
   'FB',
   'FOXIT',
   'GOOGLE',
+  'GRIFFEL',
   'KDAB',
   'LLQ',
+  'MAXAR',
   'MESHOPT',
   'MOZ',
+  'MPEG',
   'MSFT',
   'NV',
   'OWLII',
+  'PANDA3D',
   'POLUTROPON',
+  'PTC',
   'S8S',
+  'SEIN',
   'SI',
   'SKFB',
   'SKYLINE',
+  'SPECTRUM',
+  'TRYON',
+  'UX3D',
+  'VRMC',
   'WEB3D'
 };

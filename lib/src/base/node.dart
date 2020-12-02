@@ -229,12 +229,15 @@ class Node extends GltfChildOfRootProperty {
     }
   }
 
-  void addScene(Scene scene) {
+  void addScene(Scene scene) => _addScene(scene, <Node>{});
+
+  void _addScene(Scene scene, Set<Node> seenNodes) {
     _scenes.add(scene);
-    if (children != null) {
-      for (final node in children) {
-        node?.addScene(scene);
-      }
+    if (_children == null || !seenNodes.add(this)) {
+      return;
+    }
+    for (final node in children) {
+      node?._addScene(scene, seenNodes);
     }
   }
 }

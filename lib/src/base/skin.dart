@@ -102,6 +102,11 @@ class Skin extends GltfChildOfRootProperty {
         if (context.validate) {
           context.path.add(INVERSE_BIND_MATRICES);
 
+          if (_inverseBindMatrices.bufferView != null &&
+              _inverseBindMatrices.bufferView.byteStride != -1) {
+            context.addIssue(LinkError.skinIbmAccessorWithByteStride);
+          }
+
           final format = AccessorFormat.fromAccessor(_inverseBindMatrices);
           if (format != SKIN_IBM_FORMAT) {
             context.addIssue(LinkError.skinIbmInvalidFormat, args: [

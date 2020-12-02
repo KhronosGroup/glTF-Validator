@@ -16,6 +16,7 @@
 
 library gltf.base.camera;
 
+import 'dart:math' as math;
 import 'package:gltf/src/base/gltf_property.dart';
 
 class Camera extends GltfChildOfRootProperty {
@@ -117,6 +118,12 @@ class CameraPerspective extends GltfProperty {
       checkMembers(map, CAMERA_PERSPECTIVE_MEMBERS, context);
     }
 
+    final yfov = getFloat(map, YFOV, context, req: true, exclMin: 0);
+
+    if (context.validate && !yfov.isNaN && yfov >= math.pi) {
+      context.addIssue(SemanticError.cameraYFovGequalPi);
+    }
+
     final zfar = getFloat(map, ZFAR, context, exclMin: 0);
     final znear = getFloat(map, ZNEAR, context, req: true, exclMin: 0);
 
@@ -126,7 +133,7 @@ class CameraPerspective extends GltfProperty {
 
     return CameraPerspective._(
         getFloat(map, ASPECT_RATIO, context, exclMin: 0),
-        getFloat(map, YFOV, context, req: true, exclMin: 0),
+        yfov,
         zfar,
         znear,
         getExtensions(map, CameraPerspective, context),

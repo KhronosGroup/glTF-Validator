@@ -45,6 +45,7 @@ class ValidatorOptions {
   static const String kWriteTimestamp = 'write-timestamp';
   static const String kAbsolutePath = 'absolute-path';
   static const String kMessages = 'messages';
+  static const String kStdout = 'stdout';
   static const String kThreads = 'threads';
 
   static const String kConfig = 'config';
@@ -54,6 +55,7 @@ class ValidatorOptions {
   final bool absolutePath;
   final bool messages;
   final bool printAll;
+  final bool stdoutReport;
   final int threads;
 
   ValidatorOptions(
@@ -62,6 +64,7 @@ class ValidatorOptions {
       this.absolutePath = false,
       this.messages = false,
       this.printAll = false,
+      this.stdoutReport = false,
       this.threads = 0});
 
   factory ValidatorOptions.fromArgs(ArgResults args) => ValidatorOptions(
@@ -70,6 +73,7 @@ class ValidatorOptions {
       writeTimestamp: args[kWriteTimestamp] == true,
       absolutePath: args[kAbsolutePath] == true,
       printAll: args[kAll] == true,
+      stdoutReport: args[kStdout] == true,
       threads: max(int.tryParse((args[kThreads] ?? '') as String) ?? 0, 0));
 }
 
@@ -164,11 +168,15 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
 Future<void> run(List<String> args) async {
   ArgResults argResult;
   final parser = ArgParser()
+    ..addFlag(ValidatorOptions.kStdout,
+        abbr: 'o',
+        help: 'Print JSON report to stdout instead of writing it to a file. '
+            'This option cannot be used with directory input.')
     ..addFlag(ValidatorOptions.kValidateResources,
         abbr: 'r',
         help: 'Validate contents of embedded and/or '
             'referenced resources (buffers, images).',
-        defaultsTo: false)
+        defaultsTo: true)
     ..addFlag(ValidatorOptions.kWriteTimestamp,
         abbr: 't',
         help: 'Write UTC timestamp to the validation report.',
@@ -230,6 +238,13 @@ Future<void> run(List<String> args) async {
 
   if (FileSystemEntity.isDirectorySync(input) &&
       Directory(input).statSync().type == FileSystemEntityType.directory) {
+    if (validatorOptions.stdoutReport) {
+      errPipe.write('Directory input cannot be used with '
+          '--${ValidatorOptions.kStdout}.\n\n');
+      exitCode = kErrorCode;
+      return;
+    }
+
     final threads = 0 == validatorOptions.threads
         ? Platform.numberOfProcessors
         : validatorOptions.threads;
@@ -374,9 +389,15 @@ Future<bool> _processFile(ValidationTask task) async {
   }
   errPipe.write(sb.toString());
 
-  await File('${task.filename}.report.json').writeAsString(
-      const JsonEncoder.withIndent('    ').convert(validationResult.toMap()),
-      flush: true);
+  final reportString =
+      const JsonEncoder.withIndent('    ').convert(validationResult.toMap());
+
+  if (task.validatorOptions.stdoutReport) {
+    outPipe.writeln(reportString);
+  } else {
+    await File('${task.filename}.report.json')
+        .writeAsString(reportString, flush: true);
+  }
 
   return errors.isNotEmpty;
 }

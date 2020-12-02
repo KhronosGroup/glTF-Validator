@@ -6,6 +6,7 @@ targets:
       - "node/gltf_validator.dart"
       - "tool/**"
       - "web/**"
+      - "$package$"
     builders:
       build_node_compilers|entrypoint:
         generate_for:

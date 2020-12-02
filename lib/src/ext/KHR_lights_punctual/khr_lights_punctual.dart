@@ -21,9 +21,9 @@ import 'package:gltf/src/ext/extensions.dart';
 import 'package:gltf/src/utils.dart';
 
 const Extension khrLightsPunctualExtension =
-    Extension('KHR_lights_punctual', <Type, ExtFuncs>{
-  Gltf: ExtFuncs(KhrLightsPunctualGltf.fromMap),
-  Node: ExtFuncs(KhrLightsPunctualNode.fromMap)
+    Extension('KHR_lights_punctual', <Type, ExtensionDescriptor>{
+  Gltf: ExtensionDescriptor(KhrLightsPunctualGltf.fromMap),
+  Node: ExtensionDescriptor(KhrLightsPunctualNode.fromMap)
 });
 
 const String LIGHTS = 'lights';

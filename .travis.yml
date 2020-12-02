@@ -1,7 +1,7 @@
 language: dart
 sudo: false
 dart:
-  - dev
+  - beta
   - stable
 
 dart_task:
@@ -10,7 +10,7 @@ dart_task:
 
 matrix:
   include:
-  - dart: dev
+  - dart: beta
     dart_task: dartfmt
 
 # Only building master means that we don't run two builds for each pull request.

@@ -16,7 +16,7 @@
 
 library gltf;
 
-import 'src/version.dart';
+import 'package:gltf/src/version.dart';
 
 export 'package:gltf/src/context.dart';
 export 'package:gltf/src/ext/extensions.dart';

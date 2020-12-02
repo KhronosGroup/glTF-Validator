@@ -16,6 +16,8 @@
 
 // ignore_for_file: avoid_print
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html' show querySelector, InputElement, File, FileReader;
@@ -102,6 +104,8 @@ void _validate(List<File> files) {
         _dropZone.classes.add('invalid');
         _validityLabel.text = 'The asset contains errors.';
       }
+    } else {
+      _validityLabel.text = 'No glTF asset provided.';
     }
   });
 }

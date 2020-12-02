@@ -1,3 +1,49 @@
+## 2.0.0-dev.3.3
+
+### New Features
+
+* Added support for new PBR extensions: `KHR_materials_clearcoat`, `KHR_materials_transmission`, and `KHR_materials_sheen`.
+
+* Added `CAMERA_YFOV_GEQUAL_PI` validation warning (#140).
+
+* Added new `SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE` error for IBM accessors using buffer views with defined `byteStride`.
+
+* Added new `IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE` error for images using buffer views with defined `byteStride`.
+
+* Added new vendor prefixes: `ANIMECH`, `EPIC`, `GRIFFEL`, `MAXAR`, `MPEG`, `PANDA3D`, `PTC`, `SEIN`, `SPECTRUM`, `TRYON`, `UX3D`, and `VRMC`.
+
+### Changes
+
+* Modified `MULTIPLE_EXTENSIONS` warning. It is now reported only for explicitly standalone extensions (#145 and #146).
+
+* Added missing check for morph target accessors overriding buffer view usage.
+
+### Bugfixes
+
+* Fixed an endless loop on assets with a node loop within a scene (#141).
+
+* Fixed wrong pointer for undeclared root extensions (#150).
+
+* Fixed building all targets at once (`pub run grinder` with no args).
+
+* Fixed missing JS API error messages when the validator is compiled in debug mode.
+
+* Web drag-n-drop tool now shows a correct message when no glTF assets were provided.
+
+### Integration updates
+
+  * npm tool no longer re-defines `require` (#139).
+
+  * npm tool no longer requires `options.externalResourceFunction` for GLB or assets with embedded data (#138).
+
+  * `options.validateAccessorData` npm tool flag is removed, accessors' data validation is always enabled.
+
+  * npm tool now reports `IO_ERROR` for external resources when `options.externalResourceFunction` is not provided.
+
+  * CLI tool now supports `--stdout` flag for writing a single validation report to STDOUT instead of a new file.
+
+  * CLI tool validates binary data by default (#138).
+
 ## 2.0.0-dev.3.2
 
 ### Bugfixes

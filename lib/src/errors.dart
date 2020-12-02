@@ -123,8 +123,7 @@ class DataError extends IssueType {
   static final DataError accessorIndexPrimitiveRestart = DataError._(
       'ACCESSOR_INDEX_PRIMITIVE_RESTART',
       (args) => 'Indices accessor contains primitive restart value '
-          '(${args[0]}) at index ${args[1]}.',
-      Severity.Error);
+          '(${args[0]}) at index ${args[1]}.');
 
   static final DataError accessorAnimationInputNegative = DataError._(
       'ACCESSOR_ANIMATION_INPUT_NEGATIVE',
@@ -170,8 +169,7 @@ class DataError extends IssueType {
 
   static final DataError imageNonEnabledMimeType = DataError._(
       'IMAGE_NON_ENABLED_MIME_TYPE',
-      (args) => '${_q(args[0])} MIME type requires an extension.',
-      Severity.Error);
+      (args) => '${_q(args[0])} MIME type requires an extension.');
 
   static final DataError imageNonPowerOfTwoDimensions = DataError._(
       'IMAGE_NPOT_DIMENSIONS',
@@ -367,6 +365,11 @@ class SemanticError extends IssueType {
       (args) => 'xmag and ymag must not be zero.',
       Severity.Warning);
 
+  static final SemanticError cameraYFovGequalPi = SemanticError._(
+      'CAMERA_YFOV_GEQUAL_PI',
+      (args) => 'yfov should be less than Pi.',
+      Severity.Warning);
+
   static final SemanticError cameraZfarLequalZnear = SemanticError._(
       'CAMERA_ZFAR_LEQUAL_ZNEAR', (args) => 'zfar must be greater than znear.');
 
@@ -491,8 +494,8 @@ class SemanticError extends IssueType {
 
   static final SemanticError multipleExtensions = SemanticError._(
       'MULTIPLE_EXTENSIONS',
-      (args) => 'Multiple extensions are defined for this object: '
-          '${(args[1] as Iterable).map(_q)}.',
+      (args) => 'This extension may be incompatible '
+          'with other extensions for the object.',
       Severity.Warning);
 
   static final SemanticError nonObjectExtras = SemanticError._(
@@ -600,6 +603,11 @@ class LinkError extends IssueType {
       (args) => 'Override of previously set bufferView target or usage. '
           'Initial: ${_q(args[0])}, new: ${_q(args[1])}.');
 
+  static final LinkError imageBufferViewWithByteStride = LinkError._(
+      'IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE',
+      (args) => 'bufferView.byteStride must not be defined for '
+          'buffer views containing image data.');
+
   static final LinkError invalidIbmAccessorCount = LinkError._(
       'INVALID_IBM_ACCESSOR_COUNT',
       (args) => 'Accessor of count ${args[0]} expected. Found ${args[1]}.');
@@ -648,7 +656,7 @@ class LinkError extends IssueType {
       'MESH_PRIMITIVE_TOO_FEW_TEXCOORDS',
       (args) => 'Material is incompatible with mesh primitive: '
           'Texture binding ${_q(args[0])} '
-          'needs \'TEXCOORD_${args[1]}\' attribute.');
+          "needs 'TEXCOORD_${args[1]}' attribute.");
 
   static final LinkError meshPrimitiveUnequalAccessorsCount = LinkError._(
       'MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT',
@@ -692,11 +700,15 @@ class LinkError extends IssueType {
       (args) => 'Invalid IBM accessor format ${_q(args[0])}. '
           'Must be one of ${(args[1] as Iterable).map(_q)}. ');
 
+  static final LinkError skinIbmAccessorWithByteStride = LinkError._(
+      'SKIN_IBM_ACCESSOR_WITH_BYTESTRIDE',
+      (args) => 'bufferView.byteStride must not be defined for '
+          'buffer views used by inverse bind matrices accessors.');
+
   static final LinkError textureInvalidImageMimeType = LinkError._(
       'TEXTURE_INVALID_IMAGE_MIME_TYPE',
       (args) => 'Invalid MIME type ${_q(args[0])} for the texture '
-          'source. Valid MIME types are ${(args[1] as Iterable).map(_q)}.',
-      Severity.Error);
+          'source. Valid MIME types are ${(args[1] as Iterable).map(_q)}.');
 
   static final LinkError undeclaredExtension = LinkError._(
       'UNDECLARED_EXTENSION',

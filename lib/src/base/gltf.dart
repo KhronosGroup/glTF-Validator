@@ -208,6 +208,7 @@ class Gltf extends GltfProperty {
 
     final textures = toSafeList<Texture>(TEXTURES, Texture.fromMap);
 
+    resetPath();
     final extensions = getExtensions(map, Gltf, context);
 
     resetPath();
