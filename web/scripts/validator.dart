@@ -16,6 +16,8 @@
 
 // ignore_for_file: avoid_print
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html' show querySelector, InputElement, File, FileReader;

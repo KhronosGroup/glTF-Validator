@@ -14,6 +14,8 @@
  * # limitations under the License.
  */
 
+// @dart=2.9
+
 @JS()
 library gltf_validator_npm;
 
