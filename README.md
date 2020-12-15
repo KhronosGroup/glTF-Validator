@@ -4,7 +4,7 @@
 
 # glTF-Validator
 
-[![Build Status](https://travis-ci.org/KhronosGroup/glTF-Validator.svg?branch=master)](https://travis-ci.org/KhronosGroup/glTF-Validator)
+[![Build Status](https://github.com/KhronosGroup/glTF-Validator/workflows/CI/badge.svg)](https://github.com/KhronosGroup/glTF-Validator/actions?query=workflow%3ACI)
 
 Tool to validate [glTF](https://github.com/KhronosGroup/glTF) assets.
 
