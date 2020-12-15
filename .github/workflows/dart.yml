@@ -30,7 +30,7 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze project source
-        run: dart analyze
+        run: dart analyze --no-fatal-warnings
 
       - name: Run tests
         run: dart test
