@@ -1,0 +1,35 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_specular": { }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 0.5,
+                    "specularTexture": {
+                        "index": 0
+                    },
+                    "specularColorFactor": [1.5, 0.0, 0.5],
+                    "specularColorTexture": {
+                        "index": 1
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        },
+        {
+        }
+    ]
+}

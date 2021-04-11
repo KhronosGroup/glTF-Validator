@@ -15,6 +15,7 @@
  */
 
 // ignore_for_file: avoid_print
+// ignore_for_file: avoid_dynamic_calls
 
 // @dart=2.9
 
@@ -34,7 +35,7 @@ const _kJsonEncoder = JsonEncoder.withIndent('    ');
 
 final _dropZone = querySelector('#dropZone');
 final _output = querySelector('#output');
-final _input = querySelector('#input') as InputElement; // ignore: avoid_as
+final _input = querySelector('#input') as InputElement;
 final _inputLink = querySelector('#inputLink');
 final _truncatedWarning = querySelector('#truncatedWarning');
 final _validityLabel = querySelector('#validityLabel');

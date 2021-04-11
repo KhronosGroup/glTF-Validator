@@ -94,6 +94,7 @@
 |MESH_PRIMITIVE_ACCESSOR_UNALIGNED|Vertex attribute data must be aligned to 4-byte boundaries.|Error|
 |MESH_PRIMITIVE_ACCESSOR_WITHOUT_BYTESTRIDE|bufferView.byteStride must be defined when two or more accessors use the same buffer view.|Error|
 |MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_INVALID_FORMAT|Invalid accessor format '`%1`' for this attribute semantic. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_UNSIGNED_INT|Mesh attributes cannot use UNSIGNED_INT component type.|Error|
 |MESH_PRIMITIVE_INCOMPATIBLE_MODE|Number of vertices or indices (`%1`) is not compatible with used drawing mode ('`%2`').|Warning|
 |MESH_PRIMITIVE_INDICES_ACCESSOR_INVALID_FORMAT|Invalid indices accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`'). |Error|
 |MESH_PRIMITIVE_INDICES_ACCESSOR_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for indices accessor.|Error|

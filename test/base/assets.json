@@ -197,6 +197,7 @@
     "mesh": {
         "name": "Mesh",
         "tests": {
+            "accessor_attribute_uint32.gltf": "Attribute accessor with UNSIGNED_INT component type",
             "accessor_unaligned.gltf": "Accessor unaligned",
             "accessor_unequal_count.gltf": "Accessor unequal count",
             "accessor_without_bytestride.gltf": "Accessor without byte stride",

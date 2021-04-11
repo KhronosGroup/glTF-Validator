@@ -1,0 +1,17 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_specular": {
+                    "customProperty": true
+                }
+            }
+        }
+    ]
+}

@@ -76,8 +76,8 @@ class Context {
   final Map<BufferView, Set<Accessor>> bufferViewAccessors =
       <BufferView, Set<Accessor>>{};
 
-  final Map<SafeList, List<String>> extensionCollections =
-      <SafeList, List<String>>{};
+  final Map<SafeList<Usable>, List<String>> extensionCollections =
+      <SafeList<Usable>, List<String>>{};
 
   void registerObjectsOwner(Object owner, Iterable<Object> objects) {
     for (final o in objects) {

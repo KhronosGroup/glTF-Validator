@@ -1,0 +1,19 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_volume"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_volume": {
+                    "attenuationColor": [-0.5, 1.5, 1.0],
+                    "attenuationDistance": 0,
+                    "thicknessFactor": -1
+                }
+            }
+        }
+    ]
+}

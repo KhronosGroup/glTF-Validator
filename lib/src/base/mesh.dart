@@ -392,6 +392,10 @@ class MeshPrimitive extends GltfProperty {
                 context.path.removeLast();
               }
             }
+          } else if (accessor.componentType == gl.UNSIGNED_INT) {
+            context.addIssue(
+                LinkError.meshPrimitiveAttributesAccessorUnsignedInt,
+                name: semantic);
           }
 
           if ((accessor.byteOffset != -1 &&
@@ -528,11 +532,12 @@ class MeshPrimitive extends GltfProperty {
 
     if (_targetsIndices != null) {
       context.path.add(TARGETS);
-      _targets = List<Map<String, Accessor>>(_targetsIndices.length);
+      _targets = List<Map<String, Accessor>>.generate(
+          _targetsIndices.length, (_) => <String, Accessor>{},
+          growable: false);
 
       for (var i = 0; i < _targetsIndices.length; i++) {
         final targetIndices = _targetsIndices[i];
-        _targets[i] = <String, Accessor>{};
 
         context.path.add(i.toString());
         targetIndices.forEach((semantic, accessorIndex) {

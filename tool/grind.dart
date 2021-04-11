@@ -1,20 +1,8 @@
-/*
- * # Copyright (c) 2016-2019 The Khronos Group Inc.
- * #
- * # Licensed under the Apache License, Version 2.0 (the "License");
- * # you may not use this file except in compliance with the License.
- * # You may obtain a copy of the License at
- * #
- * #     http://www.apache.org/licenses/LICENSE-2.0
- * #
- * # Unless required by applicable law or agreed to in writing, software
- * # distributed under the License is distributed on an "AS IS" BASIS,
- * # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * # See the License for the specific language governing permissions and
- * # limitations under the License.
- */
+// Copyright 2021 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: Apache-2.0
 
-// ignore_for_file: avoid_as
+// ignore_for_file: avoid_dynamic_calls
 
 import 'dart:async';
 import 'dart:convert';
@@ -23,6 +11,7 @@ import 'dart:mirrors';
 
 import 'package:gltf/src/errors.dart';
 import 'package:grinder/grinder.dart';
+import 'package:node_preamble/preamble.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
@@ -105,7 +94,42 @@ void exe() {
   delete(targetDir);
   targetDir.createSync(recursive: true);
 
-  run(dart2native, arguments: ['bin/gltf_validator.dart', '-v', '-o', output]);
+  final outputDebug = p.join(_getTarget(_binSource), 'symbols.elf');
+
+  run(dart2native, arguments: [
+    'bin/gltf_validator.dart',
+    '--save-debugging-info=$outputDebug',
+    '-v',
+    '-o',
+    output
+  ]);
+}
+
+@Depends(exe)
+@Task('Package native executable.')
+void exeRelease() {
+  if (Platform.isLinux) {
+    run('tar',
+        arguments: [
+          '--create',
+          '--owner=0',
+          '--group=0',
+          '--xz',
+          '--file=gltf_validator-$_version-linux64.tar.xz',
+          'gltf_validator'
+        ],
+        workingDirectory: _getTarget(_binSource));
+  } else if (Platform.isWindows) {
+    final psCommand = 'Compress-Archive '
+        '-Path gltf_validator.exe '
+        '-DestinationPath gltf_validator-$_version-win64.zip';
+
+    run('powershell',
+        arguments: ['-Command', psCommand],
+        workingDirectory: _getTarget(_binSource));
+  } else {
+    log('Ignoring exe-release command for unsupported platform.');
+  }
 }
 
 @Task('Build web drag-n-drop version.')
@@ -130,11 +154,12 @@ void _npmBuild({bool release = true}) {
   delete(_nodeTargetDir);
   _runBuild(_nodeSource, release: release);
 
-  // Do not redefine require to avoid webpack complaints
   {
+    // Do not redefine require to avoid webpack complaints
+    final preamble =
+        getPreamble(minified: true).replaceFirst('self.require=require,', '');
     final file = File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
-    file.writeAsStringSync(
-        file.readAsStringSync().replaceFirst('self.require=require,', ''));
+    file.writeAsStringSync(preamble + file.readAsStringSync());
   }
 
   const packageJson = 'package.json';

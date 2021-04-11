@@ -34,3 +34,6 @@ jobs:
 
       - name: Run tests
         run: dart test
+
+      - name: Verify build all
+        run: dart run grinder

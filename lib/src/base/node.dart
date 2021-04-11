@@ -215,7 +215,7 @@ class Node extends GltfChildOfRootProperty {
     }
 
     if (_childrenIndices != null) {
-      _children = List<Node>(_childrenIndices.length);
+      _children = List<Node>.filled(_childrenIndices.length, null);
 
       resolveNodeList(
           _childrenIndices, _children, gltf.nodes, CHILDREN, context,

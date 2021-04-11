@@ -1,14 +1,29 @@
 targets:
   $default:
-    sources:
-      - "pubspec.yaml"
-      - "lib/**"
-      - "node/gltf_validator.dart"
-      - "tool/**"
-      - "web/**"
-      - "$package$"
     builders:
-      build_node_compilers|entrypoint:
+      build_web_compilers|entrypoint:
+        enabled: false
+  web:
+    auto_apply_builders: false
+    dependencies: [ '$default' ]
+    builders:
+      build_web_compilers|entrypoint:
+        generate_for:
+          - web/**.dart
+        release_options:
+          compiler: dart2js
+          dart2js_args:
+            - --minify
+            - --lax-runtime-type-to-string
+            - --no-source-maps
+            - --trust-primitives
+            - --omit-implicit-checks
+            - --omit-as-casts
+  node:
+    auto_apply_builders: false
+    dependencies: [ '$default' ]
+    builders:
+      build_web_compilers|entrypoint:
         generate_for:
           - node/**.dart
         options:
@@ -24,15 +39,3 @@ targets:
           dart2js_args:
             - --server-mode
             - -DGLTF_VALIDATOR_DEBUG=true
-      build_web_compilers|entrypoint:
-        generate_for:
-          - web/**.dart
-        release_options:
-          compiler: dart2js
-          dart2js_args:
-          - --minify
-          - --lax-runtime-type-to-string
-          - --no-source-maps
-          - --trust-primitives
-          - --omit-implicit-checks
-          - --omit-as-casts

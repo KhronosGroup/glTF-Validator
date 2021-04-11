@@ -25,8 +25,6 @@ import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart' show isNonRelativeUri;
 
-//ignore_for_file: avoid_as
-
 Context get ignoreUnusedContext => Context(
     validate: true,
     options: ValidationOptions(ignoredIssues: [LinkError.unusedObject.code]));

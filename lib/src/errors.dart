@@ -14,8 +14,6 @@
  * # limitations under the License.
  */
 
-// ignore_for_file: avoid_as
-
 library gltf.error;
 
 import 'package:meta/meta.dart';
@@ -618,6 +616,10 @@ class LinkError extends IssueType {
           (args) => 'Invalid accessor format ${_q(args[0])} '
               'for this attribute semantic. '
               'Must be one of ${(args[1] as Iterable).map(_q)}.');
+
+  static final LinkError meshPrimitiveAttributesAccessorUnsignedInt =
+      LinkError._('MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_UNSIGNED_INT',
+          (args) => 'Mesh attributes cannot use UNSIGNED_INT component type.');
 
   static final LinkError meshPrimitivePositionAccessorWithoutBounds =
       LinkError._(

@@ -1,6 +1,6 @@
 {
     "light": {
-        "name": "root.KHR_texture_transform",
+        "name": "root.KHR_lights_punctual",
         "tests": {
             "custom_property.gltf": "Custom property",
             "directional_light_with_range.gltf": "Directional light with range",
@@ -15,7 +15,7 @@
         }
     },
     "node": {
-        "name": "node.KHR_texture_transform",
+        "name": "node.KHR_lights_punctual",
         "tests": {
             "custom_property.gltf": "Custom property",
             "empty_object.gltf": "Empty object",

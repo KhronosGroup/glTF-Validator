@@ -108,6 +108,7 @@ int getUint(Map<String, Object> map, String name, Context context,
 
 double getFloat(Map<String, Object> map, String name, Context context,
     {bool req = false,
+    double standalone = double.nan,
     double min = double.negativeInfinity,
     double exclMin = double.negativeInfinity,
     double max = double.infinity,
@@ -117,7 +118,9 @@ double getFloat(Map<String, Object> map, String name, Context context,
   assert(exclMax > min && max >= min && exclMax > exclMin && max > exclMin);
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
-    if (value < min || value <= exclMin || value > max || value >= exclMax) {
+    assert(value.isFinite);
+    if (value != standalone &&
+        (value < min || value <= exclMin || value > max || value >= exclMax)) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
       return double.nan;
     }
@@ -356,12 +359,15 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     }
 
     var wrongMemberFound = false;
-    final result = List<double>(value.length);
+    final result = List<double>.filled(value.length, 0);
     for (var i = 0; i < value.length; ++i) {
       final v = value[i];
       if (v is num) {
         if (context.validate && (v < min || v > max)) {
-          context.addIssue(SchemaError.valueNotInRange, name: name, args: [v]);
+          context
+            ..path.add(name)
+            ..addIssue(SchemaError.valueNotInRange, index: i, args: [v])
+            ..path.removeLast();
           wrongMemberFound = true;
         }
         if (singlePrecision) {
@@ -642,11 +648,11 @@ class SafeList<T> extends ListBase<T> {
   final int _length;
   final String name;
 
-  SafeList(this._length, this.name) : _list = List<T>(_length);
+  SafeList(this._length, this.name) : _list = List<T>.filled(_length, null);
 
   SafeList.empty(this.name)
       : _length = 0,
-        _list = List<T>(0);
+        _list = List<T>.empty();
 
   @override
   T operator [](int index) =>

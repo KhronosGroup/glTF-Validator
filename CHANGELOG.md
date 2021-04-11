@@ -1,3 +1,23 @@
+## 2.0.0-dev.3.4
+
+### New Features
+
+* Added support for new PBR extensions: `KHR_materials_ior`, `KHR_materials_specular`, and `KHR_materials_volume`.
+
+* Added `MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_UNSIGNED_INT` validation error (#154).
+
+* Added new vendor prefixes: `CLO`, `OFT`.
+
+### Bugfixes
+
+* Fixed incomplete JSON pointers for out-of-range array elements.
+
+### Integration updates
+
+* Added `exe-release` task to generate release archives.
+
+* Fixed test names for `KHR_lights_punctual` extension.
+
 ## 2.0.0-dev.3.3
 
 ### New Features

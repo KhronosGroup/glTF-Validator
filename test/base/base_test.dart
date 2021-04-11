@@ -25,8 +25,6 @@ import 'package:gltf/gltf.dart';
 
 import '../utils.dart';
 
-//ignore_for_file: avoid_as
-
 Future main() async {
   await compareReports('test/base');
 

@@ -1,0 +1,31 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_volume"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_volume": { }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_materials_volume": {
+                    "attenuationColor": [0, 0.5, 0],
+                    "attenuationDistance": 10.0,
+                    "thicknessFactor": 3.0,
+                    "thicknessTexture": {
+                        "index": 0
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        }
+    ]
+}
