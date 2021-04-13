@@ -19,6 +19,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Print Dart SDK version
         run: dart --version
