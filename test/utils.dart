@@ -16,9 +16,8 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
 
-import 'package:resource/resource.dart';
 import 'package:test/test.dart';
 
 import 'package:gltf/gltf.dart';
@@ -31,7 +30,7 @@ Context get ignoreUnusedContext => Context(
 
 Future compareReports(String basePath) async {
   final testCases =
-      jsonDecode(await Resource('$basePath/assets.json').readAsString())
+      jsonDecode(await File('$basePath/assets.json').readAsString())
           as Map<String, Object>;
 
   group('Compare reports', () {
@@ -44,7 +43,7 @@ Future compareReports(String basePath) async {
           test(entry.value, () async {
             final path = '$basePath/data/$dir/${entry.key}';
 
-            final reader = GltfReader.filename(Resource(path).openRead(), path);
+            final reader = GltfReader.filename(File(path).openRead(), path);
             final readerResult = await reader.read();
 
             final validationResult = ValidationResult(
@@ -60,7 +59,7 @@ Future compareReports(String basePath) async {
             final newReport = validationResult.toMap();
 
             final oldReport =
-                jsonDecode(await Resource('$path.report.json').readAsString())
+                jsonDecode(await File('$path.report.json').readAsString())
                     as Map;
 
             expect(newReport..remove('validatorVersion'),
@@ -83,9 +82,9 @@ ResourcesLoader _getFileResourceValidator(
         return null;
       }
 
-      return Resource(assetUri.resolveUri(uri))
+      return File.fromUri(assetUri.resolveUri(uri))
           .readAsBytes()
-          .then((b) => b as Uint8List, onError: (Object _) {
+          .catchError((Object _) {
         throw GltfExternalResourceNotFoundException(uri.toString());
       });
     }, externalStreamFetch: (uri) {
@@ -95,7 +94,7 @@ ResourcesLoader _getFileResourceValidator(
       // TODO: refactor resource loader to remove this
       final controller = StreamController<List<int>>();
       controller.onListen = () {
-        Resource(assetUri.resolveUri(uri)).openRead().listen(controller.add,
+        File.fromUri(assetUri.resolveUri(uri)).openRead().listen(controller.add,
             onError: (Object e) {
           controller
               .addError(GltfExternalResourceNotFoundException(uri.toString()));
@@ -107,7 +106,7 @@ ResourcesLoader _getFileResourceValidator(
 Future<GltfReaderResult> read(String path, {bool ignoreUnused = false}) async {
   final p = 'test/$path';
   final reader = GltfJsonReader(
-      Resource(p).openRead(), ignoreUnused ? ignoreUnusedContext : null);
+      File(p).openRead(), ignoreUnused ? ignoreUnusedContext : null);
   final result = await reader.read();
   final validationResult = ValidationResult(
       Uri.parse(p), reader.context, result,

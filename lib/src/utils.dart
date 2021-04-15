@@ -511,8 +511,8 @@ List<Map<String, Object>> getMapList(
   return null;
 }
 
-String getName(Map<String, Object> map, Context context) =>
-    getString(map, NAME, context);
+String getName(Map<String, Object> map, Context context, {bool req = false}) =>
+    getString(map, NAME, context, req: req);
 
 Map<String, Object> getExtensions(
     Map<String, Object> map, Type type, Context context,
@@ -531,7 +531,6 @@ Map<String, Object> getExtensions(
     final extensionMap = getMap(extensionMaps, extension, context);
 
     if (!context.extensionsLoaded.contains(extension)) {
-      extensions[extension] = null;
       if (context.validate && !context.extensionsUsed.contains(extension)) {
         context.addIssue(LinkError.undeclaredExtension, name: extension);
       }
@@ -554,7 +553,7 @@ Map<String, Object> getExtensions(
       context.path.add(extension);
       final object = extensionDescriptor.fromMap(extensionMap, context);
       extensions[extension] = object;
-      if (object is Linkable) {
+      if (!extensionDescriptor.localLink && object is Linkable) {
         context.linkableExtensions
             .putIfAbsent(
                 overriddenType ?? type, () => <LinkableExtensionEntry>[])

@@ -77,7 +77,3 @@ validator.validateBytes(new Uint8Array(asset), {
 ```
 
 ## API
-
-<!--- API BEGIN --->
-
-<!--- API END --->

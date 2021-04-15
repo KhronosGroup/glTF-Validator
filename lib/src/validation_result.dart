@@ -117,7 +117,7 @@ class ValidationResult {
           }
           totalTriangleCount += primitive.trianglesCount;
           maxAttributes = max(maxAttributes, primitive.attributes.length);
-          maxUVs = max(maxUVs, primitive.texcoordCount);
+          maxUVs = max(maxUVs, primitive.texCoordCount);
           maxInfluences = max(maxInfluences, primitive.jointsCount * 4);
         }
       }

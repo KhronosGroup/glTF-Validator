@@ -84,9 +84,6 @@ const _webSource = 'web';
 
 @Task('Build native executable.')
 void exe() {
-  final dart2native = p.join(p.dirname(Platform.resolvedExecutable),
-      'dart2native${Platform.isWindows ? '.bat' : ''}');
-
   final output = p.join(_getTarget(_binSource),
       'gltf_validator${Platform.isWindows ? '.exe' : ''}');
 
@@ -96,10 +93,11 @@ void exe() {
 
   final outputDebug = p.join(_getTarget(_binSource), 'symbols.elf');
 
-  run(dart2native, arguments: [
+  run(Platform.resolvedExecutable, arguments: [
+    'compile',
+    'exe',
     'bin/gltf_validator.dart',
     '--save-debugging-info=$outputDebug',
-    '-v',
     '-o',
     output
   ]);
@@ -107,15 +105,17 @@ void exe() {
 
 @Depends(exe)
 @Task('Package native executable.')
-void exeRelease() {
-  if (Platform.isLinux) {
+void exeArchive() {
+  if (Platform.isLinux || Platform.isMacOS) {
+    final filename =
+        'gltf_validator-$_version-${Platform.operatingSystem}64.tar.xz';
     run('tar',
         arguments: [
           '--create',
-          '--owner=0',
-          '--group=0',
+          '--${Platform.isLinux ? 'owner' : 'uid'}=0',
+          '--${Platform.isLinux ? 'group' : 'gid'}=0',
           '--xz',
-          '--file=gltf_validator-$_version-linux64.tar.xz',
+          '--file=$filename',
           'gltf_validator'
         ],
         workingDirectory: _getTarget(_binSource));
@@ -128,7 +128,8 @@ void exeRelease() {
         arguments: ['-Command', psCommand],
         workingDirectory: _getTarget(_binSource));
   } else {
-    log('Ignoring exe-release command for unsupported platform.');
+    log('Ignoring exe-release command '
+        'for an unsupported platform: ${Platform.operatingSystem}.');
   }
 }
 
@@ -167,6 +168,7 @@ void _npmBuild({bool release = true}) {
       json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync())
           as Map<String, Object>;
   jsonMap['version'] = _version;
+  jsonMap..remove('devDependencies')..remove('scripts');
 
   log('copying updated $packageJson to $_nodeTarget');
   File(p.join(_nodeTarget, packageJson))
@@ -174,6 +176,7 @@ void _npmBuild({bool release = true}) {
 
   copy(File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
   copy(File(p.join(_nodeSource, 'module.mjs')), _nodeTargetDir);
+  delete(Directory(p.join(_nodeTarget, 'node_modules')));
 }
 
 @Depends(issues, npmRelease)
@@ -212,6 +215,7 @@ void _runBuild(String dir, {bool release = true, String defineOption}) {
   delete(File(p.join(target, '.build.manifest')));
   delete(File(p.join(target, '.packages')));
   delete(Directory(p.join(target, 'packages')));
+  delete(Directory(p.join(target, '.dart_tool')));
 }
 
 String get npmExecutable => Platform.isWindows ? 'npm.cmd' : 'npm';

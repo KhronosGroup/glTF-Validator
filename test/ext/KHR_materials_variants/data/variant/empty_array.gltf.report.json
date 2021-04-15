@@ -1,24 +1,18 @@
 {
-    "uri": "test/base/data/root/invalid_extension_name.gltf",
+    "uri": "test/ext/KHR_materials_variants/data/variant/empty_array.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.4",
     "issues": {
-        "numErrors": 0,
-        "numWarnings": 1,
-        "numInfos": 1,
+        "numErrors": 1,
+        "numWarnings": 0,
+        "numInfos": 0,
         "numHints": 0,
         "messages": [
             {
-                "code": "INVALID_EXTENSION_NAME_FORMAT",
-                "message": "Extension name has invalid format.",
-                "severity": 1,
-                "pointer": "/extensionsUsed/0"
-            },
-            {
-                "code": "UNSUPPORTED_EXTENSION",
-                "message": "Cannot validate an extension as it is not supported by the validator: '_extension'.",
-                "severity": 2,
-                "pointer": "/extensionsUsed/0"
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/extensions/KHR_materials_variants/variants"
             }
         ],
         "truncated": false
@@ -26,7 +20,7 @@
     "info": {
         "version": "2.0",
         "extensionsUsed": [
-            "_extension"
+            "KHR_materials_variants"
         ],
         "animationCount": 0,
         "materialCount": 0,

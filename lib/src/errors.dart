@@ -727,10 +727,14 @@ class LinkError extends IssueType {
       'UNSUPPORTED_EXTENSION',
       (args) => 'Cannot validate an extension as it is not supported '
           'by the validator: ${_q(args[0])}.',
-      Severity.Warning);
+      Severity.Information);
 
   static final LinkError unusedObject = LinkError._('UNUSED_OBJECT',
       (args) => 'This object may be unused.', Severity.Information);
+
+  static final LinkError khrMaterialsVariantsNonUniqueVariant = LinkError._(
+      'KHR_MATERIALS_VARIANTS_NON_UNIQUE_VARIANT',
+      (args) => 'This variant is used more than once for this mesh primitive.');
 
   LinkError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])

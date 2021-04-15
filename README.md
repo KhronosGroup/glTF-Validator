@@ -41,6 +41,7 @@ NPM package: https://www.npmjs.com/package/gltf-validator
   - KHR_materials_specular
   - KHR_materials_transmission
   - KHR_materials_unlit
+  - KHR_materials_variants
   - KHR_materials_volume
   - KHR_mesh_quantization
   - KHR_texture_transform

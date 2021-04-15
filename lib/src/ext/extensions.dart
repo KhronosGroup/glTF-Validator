@@ -24,10 +24,11 @@ import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
 import 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
-import 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
 import 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
 import 'package:gltf/src/ext/KHR_materials_specular/khr_materials_specular.dart';
+import 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
 import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
+import 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart';
 import 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
@@ -38,11 +39,12 @@ export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 export 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
 export 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
-export 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
 export 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
 export 'package:gltf/src/ext/KHR_materials_specular/khr_materials_specular.dart'
     hide SPECULAR_FACTOR;
+export 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
 export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
+export 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart';
 export 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 export 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
@@ -59,8 +61,10 @@ class Extension {
 
 class ExtensionDescriptor {
   final FromMapFunction<Object> fromMap;
-  const ExtensionDescriptor(this.fromMap, {this.standalone = false});
+  const ExtensionDescriptor(this.fromMap,
+      {this.standalone = false, this.localLink = false});
   final bool standalone;
+  final bool localLink;
 }
 
 @immutable
@@ -95,10 +99,11 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrMaterialsClearcoatExtension,
   khrMaterialsIorExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
-  khrMaterialsTransmissionExtension,
   khrMaterialsSheenExtension,
   khrMaterialsSpecularExtension,
+  khrMaterialsTransmissionExtension,
   khrMaterialsUnlitExtension,
+  khrMaterialsVariantsExtension,
   khrMaterialsVolumeExtension,
   khrMeshQuantizationExtension,
   khrTextureTransformExtension
@@ -115,10 +120,12 @@ const Set<String> kReservedPrefixes = <String>{
   'ALI',
   'AMZN',
   'ANIMECH',
+  'ASOBO',
   'AVR',
   'BLENDER',
   'CAPTURE',
   'CESIUM',
+  'CITRUS',
   'CLO',
   'CVTOOLS',
   'EPIC',

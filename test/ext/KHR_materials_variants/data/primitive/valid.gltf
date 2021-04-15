@@ -1,0 +1,83 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [ "KHR_materials_variants", "KHR_materials_sheen" ],
+    "extensions": {
+        "KHR_materials_variants": {
+            "variants": [
+                {
+                    "name": "variant0",
+                    "extras": {
+                        "id": 5
+                    }
+                },
+                {
+                    "name": "variant1",
+                    "extras": {
+                        "id": 3
+                    }
+                }
+            ]
+        }
+    },
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "TEXCOORD_0": 1
+                    },
+                    "extensions": {
+                        "KHR_materials_variants": {
+                            "mappings": [
+                                {
+                                    "material": 0,
+                                    "variants": [1],
+                                    "extras": {
+                                        "theme": "regular"
+                                    }
+                                },
+                                {
+                                    "material": 1,
+                                    "variants": [0],
+                                    "extras": {
+                                        "theme": "sheen"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3,
+            "min": [ 0, 0, 0 ],
+            "max": [ 1, 1, 1 ]
+        },
+        {
+            "type": "VEC2",
+            "componentType": 5126,
+            "count": 3
+        }
+    ],
+    "materials": [
+        {},
+        {
+            "extensions": {
+                "KHR_materials_sheen": {
+                    "sheenColorTexture": {
+                        "index": 0
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [{}]
+}

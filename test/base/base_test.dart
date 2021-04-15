@@ -15,10 +15,10 @@
  */
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:gltf/src/data_access/image_decoder.dart';
-import 'package:resource/resource.dart';
 import 'package:test/test.dart';
 
 import 'package:gltf/gltf.dart';
@@ -589,14 +589,13 @@ Future main() async {
       test('Valid glTF Stream', () {
         expect(
             GltfReader.detect(
-                const Resource('test/base/data/root/valid.gltf').openRead()),
+                File('test/base/data/root/valid.gltf').openRead()),
             completion(const TypeMatcher<GltfJsonReader>()));
       });
 
       test('Valid GLB Stream', () {
         expect(
-            GltfReader.detect(
-                const Resource('test/base/data/glb/valid.glb').openRead()),
+            GltfReader.detect(File('test/base/data/glb/valid.glb').openRead()),
             completion(const TypeMatcher<GlbReader>()));
       });
     });

@@ -1,0 +1,23 @@
+{
+    "variant": {
+        "name": "root.KHR_materials_variants",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "empty_array.gltf": "Empty variants array",
+            "empty_object.gltf": "Empty object",
+            "invalid_name.gltf": "Invalid variant name",
+            "valid.gltf": "Valid"
+        }
+    },
+    "primitive": {
+        "name": "primitive.KHR_materials_variants",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "dependency.gltf": "Unsatisfied dependency",
+            "empties.gltf": "Empty objects",
+            "non_unique.gltf": "Non-unique variants",
+            "unexpected_extension.gltf": "Unexpected extension",
+            "valid.gltf": "Valid"
+        }
+    }
+}
