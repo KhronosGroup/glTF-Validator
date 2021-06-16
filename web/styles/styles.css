@@ -29,12 +29,23 @@ html, body {
 
     width: 400px;
     padding: 25px 0;
-    margin: 50px auto;
+    margin: 50px auto 5px;
 
     background: #eee;
     border: 1px solid #ccc;
 
     border-radius: 5px;
+}
+
+#altZone {
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5em;
+
+    width: 400px;
+    padding: 0;
+    margin: 5px auto 50px;
 }
 
 #outputZone {
