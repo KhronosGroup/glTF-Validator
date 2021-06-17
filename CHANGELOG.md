@@ -18,7 +18,7 @@
 
 ### Integration updates
 
-* Added `exe-archive` task to generate release archives.
+* Added `exe-archive` and `web-archive` tasks to generate release archives.
 
 * Fixed test names for `KHR_lights_punctual` extension.
 

@@ -128,7 +128,7 @@ void exeArchive() {
         arguments: ['-Command', psCommand],
         workingDirectory: _getTarget(_binSource));
   } else {
-    log('Ignoring exe-release command '
+    log('Ignoring exe-archive command '
         'for an unsupported platform: ${Platform.operatingSystem}.');
   }
 }
@@ -136,6 +136,28 @@ void exeArchive() {
 @Task('Build web drag-n-drop version.')
 void web() {
   _runBuild(_webSource);
+}
+
+@Depends(web)
+@Task('Package web build.')
+void webArchive() {
+  final filename = 'gltf_validator-$_version-web.zip';
+  if (Platform.isLinux || Platform.isMacOS) {
+    run('zip',
+        arguments: ['-r', filename, '.'],
+        workingDirectory: _getTarget(_webSource));
+  } else if (Platform.isWindows) {
+    final psCommand = 'Compress-Archive '
+        '-Path . '
+        '-DestinationPath $filename';
+
+    run('powershell',
+        arguments: ['-Command', psCommand],
+        workingDirectory: _getTarget(_webSource));
+  } else {
+    log('Ignoring web-archive command '
+        'for an unsupported platform: ${Platform.operatingSystem}.');
+  }
 }
 
 @Task('Build non-minified npm package with preserved call-stacks.')
