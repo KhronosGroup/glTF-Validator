@@ -15,12 +15,13 @@
  */
 
 // ignore_for_file: avoid_print
+// ignore_for_file: avoid_dynamic_calls
 
 // @dart=2.9
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html' show querySelector, InputElement, File, FileReader;
+import 'dart:html' show querySelector, InputElement, File, FileReader, window;
 import 'dart:js';
 import 'dart:math';
 
@@ -34,7 +35,7 @@ const _kJsonEncoder = JsonEncoder.withIndent('    ');
 
 final _dropZone = querySelector('#dropZone');
 final _output = querySelector('#output');
-final _input = querySelector('#input') as InputElement; // ignore: avoid_as
+final _input = querySelector('#input') as InputElement;
 final _inputLink = querySelector('#inputLink');
 final _truncatedWarning = querySelector('#truncatedWarning');
 final _validityLabel = querySelector('#validityLabel');
@@ -233,7 +234,8 @@ void _writeMap(Map<String, Object> jsonMap) {
   final report = _kJsonEncoder.convert(jsonMap);
   _output.text = report;
   if (report.length < _kMaxReportLength) {
-    context['Prism'].callMethod('highlightAll', [true]);
+    context['Prism']
+        .callMethod('highlightAll', [window.location.protocol != 'file:']);
   } else {
     print('Report is too big: ${report.length} bytes. '
         'Syntax highlighting disabled.');

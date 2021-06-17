@@ -1,0 +1,74 @@
+{
+    "uri": "test/ext/KHR_materials_variants/data/primitive/empties.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.4",
+    "issues": {
+        "numErrors": 5,
+        "numWarnings": 0,
+        "numInfos": 2,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'mappings' must be defined.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/0/extensions/KHR_materials_variants"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/1/extensions/KHR_materials_variants/mappings"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'variants' must be defined.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/2/extensions/KHR_materials_variants/mappings/0"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'material' must be defined.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/2/extensions/KHR_materials_variants/mappings/0"
+            },
+            {
+                "code": "EMPTY_ENTITY",
+                "message": "Entity cannot be empty.",
+                "severity": 0,
+                "pointer": "/meshes/0/primitives/3/extensions/KHR_materials_variants/mappings/0/variants"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/extensions/KHR_materials_variants/variants/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": [
+            "KHR_materials_variants"
+        ],
+        "animationCount": 0,
+        "materialCount": 1,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 4,
+        "totalVertexCount": 12,
+        "totalTriangleCount": 4,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 1
+    }
+}

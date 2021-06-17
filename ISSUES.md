@@ -91,9 +91,11 @@
 |BUFFER_VIEW_TOO_LONG|BufferView does not fit buffer (`%1`) byteLength (`%2`).|Error|
 |IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views containing image data.|Error|
 |INVALID_IBM_ACCESSOR_COUNT|Accessor of count `%1` expected. Found `%2`.|Error|
+|KHR_MATERIALS_VARIANTS_NON_UNIQUE_VARIANT|This variant is used more than once for this mesh primitive.|Error|
 |MESH_PRIMITIVE_ACCESSOR_UNALIGNED|Vertex attribute data must be aligned to 4-byte boundaries.|Error|
 |MESH_PRIMITIVE_ACCESSOR_WITHOUT_BYTESTRIDE|bufferView.byteStride must be defined when two or more accessors use the same buffer view.|Error|
 |MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_INVALID_FORMAT|Invalid accessor format '`%1`' for this attribute semantic. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
+|MESH_PRIMITIVE_ATTRIBUTES_ACCESSOR_UNSIGNED_INT|Mesh attributes cannot use UNSIGNED_INT component type.|Error|
 |MESH_PRIMITIVE_INCOMPATIBLE_MODE|Number of vertices or indices (`%1`) is not compatible with used drawing mode ('`%2`').|Warning|
 |MESH_PRIMITIVE_INDICES_ACCESSOR_INVALID_FORMAT|Invalid indices accessor format '`%1`'. Must be one of ('`%a`', '`%b`', '`%c`'). |Error|
 |MESH_PRIMITIVE_INDICES_ACCESSOR_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for indices accessor.|Error|
@@ -114,7 +116,7 @@
 |UNDECLARED_EXTENSION|Extension is not declared in extensionsUsed.|Error|
 |UNEXPECTED_EXTENSION_OBJECT|Unexpected location for this extension.|Error|
 |UNRESOLVED_REFERENCE|Unresolved reference: `%1`.|Error|
-|UNSUPPORTED_EXTENSION|Cannot validate an extension as it is not supported by the validator: '`%1`'.|Warning|
+|UNSUPPORTED_EXTENSION|Cannot validate an extension as it is not supported by the validator: '`%1`'.|Information|
 |UNUSED_OBJECT|This object may be unused.|Information|
 ## DataError
 | Code | Message | Severity |

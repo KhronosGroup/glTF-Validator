@@ -87,6 +87,17 @@ class Mesh extends GltfChildOfRootProperty {
     context.path.add(PRIMITIVES);
     primitives?.forEachWithIndices((i, primitive) {
       context.path.add(i.toString());
+
+      context.path.add(EXTENSIONS);
+      primitive.extensions.forEach((key, value) {
+        if (value is Linkable) {
+          context.path.add(key);
+          value.link(gltf, context);
+          context.path.removeLast();
+        }
+      });
+      context.path.removeLast();
+
       primitive.link(gltf, context);
       context.path.removeLast();
     });
@@ -107,7 +118,7 @@ class MeshPrimitive extends GltfProperty {
   final int colorCount;
   final int jointsCount;
   final int weightsCount;
-  final int texcoordCount;
+  final int texCoordCount;
 
   final Map<String, Accessor> attributes = <String, Accessor>{};
 
@@ -116,6 +127,8 @@ class MeshPrimitive extends GltfProperty {
   List<Map<String, Accessor>> _targets;
   Accessor _indices;
   Material _material;
+
+  final List<int> _unusedTexCoords;
 
   MeshPrimitive._(
       this._attributesIndices,
@@ -129,10 +142,12 @@ class MeshPrimitive extends GltfProperty {
       this.colorCount,
       this.jointsCount,
       this.weightsCount,
-      this.texcoordCount,
+      this.texCoordCount,
       Map<String, Object> extensions,
       Object extras)
-      : super(extensions, extras);
+      : _unusedTexCoords =
+            List<int>.generate(texCoordCount, (i) => i, growable: false),
+        super(extensions, extras);
 
   factory MeshPrimitive.fromMap(Map<String, Object> map, Context context) {
     if (context.validate) {
@@ -149,7 +164,7 @@ class MeshPrimitive extends GltfProperty {
     var maxJoints = -1;
     var weightsCount = 0;
     var maxWeights = -1;
-    var texcoordCount = 0;
+    var texCoordCount = 0;
     var maxTexcoord = -1;
 
     void checkAttributeSemanticName(String semantic) {
@@ -212,7 +227,7 @@ class MeshPrimitive extends GltfProperty {
                 maxJoints = index > maxJoints ? index : maxJoints;
                 break;
               case TEXCOORD_:
-                texcoordCount++;
+                texCoordCount++;
                 maxTexcoord = index > maxTexcoord ? index : maxTexcoord;
                 break;
               case WEIGHTS_:
@@ -264,7 +279,7 @@ class MeshPrimitive extends GltfProperty {
       colorCount = checkContinuity(maxColor, colorCount, COLOR_);
       jointsCount = checkContinuity(maxJoints, jointsCount, JOINTS_);
       weightsCount = checkContinuity(maxWeights, weightsCount, WEIGHTS_);
-      texcoordCount = checkContinuity(maxTexcoord, texcoordCount, TEXCOORD_);
+      texCoordCount = checkContinuity(maxTexcoord, texCoordCount, TEXCOORD_);
 
       if (jointsCount != weightsCount) {
         context.addIssue(SemanticError.meshPrimitiveJointsWeightsMismatch,
@@ -289,7 +304,7 @@ class MeshPrimitive extends GltfProperty {
     final targets = getIndicesMapsList(
         map, TARGETS, context, checkMorphTargetAttributeSemanticName);
 
-    return MeshPrimitive._(
+    final primitive = MeshPrimitive._(
         attributes,
         getIndex(map, INDICES, context, req: false),
         getIndex(map, MATERIAL, context, req: false),
@@ -301,9 +316,13 @@ class MeshPrimitive extends GltfProperty {
         colorCount,
         jointsCount,
         weightsCount,
-        texcoordCount,
+        texCoordCount,
         getExtensions(map, MeshPrimitive, context),
         getExtras(map, context));
+
+    context.registerObjectsOwner(primitive, primitive.extensions.values);
+
+    return primitive;
   }
 
   int get count => _count;
@@ -392,6 +411,10 @@ class MeshPrimitive extends GltfProperty {
                 context.path.removeLast();
               }
             }
+          } else if (accessor.componentType == gl.UNSIGNED_INT) {
+            context.addIssue(
+                LinkError.meshPrimitiveAttributesAccessorUnsignedInt,
+                name: semantic);
           }
 
           if ((accessor.byteOffset != -1 &&
@@ -494,9 +517,6 @@ class MeshPrimitive extends GltfProperty {
     _material = gltf.materials[_materialIndex];
 
     if (context.validate) {
-      final unusedTexCoords =
-          List<int>.generate(texcoordCount, (i) => i, growable: false);
-
       if (_materialIndex != -1) {
         if (_material == null) {
           context.addIssue(LinkError.unresolvedReference,
@@ -506,19 +526,18 @@ class MeshPrimitive extends GltfProperty {
 
           _material.texCoordIndices.forEach((pointer, texCoord) {
             if (texCoord != -1) {
-              if (texCoord + 1 > texcoordCount) {
+              if (texCoord + 1 > texCoordCount) {
                 context.addIssue(LinkError.meshPrimitiveTooFewTexcoords,
                     name: MATERIAL, args: [pointer, texCoord]);
               } else {
-                // mark as used
-                unusedTexCoords[texCoord] = -1;
+                markUsedTexCoord(texCoord);
               }
             }
           });
         }
       }
 
-      for (final unusedIndex in unusedTexCoords.where((i) => i != -1)) {
+      for (final unusedIndex in _unusedTexCoords.where((i) => i != -1)) {
         context
           ..path.add(ATTRIBUTES)
           ..addIssue(LinkError.unusedObject, name: '${TEXCOORD_}_$unusedIndex')
@@ -528,11 +547,12 @@ class MeshPrimitive extends GltfProperty {
 
     if (_targetsIndices != null) {
       context.path.add(TARGETS);
-      _targets = List<Map<String, Accessor>>(_targetsIndices.length);
+      _targets = List<Map<String, Accessor>>.generate(
+          _targetsIndices.length, (_) => <String, Accessor>{},
+          growable: false);
 
       for (var i = 0; i < _targetsIndices.length; i++) {
         final targetIndices = _targetsIndices[i];
-        _targets[i] = <String, Accessor>{};
 
         context.path.add(i.toString());
         targetIndices.forEach((semantic, accessorIndex) {
@@ -614,6 +634,11 @@ class MeshPrimitive extends GltfProperty {
       }
       context.path.removeLast();
     }
+  }
+
+  void markUsedTexCoord(int texCoord) {
+    assert(texCoord < texCoordCount);
+    _unusedTexCoords[texCoord] = -1;
   }
 
   void _checkAccessorRefs(Accessor accessor, String semantic, Context context) {

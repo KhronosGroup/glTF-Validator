@@ -1,0 +1,11 @@
+{
+    "material": {
+        "name": "material.KHR_materials_volume",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "out_of_range.gltf": "Out of range values",
+            "unexpected_extension.gltf": "Unexpected extension object location",
+            "valid.gltf": "Valid"
+        }
+    }
+}

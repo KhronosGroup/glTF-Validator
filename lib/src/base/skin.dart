@@ -64,7 +64,7 @@ class Skin extends GltfChildOfRootProperty {
     _skeleton = gltf.nodes[_skeletonIndex];
 
     if (_jointsIndices != null) {
-      _joints = List<Node>(_jointsIndices.length);
+      _joints = List<Node>.filled(_jointsIndices.length, null);
 
       resolveNodeList(_jointsIndices, _joints, gltf.nodes, JOINTS, context,
           (node, nodeIndex, index) {

@@ -1075,7 +1075,7 @@ class MinFloatChecker extends ElementChecker<double> {
 
   MinFloatChecker(this.path, List<double> min)
       : _invalidMinCount = List<int>.filled(min.length, 0),
-        _computedMin = List<double>(min.length),
+        _computedMin = List<double>.filled(min.length, 0),
         _providedMin = min.toList(growable: false);
 
   @override
@@ -1121,7 +1121,7 @@ class MaxFloatChecker extends ElementChecker<double> {
 
   MaxFloatChecker(this.path, List<double> max)
       : _invalidMaxCount = List<int>.filled(max.length, 0),
-        _computedMax = List<double>(max.length),
+        _computedMax = List<double>.filled(max.length, 0),
         _providedMax = max.toList(growable: false);
 
   @override
@@ -1167,7 +1167,7 @@ class MinIntegerChecker extends ElementChecker<int> {
 
   MinIntegerChecker(this.path, List<int> min)
       : _invalidMinCount = List<int>.filled(min.length, 0),
-        _computedMin = List<int>(min.length),
+        _computedMin = List<int>.filled(min.length, 0),
         _providedMin = min.toList(growable: false);
 
   @override
@@ -1213,7 +1213,7 @@ class MaxIntegerChecker extends ElementChecker<int> {
 
   MaxIntegerChecker(this.path, List<int> max)
       : _invalidMaxCount = List<int>.filled(max.length, 0),
-        _computedMax = List<int>(max.length),
+        _computedMax = List<int>.filled(max.length, 0),
         _providedMax = max.toList(growable: false);
 
   @override

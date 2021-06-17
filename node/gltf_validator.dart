@@ -14,6 +14,8 @@
  * # limitations under the License.
  */
 
+// ignore_for_file: avoid_dynamic_calls
+
 // @dart=2.9
 
 @JS()
@@ -146,7 +148,6 @@ _JSValidationOptions _checkOptionsObject(Object options) {
           options is List)) {
     throw ArgumentError('options: Value must be an object.');
   }
-  // ignore: avoid_as
   return options as _JSValidationOptions;
 }
 

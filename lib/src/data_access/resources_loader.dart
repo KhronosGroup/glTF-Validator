@@ -131,7 +131,6 @@ class ResourcesLoader {
 
       Uint8List data;
       try {
-        // ignore: avoid_as
         data = await _fetchBuffer(buffer) as Uint8List;
       } on Exception catch (e) {
         // likely IO error

@@ -19,10 +19,9 @@
         "3d"
     ],
     "devDependencies": {
-        "documentation": "^12.1.3",
-        "replace-between": "0.0.8"
+        "documentation": "^13.2.5"
     },
     "scripts": {
-        "docs": "documentation build index.js --shallow -f md | replace-between --target ../build/node/README.md --token API"
+        "docs": "documentation readme index.js --quiet=true --shallow -f md --section=API --readme-file ../build/node/README.md"
     }
 }

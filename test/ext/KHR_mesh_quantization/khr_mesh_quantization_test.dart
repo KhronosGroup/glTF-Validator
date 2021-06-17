@@ -23,8 +23,6 @@ import 'package:gltf/src/base/gltf_property.dart';
 
 import '../../utils.dart';
 
-//ignore_for_file: avoid_as
-
 Future main() async {
   await compareReports('test/ext/KHR_mesh_quantization');
 

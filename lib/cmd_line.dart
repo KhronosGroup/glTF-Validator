@@ -30,8 +30,6 @@ import 'package:isolate/isolate_runner.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
-// ignore_for_file: avoid_as
-
 const int kErrorCode = 1;
 
 StringSink outPipe = stdout;
@@ -308,9 +306,9 @@ Future<bool> _processFileZoned(ValidationTask task) {
   // Run validation task in a separate zone catching
   // all uncaught runtime errors.
   final resultCompleter = Completer<bool>();
-  runZoned(() {
+  runZonedGuarded(() {
     _processFile(task).then(resultCompleter.complete);
-  }, onError: (Object error, StackTrace stackTrace) {
+  }, (Object error, StackTrace stackTrace) {
     errPipe.write('${task.filename} '
         'caused an uncaught runtime error:\n$error\n$stackTrace\n');
     resultCompleter.complete(false);

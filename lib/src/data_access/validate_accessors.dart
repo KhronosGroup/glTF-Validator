@@ -126,8 +126,10 @@ void validateAccessorsData(Gltf gltf, Context context) {
       final vertexCount = primitive.vertexCount;
 
       // joints/weights pair covers a subset of primitive influences
-      final jointsIterators = List<Iterator<int>>(primitive.jointsCount);
-      final weightsIterators = List<Iterator<double>>(primitive.jointsCount);
+      final jointsIterators =
+          List<Iterator<int>>.filled(primitive.jointsCount, null);
+      final weightsIterators =
+          List<Iterator<double>>.filled(primitive.jointsCount, null);
       for (var i = 0; i < primitive.jointsCount; i++) {
         final jointsAccessor =
             _guardAccessor(primitive.attributes['${JOINTS_}_$i']);

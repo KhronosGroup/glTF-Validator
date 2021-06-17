@@ -1,20 +1,8 @@
-/*
- * # Copyright (c) 2016-2019 The Khronos Group Inc.
- * #
- * # Licensed under the Apache License, Version 2.0 (the "License");
- * # you may not use this file except in compliance with the License.
- * # You may obtain a copy of the License at
- * #
- * #     http://www.apache.org/licenses/LICENSE-2.0
- * #
- * # Unless required by applicable law or agreed to in writing, software
- * # distributed under the License is distributed on an "AS IS" BASIS,
- * # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * # See the License for the specific language governing permissions and
- * # limitations under the License.
- */
+// Copyright 2021 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: Apache-2.0
 
-// ignore_for_file: avoid_as
+// ignore_for_file: avoid_dynamic_calls
 
 import 'dart:async';
 import 'dart:convert';
@@ -23,6 +11,7 @@ import 'dart:mirrors';
 
 import 'package:gltf/src/errors.dart';
 import 'package:grinder/grinder.dart';
+import 'package:node_preamble/preamble.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
@@ -95,9 +84,6 @@ const _webSource = 'web';
 
 @Task('Build native executable.')
 void exe() {
-  final dart2native = p.join(p.dirname(Platform.resolvedExecutable),
-      'dart2native${Platform.isWindows ? '.bat' : ''}');
-
   final output = p.join(_getTarget(_binSource),
       'gltf_validator${Platform.isWindows ? '.exe' : ''}');
 
@@ -105,12 +91,73 @@ void exe() {
   delete(targetDir);
   targetDir.createSync(recursive: true);
 
-  run(dart2native, arguments: ['bin/gltf_validator.dart', '-v', '-o', output]);
+  final outputDebug = p.join(_getTarget(_binSource), 'symbols.elf');
+
+  run(Platform.resolvedExecutable, arguments: [
+    'compile',
+    'exe',
+    'bin/gltf_validator.dart',
+    '--save-debugging-info=$outputDebug',
+    '-o',
+    output
+  ]);
+}
+
+@Depends(exe)
+@Task('Package native executable.')
+void exeArchive() {
+  if (Platform.isLinux || Platform.isMacOS) {
+    final filename =
+        'gltf_validator-$_version-${Platform.operatingSystem}64.tar.xz';
+    run('tar',
+        arguments: [
+          '--create',
+          '--${Platform.isLinux ? 'owner' : 'uid'}=0',
+          '--${Platform.isLinux ? 'group' : 'gid'}=0',
+          '--xz',
+          '--file=$filename',
+          'gltf_validator'
+        ],
+        workingDirectory: _getTarget(_binSource));
+  } else if (Platform.isWindows) {
+    final psCommand = 'Compress-Archive '
+        '-Path gltf_validator.exe '
+        '-DestinationPath gltf_validator-$_version-win64.zip';
+
+    run('powershell',
+        arguments: ['-Command', psCommand],
+        workingDirectory: _getTarget(_binSource));
+  } else {
+    log('Ignoring exe-archive command '
+        'for an unsupported platform: ${Platform.operatingSystem}.');
+  }
 }
 
 @Task('Build web drag-n-drop version.')
 void web() {
   _runBuild(_webSource);
+}
+
+@Depends(web)
+@Task('Package web build.')
+void webArchive() {
+  final filename = 'gltf_validator-$_version-web.zip';
+  if (Platform.isLinux || Platform.isMacOS) {
+    run('zip',
+        arguments: ['-r', filename, '.'],
+        workingDirectory: _getTarget(_webSource));
+  } else if (Platform.isWindows) {
+    final psCommand = 'Compress-Archive '
+        '-Path . '
+        '-DestinationPath $filename';
+
+    run('powershell',
+        arguments: ['-Command', psCommand],
+        workingDirectory: _getTarget(_webSource));
+  } else {
+    log('Ignoring web-archive command '
+        'for an unsupported platform: ${Platform.operatingSystem}.');
+  }
 }
 
 @Task('Build non-minified npm package with preserved call-stacks.')
@@ -130,11 +177,12 @@ void _npmBuild({bool release = true}) {
   delete(_nodeTargetDir);
   _runBuild(_nodeSource, release: release);
 
-  // Do not redefine require to avoid webpack complaints
   {
+    // Do not redefine require to avoid webpack complaints
+    final preamble =
+        getPreamble(minified: true).replaceFirst('self.require=require,', '');
     final file = File(p.join(_nodeTarget, 'gltf_validator.dart.js'));
-    file.writeAsStringSync(
-        file.readAsStringSync().replaceFirst('self.require=require,', ''));
+    file.writeAsStringSync(preamble + file.readAsStringSync());
   }
 
   const packageJson = 'package.json';
@@ -142,6 +190,7 @@ void _npmBuild({bool release = true}) {
       json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync())
           as Map<String, Object>;
   jsonMap['version'] = _version;
+  jsonMap..remove('devDependencies')..remove('scripts');
 
   log('copying updated $packageJson to $_nodeTarget');
   File(p.join(_nodeTarget, packageJson))
@@ -149,6 +198,7 @@ void _npmBuild({bool release = true}) {
 
   copy(File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
   copy(File(p.join(_nodeSource, 'module.mjs')), _nodeTargetDir);
+  delete(Directory(p.join(_nodeTarget, 'node_modules')));
 }
 
 @Depends(issues, npmRelease)
@@ -187,6 +237,7 @@ void _runBuild(String dir, {bool release = true, String defineOption}) {
   delete(File(p.join(target, '.build.manifest')));
   delete(File(p.join(target, '.packages')));
   delete(Directory(p.join(target, 'packages')));
+  delete(Directory(p.join(target, '.dart_tool')));
 }
 
 String get npmExecutable => Platform.isWindows ? 'npm.cmd' : 'npm';

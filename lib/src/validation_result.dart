@@ -45,12 +45,11 @@ class ValidationResult {
     final issuesMap = <String, Object>{};
     final numIssues = [0, 0, 0, 0];
 
-    final messages = List<Map<String, Object>>(issues.length);
-    for (var i = 0; i < messages.length; ++i) {
+    final messages = List<Map<String, Object>>.generate(issues.length, (i) {
       final issue = issues[i];
       ++numIssues[issue.severity.index];
-      messages[i] = issue.toMap();
-    }
+      return issue.toMap();
+    }, growable: false);
 
     issuesMap['numErrors'] = numIssues[Severity.Error.index];
     issuesMap['numWarnings'] = numIssues[Severity.Warning.index];
@@ -118,7 +117,7 @@ class ValidationResult {
           }
           totalTriangleCount += primitive.trianglesCount;
           maxAttributes = max(maxAttributes, primitive.attributes.length);
-          maxUVs = max(maxUVs, primitive.texcoordCount);
+          maxUVs = max(maxUVs, primitive.texCoordCount);
           maxInfluences = max(maxInfluences, primitive.jointsCount * 4);
         }
       }

@@ -43,7 +43,7 @@ class Scene extends GltfChildOfRootProperty {
       return;
     }
 
-    nodes = List<Node>(_nodesIndices.length);
+    nodes = List<Node>.filled(_nodesIndices.length, null);
 
     resolveNodeList(_nodesIndices, nodes, gltf.nodes, NODES, context,
         (node, nodeIndex, index) {
