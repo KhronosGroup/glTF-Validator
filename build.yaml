@@ -14,8 +14,8 @@ targets:
           compiler: dart2js
           dart2js_args:
             - --minify
-            - --lax-runtime-type-to-string
             - --no-source-maps
+            - --lax-runtime-type-to-string
             - --trust-primitives
             - --omit-implicit-checks
             - --omit-as-casts
@@ -31,10 +31,11 @@ targets:
         release_options:
           dart2js_args:
             - --minify
+            - --no-source-maps
             - --lax-runtime-type-to-string
-            - --server-mode
             - --trust-primitives
             - --omit-implicit-checks
+            - --server-mode
         dev_options:
           dart2js_args:
             - --server-mode
