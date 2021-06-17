@@ -14,6 +14,8 @@
 
 * Fixed incomplete JSON pointers for out-of-range array elements.
 
+* Web build is now usable from a local filesystem.
+
 ### Integration updates
 
 * Added `exe-archive` task to generate release archives.

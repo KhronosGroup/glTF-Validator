@@ -21,7 +21,7 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html' show querySelector, InputElement, File, FileReader;
+import 'dart:html' show querySelector, InputElement, File, FileReader, window;
 import 'dart:js';
 import 'dart:math';
 
@@ -234,7 +234,8 @@ void _writeMap(Map<String, Object> jsonMap) {
   final report = _kJsonEncoder.convert(jsonMap);
   _output.text = report;
   if (report.length < _kMaxReportLength) {
-    context['Prism'].callMethod('highlightAll', [true]);
+    context['Prism']
+        .callMethod('highlightAll', [window.location.protocol != 'file:']);
   } else {
     print('Report is too big: ${report.length} bytes. '
         'Syntax highlighting disabled.');
