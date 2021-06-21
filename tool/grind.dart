@@ -106,6 +106,14 @@ void exe() {
 @Depends(exe)
 @Task('Package native executable.')
 void exeArchive() {
+  final targetDir = Directory(_getTarget(_binSource));
+  copy(File('LICENSE'), targetDir);
+  copy(File('NOTICES'), targetDir);
+
+  final docsDir = Directory(p.join(targetDir.path, 'docs'))..createSync();
+  copy(File(p.join('docs', 'config-example.yaml')), docsDir);
+  copy(File(p.join('docs', 'validation.schema.json')), docsDir);
+
   if (Platform.isLinux || Platform.isMacOS) {
     final filename =
         'gltf_validator-$_version-${Platform.operatingSystem}64.tar.xz';
@@ -116,12 +124,15 @@ void exeArchive() {
           '--${Platform.isLinux ? 'group' : 'gid'}=0',
           '--xz',
           '--file=$filename',
-          'gltf_validator'
+          'gltf_validator',
+          'LICENSE',
+          'NOTICES',
+          'docs'
         ],
         workingDirectory: _getTarget(_binSource));
   } else if (Platform.isWindows) {
     final psCommand = 'Compress-Archive '
-        '-Path gltf_validator.exe '
+        '-Path gltf_validator.exe, LICENSE, NOTICES, docs '
         '-DestinationPath gltf_validator-$_version-win64.zip';
 
     run('powershell',
@@ -141,6 +152,10 @@ void web() {
 @Depends(web)
 @Task('Package web build.')
 void webArchive() {
+  final targetDir = Directory(_getTarget(_webSource));
+  copy(File('LICENSE'), targetDir);
+  copy(File('NOTICES'), targetDir);
+
   final filename = 'gltf_validator-$_version-web.zip';
   if (Platform.isLinux || Platform.isMacOS) {
     run('zip',
@@ -148,7 +163,7 @@ void webArchive() {
         workingDirectory: _getTarget(_webSource));
   } else if (Platform.isWindows) {
     final psCommand = 'Compress-Archive '
-        '-Path . '
+        '-Path ./* '
         '-DestinationPath $filename';
 
     run('powershell',
@@ -206,7 +221,7 @@ void _npmBuild({bool release = true}) {
 void npm() {
   copy(File('ISSUES.md'), _nodeTargetDir);
   copy(File('LICENSE'), _nodeTargetDir);
-  copy(File('3RD_PARTY'), _nodeTargetDir);
+  copy(File('NOTICES'), _nodeTargetDir);
   copy(File(p.join('docs', 'validation.schema.json')), _nodeTargetDir);
 
   log('Building npm README...');
