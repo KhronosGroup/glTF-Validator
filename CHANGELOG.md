@@ -1,3 +1,9 @@
+## 2.0.0-dev.3.5
+
+### Integration updates
+
+* Updated 3rd-party licenses and included docs in all generated archives.
+
 ## 2.0.0-dev.3.4
 
 ### New Features
