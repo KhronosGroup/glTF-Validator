@@ -16,9 +16,7 @@
 
 library gltf.extensions;
 
-import 'package:gltf/src/hash.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-
 import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
@@ -32,6 +30,8 @@ import 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart'
 import 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
+import 'package:gltf/src/ext/OMI_audio_emitter/omi_audio_emitter.dart';
+import 'package:gltf/src/hash.dart';
 import 'package:meta/meta.dart';
 
 export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
@@ -106,7 +106,8 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrMaterialsVariantsExtension,
   khrMaterialsVolumeExtension,
   khrMeshQuantizationExtension,
-  khrTextureTransformExtension
+  khrTextureTransformExtension,
+  omiAudioEmitterExtension
 ];
 
 // https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md
@@ -142,6 +143,7 @@ const Set<String> kReservedPrefixes = <String>{
   'MSFT',
   'NV',
   'OFT',
+  'OMI',
   'OWLII',
   'PANDA3D',
   'POLUTROPON',
