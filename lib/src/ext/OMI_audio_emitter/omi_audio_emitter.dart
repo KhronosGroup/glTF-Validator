@@ -49,7 +49,7 @@ const List<String> OMI_AUDIO_EMITTER_DISTANCE_MODELS = <String>[
 const String TYPE = 'type';
 const String GAIN = 'gain';
 const String LOOP = 'loop';
-const String AUTO_PLAY = 'autoPlay';
+const String PLAYING = 'playing';
 const String SOURCE = 'source';
 const String CONE_INNER_ANGLE = 'coneInnerAngle';
 const String CONE_OUTER_ANGLE = 'coneOuterAngle';
@@ -63,7 +63,7 @@ const List<String> OMI_AUDIO_EMITTER_MEMBERS = <String>[
   TYPE,
   GAIN,
   LOOP,
-  AUTO_PLAY,
+  PLAYING,
   SOURCE,
   CONE_INNER_ANGLE,
   CONE_OUTER_ANGLE,
@@ -282,7 +282,7 @@ class OmiAudioEmitter extends GltfChildOfRootProperty {
   final String type;
   final double gain;
   final bool loop;
-  final bool autoPlay;
+  final bool playing;
   final int _sourceIndex;
   OmiAudioSource _source;
   OmiAudioSource get source => _source;
@@ -298,7 +298,7 @@ class OmiAudioEmitter extends GltfChildOfRootProperty {
       this.type,
       this.gain,
       this.loop,
-      this.autoPlay,
+      this.playing,
       this._sourceIndex,
       this.coneInnerAngle,
       this.coneOuterAngle,
@@ -324,7 +324,7 @@ class OmiAudioEmitter extends GltfChildOfRootProperty {
 
     final loop = getBool(map, LOOP, context);
 
-    final autoPlay = getBool(map, AUTO_PLAY, context);
+    final playing = getBool(map, PLAYING, context);
 
     final source = getIndex(map, SOURCE, context, req: false);
 
@@ -392,7 +392,7 @@ class OmiAudioEmitter extends GltfChildOfRootProperty {
         type,
         gain,
         loop,
-        autoPlay,
+        playing,
         source,
         coneInnerAngle,
         coneOuterAngle,
