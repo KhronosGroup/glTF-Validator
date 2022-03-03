@@ -606,6 +606,11 @@ class LinkError extends IssueType {
       (args) => 'bufferView.byteStride must not be defined for '
           'buffer views containing image data.');
 
+  static final LinkError audioBufferViewWithByteStride = LinkError._(
+      'AUDIO_BUFFER_VIEW_WITH_BYTESTRIDE',
+      (args) => 'bufferView.byteStride must not be defined for '
+          'buffer views containing audio data.');
+
   static final LinkError invalidIbmAccessorCount = LinkError._(
       'INVALID_IBM_ACCESSOR_COUNT',
       (args) => 'Accessor of count ${args[0]} expected. Found ${args[1]}.');
