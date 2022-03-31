@@ -501,6 +501,12 @@ class SemanticError extends IssueType {
               'when the emissive factor is zero or undefined.',
           Severity.Warning);
 
+  static final SemanticError khrMaterialsVolumeNoTransmission = SemanticError._(
+      'KHR_MATERIALS_VOLUME_NO_TRANSMISSION',
+      (args) => 'The volume extension needs to be combined with an extension '
+          'that allows light to transmit through the surface.',
+      Severity.Warning);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);

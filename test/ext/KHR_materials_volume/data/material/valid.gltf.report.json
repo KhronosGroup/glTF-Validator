@@ -1,7 +1,7 @@
 {
     "uri": "test/ext/KHR_materials_volume/data/material/valid.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.4",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -26,6 +26,7 @@
     "info": {
         "version": "2.0",
         "extensionsUsed": [
+            "KHR_materials_transmission",
             "KHR_materials_volume"
         ],
         "animationCount": 0,

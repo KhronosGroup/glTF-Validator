@@ -71,6 +71,21 @@ class KhrMaterialsVolume extends GltfProperty {
       thicknessTexture.link(gltf, context);
       context.path.removeLast();
     }
+
+    if (!context.validate) {
+      return;
+    }
+
+    Object o = this;
+    while (o != null) {
+      o = context.owners[o];
+      if (o is Material) {
+        if (!o.extensions.containsKey(KHR_MATERIALS_TRANSMISSION)) {
+          context.addIssue(SemanticError.khrMaterialsVolumeNoTransmission);
+        }
+        break;
+      }
+    }
   }
 }
 

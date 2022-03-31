@@ -44,6 +44,7 @@
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES|outerConeAngle (`%2`) is less than or equal to innerConeAngle (`%1`).|Error|
 |KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR|Emissive strength has no effect when the emissive factor is zero or undefined.|Warning|
+|KHR_MATERIALS_VOLUME_NO_TRANSMISSION|The volume extension needs to be combined with an extension that allows light to transmit through the surface.|Warning|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
 |MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT|All primitives must have the same number of morph targets.|Error|

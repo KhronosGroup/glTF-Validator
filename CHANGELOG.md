@@ -4,6 +4,8 @@
 
 * Added support for `KHR_materials_emissive_strength` extension; added `KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR` warning.
 
+* Added `KHR_MATERIALS_VOLUME_NO_TRANSMISSION` warning.
+
 * Added 10 new vendor prefixes.
 
 * Added allowed accessor formats for `TEXCOORD_n` and `COLOR_n` morph target attributes.
