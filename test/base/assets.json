@@ -256,6 +256,7 @@
             "node_skin_without_skinned_mesh.gltf": "Node skin without skinned mesh",
             "node_skinned_mesh_without_skin.gltf": "Node skinned mesh without skin",
             "node_weights_invalid.gltf": "Node weights invalid",
+            "node_weights_override.gltf": "Node overrides static mesh weights",
             "rotation_non_unit.gltf": "Non-unit rotation quaternion",
             "skin_with_no_mesh.gltf": "Skin with no mesh",
             "unresolved_camera.gltf": "Unresolved camera",

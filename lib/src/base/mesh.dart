@@ -26,6 +26,10 @@ class Mesh extends GltfChildOfRootProperty {
   final SafeList<MeshPrimitive> primitives;
   final List<double> weights;
 
+  bool _weightsUsed = false;
+
+  bool get areWeightsUsed => _weightsUsed;
+
   Mesh._(this.primitives, this.weights, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
@@ -94,6 +98,10 @@ class Mesh extends GltfChildOfRootProperty {
       context.path.removeLast();
     });
     context.path.removeLast();
+  }
+
+  void markWeightsAsUsed() {
+    _weightsUsed = true;
   }
 }
 

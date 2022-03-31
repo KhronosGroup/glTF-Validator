@@ -374,6 +374,19 @@ class Gltf extends GltfProperty {
         }
         context.path.clear();
       }
+
+      // Check for meshes with unused static weights
+      context.path.add(MESHES);
+      for (var i = 0; i < meshes.length; ++i) {
+        final mesh = meshes[i];
+        if (mesh?.weights != null && mesh.isUsed && !mesh.areWeightsUsed) {
+          context
+            ..path.add(i.toString())
+            ..addIssue(LinkError.unusedMeshWeights, name: WEIGHTS)
+            ..path.removeLast();
+        }
+      }
+      context.path.clear();
     }
 
     return gltf;

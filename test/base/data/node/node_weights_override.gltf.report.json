@@ -1,0 +1,47 @@
+{
+    "uri": "test/base/data/node/node_weights_override.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.6",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 0,
+        "numInfos": 3,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/1"
+            },
+            {
+                "code": "UNUSED_MESH_WEIGHTS",
+                "message": "The static morph target weights are always overridden.",
+                "severity": 2,
+                "pointer": "/meshes/0/weights"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": true,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 2,
+        "totalVertexCount": 6,
+        "totalTriangleCount": 2,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 1
+    }
+}
