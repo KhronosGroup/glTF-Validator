@@ -220,6 +220,10 @@ class GlbReader implements GltfReader {
               _hasJsonChunk = true;
               break;
             case _CHUNK_BIN:
+              if (_chunkLength == 0) {
+                context.addIssue(GlbError.emptyBinChunk,
+                    offset: _offset - _CHUNK_HEADER_LENGTH);
+              }
               updateState(seen: _hasBinChunk);
               _hasBinChunk = true;
               break;

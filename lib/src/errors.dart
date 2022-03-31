@@ -782,6 +782,9 @@ class GlbError extends IssueType {
   static final GlbError emptyChunk = GlbError._('GLB_EMPTY_CHUNK',
       (args) => 'Chunk (${args[0]}) cannot have zero length.');
 
+  static final GlbError emptyBinChunk = GlbError._('GLB_EMPTY_BIN_CHUNK',
+      (args) => 'Empty BIN chunk should be omitted.', Severity.Information);
+
   static final GlbError duplicateChunk = GlbError._('GLB_DUPLICATE_CHUNK',
       (args) => 'Chunk of type ${args[0]} has already been used.');
 
