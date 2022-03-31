@@ -252,6 +252,7 @@
             "matrix_default.gltf": "Default transform matrix",
             "matrix_indecomposable.gltf": "Indecomposable matrix",
             "matrix_trs.gltf": "TRS with matrix",
+            "node_empty.gltf": "Empty nodes",
             "node_loop.gltf": "Node loop",
             "node_loop_scene.gltf": "Node loop with a scene",
             "node_parent_override.gltf": "Node parent override",

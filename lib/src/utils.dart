@@ -538,9 +538,11 @@ Map<String, Object> getExtensions(
     final extensionMap = getMap(extensionMaps, extension, context);
 
     if (!context.extensionsLoaded.contains(extension)) {
+      // Unknown extension
       if (context.validate && !context.extensionsUsed.contains(extension)) {
         context.addIssue(LinkError.undeclaredExtension, name: extension);
       }
+      extensions[extension] = extensionMap;
       continue;
     }
 
