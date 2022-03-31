@@ -592,6 +592,11 @@ class LinkError extends IssueType {
       (args) => 'Override of previously set bufferView target or usage. '
           'Initial: ${_q(args[0])}, new: ${_q(args[1])}.');
 
+  static final LinkError bufferViewTargetMissing = LinkError._(
+      'BUFFER_VIEW_TARGET_MISSING',
+      (args) => 'bufferView.target should be set for vertex or index data.',
+      Severity.Information);
+
   static final LinkError imageBufferViewWithByteStride = LinkError._(
       'IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE',
       (args) => 'bufferView.byteStride must not be defined for '

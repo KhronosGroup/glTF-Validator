@@ -54,12 +54,14 @@
     "bufferViews": [
         {
             "buffer": 0,
-            "byteLength": 36
+            "byteLength": 36,
+            "target": 34962
         },
         {
             "buffer": 0,
             "byteOffset": 36,
-            "byteLength": 48
+            "byteLength": 48,
+            "target": 34962
         }
     ],
     "buffers": [
