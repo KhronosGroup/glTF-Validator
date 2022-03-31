@@ -599,7 +599,8 @@ class LinkError extends IssueType {
 
   static final LinkError invalidIbmAccessorCount = LinkError._(
       'INVALID_IBM_ACCESSOR_COUNT',
-      (args) => 'Accessor of count ${args[0]} expected. Found ${args[1]}.');
+      (args) => 'IBM accessor must have at least ${args[0]} elements.'
+          ' Found ${args[1]}.');
 
   static final LinkError meshPrimitiveAttributesAccessorInvalidFormat =
       LinkError._(
