@@ -20,6 +20,7 @@ import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
+import 'package:gltf/src/ext/KHR_materials_emissive_strength/khr_materials_emissive_strength.dart';
 import 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 import 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
@@ -36,6 +37,7 @@ import 'package:meta/meta.dart';
 export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 export 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
+export 'package:gltf/src/ext/KHR_materials_emissive_strength/khr_materials_emissive_strength.dart';
 export 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
@@ -96,6 +98,7 @@ const List<Extension> kDefaultExtensions = <Extension>[
   extTextureWebPExtension,
   khrLightsPunctualExtension,
   khrMaterialsClearcoatExtension,
+  khrMaterialsEmissiveStrengthExtension,
   khrMaterialsIorExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsSheenExtension,

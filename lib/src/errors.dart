@@ -494,6 +494,13 @@ class SemanticError extends IssueType {
       (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
           'innerConeAngle (${args[0]}).');
 
+  static final SemanticError khrMaterialsEmissiveStrengthZeroFactor =
+      SemanticError._(
+          'KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR',
+          (args) => 'Emissive strength has no effect '
+              'when the emissive factor is zero or undefined.',
+          Severity.Warning);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);
