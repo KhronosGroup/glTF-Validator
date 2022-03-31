@@ -20,20 +20,11 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
-enum ImageCodec { JPEG, PNG, WebP }
+enum ImageCodec { JPEG, PNG, WebP, KTX2 }
 
 extension ImageCodecMimeType on ImageCodec {
-  String get mimeType {
-    switch (this) {
-      case ImageCodec.JPEG:
-        return 'image/jpeg';
-      case ImageCodec.PNG:
-        return 'image/png';
-      case ImageCodec.WebP:
-        return 'image/webp';
-    }
-    throw ArgumentError();
-  }
+  String get mimeType =>
+      const ['image/jpeg', 'image/png', 'image/webp', 'image/ktx2'][index];
 }
 
 enum _ColorPrimaries { Unknown, sRGB, Custom }
@@ -99,28 +90,22 @@ class ImageInfo {
 
     subscription = data.listen((data) {
       if (!isDetected) {
-        if (data.length < 9) {
-          subscription.cancel();
-          completer.completeError(const UnexpectedEndOfStreamException());
-          return;
-        } else {
-          switch (detectCodec(data as Uint8List)) {
-            case ImageCodec.JPEG:
-              decoder = JpegInfoDecoder(subscription, completer);
-              break;
-            case ImageCodec.PNG:
-              decoder = PngInfoDecoder(subscription, completer);
-              break;
-            case ImageCodec.WebP:
-              decoder = WebPInfoDecoder(subscription, completer);
-              break;
-            default:
-              subscription.cancel();
-              completer.completeError(const UnsupportedImageFormatException());
-              return;
-          }
-          isDetected = true;
+        switch (detectCodec(data as Uint8List)) {
+          case ImageCodec.JPEG:
+            decoder = JpegInfoDecoder(subscription, completer);
+            break;
+          case ImageCodec.PNG:
+            decoder = PngInfoDecoder(subscription, completer);
+            break;
+          case ImageCodec.WebP:
+            decoder = WebPInfoDecoder(subscription, completer);
+            break;
+          default:
+            subscription.cancel();
+            completer.completeError(const UnsupportedImageFormatException());
+            return;
         }
+        isDetected = true;
       }
       decoder.add(data);
     }, onError: (Object e) {
@@ -134,6 +119,12 @@ class ImageInfo {
   }
 
   static ImageCodec detectCodec(Uint8List firstChunk) {
+    // Although only WebP detection requires 14 bytes,
+    // valid images of other supported formats cannot be smaller than that.
+    if (firstChunk.length < 14) {
+      return null;
+    }
+
     final byteData = firstChunk.buffer.asByteData();
     final dword0 = byteData.getUint32(0, Endian.little);
 
@@ -154,6 +145,14 @@ class ImageInfo {
         byteData.getUint16(12, Endian.little) == 0x5056) {
       return ImageCodec.WebP;
     }
+
+    // KTX2 signature: AB 4B 54 58 20 32 30 BB 0D 0A 1A 0A
+    if (dword0 == 0x58544BAB &&
+        byteData.getUint32(4, Endian.little) == 0xBB303220 &&
+        byteData.getUint32(8, Endian.little) == 0x0A1A0A0D) {
+      return ImageCodec.KTX2;
+    }
+
     return null;
   }
 }
