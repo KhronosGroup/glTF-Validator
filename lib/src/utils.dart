@@ -41,9 +41,13 @@ Object _getGuarded(
   return value;
 }
 
+// Convert an integer value parsed as double to a sound integer.
+Object _tryFixInt(Object value) =>
+    value is double && value.floorToDouble() == value ? value.toInt() : value;
+
 int getIndex(Map<String, Object> map, String name, Context context,
     {bool req = true}) {
-  final value = _getGuarded(map, name, _kInteger, context);
+  final value = _tryFixInt(_getGuarded(map, name, _kInteger, context));
   if (value is int) {
     if (value >= 0) {
       return value;
@@ -82,7 +86,7 @@ int getUint(Map<String, Object> map, String name, Context context,
   assert(min != null && min >= 0);
   assert(max == -1 || max >= min);
   assert(list == null || list.every((v) => v >= 0));
-  final value = _getGuarded(map, name, _kInteger, context);
+  final value = _tryFixInt(_getGuarded(map, name, _kInteger, context));
   if (value is int) {
     if (list != null) {
       if (!checkEnum<int>(name, value, list, context)) {
@@ -228,11 +232,13 @@ List<int> getIndicesList(Map<String, Object> map, String name, Context context,
       context.path.add(name);
       final uniqueItems = <int>{};
       for (var i = 0; i < value.length; i++) {
-        final v = value[i];
+        final v = _tryFixInt(value[i]);
         if (v is int && v >= 0) {
           if (!uniqueItems.add(v)) {
             context.addIssue(SchemaError.arrayDuplicateElements, index: i);
           }
+          // Ensure that the returned entry is integer
+          value[i] = v;
         } else {
           // Sanitize value
           value[i] = -1;
@@ -264,7 +270,11 @@ Map<String, int> getIndicesMap(Map<String, Object> map, String name,
     context.path.add(name);
     value.forEach((k, v) {
       checkKey(k);
-      if (!(v is int && v >= 0)) {
+      v = _tryFixInt(v);
+      if (v is int && v >= 0) {
+        // Ensure that the returned entry is integer
+        value[k] = v;
+      } else {
         // Sanitize value
         value[k] = -1;
         context.addIssue(SchemaError.invalidIndex, name: k);
@@ -303,7 +313,11 @@ List<Map<String, int>> getIndicesMapsList(Map<String, Object> map, String name,
               context.path.add(i.toString());
               innerMap.forEach((k, v) {
                 checkKey(k);
-                if (!(v is int && v >= 0)) {
+                v = _tryFixInt(v);
+                if (v is int && v >= 0) {
+                  // Ensure that the returned entry is integer
+                  innerMap[k] = v;
+                } else {
                   // Sanitize value
                   innerMap[k] = -1;
                   context.addIssue(SchemaError.invalidIndex, name: k);
@@ -412,19 +426,14 @@ List<int> getGlIntList(Map<String, Object> map, String name, Context context,
     final result = createTypedIntList(type, length);
     var wrongMemberFound = false;
     for (var i = 0; i < value.length; ++i) {
-      final v = value[i];
-      if (v is num && v.toInt() == v) {
-        // This check works only on DartVM
-        if (v is! int) {
-          context.addIssue(SemanticError.integerWrittenAsFloat,
-              name: name, args: [v]);
-        }
+      final v = _tryFixInt(value[i]);
+      if (v is int) {
         if (context.validate && ((v < min) || (v > max))) {
           context.addIssue(SemanticError.invalidGlValue,
               name: name, args: [v, gl.TYPE_NAMES[type]]);
           wrongMemberFound = true;
         }
-        result[i] = v.toInt();
+        result[i] = v;
       } else {
         context.addIssue(SchemaError.arrayTypeMismatch,
             name: name, args: [v, _kInteger]);

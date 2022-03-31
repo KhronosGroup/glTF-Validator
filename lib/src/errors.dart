@@ -314,11 +314,6 @@ class SemanticError extends IssueType {
       'INVALID_GL_VALUE',
       (args) => 'Invalid value ${args[0]} for GL type ${_q(args[1])}.');
 
-  static final SemanticError integerWrittenAsFloat = SemanticError._(
-      'INTEGER_WRITTEN_AS_FLOAT',
-      (args) => 'Integer value is written with fractional part: ${args[0]}.',
-      Severity.Warning);
-
   static final SemanticError accessorNormalizedInvalid = SemanticError._(
       'ACCESSOR_NORMALIZED_INVALID',
       (args) => 'Only (u)byte and (u)short accessors can be normalized.');

@@ -4,6 +4,7 @@
         "tests": {
             "bom.gltf": "Starting with BOM",
             "empty_file.gltf": "Empty file",
+            "integer_written_as_float.gltf": "Integer written as float",
             "invalid_object.gltf": "Invalid root type",
             "invalid_syntax.gltf": "Invalid syntax"
         }
@@ -174,7 +175,6 @@
             "empty_array.gltf": "Empty array",
             "empty_object.gltf": "Empty object",
             "float_normalized.gltf": "Float normalized",
-            "integer_written_as_float.gltf": "Integer written as float",
             "invalid_sparse_count_and_stride.gltf": "Invalid sparse count and stride",
             "matrix_alignment.gltf": "Matrix alignment",
             "unknown_type.gltf": "Unknown type",

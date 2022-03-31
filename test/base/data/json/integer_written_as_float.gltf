@@ -1,0 +1,113 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "buffers": [
+        {
+            "byteLength": 1
+        },
+        {
+            "byteLength": 1
+        },
+        {
+            "byteLength": 1
+        },
+        {
+            "byteLength": 1
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 1e0
+        },
+        {
+            "buffer": 1e0,
+            "byteLength": 10e-1
+        },
+        {
+            "buffer": 2.0,
+            "byteLength": 1.0
+        },
+        {
+            "buffer": 3.0e0,
+            "byteLength": 0.1e1
+        }
+    ],
+    "nodes": [
+        {
+            "children": [
+                1.0,
+                2e0,
+                30e-1,
+                4.0e0
+            ]
+        },
+        {},
+        {},
+        {},
+        {}
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0.0,
+                        "NORMAL": 1e0,
+                        "COLOR_0": 2.0e0
+                    },
+                    "targets": [
+                        {
+                            "POSITION": 3.0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC3",
+            "min": [
+                0,
+                0,
+                0
+            ],
+            "max": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC3"
+        },
+        {
+            "componentType": 5121,
+            "count": 3,
+            "type": "VEC3",
+            "normalized": true,
+            "min": [255.0, 2550e-1, 255e0]
+        },
+        {
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC3",
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "max": [
+                1,
+                1,
+                1
+            ]
+        }
+    ]
+}
