@@ -49,6 +49,10 @@ class Buffer extends GltfChildOfRootProperty {
       final uriString = getString(map, URI, context);
 
       if (uriString != null) {
+        if (context.isGlb) {
+          context.addIssue(DataError.uriGlb, name: URI);
+        }
+
         UriData uriData;
         try {
           uriData = UriData.parse(uriString);

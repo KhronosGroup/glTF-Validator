@@ -1,13 +1,19 @@
 {
     "uri": "test/base/data/buffer/invalid_uri_data.glb",
     "mimeType": "model/gltf-binary",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
-        "numInfos": 1,
+        "numInfos": 2,
         "numHints": 0,
         "messages": [
+            {
+                "code": "URI_GLB",
+                "message": "URI is used in GLB container.",
+                "severity": 2,
+                "pointer": "/buffers/0/uri"
+            },
             {
                 "code": "INVALID_URI",
                 "message": "Invalid URI 'data:'. Parser output:\nFormatException: Expecting '='\ndata:",

@@ -180,6 +180,9 @@ class DataError extends IssueType {
           'colorspace information, non-square pixels, or animation.',
       Severity.Warning);
 
+  static final DataError uriGlb = DataError._('URI_GLB',
+      (args) => 'URI is used in GLB container.', Severity.Information);
+
   static final DataError dataUriGlb = DataError._('DATA_URI_GLB',
       (args) => 'Data URI is used in GLB container.', Severity.Warning);
 

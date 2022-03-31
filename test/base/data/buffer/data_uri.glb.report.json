@@ -5,9 +5,15 @@
     "issues": {
         "numErrors": 0,
         "numWarnings": 1,
-        "numInfos": 1,
+        "numInfos": 2,
         "numHints": 0,
         "messages": [
+            {
+                "code": "URI_GLB",
+                "message": "URI is used in GLB container.",
+                "severity": 2,
+                "pointer": "/buffers/0/uri"
+            },
             {
                 "code": "DATA_URI_GLB",
                 "message": "Data URI is used in GLB container.",
