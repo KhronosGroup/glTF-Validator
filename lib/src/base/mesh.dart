@@ -259,11 +259,6 @@ class MeshPrimitive extends GltfProperty {
             name: TANGENT);
       }
 
-      if (hasTangent && mode == gl.POINTS) {
-        context.addIssue(SemanticError.meshPrimitiveTangentPoints,
-            name: TANGENT);
-      }
-
       /// Check for indexed semantics continuity -
       /// they must start with zero and do not have gaps.
       /// Otherwise, the semantic will be completely ignored.

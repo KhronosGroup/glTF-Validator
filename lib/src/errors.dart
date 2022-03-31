@@ -418,11 +418,6 @@ class SemanticError extends IssueType {
           (args) => 'Number of JOINTS attribute semantics (${args[0]}) '
               'does not match the number of WEIGHTS (${args[1]}).');
 
-  static final SemanticError meshPrimitiveTangentPoints = SemanticError._(
-      'MESH_PRIMITIVE_TANGENT_POINTS',
-      (args) => 'TANGENT attribute defined for POINTS rendering mode.',
-      Severity.Warning);
-
   static final SemanticError meshInvalidWeightsCount = SemanticError._(
       'MESH_INVALID_WEIGHTS_COUNT',
       (args) => 'The length of weights array (${args[0]}) does not match '
