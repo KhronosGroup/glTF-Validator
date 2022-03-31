@@ -1,3 +1,63 @@
+## 2.0.0-dev.3.6
+
+### New Features
+
+* Added support for `KHR_materials_emissive_strength` extension; added `KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR` warning.
+
+* Added 10 new vendor prefixes.
+
+* Added allowed accessor formats for `TEXCOORD_n` and `COLOR_n` morph target attributes.
+
+* Added `ANIMATION_SAMPLER_ACCESSOR_WITH_BYTESTRIDE` error.
+
+* Added `BUFFER_BYTE_LENGTH_MISMATCH` error.
+
+* Added `BUFFER_VIEW_TARGET_MISSING` info.
+
+* Added `CAMERA_XMAG_YMAG_NEGATIVE` warning.
+
+* Added `GLB_EMPTY_BIN_CHUNK` info.
+
+* Added `URI_GLB` info.
+
+* Added `UNUSED_MESH_WEIGHTS` and `UNUSED_MESH_TANGENT` infos.
+
+### Changes
+
+* Skipped range-checking for vertex color attributes not defined in the spec.
+
+* Data URIs with content not matching the declared `mediatype` now trigger `INVALID_URI` error.
+
+* Updated `INVALID_IBM_ACCESSOR_COUNT` validation logic and message.
+
+* Updated `MESH_PRIMITIVE_MORPH_TARGET_NO_BASE_ACCESSOR` validation message.
+
+* Fixed JSON-pointers for `IMAGE_MIME_TYPE_INVALID` error.
+
+* Changed `ASSET_MIN_VERSION_GREATER_THAN_VERSION` default severity to Error.
+
+* Changed `CAMERA_XMAG_YMAG_ZERO` default severity to Error.
+
+* Changed `DATA_URI_GLB` default severity to Warning.
+
+* Removed `BUFFER_EMBEDDED_BYTELENGTH_MISMATCH` error.
+
+* Removed `BUFFER_EXTERNAL_BYTELENGTH_MISMATCH` error.
+
+* Removed `INTEGER_WRITTEN_AS_FLOAT` warning.
+
+* Removed `MESH_PRIMITIVE_TANGENT_POINTS` and `MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT` validation issues.
+
+### Bugfixes
+
+* Fixed false positive `NODE_EMPTY` caused by unknown extensions.
+
+* Fixed assertion on JSON arrays containing numbers that do not fit into double precision.
+
+* Made `BUFFER_DATA_URI_MIME_TYPE_INVALID` validation case-insensitive.
+
+* Tightened JPEG and WebP detection logic.
+
 ## 2.0.0-dev.3.5
 
 ### Integration updates

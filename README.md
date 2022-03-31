@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/KhronosGroup/glTF/raw/master/specification/figures/gltf.png" alt=""/>
+<img src="web/logos/glTF_RGB_June16.svg" alt=""/>
 </p>
 
 # glTF-Validator
@@ -8,7 +8,7 @@
 
 Tool to validate [glTF](https://github.com/KhronosGroup/glTF) assets.
 
-Validation is performed against [glTF 2.0](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0) specification.
+Validation is performed against [glTF 2.0](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html) specification.
 
 Validator writes a validation report (in JSON-format) with all found issues and asset stats.
 
@@ -18,7 +18,7 @@ NPM package: https://www.npmjs.com/package/gltf-validator
 
 ## Implemented features
 
-- JSON syntax check and [GLBv2](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#glb-file-format-specification) file format correctness.
+- JSON syntax check and [GLBv2](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#glb-file-format-specification) file format correctness.
 - Asset description validation
   - All properties and their types from JSON-Schemas (including implicit limitations on valid values).
   - Validity and compatibility of internal references.
@@ -35,6 +35,7 @@ NPM package: https://www.npmjs.com/package/gltf-validator
   - EXT_texture_webp
   - KHR_lights_punctual
   - KHR_materials_clearcoat
+  - KHR_materials_emissive_strength
   - KHR_materials_ior
   - KHR_materials_pbrSpecularGlossiness
   - KHR_materials_sheen
@@ -62,6 +63,8 @@ Validation log will be printed to stderr.
 
 Shell return code will be non-zero if at least one error was found.
 -o, --[no-]stdout                Print JSON report to stdout instead of writing it to a file. This option cannot be used with directory input.
+-r, --[no-]validate-resources    Validate contents of embedded and/or referenced resources (buffers, images).
+                                 (defaults to on)
 -t, --[no-]write-timestamp       Write UTC timestamp to the validation report.
 -p, --[no-]absolute-path         Write absolute asset path to the validation report.
 -m, --[no-]messages              Print issue messages to stderr. Otherwise, only total number of issues will be printed.
@@ -114,7 +117,3 @@ To publish an npm package, follow these steps after installation:
 To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
 1. Run `dart run grinder issues`.
 2. `ISSUES.md` file will be written to the repo root.
-
-## Known Issues
-- Web and npm versions cannot differentiate between JSON integers and floats of the same value, e.g., `1` vs `1.0`.
-- JSON charset encoding restrictions are not enforced.
