@@ -65,12 +65,15 @@ class Buffer extends GltfChildOfRootProperty {
             context.addIssue(DataError.dataUriGlb, name: URI);
           }
 
-          if (uriData.mimeType == APPLICATION_OCTET_STREAM ||
-              uriData.mimeType == APPLICATION_GLTF_BUFFER) {
-            data = uriData.contentAsBytes();
-          } else {
-            context.addIssue(SemanticError.bufferDataUriMimeTypeInvalid,
-                name: URI, args: [uriData.mimeType]);
+          switch (uriData.mimeType.toLowerCase()) {
+            case APPLICATION_GLTF_BUFFER:
+            case APPLICATION_OCTET_STREAM:
+              data = uriData.contentAsBytes();
+              break;
+            default:
+              context.addIssue(SemanticError.bufferDataUriMimeTypeInvalid,
+                  name: URI, args: [uriData.mimeType]);
+              break;
           }
         }
       }

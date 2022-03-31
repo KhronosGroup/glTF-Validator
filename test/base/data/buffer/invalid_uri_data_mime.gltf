@@ -6,6 +6,10 @@
         {
             "uri": "data:application/octet-stream2;base64,AA==",
             "byteLength": 1
+        },
+        {
+            "uri": "data:application/OCTET-STREAM;base64,AA==",
+            "byteLength": 1
         }
     ]
 }

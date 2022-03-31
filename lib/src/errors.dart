@@ -337,8 +337,7 @@ class SemanticError extends IssueType {
 
   static final SemanticError bufferDataUriMimeTypeInvalid = SemanticError._(
       'BUFFER_DATA_URI_MIME_TYPE_INVALID',
-      (args) =>
-          "Buffer's Data URI MIME-Type must be 'application/octet-stream' "
+      (args) => "Data URI media type must be 'application/octet-stream' "
           "or 'application/gltf-buffer'. Found ${_q(args[0])} instead.");
 
   static final SemanticError bufferViewTooBigByteStride = SemanticError._(
