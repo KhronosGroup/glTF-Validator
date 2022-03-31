@@ -20,7 +20,21 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
-enum _ImageCodec { JPEG, PNG, WebP }
+enum ImageCodec { JPEG, PNG, WebP }
+
+extension ImageCodecMimeType on ImageCodec {
+  String get mimeType {
+    switch (this) {
+      case ImageCodec.JPEG:
+        return 'image/jpeg';
+      case ImageCodec.PNG:
+        return 'image/png';
+      case ImageCodec.WebP:
+        return 'image/webp';
+    }
+    throw ArgumentError();
+  }
+}
 
 enum _ColorPrimaries { Unknown, sRGB, Custom }
 
@@ -90,14 +104,14 @@ class ImageInfo {
           completer.completeError(const UnexpectedEndOfStreamException());
           return;
         } else {
-          switch (_detectCodec(data)) {
-            case _ImageCodec.JPEG:
+          switch (detectCodec(data as Uint8List)) {
+            case ImageCodec.JPEG:
               decoder = JpegInfoDecoder(subscription, completer);
               break;
-            case _ImageCodec.PNG:
+            case ImageCodec.PNG:
               decoder = PngInfoDecoder(subscription, completer);
               break;
-            case _ImageCodec.WebP:
+            case ImageCodec.WebP:
               decoder = WebPInfoDecoder(subscription, completer);
               break;
             default:
@@ -119,28 +133,26 @@ class ImageInfo {
     return completer.future;
   }
 
-  static _ImageCodec _detectCodec(List<int> firstChunk) {
-    const JPEG = <int>[0xFF, 0xD8];
-    const PNG = <int>[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
-    const WEBP = <int>[0x52, 0x49, 0x46, 0x46];
+  static ImageCodec detectCodec(Uint8List firstChunk) {
+    final byteData = firstChunk.buffer.asByteData();
+    final dword0 = byteData.getUint32(0, Endian.little);
 
-    bool beginsWith(List<int> a, List<int> b) {
-      for (var i = 0; i < b.length; i++) {
-        if (a[i] != b[i]) {
-          return false;
-        }
-      }
-      return true;
+    // JPEG signature: FF D8 FF
+    if (dword0 & 0xFFFFFF == 0xFFD8FF) {
+      return ImageCodec.JPEG;
     }
 
-    if (beginsWith(firstChunk, JPEG)) {
-      return _ImageCodec.JPEG;
+    // PNG signature: 89 50 4E 47 0D 0A 1A 0A
+    if (dword0 == 0x474E5089 &&
+        byteData.getUint32(4, Endian.little) == 0x0A1A0A0D) {
+      return ImageCodec.PNG;
     }
-    if (beginsWith(firstChunk, PNG)) {
-      return _ImageCodec.PNG;
-    }
-    if (beginsWith(firstChunk, WEBP)) {
-      return _ImageCodec.WebP;
+
+    // WebP signature: 52 49 46 46 XX XX XX XX 57 45 42 50 56 50
+    if (dword0 == 0x46464952 &&
+        byteData.getUint32(8, Endian.little) == 0x50424557 &&
+        byteData.getUint16(12, Endian.little) == 0x5056) {
+      return ImageCodec.WebP;
     }
     return null;
   }
@@ -302,6 +314,9 @@ class JpegInfoDecoder extends ImageInfoDecoder {
       format = Format.RGB;
     } else if (data[5] == 1) {
       format = Format.Luminance;
+    } else {
+      throw const InvalidDataFormatException(
+          'Invalid number of JPEG color channels.');
     }
 
     completer.complete(ImageInfo._(mimeType, bits, format, width, height));
