@@ -1,0 +1,14 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "translation": [
+                1e309,
+                -1e309,
+                0
+            ]
+        }
+    ]
+}

@@ -117,7 +117,6 @@ double getFloat(Map<String, Object> map, String name, Context context,
   assert(exclMax > min && max >= min && exclMax > exclMin && max > exclMin);
   final value = _getGuarded(map, name, _kNumber, context);
   if (value is num) {
-    assert(value.isFinite);
     if (value != standalone &&
         (value < min || value <= exclMin || value > max || value >= exclMax)) {
       context.addIssue(SchemaError.valueNotInRange, name: name, args: [value]);
@@ -362,7 +361,7 @@ List<double> getFloatList(Map<String, Object> map, String name, Context context,
     for (var i = 0; i < value.length; ++i) {
       final v = value[i];
       if (v is num) {
-        if (context.validate && (v < min || v > max)) {
+        if (context.validate && (v.isInfinite || v < min || v > max)) {
           context
             ..path.add(name)
             ..addIssue(SchemaError.valueNotInRange, index: i, args: [v])
