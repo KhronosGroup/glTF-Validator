@@ -42,7 +42,7 @@ class Image extends GltfChildOfRootProperty {
     }
 
     final bufferViewIndex = getIndex(map, BUFFER_VIEW, context, req: false);
-    var mimeType =
+    final mimeType =
         getString(map, MIME_TYPE, context, list: context.imageMimeTypes);
     final uriString = getString(map, URI, context, req: false);
 
@@ -80,14 +80,15 @@ class Image extends GltfChildOfRootProperty {
 
         data = uriData.contentAsBytes();
 
-        // Re-assign `mimeType` only if it wasn't set in JSON
-        if (mimeType == null) {
-          if (context.validate &&
-              !context.imageMimeTypes.contains(uriData.mimeType)) {
-            context.addIssue(SchemaError.valueNotInList,
-                name: URI, args: [uriData.mimeType, context.imageMimeTypes]);
-          }
-          mimeType = uriData.mimeType;
+        if (context.validate &&
+            ImageInfo.detectCodec(data)?.mimeType !=
+                uriData.mimeType.toLowerCase()) {
+          context.addIssue(SchemaError.invalidUri, name: URI, args: [
+            uriString,
+            'The declared mediatype does not match the embedded content.'
+          ]);
+          // Drop invalid data
+          data = null;
         }
       }
     }

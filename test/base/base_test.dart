@@ -113,7 +113,8 @@ Future main() async {
       final img1 = gltf.images[1];
       expect(img1.bufferView, isNull);
       expect(img1.data.length, 69);
-      expect(img1.mimeType, 'image/png');
+      expect(img1.mimeType, isNull);
+      expect(img1.info.mimeType, 'image/png');
       expect(img1.extensions, isEmpty);
 
       final img2 = gltf.images[2];

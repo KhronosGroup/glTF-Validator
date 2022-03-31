@@ -74,7 +74,7 @@ class ExtTextureWebPTexture extends GltfProperty
 
   @override
   void validateResources(Gltf gltf, Context context) {
-    final mimeType = _source?.info?.mimeType;
+    final mimeType = _source?.mimeType ?? _source?.info?.mimeType;
     if (mimeType != null && mimeType != IMAGE_WEBP) {
       context
           .addIssue(LinkError.textureInvalidImageMimeType, name: SOURCE, args: [

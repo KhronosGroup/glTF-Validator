@@ -182,7 +182,7 @@ class ResourcesLoader {
               ..storage = _Storage.External
               ..uri = image.uri.toString();
             return externalStreamFetch(image.uri);
-          } else if (image.data != null && image.mimeType != null) {
+          } else if (image.data != null) {
             // Data URI, preloaded on phase 2 of GltfLoader
             resourceInfo.storage = _Storage.DataUri;
             return Stream.fromIterable([image.data]);
@@ -230,9 +230,12 @@ class ResourcesLoader {
 
           if (context.validate) {
             if (image.mimeType != null &&
-                (image.mimeType != imageInfo.mimeType)) {
+                image.mimeType != imageInfo.mimeType) {
               context.addIssue(DataError.imageMimeTypeInvalid,
-                  args: [imageInfo.mimeType, image.mimeType]);
+                  args: [imageInfo.mimeType, image.mimeType],
+                  name: resourceInfo.storage == _Storage.BufferView
+                      ? BUFFER_VIEW
+                      : URI);
             }
 
             if (!isPot(imageInfo.width) || !isPot(imageInfo.height)) {

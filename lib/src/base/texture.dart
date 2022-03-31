@@ -75,7 +75,7 @@ class Texture extends GltfChildOfRootProperty implements ResourceValidatable {
   void validateResources(Gltf gltf, Context context) {
     // The core spec allows only JPEG and PNG.
     const types = [IMAGE_JPEG, IMAGE_PNG];
-    final mimeType = _source?.info?.mimeType;
+    final mimeType = _source?.mimeType ?? _source?.info?.mimeType;
     if (mimeType != null && !types.contains(mimeType)) {
       context.addIssue(LinkError.textureInvalidImageMimeType,
           name: SOURCE, args: [mimeType, types]);
