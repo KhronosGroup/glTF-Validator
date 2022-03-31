@@ -18,7 +18,6 @@ library gltf.extensions.khr_materials_pbr_specular_glossiness;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
-import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_PBRSPECULARGLOSSINESS =
     'KHR_materials_pbrSpecularGlossiness';

@@ -6,7 +6,6 @@ library gltf.extensions.khr_materials_specular;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
-import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_SPECULAR = 'KHR_materials_specular';
 

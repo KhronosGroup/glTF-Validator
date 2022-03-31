@@ -6,7 +6,6 @@ library gltf.extensions.khr_materials_volume;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
-import 'package:gltf/src/utils.dart';
 
 const String KHR_MATERIALS_VOLUME = 'KHR_materials_volume';
 

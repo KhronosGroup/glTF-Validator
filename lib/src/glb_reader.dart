@@ -22,8 +22,6 @@ import 'dart:typed_data';
 
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:gltf/src/errors.dart';
-
 import 'package:meta/meta.dart';
 
 class GlbReader implements GltfReader {

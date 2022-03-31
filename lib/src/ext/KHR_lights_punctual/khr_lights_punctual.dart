@@ -18,7 +18,6 @@ library gltf.extensions.khr_lights_punctual;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
-import 'package:gltf/src/utils.dart';
 
 const Extension khrLightsPunctualExtension =
     Extension('KHR_lights_punctual', <Type, ExtensionDescriptor>{

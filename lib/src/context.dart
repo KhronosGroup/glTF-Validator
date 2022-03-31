@@ -19,7 +19,6 @@ library gltf.context;
 import 'dart:collection';
 
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/ext/extensions.dart';
 import 'package:gltf/src/gl.dart' as gl;
 

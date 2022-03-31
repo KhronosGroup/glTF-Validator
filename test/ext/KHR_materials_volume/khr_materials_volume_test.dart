@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:test/test.dart';
 import 'package:gltf/gltf.dart';
+import 'package:test/test.dart';
 
 import '../../utils.dart';
 

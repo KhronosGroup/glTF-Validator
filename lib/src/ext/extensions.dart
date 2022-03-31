@@ -16,9 +16,7 @@
 
 library gltf.extensions;
 
-import 'package:gltf/src/hash.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-
 import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
@@ -32,6 +30,7 @@ import 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart'
 import 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
+import 'package:gltf/src/hash.dart';
 import 'package:meta/meta.dart';
 
 export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';

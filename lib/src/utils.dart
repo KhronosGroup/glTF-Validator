@@ -20,11 +20,10 @@ import 'dart:collection';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:vector_math/vector_math.dart';
-
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
 import 'package:gltf/src/gl.dart' as gl;
+import 'package:vector_math/vector_math.dart';
 
 const _kArray = 'array';
 const _kBoolean = 'boolean';

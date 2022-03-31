@@ -16,21 +16,7 @@
 
 library gltf.base.gltf;
 
-import 'package:gltf/src/base/accessor.dart';
-import 'package:gltf/src/base/animation.dart';
-import 'package:gltf/src/base/asset.dart';
-import 'package:gltf/src/base/buffer.dart';
-import 'package:gltf/src/base/buffer_view.dart';
-import 'package:gltf/src/base/camera.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:gltf/src/base/image.dart';
-import 'package:gltf/src/base/material.dart';
-import 'package:gltf/src/base/mesh.dart';
-import 'package:gltf/src/base/node.dart';
-import 'package:gltf/src/base/sampler.dart';
-import 'package:gltf/src/base/scene.dart';
-import 'package:gltf/src/base/skin.dart';
-import 'package:gltf/src/base/texture.dart';
 
 export 'package:gltf/src/base/accessor.dart';
 export 'package:gltf/src/base/animation.dart';

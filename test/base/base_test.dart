@@ -18,10 +18,9 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:gltf/gltf.dart';
 import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:test/test.dart';
-
-import 'package:gltf/gltf.dart';
 
 import '../utils.dart';
 

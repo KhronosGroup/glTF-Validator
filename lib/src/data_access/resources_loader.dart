@@ -18,7 +18,6 @@ library gltf.data_access.resources_loader;
 
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:gltf/src/data_access/validate_accessors.dart';
