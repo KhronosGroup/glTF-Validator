@@ -8,7 +8,8 @@
                 {
                     "attributes": {
                         "POSITION": 0,
-                        "COLOR_0": 1
+                        "COLOR_0": 1,
+                        "COLOR_1": 1
                     }
                 }
             ]

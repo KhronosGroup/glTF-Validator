@@ -402,7 +402,7 @@ class MeshPrimitive extends GltfProperty {
                     UnitVec3SignFloatChecker(context.getPointerString(),
                         accessor.isFloat ? null : accessor.normalizeValue));
                 context.path.removeLast();
-              } else if (semantic.startsWith('${COLOR_}_') &&
+              } else if (semantic == '${COLOR_}_0' &&
                   gl.FLOAT == accessor.componentType) {
                 accessor.setClamped();
                 context.path.add(semantic);
