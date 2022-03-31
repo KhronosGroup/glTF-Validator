@@ -111,7 +111,7 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrTextureTransformExtension
 ];
 
-// https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md
+// https://github.com/KhronosGroup/glTF/blob/main/extensions/Prefixes.md
 const Set<String> kReservedPrefixes = <String>{
   'KHR',
   'EXT',
@@ -130,7 +130,9 @@ const Set<String> kReservedPrefixes = <String>{
   'CITRUS',
   'CLO',
   'CVTOOLS',
+  'EMBARK',
   'EPIC',
+  'F8',
   'FB',
   'FOXIT',
   'GOOGLE',
@@ -142,18 +144,26 @@ const Set<String> kReservedPrefixes = <String>{
   'MOZ',
   'MPEG',
   'MSFT',
+  'MX',
+  'NEEDLE',
   'NV',
   'OFT',
+  'OMI',
+  'OTOY',
   'OWLII',
   'PANDA3D',
   'POLUTROPON',
   'PTC',
   'S8S',
+  'SE',
   'SEIN',
+  'SHAPEDIVER',
   'SI',
   'SKFB',
   'SKYLINE',
+  'SNAP',
   'SPECTRUM',
+  'TENCENT',
   'TRYON',
   'UX3D',
   'VRMC',
