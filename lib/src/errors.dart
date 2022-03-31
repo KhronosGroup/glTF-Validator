@@ -181,7 +181,7 @@ class DataError extends IssueType {
       Severity.Warning);
 
   static final DataError dataUriGlb = DataError._('DATA_URI_GLB',
-      (args) => 'Data URI is used in GLB container.', Severity.Information);
+      (args) => 'Data URI is used in GLB container.', Severity.Warning);
 
   static final DataError accessorJointsIndexOob = DataError._(
       'ACCESSOR_JOINTS_INDEX_OOB',

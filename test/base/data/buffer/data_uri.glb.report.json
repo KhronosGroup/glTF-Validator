@@ -1,17 +1,17 @@
 {
     "uri": "test/base/data/buffer/data_uri.glb",
     "mimeType": "model/gltf-binary",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 0,
-        "numWarnings": 0,
-        "numInfos": 2,
+        "numWarnings": 1,
+        "numInfos": 1,
         "numHints": 0,
         "messages": [
             {
                 "code": "DATA_URI_GLB",
                 "message": "Data URI is used in GLB container.",
-                "severity": 2,
+                "severity": 1,
                 "pointer": "/buffers/0/uri"
             },
             {
