@@ -308,8 +308,7 @@ class SemanticError extends IssueType {
   static final SemanticError minVersionGreaterThanVersion = SemanticError._(
       'ASSET_MIN_VERSION_GREATER_THAN_VERSION',
       (args) => 'Asset minVersion ${_q(args[0])} is greater '
-          'than version ${_q(args[1])}.',
-      Severity.Warning);
+          'than version ${_q(args[1])}.');
 
   static final SemanticError invalidGlValue = SemanticError._(
       'INVALID_GL_VALUE',
