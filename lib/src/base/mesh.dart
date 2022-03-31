@@ -45,7 +45,6 @@ class Mesh extends GltfChildOfRootProperty {
 
       context.path.add(PRIMITIVES);
       int targetsCount;
-      var jointsCount = -1;
       for (var i = 0; i < primitivesMaps.length; i++) {
         context.path.add(i.toString());
         final primitive = MeshPrimitive.fromMap(primitivesMaps[i], context);
@@ -55,13 +54,6 @@ class Mesh extends GltfChildOfRootProperty {
           } else if (targetsCount != primitive._targetsIndices?.length) {
             context.addIssue(SemanticError.meshPrimitivesUnequalTargetsCount,
                 name: TARGETS);
-          }
-
-          if (jointsCount == -1) {
-            jointsCount = primitive.jointsCount;
-          } else if (jointsCount != primitive.jointsCount) {
-            context.addIssue(SemanticError.meshPrimitivesUnequalJointsCount,
-                name: ATTRIBUTES);
           }
         }
         primitives[i] = primitive;

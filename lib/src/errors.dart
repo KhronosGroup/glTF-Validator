@@ -387,12 +387,6 @@ class SemanticError extends IssueType {
           (args) =>
               'All primitives must have the same number of morph targets.');
 
-  static final SemanticError meshPrimitivesUnequalJointsCount = SemanticError._(
-      'MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT',
-      (args) => "All primitives should contain the same number of 'JOINTS' "
-          "and 'WEIGHTS' attribute sets.",
-      Severity.Warning);
-
   static final SemanticError meshPrimitiveNoPosition = SemanticError._(
       'MESH_PRIMITIVE_NO_POSITION',
       (args) => 'No POSITION attribute found.',
