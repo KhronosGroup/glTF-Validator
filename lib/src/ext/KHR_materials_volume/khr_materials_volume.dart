@@ -80,7 +80,11 @@ class KhrMaterialsVolume extends GltfProperty {
     while (o != null) {
       o = context.owners[o];
       if (o is Material) {
-        if (!o.extensions.containsKey(KHR_MATERIALS_TRANSMISSION)) {
+        // The volume extension needs to be combined with an extension
+        // that allows light to transmit through the surface.
+        // Also suppress the warning when an unknown extension is present.
+        if (!o.extensions.containsKey(KHR_MATERIALS_TRANSMISSION) &&
+            !o.extensions.values.any((e) => e is Map)) {
           context.addIssue(SemanticError.khrMaterialsVolumeNoTransmission);
         }
         break;
