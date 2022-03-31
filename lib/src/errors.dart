@@ -658,7 +658,7 @@ class LinkError extends IssueType {
 
   static final LinkError meshPrimitiveMorphTargetNoBaseAccessor = LinkError._(
       'MESH_PRIMITIVE_MORPH_TARGET_NO_BASE_ACCESSOR',
-      (args) => 'No base accessor for this attribute semantic.');
+      (args) => 'The mesh primitive does not define this attribute semantic.');
 
   static final LinkError meshPrimitiveMorphTargetInvalidAttributeCount =
       LinkError._('MESH_PRIMITIVE_MORPH_TARGET_INVALID_ATTRIBUTE_COUNT',
