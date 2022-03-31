@@ -357,10 +357,13 @@ class SemanticError extends IssueType {
       'BUFFER_VIEW_INVALID_BYTE_STRIDE',
       (args) => 'Only buffer views with raw vertex data can have byteStride.');
 
-  static final SemanticError cameraXmagYmagZero = SemanticError._(
-      'CAMERA_XMAG_YMAG_ZERO',
-      (args) => 'xmag and ymag must not be zero.',
+  static final SemanticError cameraXmagYmagNegative = SemanticError._(
+      'CAMERA_XMAG_YMAG_NEGATIVE',
+      (args) => 'xmag and ymag should not be negative.',
       Severity.Warning);
+
+  static final SemanticError cameraXmagYmagZero = SemanticError._(
+      'CAMERA_XMAG_YMAG_ZERO', (args) => 'xmag and ymag must not be zero.');
 
   static final SemanticError cameraYFovGequalPi = SemanticError._(
       'CAMERA_YFOV_GEQUAL_PI',
