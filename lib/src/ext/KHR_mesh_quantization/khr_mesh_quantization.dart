@@ -69,6 +69,9 @@ void _init(Context context) {
     AccessorFormat(VEC3, gl.BYTE, normalized: true),
     AccessorFormat(VEC3, gl.SHORT, normalized: true)
   ]);
+
+  context.morphAttributeAccessorFormats[TEXCOORD_].addAll(
+      const [AccessorFormat(VEC2, gl.BYTE), AccessorFormat(VEC2, gl.SHORT)]);
 }
 
 const Extension khrMeshQuantizationExtension = Extension(
