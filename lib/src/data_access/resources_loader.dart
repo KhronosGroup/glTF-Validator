@@ -103,34 +103,36 @@ class ResourcesLoader {
       final info = ResourceInfo(context.getPointerString())
         ..mimeType = APPLICATION_GLTF_BUFFER;
 
-      FutureOr<List<int>> _fetchBuffer(Buffer buffer) {
-        if (buffer.extensions.isEmpty) {
-          if (buffer.uri != null) {
-            // External fetch
-            info
-              ..storage = _Storage.External
-              ..uri = buffer.uri.toString();
-            return externalBytesFetch(buffer.uri);
-          } else if (buffer.data != null) {
-            // Data URI
-            info.storage = _Storage.DataUri;
-            return buffer.data;
-          } else if (context.isGlb && i == 0 && !buffer.hasUri) {
-            // GLB Buffer
-            info.storage = _Storage.GLB;
-            final data = externalBytesFetch();
-            if (context.validate && data == null) {
-              context.addIssue(LinkError.bufferMissingGlbData);
-            }
-            return data;
+      FutureOr<Uint8List> _fetchBuffer(Buffer buffer) {
+        // Ignore buffers with invalid byte length
+        if (buffer.byteLength == -1) {
+          return null;
+        }
+        if (buffer.uri != null) {
+          // External fetch
+          info
+            ..storage = _Storage.External
+            ..uri = buffer.uri.toString();
+          return externalBytesFetch(buffer.uri);
+        } else if (buffer.data != null) {
+          // Data URI
+          info.storage = _Storage.DataUri;
+          return buffer.data;
+        } else if (context.isGlb && i == 0 && !buffer.hasUri) {
+          // GLB Buffer
+          info.storage = _Storage.GLB;
+          final data = externalBytesFetch();
+          if (context.validate && data == null) {
+            context.addIssue(LinkError.bufferMissingGlbData);
           }
+          return data;
         }
         return null;
       }
 
       Uint8List data;
       try {
-        data = await _fetchBuffer(buffer) as Uint8List;
+        data = await _fetchBuffer(buffer);
       } on Exception catch (e) {
         // likely IO error
         context.addIssue(IoError.ioError, args: [e], name: URI);
@@ -139,7 +141,7 @@ class ResourcesLoader {
       if (data != null) {
         info.byteLength = data.length;
         if (data.length < buffer.byteLength) {
-          context.addIssue(DataError.bufferExternalBytelengthMismatch,
+          context.addIssue(DataError.bufferByteLengthMismatch,
               args: [data.length, buffer.byteLength]);
         } else {
           if (context.isGlb && i == 0 && !buffer.hasUri) {

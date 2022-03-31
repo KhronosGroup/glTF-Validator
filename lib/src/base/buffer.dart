@@ -39,7 +39,7 @@ class Buffer extends GltfChildOfRootProperty {
       checkMembers(map, BUFFER_MEMBERS, context);
     }
 
-    var byteLength = getUint(map, BYTE_LENGTH, context, min: 1, req: true);
+    final byteLength = getUint(map, BYTE_LENGTH, context, min: 1, req: true);
 
     Uri uri;
     Uint8List data;
@@ -72,11 +72,6 @@ class Buffer extends GltfChildOfRootProperty {
             context.addIssue(SemanticError.bufferDataUriMimeTypeInvalid,
                 name: URI, args: [uriData.mimeType]);
           }
-        }
-        if (data != null && byteLength != -1 && data.length != byteLength) {
-          context.addIssue(DataError.bufferEmbeddedBytelengthMismatch,
-              args: [data.length, byteLength], name: BYTE_LENGTH);
-          byteLength = data.length;
         }
       }
     }

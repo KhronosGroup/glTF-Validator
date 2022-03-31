@@ -732,7 +732,7 @@ bool isNonRelativeUri(Uri uri) =>
     uri.hasQuery ||
     uri.hasFragment;
 
-int padLength(int length) => length + ((4 - (length & 3)) & 3);
+int padLength(int length) => length + (-length & 3);
 
 List<int> createTypedIntList(int type, int length) {
   assert(length > 0);

@@ -44,15 +44,10 @@ const unitLengthThresholdVec4 = 0.00769;
 const unitSumThresholdStep = 0.0039216;
 
 class DataError extends IssueType {
-  static final DataError bufferEmbeddedBytelengthMismatch = DataError._(
-      'BUFFER_EMBEDDED_BYTELENGTH_MISMATCH',
-      (args) => 'Actual Data URI encoded data length ${args[0]} is not equal '
-          'to the declared buffer byteLength ${args[1]}.');
-
-  static final DataError bufferExternalBytelengthMismatch = DataError._(
-      'BUFFER_EXTERNAL_BYTELENGTH_MISMATCH',
-      (args) => 'Actual data length ${args[0]} is less than '
-          'the declared buffer byteLength ${args[1]}.');
+  static final DataError bufferByteLengthMismatch = DataError._(
+      'BUFFER_BYTE_LENGTH_MISMATCH',
+      (args) => 'Actual data byte length (${args[0]}) is less than '
+          'the declared buffer byte length (${args[1]}).');
 
   static final DataError bufferGlbChunkTooBig = DataError._(
       'BUFFER_GLB_CHUNK_TOO_BIG',

@@ -1,7 +1,7 @@
 {
     "uri": "test/base/data/buffer/wrong_bytelength.glb",
     "mimeType": "model/gltf-binary",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
@@ -15,8 +15,8 @@
                 "pointer": "/buffers/0"
             },
             {
-                "code": "BUFFER_EXTERNAL_BYTELENGTH_MISMATCH",
-                "message": "Actual data length 16 is less than the declared buffer byteLength 17.",
+                "code": "BUFFER_BYTE_LENGTH_MISMATCH",
+                "message": "Actual data byte length (16) is less than the declared buffer byte length (17).",
                 "severity": 0,
                 "pointer": "/buffers/0"
             }
