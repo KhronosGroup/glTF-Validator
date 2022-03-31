@@ -85,8 +85,15 @@ class Animation extends GltfChildOfRootProperty {
               name: INPUT, args: [sampler._inputIndex]);
         } else {
           sampler._input.setUsage(AccessorUsage.AnimationInput, INPUT, context);
-          sampler._input.bufferView
-              ?.setUsage(BufferViewUsage.Other, INPUT, context);
+
+          final inputBufferView = sampler._input.bufferView;
+          if (inputBufferView != null) {
+            inputBufferView.setUsage(BufferViewUsage.Other, INPUT, context);
+            if (context.validate && inputBufferView.byteStride != -1) {
+              context.addIssue(LinkError.animationSamplerAccessorWithByteStride,
+                  name: INPUT);
+            }
+          }
 
           if (context.validate) {
             context.path.add(INPUT);
@@ -126,6 +133,15 @@ class Animation extends GltfChildOfRootProperty {
         } else {
           sampler._output
               .setUsage(AccessorUsage.AnimationOutput, OUTPUT, context);
+          final outputBufferView = sampler._output.bufferView;
+          if (outputBufferView != null) {
+            outputBufferView.setUsage(BufferViewUsage.Other, OUTPUT, context);
+            if (context.validate && outputBufferView.byteStride != -1) {
+              context.addIssue(LinkError.animationSamplerAccessorWithByteStride,
+                  name: OUTPUT);
+            }
+          }
+
           sampler._output.bufferView
               ?.setUsage(BufferViewUsage.Other, OUTPUT, context);
           sampler._output

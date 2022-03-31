@@ -319,6 +319,7 @@
             "custom_property.gltf": "Custom property",
             "empty_array.gltf": "Empty array",
             "empty_objects.gltf": "Empty objects",
+            "sampler_bufferview_bytestride.gltf": "Sampler accessors using buffer views with byteStride",
             "sampler_input_format_invalid.gltf": "Sampler input format invalid",
             "sampler_input_no_bounds.gltf": "Sampler input without bounds",
             "sampler_output_count_invalid.gltf": "Sampler output count invalid",

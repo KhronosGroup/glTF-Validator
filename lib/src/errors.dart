@@ -578,6 +578,11 @@ class LinkError extends IssueType {
           (args) => 'Animation sampler output accessor of count '
               '${args[0]} expected. Found ${args[1]}.');
 
+  static final LinkError animationSamplerAccessorWithByteStride = LinkError._(
+      'ANIMATION_SAMPLER_ACCESSOR_WITH_BYTESTRIDE',
+      (args) => 'bufferView.byteStride must not be defined for '
+          'buffer views used by animation sampler accessors.');
+
   static final LinkError bufferMissingGlbData = LinkError._(
       'BUFFER_MISSING_GLB_DATA',
       (args) => 'Buffer refers to an unresolved GLB binary chunk.');
