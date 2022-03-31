@@ -532,6 +532,13 @@ class MeshPrimitive extends GltfProperty {
         }
       }
 
+      if (hasTangent && (_material == null || !_material.needsTangent)) {
+        context
+          ..path.add(ATTRIBUTES)
+          ..addIssue(LinkError.unusedMeshTangent, name: TANGENT)
+          ..path.removeLast();
+      }
+
       for (final unusedIndex in _unusedTexCoords.where((i) => i != -1)) {
         context
           ..path.add(ATTRIBUTES)

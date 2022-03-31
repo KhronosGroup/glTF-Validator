@@ -9,8 +9,10 @@
                     "attributes": {
                         "POSITION": 0,
                         "NORMAL": 1,
-                        "TANGENT": 2
-                    }
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3
+                    },
+                    "material": 0
                 }
             ]
         }
@@ -42,6 +44,11 @@
             "componentType": 5126,
             "count": 3,
             "bufferView": 1
+        },
+        {
+            "type": "VEC2",
+            "componentType": 5126,
+            "count": 3
         }
     ],
     "bufferViews": [
@@ -60,5 +67,15 @@
             "byteLength": 84,
             "uri": "normals_tangents_non_unit_invalid_sign.bin"
         }
+    ],
+    "materials": [
+        {
+            "normalTexture": {
+                "index": 0
+            }
+        }
+    ],
+    "textures": [
+        {}
     ]
 }

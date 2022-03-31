@@ -28,6 +28,10 @@ class Material extends GltfChildOfRootProperty {
   final double alphaCutoff;
   final bool doubleSided;
 
+  bool _needsTangent = false;
+
+  bool get needsTangent => _needsTangent;
+
   final Map<String, int> texCoordIndices = <String, int>{};
 
   Material._(
@@ -237,6 +241,19 @@ class NormalTextureInfo extends TextureInfo {
     context.registerObjectsOwner(normalTextureInfo, extensions.values);
 
     return normalTextureInfo;
+  }
+
+  @override
+  void link(Gltf gltf, Context context) {
+    super.link(gltf, context);
+    Object o = this;
+    while (o != null) {
+      o = context.owners[o];
+      if (o is Material) {
+        o._needsTangent = true;
+        break;
+      }
+    }
   }
 }
 

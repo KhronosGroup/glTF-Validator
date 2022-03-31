@@ -728,6 +728,12 @@ class LinkError extends IssueType {
       (args) => 'The static morph target weights are always overridden.',
       Severity.Information);
 
+  static final LinkError unusedMeshTangent = LinkError._(
+      'UNUSED_MESH_TANGENT',
+      (args) =>
+          'Tangents are not used because the material has no normal texture.',
+      Severity.Information);
+
   static final LinkError khrMaterialsVariantsNonUniqueVariant = LinkError._(
       'KHR_MATERIALS_VARIANTS_NON_UNIQUE_VARIANT',
       (args) => 'This variant is used more than once for this mesh primitive.');

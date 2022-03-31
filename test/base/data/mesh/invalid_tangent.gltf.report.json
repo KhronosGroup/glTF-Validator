@@ -5,13 +5,19 @@
     "issues": {
         "numErrors": 0,
         "numWarnings": 1,
-        "numInfos": 1,
+        "numInfos": 2,
         "numHints": 0,
         "messages": [
             {
                 "code": "MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL",
                 "message": "TANGENT attribute without NORMAL found.",
                 "severity": 1,
+                "pointer": "/meshes/0/primitives/0/attributes/TANGENT"
+            },
+            {
+                "code": "UNUSED_MESH_TANGENT",
+                "message": "Tangents are not used because the material has no normal texture.",
+                "severity": 2,
                 "pointer": "/meshes/0/primitives/0/attributes/TANGENT"
             },
             {
