@@ -574,15 +574,12 @@ Future main() async {
 
     group('Stream Detection', () {
       test('Empty Stream', () {
-        expect(GltfReader.detect(Stream.fromIterable([Uint8List(0)])),
+        expect(GltfReader.detect(Stream.value(Uint8List(0))),
             throwsA(const TypeMatcher<GltfInvalidFormatException>()));
       });
 
       test('Invalid Stream', () {
-        expect(
-            GltfReader.detect(Stream.fromIterable([
-              Uint8List.fromList([99])
-            ])),
+        expect(GltfReader.detect(Stream.value(Uint8List.fromList([99]))),
             throwsA(const TypeMatcher<GltfInvalidFormatException>()));
       });
 

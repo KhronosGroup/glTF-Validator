@@ -67,7 +67,6 @@ class ExtTextureWebPTexture extends GltfProperty
             name: SOURCE, args: [_sourceIndex]);
       } else {
         _source.markAsUsed();
-        if (_source.mimeType != null && _source.mimeType != IMAGE_WEBP) {}
       }
     }
   }

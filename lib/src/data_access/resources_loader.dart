@@ -47,17 +47,14 @@ class ResourceInfo {
       'external'
     ];
 
-    final map = <String, Object>{
+    return <String, Object>{
       'pointer': pointer,
       if (mimeType != null) 'mimeType': mimeType,
-      if (storage != null) 'storage': storageString[storage.index]
+      if (storage != null) 'storage': storageString[storage.index],
+      if (uri != null) 'uri': uri,
+      if (byteLength != null) 'byteLength': byteLength,
+      if (image != null) 'image': image.toMap()
     };
-
-    addToMapIfNotNull(map, 'uri', uri);
-    addToMapIfNotNull(map, 'byteLength', byteLength);
-    addToMapIfNotNull(map, 'image', image?.toMap());
-
-    return map;
   }
 }
 
@@ -185,13 +182,13 @@ class ResourcesLoader {
           } else if (image.data != null) {
             // Data URI, preloaded on phase 2 of GltfLoader
             resourceInfo.storage = _Storage.DataUri;
-            return Stream.fromIterable([image.data]);
+            return Stream.value(image.data);
           } else if (image.bufferView != null) {
             // BufferView
             resourceInfo.storage = _Storage.BufferView;
             image.tryLoadFromBufferView();
             if (image.data != null) {
-              return Stream.fromIterable([image.data]);
+              return Stream.value(image.data);
             }
           }
         }

@@ -118,8 +118,7 @@ Future<Map<String, Object>> validateBytes(
 
   GltfReaderResult readerResult;
   try {
-    final reader =
-        await GltfReader.detect(Stream.fromIterable([data]), context);
+    final reader = await GltfReader.detect(Stream.value(data), context);
     readerResult = await reader.read();
   } on GltfInvalidFormatException {
     rethrow;

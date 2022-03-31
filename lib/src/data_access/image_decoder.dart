@@ -171,6 +171,13 @@ abstract class ImageInfoDecoder implements Sink<List<int>> {
       completer.completeError(const UnexpectedEndOfStreamException());
     }
   }
+
+  void _abort(Object error) {
+    subscription.cancel();
+    if (!completer.isCompleted) {
+      completer.completeError(error);
+    }
+  }
 }
 
 class JpegInfoDecoder extends ImageInfoDecoder {
@@ -632,13 +639,6 @@ class PngInfoDecoder extends ImageInfoDecoder {
       _primaries = _ColorPrimaries.Custom;
     }
   }
-
-  void _abort(Object error) {
-    subscription.cancel();
-    if (!completer.isCompleted) {
-      completer.completeError(error);
-    }
-  }
 }
 
 class WebPInfoDecoder extends ImageInfoDecoder {
@@ -741,13 +741,6 @@ class WebPInfoDecoder extends ImageInfoDecoder {
         colorPrimaries:
             hasCustomColorInfo ? _ColorPrimaries.Custom : _ColorPrimaries.sRGB,
         hasAnimation: hasAnimation));
-  }
-
-  void _abort(Object error) {
-    subscription.cancel();
-    if (!completer.isCompleted) {
-      completer.completeError(error);
-    }
   }
 }
 
