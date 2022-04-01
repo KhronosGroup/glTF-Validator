@@ -31,6 +31,7 @@
             "two_bin_chunks.glb": "Two BIN chunks",
             "two_empty_bin_chunks.glb": "Two empty BIN chunks",
             "two_empty_json_chunks.glb": "Two empty JSON chunks",
+            "two_images.glb": "Two images in the BIN chunk",
             "two_valid_json_chunks.glb": "Two valid JSON chunks",
             "unaligned_chunk.glb": "Unaligned chunk",
             "unknown_chunk.glb": "Unknown chunk",

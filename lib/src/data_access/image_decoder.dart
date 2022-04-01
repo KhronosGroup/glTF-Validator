@@ -125,7 +125,7 @@ class ImageInfo {
       return null;
     }
 
-    final byteData = firstChunk.buffer.asByteData();
+    final byteData = firstChunk.buffer.asByteData(firstChunk.offsetInBytes, 14);
     final dword0 = byteData.getUint32(0, Endian.little);
 
     // JPEG signature: FF D8 FF
