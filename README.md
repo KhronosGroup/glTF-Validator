@@ -1,5 +1,5 @@
 <p align="center">
-<img src="web/logos/glTF_RGB_June16.svg" alt=""/>
+<img src="web/logos/glTF_RGB_June16.svg" alt="" height="250"/>
 </p>
 
 # glTF-Validator
