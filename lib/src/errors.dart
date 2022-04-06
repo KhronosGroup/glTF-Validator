@@ -605,7 +605,7 @@ class LinkError extends IssueType {
   static final LinkError bufferViewTargetMissing = LinkError._(
       'BUFFER_VIEW_TARGET_MISSING',
       (args) => 'bufferView.target should be set for vertex or index data.',
-      Severity.Information);
+      Severity.Hint);
 
   static final LinkError imageBufferViewWithByteStride = LinkError._(
       'IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE',

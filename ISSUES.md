@@ -88,7 +88,7 @@
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT|Animation sampler output accessor of count `%1` expected. Found `%2`.|Error|
 |ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_FORMAT|Invalid animation sampler output accessor format '`%1`' for path '`%3`'. Must be one of ('`%a`', '`%b`', '`%c`').|Error|
 |BUFFER_MISSING_GLB_DATA|Buffer refers to an unresolved GLB binary chunk.|Error|
-|BUFFER_VIEW_TARGET_MISSING|bufferView.target should be set for vertex or index data.|Information|
+|BUFFER_VIEW_TARGET_MISSING|bufferView.target should be set for vertex or index data.|Hint|
 |BUFFER_VIEW_TARGET_OVERRIDE|Override of previously set bufferView target or usage. Initial: '`%1`', new: '`%2`'.|Error|
 |BUFFER_VIEW_TOO_LONG|BufferView does not fit buffer (`%1`) byteLength (`%2`).|Error|
 |IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views containing image data.|Error|

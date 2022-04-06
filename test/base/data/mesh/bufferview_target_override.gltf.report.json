@@ -5,13 +5,13 @@
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
-        "numInfos": 2,
-        "numHints": 0,
+        "numInfos": 1,
+        "numHints": 1,
         "messages": [
             {
                 "code": "BUFFER_VIEW_TARGET_MISSING",
                 "message": "bufferView.target should be set for vertex or index data.",
-                "severity": 2,
+                "severity": 3,
                 "pointer": "/meshes/0/primitives/0/attributes/POSITION"
             },
             {

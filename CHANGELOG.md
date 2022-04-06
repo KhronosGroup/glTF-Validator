@@ -14,7 +14,7 @@
 
 * Added `BUFFER_BYTE_LENGTH_MISMATCH` error.
 
-* Added `BUFFER_VIEW_TARGET_MISSING` info.
+* Added `BUFFER_VIEW_TARGET_MISSING` hint.
 
 * Added `CAMERA_XMAG_YMAG_NEGATIVE` warning.
 
