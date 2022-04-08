@@ -209,7 +209,7 @@ void _npmBuild({bool release = true}) {
     ..remove('devDependencies')
     ..remove('scripts');
 
-  log('copying updated $packageJson to $_nodeTarget');
+  log('Copying updated $packageJson to $_nodeTarget');
   File(p.join(_nodeTarget, packageJson))
       .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 
