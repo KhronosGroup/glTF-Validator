@@ -44,15 +44,10 @@ const unitLengthThresholdVec4 = 0.00769;
 const unitSumThresholdStep = 0.0039216;
 
 class DataError extends IssueType {
-  static final DataError bufferEmbeddedBytelengthMismatch = DataError._(
-      'BUFFER_EMBEDDED_BYTELENGTH_MISMATCH',
-      (args) => 'Actual Data URI encoded data length ${args[0]} is not equal '
-          'to the declared buffer byteLength ${args[1]}.');
-
-  static final DataError bufferExternalBytelengthMismatch = DataError._(
-      'BUFFER_EXTERNAL_BYTELENGTH_MISMATCH',
-      (args) => 'Actual data length ${args[0]} is less than '
-          'the declared buffer byteLength ${args[1]}.');
+  static final DataError bufferByteLengthMismatch = DataError._(
+      'BUFFER_BYTE_LENGTH_MISMATCH',
+      (args) => 'Actual data byte length (${args[0]}) is less than '
+          'the declared buffer byte length (${args[1]}).');
 
   static final DataError bufferGlbChunkTooBig = DataError._(
       'BUFFER_GLB_CHUNK_TOO_BIG',
@@ -180,8 +175,11 @@ class DataError extends IssueType {
           'colorspace information, non-square pixels, or animation.',
       Severity.Warning);
 
+  static final DataError uriGlb = DataError._('URI_GLB',
+      (args) => 'URI is used in GLB container.', Severity.Information);
+
   static final DataError dataUriGlb = DataError._('DATA_URI_GLB',
-      (args) => 'Data URI is used in GLB container.', Severity.Information);
+      (args) => 'Data URI is used in GLB container.', Severity.Warning);
 
   static final DataError accessorJointsIndexOob = DataError._(
       'ACCESSOR_JOINTS_INDEX_OOB',
@@ -308,17 +306,11 @@ class SemanticError extends IssueType {
   static final SemanticError minVersionGreaterThanVersion = SemanticError._(
       'ASSET_MIN_VERSION_GREATER_THAN_VERSION',
       (args) => 'Asset minVersion ${_q(args[0])} is greater '
-          'than version ${_q(args[1])}.',
-      Severity.Warning);
+          'than version ${_q(args[1])}.');
 
   static final SemanticError invalidGlValue = SemanticError._(
       'INVALID_GL_VALUE',
       (args) => 'Invalid value ${args[0]} for GL type ${_q(args[1])}.');
-
-  static final SemanticError integerWrittenAsFloat = SemanticError._(
-      'INTEGER_WRITTEN_AS_FLOAT',
-      (args) => 'Integer value is written with fractional part: ${args[0]}.',
-      Severity.Warning);
 
   static final SemanticError accessorNormalizedInvalid = SemanticError._(
       'ACCESSOR_NORMALIZED_INVALID',
@@ -345,8 +337,7 @@ class SemanticError extends IssueType {
 
   static final SemanticError bufferDataUriMimeTypeInvalid = SemanticError._(
       'BUFFER_DATA_URI_MIME_TYPE_INVALID',
-      (args) =>
-          "Buffer's Data URI MIME-Type must be 'application/octet-stream' "
+      (args) => "Data URI media type must be 'application/octet-stream' "
           "or 'application/gltf-buffer'. Found ${_q(args[0])} instead.");
 
   static final SemanticError bufferViewTooBigByteStride = SemanticError._(
@@ -358,10 +349,13 @@ class SemanticError extends IssueType {
       'BUFFER_VIEW_INVALID_BYTE_STRIDE',
       (args) => 'Only buffer views with raw vertex data can have byteStride.');
 
-  static final SemanticError cameraXmagYmagZero = SemanticError._(
-      'CAMERA_XMAG_YMAG_ZERO',
-      (args) => 'xmag and ymag must not be zero.',
+  static final SemanticError cameraXmagYmagNegative = SemanticError._(
+      'CAMERA_XMAG_YMAG_NEGATIVE',
+      (args) => 'xmag and ymag should not be negative.',
       Severity.Warning);
+
+  static final SemanticError cameraXmagYmagZero = SemanticError._(
+      'CAMERA_XMAG_YMAG_ZERO', (args) => 'xmag and ymag must not be zero.');
 
   static final SemanticError cameraYFovGequalPi = SemanticError._(
       'CAMERA_YFOV_GEQUAL_PI',
@@ -384,12 +378,6 @@ class SemanticError extends IssueType {
           'MESH_PRIMITIVES_UNEQUAL_TARGETS_COUNT',
           (args) =>
               'All primitives must have the same number of morph targets.');
-
-  static final SemanticError meshPrimitivesUnequalJointsCount = SemanticError._(
-      'MESH_PRIMITIVES_UNEQUAL_JOINTS_COUNT',
-      (args) => "All primitives should contain the same number of 'JOINTS' "
-          "and 'WEIGHTS' attribute sets.",
-      Severity.Warning);
 
   static final SemanticError meshPrimitiveNoPosition = SemanticError._(
       'MESH_PRIMITIVE_NO_POSITION',
@@ -415,11 +403,6 @@ class SemanticError extends IssueType {
           'MESH_PRIMITIVE_JOINTS_WEIGHTS_MISMATCH',
           (args) => 'Number of JOINTS attribute semantics (${args[0]}) '
               'does not match the number of WEIGHTS (${args[1]}).');
-
-  static final SemanticError meshPrimitiveTangentPoints = SemanticError._(
-      'MESH_PRIMITIVE_TANGENT_POINTS',
-      (args) => 'TANGENT attribute defined for POINTS rendering mode.',
-      Severity.Warning);
 
   static final SemanticError meshInvalidWeightsCount = SemanticError._(
       'MESH_INVALID_WEIGHTS_COUNT',
@@ -511,6 +494,19 @@ class SemanticError extends IssueType {
       (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
           'innerConeAngle (${args[0]}).');
 
+  static final SemanticError khrMaterialsEmissiveStrengthZeroFactor =
+      SemanticError._(
+          'KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR',
+          (args) => 'Emissive strength has no effect '
+              'when the emissive factor is zero or undefined.',
+          Severity.Warning);
+
+  static final SemanticError khrMaterialsVolumeNoTransmission = SemanticError._(
+      'KHR_MATERIALS_VOLUME_NO_TRANSMISSION',
+      (args) => 'The volume extension needs to be combined with an extension '
+          'that allows light to transmit through the surface.',
+      Severity.Warning);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);
@@ -587,6 +583,11 @@ class LinkError extends IssueType {
           (args) => 'Animation sampler output accessor of count '
               '${args[0]} expected. Found ${args[1]}.');
 
+  static final LinkError animationSamplerAccessorWithByteStride = LinkError._(
+      'ANIMATION_SAMPLER_ACCESSOR_WITH_BYTESTRIDE',
+      (args) => 'bufferView.byteStride must not be defined for '
+          'buffer views used by animation sampler accessors.');
+
   static final LinkError bufferMissingGlbData = LinkError._(
       'BUFFER_MISSING_GLB_DATA',
       (args) => 'Buffer refers to an unresolved GLB binary chunk.');
@@ -601,6 +602,11 @@ class LinkError extends IssueType {
       (args) => 'Override of previously set bufferView target or usage. '
           'Initial: ${_q(args[0])}, new: ${_q(args[1])}.');
 
+  static final LinkError bufferViewTargetMissing = LinkError._(
+      'BUFFER_VIEW_TARGET_MISSING',
+      (args) => 'bufferView.target should be set for vertex or index data.',
+      Severity.Hint);
+
   static final LinkError imageBufferViewWithByteStride = LinkError._(
       'IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE',
       (args) => 'bufferView.byteStride must not be defined for '
@@ -608,7 +614,8 @@ class LinkError extends IssueType {
 
   static final LinkError invalidIbmAccessorCount = LinkError._(
       'INVALID_IBM_ACCESSOR_COUNT',
-      (args) => 'Accessor of count ${args[0]} expected. Found ${args[1]}.');
+      (args) => 'IBM accessor must have at least ${args[0]} elements.'
+          ' Found ${args[1]}.');
 
   static final LinkError meshPrimitiveAttributesAccessorInvalidFormat =
       LinkError._(
@@ -667,7 +674,7 @@ class LinkError extends IssueType {
 
   static final LinkError meshPrimitiveMorphTargetNoBaseAccessor = LinkError._(
       'MESH_PRIMITIVE_MORPH_TARGET_NO_BASE_ACCESSOR',
-      (args) => 'No base accessor for this attribute semantic.');
+      (args) => 'The mesh primitive does not define this attribute semantic.');
 
   static final LinkError meshPrimitiveMorphTargetInvalidAttributeCount =
       LinkError._('MESH_PRIMITIVE_MORPH_TARGET_INVALID_ATTRIBUTE_COUNT',
@@ -732,6 +739,17 @@ class LinkError extends IssueType {
   static final LinkError unusedObject = LinkError._('UNUSED_OBJECT',
       (args) => 'This object may be unused.', Severity.Information);
 
+  static final LinkError unusedMeshWeights = LinkError._(
+      'UNUSED_MESH_WEIGHTS',
+      (args) => 'The static morph target weights are always overridden.',
+      Severity.Information);
+
+  static final LinkError unusedMeshTangent = LinkError._(
+      'UNUSED_MESH_TANGENT',
+      (args) =>
+          'Tangents are not used because the material has no normal texture.',
+      Severity.Information);
+
   static final LinkError khrMaterialsVariantsNonUniqueVariant = LinkError._(
       'KHR_MATERIALS_VARIANTS_NON_UNIQUE_VARIANT',
       (args) => 'This variant is used more than once for this mesh primitive.');
@@ -768,6 +786,9 @@ class GlbError extends IssueType {
 
   static final GlbError emptyChunk = GlbError._('GLB_EMPTY_CHUNK',
       (args) => 'Chunk (${args[0]}) cannot have zero length.');
+
+  static final GlbError emptyBinChunk = GlbError._('GLB_EMPTY_BIN_CHUNK',
+      (args) => 'Empty BIN chunk should be omitted.', Severity.Information);
 
   static final GlbError duplicateChunk = GlbError._('GLB_DUPLICATE_CHUNK',
       (args) => 'Chunk of type ${args[0]} has already been used.');

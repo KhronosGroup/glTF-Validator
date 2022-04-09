@@ -198,6 +198,10 @@ class Node extends GltfChildOfRootProperty {
                   args: [weights.length, _mesh.primitives[0].targets?.length]);
             }
 
+            if (weights == null && _mesh.weights != null) {
+              _mesh.markWeightsAsUsed();
+            }
+
             if (_skin != null) {
               if (_mesh.primitives
                   .every((primitive) => primitive.jointsCount == 0)) {

@@ -1,10 +1,10 @@
 {
     "uri": "test/ext/KHR_materials_volume/data/material/out_of_range.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.4",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 4,
-        "numWarnings": 0,
+        "numWarnings": 1,
         "numInfos": 1,
         "numHints": 0,
         "messages": [
@@ -31,6 +31,12 @@
                 "message": "Value -1 is out of range.",
                 "severity": 0,
                 "pointer": "/materials/0/extensions/KHR_materials_volume/thicknessFactor"
+            },
+            {
+                "code": "KHR_MATERIALS_VOLUME_NO_TRANSMISSION",
+                "message": "The volume extension needs to be combined with an extension that allows light to transmit through the surface.",
+                "severity": 1,
+                "pointer": "/materials/0/extensions/KHR_materials_volume"
             },
             {
                 "code": "UNUSED_OBJECT",

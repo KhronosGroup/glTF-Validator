@@ -16,10 +16,9 @@
 
 import 'dart:async';
 
-import 'package:test/test.dart';
-
-import 'package:gltf/src/gl.dart' as gl;
 import 'package:gltf/src/base/gltf_property.dart';
+import 'package:gltf/src/gl.dart' as gl;
+import 'package:test/test.dart';
 
 import '../../utils.dart';
 

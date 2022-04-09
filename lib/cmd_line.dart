@@ -25,8 +25,8 @@ import 'package:args/args.dart';
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart';
-import 'package:isolate/load_balancer.dart';
 import 'package:isolate/isolate_runner.dart';
+import 'package:isolate/load_balancer.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 

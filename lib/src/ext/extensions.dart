@@ -16,12 +16,11 @@
 
 library gltf.extensions;
 
-import 'package:gltf/src/hash.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-
 import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
+import 'package:gltf/src/ext/KHR_materials_emissive_strength/khr_materials_emissive_strength.dart';
 import 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 import 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
@@ -32,11 +31,13 @@ import 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart'
 import 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
+import 'package:gltf/src/hash.dart';
 import 'package:meta/meta.dart';
 
 export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
 export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 export 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
+export 'package:gltf/src/ext/KHR_materials_emissive_strength/khr_materials_emissive_strength.dart';
 export 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
 export 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
@@ -97,6 +98,7 @@ const List<Extension> kDefaultExtensions = <Extension>[
   extTextureWebPExtension,
   khrLightsPunctualExtension,
   khrMaterialsClearcoatExtension,
+  khrMaterialsEmissiveStrengthExtension,
   khrMaterialsIorExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
   khrMaterialsSheenExtension,
@@ -109,7 +111,7 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrTextureTransformExtension
 ];
 
-// https://github.com/KhronosGroup/glTF/blob/master/extensions/Prefixes.md
+// https://github.com/KhronosGroup/glTF/blob/main/extensions/Prefixes.md
 const Set<String> kReservedPrefixes = <String>{
   'KHR',
   'EXT',
@@ -128,7 +130,9 @@ const Set<String> kReservedPrefixes = <String>{
   'CITRUS',
   'CLO',
   'CVTOOLS',
+  'EMBARK',
   'EPIC',
+  'F8',
   'FB',
   'FOXIT',
   'GOOGLE',
@@ -140,18 +144,26 @@ const Set<String> kReservedPrefixes = <String>{
   'MOZ',
   'MPEG',
   'MSFT',
+  'MX',
+  'NEEDLE',
   'NV',
   'OFT',
+  'OMI',
+  'OTOY',
   'OWLII',
   'PANDA3D',
   'POLUTROPON',
   'PTC',
   'S8S',
+  'SE',
   'SEIN',
+  'SHAPEDIVER',
   'SI',
   'SKFB',
   'SKYLINE',
+  'SNAP',
   'SPECTRUM',
+  'TENCENT',
   'TRYON',
   'UX3D',
   'VRMC',

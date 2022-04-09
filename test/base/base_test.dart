@@ -18,10 +18,9 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:gltf/gltf.dart';
 import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:test/test.dart';
-
-import 'package:gltf/gltf.dart';
 
 import '../utils.dart';
 
@@ -114,7 +113,8 @@ Future main() async {
       final img1 = gltf.images[1];
       expect(img1.bufferView, isNull);
       expect(img1.data.length, 69);
-      expect(img1.mimeType, 'image/png');
+      expect(img1.mimeType, isNull);
+      expect(img1.info.mimeType, 'image/png');
       expect(img1.extensions, isEmpty);
 
       final img2 = gltf.images[2];
@@ -574,15 +574,12 @@ Future main() async {
 
     group('Stream Detection', () {
       test('Empty Stream', () {
-        expect(GltfReader.detect(Stream.fromIterable([Uint8List(0)])),
+        expect(GltfReader.detect(Stream.value(Uint8List(0))),
             throwsA(const TypeMatcher<GltfInvalidFormatException>()));
       });
 
       test('Invalid Stream', () {
-        expect(
-            GltfReader.detect(Stream.fromIterable([
-              Uint8List.fromList([99])
-            ])),
+        expect(GltfReader.detect(Stream.value(Uint8List.fromList([99]))),
             throwsA(const TypeMatcher<GltfInvalidFormatException>()));
       });
 

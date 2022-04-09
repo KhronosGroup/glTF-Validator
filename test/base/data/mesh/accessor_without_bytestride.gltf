@@ -34,7 +34,8 @@
     "bufferViews": [
         {
             "buffer": 0,
-            "byteLength": 128
+            "byteLength": 128,
+            "target": 34962
         }
     ],
     "buffers": [

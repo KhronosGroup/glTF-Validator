@@ -20,7 +20,12 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
-enum _ImageCodec { JPEG, PNG, WebP }
+enum ImageCodec { JPEG, PNG, WebP, KTX2 }
+
+extension ImageCodecMimeType on ImageCodec {
+  String get mimeType =>
+      const ['image/jpeg', 'image/png', 'image/webp', 'image/ktx2'][index];
+}
 
 enum _ColorPrimaries { Unknown, sRGB, Custom }
 
@@ -85,28 +90,22 @@ class ImageInfo {
 
     subscription = data.listen((data) {
       if (!isDetected) {
-        if (data.length < 9) {
-          subscription.cancel();
-          completer.completeError(const UnexpectedEndOfStreamException());
-          return;
-        } else {
-          switch (_detectCodec(data)) {
-            case _ImageCodec.JPEG:
-              decoder = JpegInfoDecoder(subscription, completer);
-              break;
-            case _ImageCodec.PNG:
-              decoder = PngInfoDecoder(subscription, completer);
-              break;
-            case _ImageCodec.WebP:
-              decoder = WebPInfoDecoder(subscription, completer);
-              break;
-            default:
-              subscription.cancel();
-              completer.completeError(const UnsupportedImageFormatException());
-              return;
-          }
-          isDetected = true;
+        switch (detectCodec(data as Uint8List)) {
+          case ImageCodec.JPEG:
+            decoder = JpegInfoDecoder(subscription, completer);
+            break;
+          case ImageCodec.PNG:
+            decoder = PngInfoDecoder(subscription, completer);
+            break;
+          case ImageCodec.WebP:
+            decoder = WebPInfoDecoder(subscription, completer);
+            break;
+          default:
+            subscription.cancel();
+            completer.completeError(const UnsupportedImageFormatException());
+            return;
         }
+        isDetected = true;
       }
       decoder.add(data);
     }, onError: (Object e) {
@@ -119,29 +118,41 @@ class ImageInfo {
     return completer.future;
   }
 
-  static _ImageCodec _detectCodec(List<int> firstChunk) {
-    const JPEG = <int>[0xFF, 0xD8];
-    const PNG = <int>[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
-    const WEBP = <int>[0x52, 0x49, 0x46, 0x46];
-
-    bool beginsWith(List<int> a, List<int> b) {
-      for (var i = 0; i < b.length; i++) {
-        if (a[i] != b[i]) {
-          return false;
-        }
-      }
-      return true;
+  static ImageCodec detectCodec(Uint8List firstChunk) {
+    // Although only WebP detection requires 14 bytes,
+    // valid images of other supported formats cannot be smaller than that.
+    if (firstChunk.length < 14) {
+      return null;
     }
 
-    if (beginsWith(firstChunk, JPEG)) {
-      return _ImageCodec.JPEG;
+    final byteData = firstChunk.buffer.asByteData(firstChunk.offsetInBytes, 14);
+    final dword0 = byteData.getUint32(0, Endian.little);
+
+    // JPEG signature: FF D8 FF
+    if (dword0 & 0xFFFFFF == 0xFFD8FF) {
+      return ImageCodec.JPEG;
     }
-    if (beginsWith(firstChunk, PNG)) {
-      return _ImageCodec.PNG;
+
+    // PNG signature: 89 50 4E 47 0D 0A 1A 0A
+    if (dword0 == 0x474E5089 &&
+        byteData.getUint32(4, Endian.little) == 0x0A1A0A0D) {
+      return ImageCodec.PNG;
     }
-    if (beginsWith(firstChunk, WEBP)) {
-      return _ImageCodec.WebP;
+
+    // WebP signature: 52 49 46 46 XX XX XX XX 57 45 42 50 56 50
+    if (dword0 == 0x46464952 &&
+        byteData.getUint32(8, Endian.little) == 0x50424557 &&
+        byteData.getUint16(12, Endian.little) == 0x5056) {
+      return ImageCodec.WebP;
     }
+
+    // KTX2 signature: AB 4B 54 58 20 32 30 BB 0D 0A 1A 0A
+    if (dword0 == 0x58544BAB &&
+        byteData.getUint32(4, Endian.little) == 0xBB303220 &&
+        byteData.getUint32(8, Endian.little) == 0x0A1A0A0D) {
+      return ImageCodec.KTX2;
+    }
+
     return null;
   }
 }
@@ -157,6 +168,13 @@ abstract class ImageInfoDecoder implements Sink<List<int>> {
     subscription.cancel();
     if (!completer.isCompleted) {
       completer.completeError(const UnexpectedEndOfStreamException());
+    }
+  }
+
+  void _abort(Object error) {
+    subscription.cancel();
+    if (!completer.isCompleted) {
+      completer.completeError(error);
     }
   }
 }
@@ -302,6 +320,9 @@ class JpegInfoDecoder extends ImageInfoDecoder {
       format = Format.RGB;
     } else if (data[5] == 1) {
       format = Format.Luminance;
+    } else {
+      throw const InvalidDataFormatException(
+          'Invalid number of JPEG color channels.');
     }
 
     completer.complete(ImageInfo._(mimeType, bits, format, width, height));
@@ -617,13 +638,6 @@ class PngInfoDecoder extends ImageInfoDecoder {
       _primaries = _ColorPrimaries.Custom;
     }
   }
-
-  void _abort(Object error) {
-    subscription.cancel();
-    if (!completer.isCompleted) {
-      completer.completeError(error);
-    }
-  }
 }
 
 class WebPInfoDecoder extends ImageInfoDecoder {
@@ -726,13 +740,6 @@ class WebPInfoDecoder extends ImageInfoDecoder {
         colorPrimaries:
             hasCustomColorInfo ? _ColorPrimaries.Custom : _ColorPrimaries.sRGB,
         hasAnimation: hasAnimation));
-  }
-
-  void _abort(Object error) {
-    subscription.cancel();
-    if (!completer.isCompleted) {
-      completer.completeError(error);
-    }
   }
 }
 

@@ -1,0 +1,47 @@
+{
+    "uri": "test/base/data/animation/sampler_bufferview_bytestride.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.6",
+    "issues": {
+        "numErrors": 2,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "ANIMATION_SAMPLER_ACCESSOR_WITH_BYTESTRIDE",
+                "message": "bufferView.byteStride must not be defined for buffer views used by animation sampler accessors.",
+                "severity": 0,
+                "pointer": "/animations/0/samplers/0/input"
+            },
+            {
+                "code": "ANIMATION_SAMPLER_ACCESSOR_WITH_BYTESTRIDE",
+                "message": "bufferView.byteStride must not be defined for buffer views used by animation sampler accessors.",
+                "severity": 0,
+                "pointer": "/animations/0/samplers/0/output"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "resources": [
+            {
+                "pointer": "/buffers/0",
+                "mimeType": "application/gltf-buffer"
+            }
+        ],
+        "animationCount": 1,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

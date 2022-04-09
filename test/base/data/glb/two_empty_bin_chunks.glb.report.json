@@ -1,11 +1,11 @@
 {
     "uri": "test/base/data/glb/two_empty_bin_chunks.glb",
     "mimeType": "model/gltf-binary",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 2,
         "numWarnings": 0,
-        "numInfos": 0,
+        "numInfos": 2,
         "numHints": 0,
         "messages": [
             {
@@ -13,6 +13,18 @@
                 "message": "First chunk must be of JSON type. Found 0x004e4942 instead.",
                 "severity": 0,
                 "offset": 12
+            },
+            {
+                "code": "GLB_EMPTY_BIN_CHUNK",
+                "message": "Empty BIN chunk should be omitted.",
+                "severity": 2,
+                "offset": 12
+            },
+            {
+                "code": "GLB_EMPTY_BIN_CHUNK",
+                "message": "Empty BIN chunk should be omitted.",
+                "severity": 2,
+                "offset": 20
             },
             {
                 "code": "GLB_DUPLICATE_CHUNK",

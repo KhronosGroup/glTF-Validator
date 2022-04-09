@@ -1,0 +1,33 @@
+{
+    "extensionsUsed": ["KHR_lights_punctual", "EXT_extension_unknown"],
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {
+            "extensions": {
+                "KHR_lights_punctual": {
+                    "light": 0
+                }
+            }
+        },
+        {
+            "extras": { }
+        },
+        {
+            "extensions": {
+                "EXT_extension_unknown": { }
+            }
+        },
+        {}
+    ],
+    "extensions": {
+        "KHR_lights_punctual": {
+            "lights": [
+                {
+                    "type": "directional"
+                }
+            ]
+        }
+    }
+}

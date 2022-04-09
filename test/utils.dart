@@ -18,11 +18,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:test/test.dart';
-
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart' show isNonRelativeUri;
+import 'package:test/test.dart';
 
 Context get ignoreUnusedContext => Context(
     validate: true,

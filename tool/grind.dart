@@ -51,7 +51,7 @@ void issues() {
         .map<Object>((symbol) => errorClassMirror.getField(symbol).reflectee)
         .whereType<IssueType>()
         .toList(growable: false)
-          ..sort((a, b) => a.code.compareTo(b.code));
+      ..sort((a, b) => a.code.compareTo(b.code));
 
     for (final issueType in issuesList) {
       String message;
@@ -205,9 +205,11 @@ void _npmBuild({bool release = true}) {
       json.decode(File(p.join(_nodeSource, packageJson)).readAsStringSync())
           as Map<String, Object>;
   jsonMap['version'] = _version;
-  jsonMap..remove('devDependencies')..remove('scripts');
+  jsonMap
+    ..remove('devDependencies')
+    ..remove('scripts');
 
-  log('copying updated $packageJson to $_nodeTarget');
+  log('Copying updated $packageJson to $_nodeTarget');
   File(p.join(_nodeTarget, packageJson))
       .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
 

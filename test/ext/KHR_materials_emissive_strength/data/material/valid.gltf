@@ -1,0 +1,44 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_emissive_strength"
+    ],
+    "materials": [
+        {
+            "emissiveFactor": [
+                1,
+                0,
+                0
+            ],
+            "extensions": {
+                "KHR_materials_emissive_strength": {
+                    "emissiveStrength": 2.0
+                }
+            }
+        },
+        {
+            "emissiveFactor": [
+                0,
+                1,
+                0
+            ],
+            "extensions": {
+                "KHR_materials_emissive_strength": { }
+            }
+        },
+        {
+            "emissiveFactor": [
+                0,
+                0,
+                1
+            ],
+            "extensions": {
+                "KHR_materials_emissive_strength": {
+                    "emissiveStrength": 0
+                }
+            }
+        }
+    ]
+}

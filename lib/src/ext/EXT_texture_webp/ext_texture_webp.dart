@@ -18,7 +18,6 @@ library gltf.extensions.ext_texture_webp;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
-import 'package:gltf/src/utils.dart';
 
 const String IMAGE_WEBP = 'image/webp';
 
@@ -68,14 +67,13 @@ class ExtTextureWebPTexture extends GltfProperty
             name: SOURCE, args: [_sourceIndex]);
       } else {
         _source.markAsUsed();
-        if (_source.mimeType != null && _source.mimeType != IMAGE_WEBP) {}
       }
     }
   }
 
   @override
   void validateResources(Gltf gltf, Context context) {
-    final mimeType = _source?.info?.mimeType;
+    final mimeType = _source?.mimeType ?? _source?.info?.mimeType;
     if (mimeType != null && mimeType != IMAGE_WEBP) {
       context
           .addIssue(LinkError.textureInvalidImageMimeType, name: SOURCE, args: [

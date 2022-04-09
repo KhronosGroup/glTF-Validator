@@ -52,6 +52,10 @@ class BufferView extends GltfChildOfRootProperty {
     markAsUsed();
     if (_usage == null) {
       _usage = value;
+      if (value == BufferViewUsage.IndexBuffer ||
+          value == BufferViewUsage.VertexBuffer) {
+        context.addIssue(LinkError.bufferViewTargetMissing, name: name);
+      }
     } else if (context.validate && _usage != value) {
       context.addIssue(LinkError.bufferViewTargetOverride,
           name: name, args: [_usage, value]);

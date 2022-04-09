@@ -26,6 +26,10 @@ class Mesh extends GltfChildOfRootProperty {
   final SafeList<MeshPrimitive> primitives;
   final List<double> weights;
 
+  bool _weightsUsed = false;
+
+  bool get areWeightsUsed => _weightsUsed;
+
   Mesh._(this.primitives, this.weights, String name,
       Map<String, Object> extensions, Object extras)
       : super(name, extensions, extras);
@@ -45,7 +49,6 @@ class Mesh extends GltfChildOfRootProperty {
 
       context.path.add(PRIMITIVES);
       int targetsCount;
-      var jointsCount = -1;
       for (var i = 0; i < primitivesMaps.length; i++) {
         context.path.add(i.toString());
         final primitive = MeshPrimitive.fromMap(primitivesMaps[i], context);
@@ -55,13 +58,6 @@ class Mesh extends GltfChildOfRootProperty {
           } else if (targetsCount != primitive._targetsIndices?.length) {
             context.addIssue(SemanticError.meshPrimitivesUnequalTargetsCount,
                 name: TARGETS);
-          }
-
-          if (jointsCount == -1) {
-            jointsCount = primitive.jointsCount;
-          } else if (jointsCount != primitive.jointsCount) {
-            context.addIssue(SemanticError.meshPrimitivesUnequalJointsCount,
-                name: ATTRIBUTES);
           }
         }
         primitives[i] = primitive;
@@ -102,6 +98,10 @@ class Mesh extends GltfChildOfRootProperty {
       context.path.removeLast();
     });
     context.path.removeLast();
+  }
+
+  void markWeightsAsUsed() {
+    _weightsUsed = true;
   }
 }
 
@@ -259,11 +259,6 @@ class MeshPrimitive extends GltfProperty {
             name: TANGENT);
       }
 
-      if (hasTangent && mode == gl.POINTS) {
-        context.addIssue(SemanticError.meshPrimitiveTangentPoints,
-            name: TANGENT);
-      }
-
       /// Check for indexed semantics continuity -
       /// they must start with zero and do not have gaps.
       /// Otherwise, the semantic will be completely ignored.
@@ -402,7 +397,7 @@ class MeshPrimitive extends GltfProperty {
                     UnitVec3SignFloatChecker(context.getPointerString(),
                         accessor.isFloat ? null : accessor.normalizeValue));
                 context.path.removeLast();
-              } else if (semantic.startsWith('${COLOR_}_') &&
+              } else if (semantic == '${COLOR_}_0' &&
                   gl.FLOAT == accessor.componentType) {
                 accessor.setClamped();
                 context.path.add(semantic);
@@ -535,6 +530,13 @@ class MeshPrimitive extends GltfProperty {
             }
           });
         }
+      }
+
+      if (hasTangent && (_material == null || !_material.needsTangent)) {
+        context
+          ..path.add(ATTRIBUTES)
+          ..addIssue(LinkError.unusedMeshTangent, name: TANGENT)
+          ..path.removeLast();
       }
 
       for (final unusedIndex in _unusedTexCoords.where((i) => i != -1)) {

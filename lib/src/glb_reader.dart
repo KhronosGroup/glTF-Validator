@@ -22,8 +22,6 @@ import 'dart:typed_data';
 
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:gltf/src/errors.dart';
-
 import 'package:meta/meta.dart';
 
 class GlbReader implements GltfReader {
@@ -222,6 +220,10 @@ class GlbReader implements GltfReader {
               _hasJsonChunk = true;
               break;
             case _CHUNK_BIN:
+              if (_chunkLength == 0) {
+                context.addIssue(GlbError.emptyBinChunk,
+                    offset: _offset - _CHUNK_HEADER_LENGTH);
+              }
               updateState(seen: _hasBinChunk);
               _hasBinChunk = true;
               break;

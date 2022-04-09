@@ -18,7 +18,6 @@ library gltf.data_access.resources_loader;
 
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:gltf/gltf.dart';
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/data_access/image_decoder.dart';
 import 'package:gltf/src/data_access/validate_accessors.dart';
@@ -48,17 +47,14 @@ class ResourceInfo {
       'external'
     ];
 
-    final map = <String, Object>{
+    return <String, Object>{
       'pointer': pointer,
       if (mimeType != null) 'mimeType': mimeType,
-      if (storage != null) 'storage': storageString[storage.index]
+      if (storage != null) 'storage': storageString[storage.index],
+      if (uri != null) 'uri': uri,
+      if (byteLength != null) 'byteLength': byteLength,
+      if (image != null) 'image': image.toMap()
     };
-
-    addToMapIfNotNull(map, 'uri', uri);
-    addToMapIfNotNull(map, 'byteLength', byteLength);
-    addToMapIfNotNull(map, 'image', image?.toMap());
-
-    return map;
   }
 }
 
@@ -104,34 +100,36 @@ class ResourcesLoader {
       final info = ResourceInfo(context.getPointerString())
         ..mimeType = APPLICATION_GLTF_BUFFER;
 
-      FutureOr<List<int>> _fetchBuffer(Buffer buffer) {
-        if (buffer.extensions.isEmpty) {
-          if (buffer.uri != null) {
-            // External fetch
-            info
-              ..storage = _Storage.External
-              ..uri = buffer.uri.toString();
-            return externalBytesFetch(buffer.uri);
-          } else if (buffer.data != null) {
-            // Data URI
-            info.storage = _Storage.DataUri;
-            return buffer.data;
-          } else if (context.isGlb && i == 0 && !buffer.hasUri) {
-            // GLB Buffer
-            info.storage = _Storage.GLB;
-            final data = externalBytesFetch();
-            if (context.validate && data == null) {
-              context.addIssue(LinkError.bufferMissingGlbData);
-            }
-            return data;
+      FutureOr<Uint8List> _fetchBuffer(Buffer buffer) {
+        // Ignore buffers with invalid byte length
+        if (buffer.byteLength == -1) {
+          return null;
+        }
+        if (buffer.uri != null) {
+          // External fetch
+          info
+            ..storage = _Storage.External
+            ..uri = buffer.uri.toString();
+          return externalBytesFetch(buffer.uri);
+        } else if (buffer.data != null) {
+          // Data URI
+          info.storage = _Storage.DataUri;
+          return buffer.data;
+        } else if (context.isGlb && i == 0 && !buffer.hasUri) {
+          // GLB Buffer
+          info.storage = _Storage.GLB;
+          final data = externalBytesFetch();
+          if (context.validate && data == null) {
+            context.addIssue(LinkError.bufferMissingGlbData);
           }
+          return data;
         }
         return null;
       }
 
       Uint8List data;
       try {
-        data = await _fetchBuffer(buffer) as Uint8List;
+        data = await _fetchBuffer(buffer);
       } on Exception catch (e) {
         // likely IO error
         context.addIssue(IoError.ioError, args: [e], name: URI);
@@ -140,7 +138,7 @@ class ResourcesLoader {
       if (data != null) {
         info.byteLength = data.length;
         if (data.length < buffer.byteLength) {
-          context.addIssue(DataError.bufferExternalBytelengthMismatch,
+          context.addIssue(DataError.bufferByteLengthMismatch,
               args: [data.length, buffer.byteLength]);
         } else {
           if (context.isGlb && i == 0 && !buffer.hasUri) {
@@ -181,16 +179,16 @@ class ResourcesLoader {
               ..storage = _Storage.External
               ..uri = image.uri.toString();
             return externalStreamFetch(image.uri);
-          } else if (image.data != null && image.mimeType != null) {
+          } else if (image.data != null) {
             // Data URI, preloaded on phase 2 of GltfLoader
             resourceInfo.storage = _Storage.DataUri;
-            return Stream.fromIterable([image.data]);
+            return Stream.value(image.data);
           } else if (image.bufferView != null) {
             // BufferView
             resourceInfo.storage = _Storage.BufferView;
             image.tryLoadFromBufferView();
             if (image.data != null) {
-              return Stream.fromIterable([image.data]);
+              return Stream.value(image.data);
             }
           }
         }
@@ -229,9 +227,12 @@ class ResourcesLoader {
 
           if (context.validate) {
             if (image.mimeType != null &&
-                (image.mimeType != imageInfo.mimeType)) {
+                image.mimeType != imageInfo.mimeType) {
               context.addIssue(DataError.imageMimeTypeInvalid,
-                  args: [imageInfo.mimeType, image.mimeType]);
+                  args: [imageInfo.mimeType, image.mimeType],
+                  name: resourceInfo.storage == _Storage.BufferView
+                      ? BUFFER_VIEW
+                      : URI);
             }
 
             if (!isPot(imageInfo.width) || !isPot(imageInfo.height)) {

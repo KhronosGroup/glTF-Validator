@@ -1,24 +1,42 @@
 {
     "uri": "test/base/data/skin/ibm_invalid_count.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.6",
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
-        "numInfos": 1,
+        "numInfos": 4,
         "numHints": 0,
         "messages": [
             {
                 "code": "INVALID_IBM_ACCESSOR_COUNT",
-                "message": "Accessor of count 1 expected. Found 2.",
+                "message": "IBM accessor must have at least 3 elements. Found 2.",
                 "severity": 0,
-                "pointer": "/skins/0/inverseBindMatrices"
+                "pointer": "/skins/2/inverseBindMatrices"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/3"
             },
             {
                 "code": "UNUSED_OBJECT",
                 "message": "This object may be unused.",
                 "severity": 2,
                 "pointer": "/skins/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/skins/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/skins/2"
             }
         ],
         "truncated": false

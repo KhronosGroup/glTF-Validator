@@ -118,7 +118,7 @@ class Skin extends GltfChildOfRootProperty {
                 IbmMatrixFloatChecker(context.getPointerString()));
           }
 
-          if (_joints != null && _inverseBindMatrices.count != _joints.length) {
+          if (_joints != null && _inverseBindMatrices.count < _joints.length) {
             context.addIssue(LinkError.invalidIbmAccessorCount,
                 args: [_joints.length, _inverseBindMatrices.count]);
           }

@@ -18,12 +18,12 @@ library gltf;
 
 import 'package:gltf/src/version.dart';
 
-export 'package:gltf/src/context.dart';
-export 'package:gltf/src/ext/extensions.dart';
-export 'package:gltf/src/gltf_reader.dart';
-export 'package:gltf/src/glb_reader.dart';
-export 'package:gltf/src/validation_result.dart';
 export 'package:gltf/src/base/gltf.dart';
+export 'package:gltf/src/context.dart';
 export 'package:gltf/src/data_access/resources_loader.dart';
+export 'package:gltf/src/ext/extensions.dart';
+export 'package:gltf/src/glb_reader.dart';
+export 'package:gltf/src/gltf_reader.dart';
+export 'package:gltf/src/validation_result.dart';
 
 const String kGltfValidatorVersion = packageVersion;

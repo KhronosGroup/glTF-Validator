@@ -20,6 +20,25 @@
                 "ymag": 1,
                 "xmag": 0
             }
+        },
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 1,
+                "zfar": 2,
+                "ymag": -1,
+                "xmag": 1
+            }
+        },
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "znear": 1,
+                "zfar": 2,
+                "ymag": 1,
+                "xmag": -1
+            }
         }
+
     ]
 }

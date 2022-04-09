@@ -19,7 +19,6 @@ library gltf.context;
 import 'dart:collection';
 
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/ext/extensions.dart';
 import 'package:gltf/src/gl.dart' as gl;
 
@@ -289,6 +288,25 @@ class Context {
     POSITION: {const AccessorFormat(VEC3, gl.FLOAT)},
     NORMAL: {const AccessorFormat(VEC3, gl.FLOAT)},
     TANGENT: {const AccessorFormat(VEC3, gl.FLOAT)},
+    TEXCOORD_: {
+      const AccessorFormat(VEC2, gl.FLOAT),
+      const AccessorFormat(VEC2, gl.BYTE, normalized: true),
+      const AccessorFormat(VEC2, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC2, gl.SHORT, normalized: true),
+      const AccessorFormat(VEC2, gl.UNSIGNED_SHORT, normalized: true)
+    },
+    COLOR_: {
+      const AccessorFormat(VEC3, gl.FLOAT),
+      const AccessorFormat(VEC3, gl.BYTE, normalized: true),
+      const AccessorFormat(VEC3, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC3, gl.SHORT, normalized: true),
+      const AccessorFormat(VEC3, gl.UNSIGNED_SHORT, normalized: true),
+      const AccessorFormat(VEC4, gl.FLOAT),
+      const AccessorFormat(VEC4, gl.BYTE, normalized: true),
+      const AccessorFormat(VEC4, gl.UNSIGNED_BYTE, normalized: true),
+      const AccessorFormat(VEC4, gl.SHORT, normalized: true),
+      const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
+    }
   };
 }
 

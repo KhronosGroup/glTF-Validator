@@ -88,8 +88,16 @@ class CameraOrthographic extends GltfProperty {
         context.addIssue(SemanticError.cameraZfarLequalZnear);
       }
 
-      if (xmag == 0.0 || ymag == 0.0) {
-        context.addIssue(SemanticError.cameraXmagYmagZero);
+      if (xmag == 0.0) {
+        context.addIssue(SemanticError.cameraXmagYmagZero, name: XMAG);
+      } else if (xmag < 0.0) {
+        context.addIssue(SemanticError.cameraXmagYmagNegative, name: XMAG);
+      }
+
+      if (ymag == 0.0) {
+        context.addIssue(SemanticError.cameraXmagYmagZero, name: YMAG);
+      } else if (ymag < 0.0) {
+        context.addIssue(SemanticError.cameraXmagYmagNegative, name: YMAG);
       }
     }
 
