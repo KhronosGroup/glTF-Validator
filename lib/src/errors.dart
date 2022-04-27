@@ -815,6 +815,9 @@ class GlbError extends IssueType {
   static final GlbError unknownChunkType = GlbError._('GLB_UNKNOWN_CHUNK_TYPE',
       (args) => 'Unknown GLB chunk type: ${args[0]}.', Severity.Warning);
 
+  static final GlbError extraData = GlbError._('GLB_EXTRA_DATA',
+      (args) => 'Extra data after the end of GLB stream.', Severity.Warning);
+
   GlbError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);

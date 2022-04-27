@@ -17,6 +17,7 @@
             "empty_file.glb": "Empty file",
             "empty_json_chunk.glb": "Empty JSON chunk",
             "empty_json_object.glb": "Empty JSON object",
+            "extra_data.glb": "Extra trailing bytes",
             "invalid_json_chunk.glb": "Invalid JSON chunk",
             "invalid_magic.glb": "Invalid magic",
             "invalid_version.glb": "Invalid version",

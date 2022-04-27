@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
 
+import 'package:archive/archive_io.dart';
 import 'package:gltf/src/errors.dart';
 import 'package:grinder/grinder.dart';
 import 'package:node_preamble/preamble.dart';
@@ -61,7 +62,7 @@ void issues() {
       } on TypeError catch (_) {
         message = issueType.message(argsWithArray);
       }
-      sb.writeln('|${issueType.code}|$message|'
+      sb.writeln('|${issueType.code}|${message.replaceAll('\n', ' ')}|'
           '${severityToMdString(issueType.severity)}|');
     }
     total += issuesList.length;
@@ -116,7 +117,7 @@ void exeArchive() {
 
   if (Platform.isLinux || Platform.isMacOS) {
     final filename =
-        'gltf_validator-$_version-${Platform.operatingSystem}64.tar.xz';
+        '../gltf_validator-$_version-${Platform.operatingSystem}64.tar.xz';
     run('tar',
         arguments: [
           '--create',
@@ -131,13 +132,10 @@ void exeArchive() {
         ],
         workingDirectory: _getTarget(_binSource));
   } else if (Platform.isWindows) {
-    final psCommand = 'Compress-Archive '
-        '-Path gltf_validator.exe, LICENSE, NOTICES, docs '
-        '-DestinationPath gltf_validator-$_version-win64.zip';
+    delete(File(p.join(_getTarget(_binSource), 'symbols.elf')));
 
-    run('powershell',
-        arguments: ['-Command', psCommand],
-        workingDirectory: _getTarget(_binSource));
+    final filename = 'build/gltf_validator-$_version-win64.zip';
+    ZipFileEncoder().zipDirectory(targetDir, level: 9, filename: filename);
   } else {
     log('Ignoring exe-archive command '
         'for an unsupported platform: ${Platform.operatingSystem}.');
@@ -156,23 +154,8 @@ void webArchive() {
   copy(File('LICENSE'), targetDir);
   copy(File('NOTICES'), targetDir);
 
-  final filename = 'gltf_validator-$_version-web.zip';
-  if (Platform.isLinux || Platform.isMacOS) {
-    run('zip',
-        arguments: ['-r', filename, '.'],
-        workingDirectory: _getTarget(_webSource));
-  } else if (Platform.isWindows) {
-    final psCommand = 'Compress-Archive '
-        '-Path ./* '
-        '-DestinationPath $filename';
-
-    run('powershell',
-        arguments: ['-Command', psCommand],
-        workingDirectory: _getTarget(_webSource));
-  } else {
-    log('Ignoring web-archive command '
-        'for an unsupported platform: ${Platform.operatingSystem}.');
-  }
+  final filename = 'build/gltf_validator-$_version-web.zip';
+  ZipFileEncoder().zipDirectory(targetDir, level: 9, filename: filename);
 }
 
 @Task('Build non-minified npm package with preserved call-stacks.')
