@@ -16,6 +16,8 @@ Live drag-n-drop tool: https://github.khronos.org/glTF-Validator
 
 NPM package: https://www.npmjs.com/package/gltf-validator
 
+NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfValidator/
+
 ## Implemented features
 
 - JSON syntax check and [GLBv2](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#glb-file-format-specification) file format correctness.
