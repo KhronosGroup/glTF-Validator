@@ -1,3 +1,19 @@
+## 2.0.0-dev.3.7
+
+### New Features
+
+* Added `GLB_EXTRA_DATA` warning. Extra bytes beyond the declared GLB total length are now ignored.
+
+### Bugfixes
+
+* Fixed crash when exceeding the maximum reported issues threshold while parsing GLB structures.
+
+* Fixed erroneous line break in the generated issues table.
+
+### Integration updates
+
+* ZIP-archives generated on Windows can now be opened on other platforms.
+
 ## 2.0.0-dev.3.6
 
 ### New Features

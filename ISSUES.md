@@ -12,8 +12,7 @@
 |EMPTY_ENTITY|Entity cannot be empty.|Error|
 |INVALID_INDEX|Index must be a non-negative integer.|Error|
 |INVALID_JSON|Invalid JSON data. Parser output: `%1`|Error|
-|INVALID_URI|Invalid URI '`%1`'. Parser output:
-`%2`|Error|
+|INVALID_URI|Invalid URI '`%1`'. Parser output: `%2`|Error|
 |ONE_OF_MISMATCH|Exactly one of ('`%1`', '`%2`', '`%3`', '`%4`', '`%5`') properties must be defined.|Error|
 |PATTERN_MISMATCH|Value '`%1`' does not match regexp pattern '`%2`'.|Error|
 |TYPE_MISMATCH|Type mismatch. Property value '`%1`' is not a '`%2`'.|Error|
@@ -166,6 +165,7 @@
 |GLB_DUPLICATE_CHUNK|Chunk of type `%1` has already been used.|Error|
 |GLB_EMPTY_BIN_CHUNK|Empty BIN chunk should be omitted.|Information|
 |GLB_EMPTY_CHUNK|Chunk (`%1`) cannot have zero length.|Error|
+|GLB_EXTRA_DATA|Extra data after the end of GLB stream.|Warning|
 |GLB_INVALID_MAGIC|Invalid GLB magic value (`%1`).|Error|
 |GLB_INVALID_VERSION|Invalid GLB version value `%1`.|Error|
 |GLB_LENGTH_MISMATCH|Declared length (`%1`) does not match GLB length (`%2`).|Error|

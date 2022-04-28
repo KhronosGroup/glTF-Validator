@@ -82,7 +82,13 @@ class GlbReader implements GltfReader {
 
   @override
   Future<GltfReaderResult> read() {
-    _subscription = stream.listen(_onData, onError: _onError, onDone: _onDone);
+    _subscription = stream.listen((List<int> data) {
+      try {
+        _onData(data);
+      } on IssuesLimitExceededException catch (_) {
+        _abort();
+      }
+    }, onError: _onError, onDone: _onDone);
     _jsonStreamController
       ..onPause = _subscription.pause
       ..onResume = _subscription.resume
@@ -158,6 +164,13 @@ class GlbReader implements GltfReader {
           break;
 
         case _CHUNK_HEADER:
+          if (_offset == _totalLength) {
+            context.addIssue(GlbError.extraData, offset: _offset);
+            _subscription.cancel();
+            _onDone();
+            return;
+          }
+
           availableLength = min(
               data.length - dataOffset, _CHUNK_HEADER_LENGTH - _localOffset);
           _header.setRange(
