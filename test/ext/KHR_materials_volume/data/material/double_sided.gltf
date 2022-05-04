@@ -1,0 +1,26 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_transmission", "KHR_materials_volume"
+    ],
+    "materials": [
+        {
+            "doubleSided": true,
+            "extensions": {
+                "KHR_materials_transmission": { },
+                "KHR_materials_volume": { }
+            }
+        },
+        {
+            "doubleSided": true,
+            "extensions": {
+                "KHR_materials_transmission": { },
+                "KHR_materials_volume": { 
+                    "thicknessFactor": 1
+                }
+            }
+        }
+    ]
+}

@@ -507,6 +507,12 @@ class SemanticError extends IssueType {
           'that allows light to transmit through the surface.',
       Severity.Warning);
 
+  static final SemanticError khrMaterialsVolumeDoubleSided = SemanticError._(
+      'KHR_MATERIALS_VOLUME_DOUBLE_SIDED',
+      (args) => 'The volume extension should not be used '
+          'with double-sided materials.',
+      Severity.Warning);
+
   static final SemanticError
       khrMaterialsIridescenceThicknessRangeWithoutTexture = SemanticError._(
           'KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_WITHOUT_TEXTURE',

@@ -46,6 +46,7 @@
 |KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID|Thickness maximum must be greater than or equal to the thickness minimum.|Error|
 |KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_WITHOUT_TEXTURE|Thickness minimum has no effect when a thickness texture is not defined.|Information|
 |KHR_MATERIALS_IRIDESCENCE_THICKNESS_TEXTURE_UNUSED|Thickness texture has no effect when the thickness minimum is equal to the thickness maximum.|Information|
+|KHR_MATERIALS_VOLUME_DOUBLE_SIDED|The volume extension should not be used with double-sided materials.|Warning|
 |KHR_MATERIALS_VOLUME_NO_TRANSMISSION|The volume extension needs to be combined with an extension that allows light to transmit through the surface.|Warning|
 |MATERIAL_ALPHA_CUTOFF_INVALID_MODE|Alpha cutoff is supported only for 'MASK' alpha mode.|Warning|
 |MESH_INVALID_WEIGHTS_COUNT|The length of weights array (`%1`) does not match the number of morph targets (`%2`).|Error|
