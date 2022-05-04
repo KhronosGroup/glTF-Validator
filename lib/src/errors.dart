@@ -507,6 +507,26 @@ class SemanticError extends IssueType {
           'that allows light to transmit through the surface.',
       Severity.Warning);
 
+  static final SemanticError
+      khrMaterialsIridescenceThicknessRangeWithoutTexture = SemanticError._(
+          'KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_WITHOUT_TEXTURE',
+          (args) => 'Thickness minimum has no effect '
+              'when a thickness texture is not defined.',
+          Severity.Information);
+
+  static final SemanticError khrMaterialsIridescenceThicknessRangeInvalid =
+      SemanticError._(
+          'KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID',
+          (args) => 'Thickness maximum must be greater than or '
+              'equal to the thickness minimum.');
+
+  static final SemanticError khrMaterialsIridescenceThicknessTextureUnused =
+      SemanticError._(
+          'KHR_MATERIALS_IRIDESCENCE_THICKNESS_TEXTURE_UNUSED',
+          (args) => 'Thickness texture has no effect when the thickness '
+              'minimum is equal to the thickness maximum.',
+          Severity.Information);
+
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])
       : super(type, message, severity);
