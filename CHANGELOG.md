@@ -1,3 +1,18 @@
+## 2.0.0-dev.3.8
+
+### New Features
+
+* Added support for `KHR_materials_iridescence` extension. Added:
+  * `KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID` error;
+  * `KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_WITHOUT_TEXTURE` info;
+  * `KHR_MATERIALS_IRIDESCENCE_THICKNESS_TEXTURE_UNUSED` info.
+
+* Added new vendor prefixes.
+
+### Bugfixes
+
+* Fixed inconsistent handling of meshes with morphed and non-morphed primitives.
+
 ## 2.0.0-dev.3.7
 
 ### New Features
