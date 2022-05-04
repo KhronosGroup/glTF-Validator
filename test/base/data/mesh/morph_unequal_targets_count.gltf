@@ -27,6 +27,46 @@
                             "POSITION": 3
                         }
                     ]
+                },
+                {
+                    "attributes": {
+                        "POSITION": 2
+                    }
+                }
+            ]
+        },
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 2
+                    }
+                },
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "targets": [
+                        {
+                            "POSITION": 1
+                        },
+                        {
+                            "POSITION": 1
+                        }
+                    ]
+                },
+                {
+                    "attributes": {
+                        "POSITION": 2
+                    },
+                    "targets": [
+                        {
+                            "POSITION": 3
+                        },
+                        {
+                            "POSITION": 3
+                        }
+                    ]
                 }
             ]
         }
