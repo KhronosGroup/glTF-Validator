@@ -183,10 +183,7 @@ class KhrLightsPunctualLightSpot extends GltfProperty {
     final outerConeAngle = getFloat(map, OUTER_CONE_ANGLE, context,
         def: 0.7853981633974483, exclMin: 0, max: 1.5707963267948966);
 
-    if (context.validate &&
-        !outerConeAngle.isNaN &&
-        !innerConeAngle.isNaN &&
-        outerConeAngle <= innerConeAngle) {
+    if (context.validate && outerConeAngle <= innerConeAngle) {
       context.addIssue(SemanticError.khrLightsPunctualLightSpotAngles,
           name: OUTER_CONE_ANGLE, args: [innerConeAngle, outerConeAngle]);
     }
