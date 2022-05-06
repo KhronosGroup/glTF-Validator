@@ -87,6 +87,10 @@ class KhrMaterialsVolume extends GltfProperty {
             !o.extensions.values.any((e) => e is Map)) {
           context.addIssue(SemanticError.khrMaterialsVolumeNoTransmission);
         }
+
+        if (o.doubleSided && thicknessFactor > 0) {
+          context.addIssue(SemanticError.khrMaterialsVolumeDoubleSided);
+        }
         break;
       }
     }

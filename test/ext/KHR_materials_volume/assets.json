@@ -3,6 +3,7 @@
         "name": "material.KHR_materials_volume",
         "tests": {
             "custom_property.gltf": "Custom property",
+            "double_sided.gltf": "Double-sided material",
             "out_of_range.gltf": "Out of range values",
             "unexpected_extension.gltf": "Unexpected extension object location",
             "unknown_transmission.gltf": "Unknown transmission extension",

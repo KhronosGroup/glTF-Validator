@@ -39,6 +39,7 @@ NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfVal
   - KHR_materials_clearcoat
   - KHR_materials_emissive_strength
   - KHR_materials_ior
+  - KHR_materials_iridescence
   - KHR_materials_pbrSpecularGlossiness
   - KHR_materials_sheen
   - KHR_materials_specular

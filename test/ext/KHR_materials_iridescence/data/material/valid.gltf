@@ -1,0 +1,37 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_iridescence"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_iridescence": {
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_materials_iridescence": {
+                    "iridescenceFactor": 0.5,
+                    "iridescenceTexture": {
+                        "index": 0
+                    },
+                    "iridescenceIor": 2,
+                    "iridescenceThicknessMinimum": 150,
+                    "iridescenceThicknessMaximum": 450,
+                    "iridescenceThicknessTexture": {
+                        "index": 1
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        }, {
+        }
+    ]
+}

@@ -1,0 +1,68 @@
+{
+    "uri": "test/ext/KHR_materials_iridescence/data/material/invalid_thickness_range.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.8",
+    "issues": {
+        "numErrors": 3,
+        "numWarnings": 0,
+        "numInfos": 3,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID",
+                "message": "Thickness maximum must be greater than or equal to the thickness minimum.",
+                "severity": 0,
+                "pointer": "/materials/0/extensions/KHR_materials_iridescence/iridescenceThicknessMinimum"
+            },
+            {
+                "code": "KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID",
+                "message": "Thickness maximum must be greater than or equal to the thickness minimum.",
+                "severity": 0,
+                "pointer": "/materials/1/extensions/KHR_materials_iridescence/iridescenceThicknessMaximum"
+            },
+            {
+                "code": "KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID",
+                "message": "Thickness maximum must be greater than or equal to the thickness minimum.",
+                "severity": 0,
+                "pointer": "/materials/2/extensions/KHR_materials_iridescence/iridescenceThicknessMinimum"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/materials/2"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": [
+            "KHR_materials_iridescence"
+        ],
+        "animationCount": 0,
+        "materialCount": 3,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": true,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

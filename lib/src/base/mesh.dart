@@ -48,16 +48,17 @@ class Mesh extends GltfChildOfRootProperty {
       primitives = SafeList<MeshPrimitive>(primitivesMaps.length, PRIMITIVES);
 
       context.path.add(PRIMITIVES);
-      int targetsCount;
+      var targetCount = 0;
       for (var i = 0; i < primitivesMaps.length; i++) {
         context.path.add(i.toString());
         final primitive = MeshPrimitive.fromMap(primitivesMaps[i], context);
         if (context.validate) {
-          if (targetsCount == null) {
-            targetsCount = primitive._targetsIndices?.length;
-          } else if (targetsCount != primitive._targetsIndices?.length) {
+          final primitiveTargetCount = primitive._targetsIndices?.length ?? 0;
+          if (i == 0) {
+            targetCount = primitiveTargetCount;
+          } else if (targetCount != primitiveTargetCount) {
             context.addIssue(SemanticError.meshPrimitivesUnequalTargetsCount,
-                name: TARGETS);
+                name: primitiveTargetCount > 0 ? TARGETS : null);
           }
         }
         primitives[i] = primitive;
@@ -66,11 +67,10 @@ class Mesh extends GltfChildOfRootProperty {
       context.path.removeLast();
 
       if (context.validate &&
-          targetsCount != null &&
           weights != null &&
-          targetsCount != weights.length) {
+          targetCount != weights.length) {
         context.addIssue(SemanticError.meshInvalidWeightsCount,
-            name: WEIGHTS, args: [weights.length, targetsCount]);
+            name: WEIGHTS, args: [weights.length, targetCount]);
       }
     }
 

@@ -1,3 +1,22 @@
+# Changelog
+
+## 2.0.0-dev.3.8
+
+### New Features
+
+* Added support for `KHR_materials_iridescence` extension. Added:
+  * `KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID` error;
+  * `KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_WITHOUT_TEXTURE` info;
+  * `KHR_MATERIALS_IRIDESCENCE_THICKNESS_TEXTURE_UNUSED` info.
+
+* Added `KHR_MATERIALS_VOLUME_DOUBLE_SIDED` warning.
+
+* Added new vendor prefixes.
+
+### Bugfixes
+
+* Fixed inconsistent handling of meshes with morphed and non-morphed primitives.
+
 ## 2.0.0-dev.3.7
 
 ### New Features
@@ -142,17 +161,17 @@
 
 ### Integration updates
 
-  * npm tool no longer re-defines `require` (#139).
+* npm tool no longer re-defines `require` (#139).
 
-  * npm tool no longer requires `options.externalResourceFunction` for GLB or assets with embedded data (#138).
+* npm tool no longer requires `options.externalResourceFunction` for GLB or assets with embedded data (#138).
 
-  * `options.validateAccessorData` npm tool flag is removed, accessors' data validation is always enabled.
+* `options.validateAccessorData` npm tool flag is removed, accessors' data validation is always enabled.
 
-  * npm tool now reports `IO_ERROR` for external resources when `options.externalResourceFunction` is not provided.
+* npm tool now reports `IO_ERROR` for external resources when `options.externalResourceFunction` is not provided.
 
-  * CLI tool now supports `--stdout` flag for writing a single validation report to STDOUT instead of a new file.
+* CLI tool now supports `--stdout` flag for writing a single validation report to STDOUT instead of a new file.
 
-  * CLI tool validates binary data by default (#138).
+* CLI tool validates binary data by default (#138).
 
 ## 2.0.0-dev.3.2
 
@@ -198,15 +217,15 @@
 
 * Added support for `KHR_mesh_quantization` extension.
 
-* Added `NON_REQUIRED_EXTENSION` error for extensions that cannot be optional (such as `KHR_quantized_geometry`).  
-  
+* Added `NON_REQUIRED_EXTENSION` error for extensions that cannot be optional (such as `KHR_quantized_geometry`).
+
 * Added vendor prefixes: `MESHOPT`, `POLUTROPON`, and `AGT` (#119).
 
 * Added vendor prefixes: `ALCM` and `SKYLINE`.
 
 * Added vendor prefixes: `FOXIT`, `KDAB`, and `CAPTURE`.
 
-* Extension names are now validated to have an upper-case prefix separated from the rest on the name with underscore (new `INVALID_EXTENSION_NAME_FORMAT` warning). 
+* Extension names are now validated to have an upper-case prefix separated from the rest on the name with underscore (new `INVALID_EXTENSION_NAME_FORMAT` warning).
 
 * Referencing an image of type defined by an extension from the core objects now results in `TEXTURE_INVALID_IMAGE_MIME_TYPE` error.
 
@@ -231,53 +250,53 @@
   * A node with a skinned mesh should be a root node (`NODE_SKINNED_MESH_NON_ROOT` warning).
 
   * A node with a skinned mesh should not have local transforms (`NODE_SKINNED_MESH_LOCAL_TRANSFORMS` warning).
-  
+
   * Vertex influences validation:
 
     * All joints values must be within the range of joints in the skin (`ACCESSOR_JOINTS_INDEX_OOB` error).
-      
+
     * No joint may have more than one non-zero weight for a given vertex (`ACCESSOR_JOINTS_INDEX_DUPLICATE` error).
 
     * Weights must be non-negative (`ACCESSOR_WEIGHTS_NEGATIVE` error).
-  
+
     * Weights for each vertex must be normalized to have a linear sum of `1.0` (`ACCESSOR_WEIGHTS_NON_NORMALIZED` error).
-  
+
     * Unused joint values (i.e. joints with a weight of zero) should be set to zero (`ACCESSOR_JOINTS_USED_ZERO_WEIGHT` warning).
 
 ### Integration updates
 
-  * Upgraded to the latest stable SDK. 
+* Upgraded to the latest stable SDK.
 
-  * Generated npm package no longer requires polyfills when using webpack with certain configurations (fixes #110).
+* Generated npm package no longer requires polyfills when using webpack with certain configurations (fixes #110).
 
-  * It is now possible to omit timestamps from validation reports.
-  
-  * It is now possible to set the number of used threads for directory validation (cmd-line tool only).
-  
-  * Validation report now consistently uses lower-case enums.
-  
-  * Native executable binaries can now be compiled. See the [readme](README.md) for details (fixes #113).
-  
-  * Generated report filename is now `<asset>.report.json`.
-  
-  * Unit tests (300+) are now consistently stored: an asset and its validation report. Combined with provided JSON catalogs, they could be used for testing other glTF implementations.
+* It is now possible to omit timestamps from validation reports.
+
+* It is now possible to set the number of used threads for directory validation (cmd-line tool only).
+
+* Validation report now consistently uses lower-case enums.
+
+* Native executable binaries can now be compiled. See the [readme](README.md) for details (fixes #113).
+
+* Generated report filename is now `<asset>.report.json`.
+
+* Unit tests (300+) are now consistently stored: an asset and its validation report. Combined with provided JSON catalogs, they could be used for testing other glTF implementations.
 
 ### Changes
 
 * Major refactoring of binary data validation. Now, mesh and animation accessor issues are attributed to the corresponding binding points rather than to accessor objects. This change makes validation reports more precise when accessors are reused. Namely:
 
   * `ACCESSOR_ANIMATION_INPUT_NEGATIVE` and `ACCESSOR_ANIMATION_INPUT_NON_INCREASING` are attributed to `animation.sampler.input`.
-  
-  * `ANIMATION_SAMPLER_OUTPUT_ACCESSOR_NON_NORMALIZED_QUATERNION` (new) is attributed to `animation.channel.sampler`.  
-  
+
+  * `ANIMATION_SAMPLER_OUTPUT_ACCESSOR_NON_NORMALIZED_QUATERNION` (new) is attributed to `animation.channel.sampler`.
+
   * `ACCESSOR_INVALID_SIGN` is attributed to `mesh.primitive.attributes.TANGENT`; its message is more sound now.
-  
+
   * `ACCESSOR_VECTOR3_NON_UNIT` (renamed from `ACCESSOR_NON_UNIT`) is attributed to `mesh.primitive.attributes.NORMAL` or `mesh.primitive.attributes.TANGENT`.
-  
+
   * `ACCESSOR_NON_CLAMPED` is attributed to `mesh.primitive.attributes.COLOR`.
-  
+
   * `ACCESSOR_INVALID_IBM` is attributed to `skin.inverseBindMatrices`.
-  
+
   * `ACCESSOR_INDEX_OOB`, `ACCESSOR_INDEX_PRIMITIVE_RESTART`, and `ACCESSOR_INDEX_TRIANGLE_DEGENERATE` are attributed to `mesh.primitive.indices`.
 
 * `ACCESSOR_INVALID_FLOAT` message is more specific.
@@ -346,7 +365,7 @@
 
 * Added `KHR_lights_punctual` support.
 
-* Renamed error code `NODE_ROTATION_NON_UNIT` to `ROTATION_NON_UNIT`. 
+* Renamed error code `NODE_ROTATION_NON_UNIT` to `ROTATION_NON_UNIT`.
 
 ## 2.0.0-dev.2.6
 
@@ -386,7 +405,7 @@
 
 * Changed `MESH_PRIMITIVE_NO_POSITION` default severity to Warning.
 
-* Added UTF-8 BOM detection for byte inputs. 
+* Added UTF-8 BOM detection for byte inputs.
 
 ## 2.0.0-dev.2.1
 
@@ -422,7 +441,7 @@
 
 * Fixed issue pointer corruption on empty accessors.
 
-* Improved drag-n-drop validator UX when assets contain many issues (#60, #65). 
+* Improved drag-n-drop validator UX when assets contain many issues (#60, #65).
 
 * Fixed crash on malformed JSON (#66).
 

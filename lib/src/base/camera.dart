@@ -84,7 +84,7 @@ class CameraOrthographic extends GltfProperty {
     final znear = getFloat(map, ZNEAR, context, req: true, min: 0);
 
     if (context.validate) {
-      if (!zfar.isNaN && !znear.isNaN && zfar <= znear) {
+      if (zfar <= znear) {
         context.addIssue(SemanticError.cameraZfarLequalZnear);
       }
 
@@ -128,14 +128,14 @@ class CameraPerspective extends GltfProperty {
 
     final yfov = getFloat(map, YFOV, context, req: true, exclMin: 0);
 
-    if (context.validate && !yfov.isNaN && yfov >= math.pi) {
+    if (context.validate && yfov >= math.pi) {
       context.addIssue(SemanticError.cameraYFovGequalPi);
     }
 
     final zfar = getFloat(map, ZFAR, context, exclMin: 0);
     final znear = getFloat(map, ZNEAR, context, req: true, exclMin: 0);
 
-    if (context.validate && !zfar.isNaN && !znear.isNaN && zfar <= znear) {
+    if (context.validate && zfar <= znear) {
       context.addIssue(SemanticError.cameraZfarLequalZnear);
     }
 
