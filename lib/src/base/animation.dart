@@ -346,7 +346,10 @@ class AnimationChannelTarget extends GltfProperty {
   }
 
   bool isSameAs(AnimationChannelTarget other) =>
-      other != null && _nodeIndex != -1 && _nodeIndex == other._nodeIndex && path == other.path;
+      other != null &&
+      _nodeIndex != -1 &&
+      _nodeIndex == other._nodeIndex &&
+      path == other.path;
 }
 
 class AnimationSampler extends GltfProperty {
