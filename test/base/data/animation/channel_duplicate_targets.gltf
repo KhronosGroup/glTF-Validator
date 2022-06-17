@@ -26,6 +26,28 @@
                     "sampler": 0
                 }
             ]
+        },
+        {
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1
+                }
+            ],
+            "channels": [
+                {
+                    "target": {
+                        "path": "scale"
+                    },
+                    "sampler": 0
+                },
+                {
+                    "target": {
+                        "path": "scale"
+                    },
+                    "sampler": 0
+                }
+            ]
         }
     ],
     "nodes": [

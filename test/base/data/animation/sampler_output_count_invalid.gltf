@@ -19,6 +19,22 @@
                     "sampler": 0
                 }
             ]
+        },
+        {
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 2
+                }
+            ],
+            "channels": [
+                {
+                    "target": {
+                        "path": "unknown"
+                    },
+                    "sampler": 0
+                }
+            ]
         }
     ],
     "nodes": [
@@ -40,6 +56,11 @@
             "type": "VEC3",
             "componentType": 5126,
             "count": 2
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3
         }
     ]
 }

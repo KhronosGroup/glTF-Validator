@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0-dev.3.9
+
+### Bugfixes
+
+* Fixed false positive `ANIMATION_DUPLICATE_TARGETS` caused by animation targets without `node` (#190).
+
+* Fixed false positive `ANIMATION_SAMPLER_OUTPUT_ACCESSOR_INVALID_COUNT` caused by animation targets with unknown `path`.
+
 ## 2.0.0-dev.3.8
 
 ### New Features
