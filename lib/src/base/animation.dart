@@ -254,6 +254,9 @@ class Animation extends GltfChildOfRootProperty {
                   final targetsCount = channel
                       .target._node?.mesh?.primitives?.first?.targets?.length;
                   expectedCount *= targetsCount ?? 0;
+                } else if (!ANIMATION_CHANNEL_TARGET_PATHS
+                    .contains(channel.target.path)) {
+                  expectedCount = 0;
                 }
 
                 if (expectedCount != 0 &&
@@ -346,7 +349,10 @@ class AnimationChannelTarget extends GltfProperty {
   }
 
   bool isSameAs(AnimationChannelTarget other) =>
-      other != null && _nodeIndex == other._nodeIndex && path == other.path;
+      other != null &&
+      _nodeIndex != -1 &&
+      _nodeIndex == other._nodeIndex &&
+      path == other.path;
 }
 
 class AnimationSampler extends GltfProperty {

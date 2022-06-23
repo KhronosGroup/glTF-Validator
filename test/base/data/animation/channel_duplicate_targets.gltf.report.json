@@ -1,7 +1,7 @@
 {
     "uri": "test/base/data/animation/channel_duplicate_targets.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.9",
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
@@ -19,7 +19,7 @@
     },
     "info": {
         "version": "2.0",
-        "animationCount": 1,
+        "animationCount": 2,
         "materialCount": 0,
         "hasMorphTargets": false,
         "hasSkins": false,
