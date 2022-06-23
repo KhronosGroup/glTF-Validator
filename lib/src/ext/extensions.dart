@@ -170,6 +170,7 @@ const Set<String> kReservedPrefixes = <String>{
   'SPECTRUM',
   'TENCENT',
   'TRYON',
+  'USSF',
   'UX3D',
   'VRMC',
   'WEB3D'
