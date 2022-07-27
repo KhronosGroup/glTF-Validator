@@ -289,6 +289,11 @@ class MeshPrimitive extends GltfProperty {
     }
 
     void checkMorphTargetAttributeSemanticName(String semantic) {
+      // supported by the specification
+      if (semantic.startsWith("COLOR_") || semantic.startsWith("TEXCOORD_")) {
+        return;
+      }
+
       if (!context.morphAttributeAccessorFormats.containsKey(semantic) &&
           !semantic.startsWith('_')) {
         context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
