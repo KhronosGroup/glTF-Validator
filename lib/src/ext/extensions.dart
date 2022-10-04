@@ -178,5 +178,6 @@ const Set<String> kReservedPrefixes = <String>{
   'USSF',
   'UX3D',
   'VRMC',
+  'VSEKAI',
   'WEB3D'
 };
