@@ -51,6 +51,7 @@ exports.validateString = (json, options) => validator.validateString(json, optio
  @property {boolean} writeTimestamp - Set to `false` to omit timestamp from the validation report. Default is `true`.
  @property {number} maxIssues - Max number of reported issues. Use `0` for unlimited output.
  @property {string[]} ignoredIssues - Array of ignored issue codes.
+ @property {string[]} onlyIssues - Array of only issues to consider. Cannot be used along with ignoredIssues.
  @property {Object} severityOverrides - Object with overridden severities for issue codes.
  */
 
