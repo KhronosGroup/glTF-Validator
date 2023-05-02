@@ -230,7 +230,7 @@ class Context {
       return;
     }
 
-    if (options.onlyIssues.isNotEmpty() &&
+    if (options.onlyIssues.isNotEmpty &&
         !options.onlyIssues.contains(issueType.code)) {
       return;
     }
