@@ -140,7 +140,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
 
     final Object yamlOnlyIssues = yaml[kOnly];
     if (yamlOnlyIssues is List) {
-      ignoredIssues = List.generate(yamlOnlyIssues.length, (i) {
+      onlyIssues = List.generate(yamlOnlyIssues.length, (i) {
         final Object entry = yamlOnlyIssues[i];
         if (entry is String) {
           return entry;
