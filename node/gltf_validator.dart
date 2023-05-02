@@ -214,7 +214,8 @@ Context _getContextFromOptions(_JSValidationOptions options) {
     }
 
     if (options.onlyIssues != null && options.ignoredIssues != null) {
-      throw ArgumentError('options.onlyIssues cannot be used along with options.ignoredIssues.');
+      throw ArgumentError(
+          'options.onlyIssues cannot be used along with options.ignoredIssues.');
     }
 
     if (options.onlyIssues != null) {

@@ -29,12 +29,15 @@ class ValidationOptions {
   final Map<String, Severity> severityOverrides;
 
   ValidationOptions(
-      {int maxIssues, List<String> ignoredIssues, List<String> onlyIssues, this.severityOverrides})
+      {int maxIssues,
+      List<String> ignoredIssues,
+      List<String> onlyIssues,
+      this.severityOverrides})
       : maxIssues = maxIssues ?? 0 {
     if (ignoredIssues != null) {
       this.ignoredIssues.addAll(ignoredIssues);
     }
-    if (onlyIssues != null){
+    if (onlyIssues != null) {
       this.onlyIssues.addAll(onlyIssues);
     }
   }
@@ -227,7 +230,8 @@ class Context {
       return;
     }
 
-    if (options.onlyIssues.length > 0 && !options.onlyIssues.contains(issueType.code)){
+    if (options.onlyIssues.isNotEmpty() &&
+        !options.onlyIssues.contains(issueType.code)) {
       return;
     }
 
