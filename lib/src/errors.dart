@@ -484,6 +484,13 @@ class SemanticError extends IssueType {
       (args) => 'Prefer JSON Objects for extras.',
       Severity.Information);
 
+  static final SemanticError sharesNodeWith = SemanticError._(
+      'SHARES_NODE_WITH',
+      (args) => '${args[0]} must be on its own glTF node, '
+          'it cannot be on the same glTF node as ${args[1]}.'
+          '${args.length > 2 ? ' Move the ${args[2]} to a child node.' : ''}',
+      Severity.Error);
+
   static final SemanticError extraProperty = SemanticError._(
       'EXTRA_PROPERTY',
       (args) => 'This property should not be defined as it will not be used.',
@@ -532,6 +539,34 @@ class SemanticError extends IssueType {
           (args) => 'Thickness texture has no effect when the thickness '
               'minimum is equal to the thickness maximum.',
           Severity.Information);
+
+  static final SemanticError omiColliderInvalidCapsuleHeight =
+      SemanticError._(
+          'OMI_COLLIDER_INVALID_CAPSULE_HEIGHT',
+          (args) => 'The capsule height must be at least twice the radius.',
+          Severity.Error);
+
+  static final SemanticError omiColliderTrimeshTrigger =
+      SemanticError._(
+          'OMI_COLLIDER_TRIMESH_TRIGGER',
+          (args) => 'This collider is both a trimesh and a trigger. This '
+              'is valid but not recommended since trimeshes do not have an '
+              'interior volume and the trigger may not work as expected.',
+          Severity.Information);
+
+  static final SemanticError omiPhysicsBodyMissingCollider =
+      SemanticError._(
+          'OMI_PHYSICS_BODY_MISSING_COLLIDER',
+          (args) => 'This physics body does not have any colliders. '
+              'This is valid but body will not collide with anything.',
+          Severity.Information);
+
+  static final SemanticError omiPhysicsBodyInvalidInertiaTensor =
+      SemanticError._(
+          'OMI_PHYSICS_BODY_INVALID_INERTIA_TENSOR',
+          (args) => 'This physics body has an invalid inertia tensor. '
+              'The inertia tensor must be a symmetric 3x3 matrix.',
+          Severity.Error);
 
   SemanticError._(String type, ErrorFunction message,
       [Severity severity = Severity.Error])

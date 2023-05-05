@@ -67,7 +67,12 @@
 |NON_OBJECT_EXTRAS|Prefer JSON Objects for extras.|Information|
 |NON_RELATIVE_URI|Non-relative URI found: '`%1`'.|Warning|
 |NON_REQUIRED_EXTENSION|Extension '`%1`' cannot be optional.|Error|
+|OMI_COLLIDER_INVALID_CAPSULE_HEIGHT|The capsule height must be at least twice the radius.|Error|
+|OMI_COLLIDER_TRIMESH_TRIGGER|This collider is both a trimesh and a trigger. This is valid but not recommended since trimeshes do not have an interior volume and the trigger may not work as expected.|Information|
+|OMI_PHYSICS_BODY_INVALID_INERTIA_TENSOR|This physics body has an invalid inertia tensor. The inertia tensor must be a symmetric 3x3 matrix.|Error|
+|OMI_PHYSICS_BODY_MISSING_COLLIDER|This physics body does not have any colliders. This is valid but body will not collide with anything.|Information|
 |ROTATION_NON_UNIT|Rotation quaternion must be normalized.|Error|
+|SHARES_NODE_WITH|`%1` must be on its own glTF node, it cannot be on the same glTF node as `%2`. Move the `%3` to a child node.|Error|
 |SKIN_NO_COMMON_ROOT|Joints do not have a common root.|Error|
 |SKIN_SKELETON_INVALID|Skeleton node is not a common root.|Error|
 |UNKNOWN_ASSET_MAJOR_VERSION|Unknown glTF major asset version: `%1`.|Error|
