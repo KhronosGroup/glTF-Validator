@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: '14'
       - uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: '2.17.7'
 
       - name: Print Dart SDK version
         run: dart --version
