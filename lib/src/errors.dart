@@ -494,6 +494,12 @@ class SemanticError extends IssueType {
       (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
           'innerConeAngle (${args[0]}).');
 
+  static final SemanticError khrMaterialsDispersionNoVolume = SemanticError._(
+      'KHR_MATERIALS_DISPERSION_NO_VOLUME',
+      (args) => 'The dispersion extension needs to be combined with '
+          'the volume extension.',
+      Severity.Warning);
+
   static final SemanticError khrMaterialsEmissiveStrengthZeroFactor =
       SemanticError._(
           'KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR',
