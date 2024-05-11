@@ -18,19 +18,23 @@ const List<String> KHR_MATERIALS_DISPERSION_MEMBERS = <String>[
 class KhrMaterialsDispersion extends GltfProperty {
   final double dispersion;
 
-  KhrMaterialsDispersion._(this.dispersion, Map<String, Object> extensions, Object extras)
+  KhrMaterialsDispersion._(
+      this.dispersion, Map<String, Object> extensions, Object extras)
       : super(extensions, extras);
 
-  static KhrMaterialsDispersion fromMap(Map<String, Object> map, Context context) {
+  static KhrMaterialsDispersion fromMap(
+      Map<String, Object> map, Context context) {
     if (context.validate) {
       checkMembers(map, KHR_MATERIALS_DISPERSION_MEMBERS, context);
     }
 
-    final dispersion = getFloat(map, DISPERSION, context, min: 0, def: 0, standalone: 0);
+    final dispersion =
+        getFloat(map, DISPERSION, context, min: 0, def: 0, standalone: 0);
 
     final extensions = getExtensions(map, KhrMaterialsDispersion, context);
 
-    return KhrMaterialsDispersion._(dispersion, extensions, getExtras(map, context));
+    return KhrMaterialsDispersion._(
+        dispersion, extensions, getExtras(map, context));
   }
 
   @override
