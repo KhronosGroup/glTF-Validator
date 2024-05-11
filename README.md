@@ -112,6 +112,10 @@ To build an npm package for use in Node.js environment, follow these steps after
 
 Refer to the [npm package documentation](https://www.npmjs.com/package/gltf-validator) for additional information.
 
+#### Post-Build Steps
+1. To auto-format all source files, from the root folder run: `dart format --fix .`
+2. To run the tests, use: `dart test`
+
 #### Publishing
 To publish an npm package, follow these steps after installation:
 1. Run `dart run grinder npm-publish`.
