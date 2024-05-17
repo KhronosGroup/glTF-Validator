@@ -167,9 +167,6 @@ class Context {
       if (prefix == null) {
         addIssue(SemanticError.invalidExtensionNameFormat,
             name: '/$EXTENSIONS_USED/$i');
-      } else if (!kReservedPrefixes.contains(prefix)) {
-        addIssue(SemanticError.unreservedExtensionPrefix,
-            name: '/$EXTENSIONS_USED/$i', args: [prefix]);
       }
 
       final extension = _userExtensions.firstWhere(

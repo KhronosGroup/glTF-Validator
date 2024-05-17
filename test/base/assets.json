@@ -358,7 +358,6 @@
             "invalid_extension_name.gltf": "Invalid extension name",
             "named_objects.gltf": "Valid named objects",
             "undefined_used_extensions.gltf": "Undefined used extensions array",
-            "unreserved_extension_prefix.gltf": "Unreserved extension prefix",
             "unused_objects.gltf": "Unused objects",
             "valid.gltf": "Valid"
         }
