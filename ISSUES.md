@@ -73,7 +73,6 @@
 |SKIN_SKELETON_INVALID|Skeleton node is not a common root.|Error|
 |UNKNOWN_ASSET_MAJOR_VERSION|Unknown glTF major asset version: `%1`.|Error|
 |UNKNOWN_ASSET_MINOR_VERSION|Unknown glTF minor asset version: `%1`.|Warning|
-|UNRESERVED_EXTENSION_PREFIX|Extension uses unreserved extension prefix '`%1`'.|Warning|
 |UNUSED_EXTENSION_REQUIRED|Unused extension '`%1`' cannot be required.|Error|
 ## LinkError
 | Code | Message | Severity |
