@@ -1,0 +1,23 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_dispersion",
+        "KHR_materials_volume",
+        "KHR_materials_transmission"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_dispersion": {
+                    "customProperty": true
+                },
+                "KHR_materials_volume": {
+                    "thicknessFactor": 1
+                },
+                "KHR_materials_transmission": {}
+            }
+        }
+    ]
+}

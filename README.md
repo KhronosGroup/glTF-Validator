@@ -37,6 +37,7 @@ NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfVal
   - EXT_texture_webp
   - KHR_lights_punctual
   - KHR_materials_clearcoat
+  - KHR_materials_dispersion
   - KHR_materials_emissive_strength
   - KHR_materials_ior
   - KHR_materials_iridescence
@@ -115,6 +116,10 @@ Refer to the [npm package documentation](https://www.npmjs.com/package/gltf-vali
 To publish an npm package, follow these steps after installation:
 1. Run `dart run grinder npm-publish`.
 2. `gltf-validator` npm package will be built to `build/node` and published to npm registry using `npm publish`.
+
+### Post-Build Steps
+1. To auto-format all source files, from the root folder run: `dart format --fix .`
+2. To run the tests, use: `dart test`
 
 ### Validation Issues List
 To generate [ISSUES.md](ISSUES.md), follow these steps after installation:
