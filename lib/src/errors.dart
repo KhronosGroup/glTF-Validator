@@ -433,11 +433,6 @@ class SemanticError extends IssueType {
       'NON_REQUIRED_EXTENSION',
       (args) => 'Extension ${_q(args[0])} cannot be optional.');
 
-  static final SemanticError unreservedExtensionPrefix = SemanticError._(
-      'UNRESERVED_EXTENSION_PREFIX',
-      (args) => 'Extension uses unreserved extension prefix ${_q(args[0])}.',
-      Severity.Warning);
-
   static final SemanticError invalidExtensionNameFormat = SemanticError._(
       'INVALID_EXTENSION_NAME_FORMAT',
       (args) => 'Extension name has invalid format.',
