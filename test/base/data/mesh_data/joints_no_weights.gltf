@@ -1,0 +1,76 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "nodes": [
+        {},
+        {
+            "mesh": 0,
+            "skin": 0
+        }
+    ],
+    "skins": [
+        {
+            "joints": [0]
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "JOINTS_0": 1,
+                        "WEIGHTS_0": 2
+                    },
+                    "mode": 0
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 1,
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5121,
+            "count": 1,
+            "bufferView": 0,
+            "byteOffset": 12
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 1,
+            "bufferView": 0,
+            "byteOffset": 16
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 32,
+            "byteStride": 32,
+            "target": 34962
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 16,
+            "uri": "data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAA=="
+        }
+    ]
+}

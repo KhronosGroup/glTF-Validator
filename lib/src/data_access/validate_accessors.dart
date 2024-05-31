@@ -17,7 +17,6 @@
 library gltf.data_access.validate_accessors_data;
 
 import 'package:gltf/src/base/gltf_property.dart';
-import 'package:meta/meta.dart';
 
 Accessor<T> _guardAccessor<T extends num>(Accessor<T> accessor) {
   if (accessor == null) {
@@ -164,10 +163,7 @@ void validateAccessorsData(Gltf gltf, Context context) {
 
       // add a checker from the current primitive to the global list
       influencesCheckers.add(InfluencesChecker(context.getPointerString(),
-          jointsIterators: jointsIterators,
-          weightsIterators: weightsIterators,
-          maxJointIndex: maxJoints - 1,
-          limitingSkinIndex: limitingSkinIndex));
+          jointsIterators, weightsIterators, maxJoints - 1, limitingSkinIndex));
 
       context.path
         ..removeLast()
@@ -225,9 +221,7 @@ void _processAccessorElements(Context context) {
 
     for (final value in accessor.getElements()) {
       for (var t = 0; t < elementCheckers.length; t++) {
-        if (!elementCheckers[t].check(context, index, componentIndex, value)) {
-          continue;
-        }
+        elementCheckers[t].check(context, index, componentIndex, value);
       }
 
       if (++componentIndex == components) {
@@ -262,11 +256,8 @@ class InfluencesChecker {
   double _threshold = 0;
   final Set<int> _currentIndices = <int>{};
 
-  InfluencesChecker(this.path,
-      {@required this.jointsIterators,
-      @required this.weightsIterators,
-      @required this.maxJointIndex,
-      @required this.limitingSkinIndex})
+  InfluencesChecker(this.path, this.jointsIterators, this.weightsIterators,
+      this.maxJointIndex, this.limitingSkinIndex)
       : assert(jointsIterators.length == weightsIterators.length),
         assert(maxJointIndex >= 0),
         assert(limitingSkinIndex >= 0);
@@ -298,7 +289,12 @@ class InfluencesChecker {
       }
 
       final weight = weightsIterators[i].current;
-      assert(weight != null);
+
+      if (weight == null) {
+        // insufficient weights data
+        _done = true;
+        return;
+      }
 
       if (weight != 0) {
         var unique = true;
