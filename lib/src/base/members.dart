@@ -477,6 +477,11 @@ const List<String> ATTRIBUTE_SEMANTIC_ARRAY_MEMBERS = <String>[
   WEIGHTS_
 ];
 
+const List<String> ATTRIBUTE_SEMANTIC_MORPH_TARGET_ARRAY_MEMBERS = <String>[
+  COLOR_,
+  TEXCOORD_,
+];
+
 const Map<int, String> ATTRIBUTE_TYPES = <int, String>{
   gl.FLOAT: SCALAR,
   gl.FLOAT_VEC2: VEC2,

@@ -7,17 +7,20 @@
             "primitives": [
                 {
                     "attributes": {
-                        "POSITION": 1
+                        "POSITION": 1,
+                        "COLOR_0": 4
                     },
                     "mode": 4,
                     "indices": 0,
                     "material": 0,
                     "targets": [
                         {
-                            "POSITION": 2
+                            "POSITION": 2,
+                            "COLOR_0": 5
                         },
                         {
-                            "POSITION": 3
+                            "POSITION": 3,
+                            "COLOR_0": 6
                         }
                     ]
                 }
@@ -60,8 +63,8 @@
                 1.0,
                 1.0
             ]
-        }
-        ,{
+        },
+        {
             "type": "VEC3",
             "componentType": 5126,
             "count": 4,
@@ -75,6 +78,21 @@
                 1.0,
                 1.0
             ]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 4
         }
     ],
     "materials": [

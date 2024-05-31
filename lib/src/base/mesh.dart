@@ -167,6 +167,22 @@ class MeshPrimitive extends GltfProperty {
     var texCoordCount = 0;
     var maxTexcoord = -1;
 
+    int parseAttributeSemanticIndex(List<int> codeUnits) {
+      if (codeUnits.isEmpty || codeUnits.length > 1 && codeUnits[0] == 0x30) {
+        return -1;
+      }
+
+      var index = 0;
+      for (var i = 0; i < codeUnits.length; ++i) {
+        final digit = codeUnits[i] - 0x30;
+        if (digit > 9 || digit < 0) {
+          return -1;
+        }
+        index = 10 * index + digit;
+      }
+      return index;
+    }
+
     void checkAttributeSemanticName(String semantic) {
       // Skip on custom semantics
       if (semantic.isNotEmpty && semantic.codeUnitAt(0) == 95 /*underscore*/) {
@@ -194,29 +210,8 @@ class MeshPrimitive extends GltfProperty {
             break;
           }
 
-          var index = 0;
-          var valid = true;
-          final codeUnits = semParts[1].codeUnits;
-
-          if (codeUnits.isEmpty) {
-            valid = false;
-          } else if (codeUnits.length == 1) {
-            index = codeUnits[0] - 0x30 /* 0 */;
-            if (index < 0 || index > 9) {
-              valid = false;
-            }
-          } else {
-            for (var i = 0; i < codeUnits.length; ++i) {
-              final digit = codeUnits[i] - 0x30;
-              if (digit > 9 || digit < 0 || i == 0 && digit == 0) {
-                valid = false;
-                break;
-              }
-              index = 10 * index + digit;
-            }
-          }
-
-          if (valid) {
+          final index = parseAttributeSemanticIndex(semParts[1].codeUnits);
+          if (index != -1) {
             switch (arraySemantic) {
               case COLOR_:
                 colorCount++;
@@ -289,8 +284,20 @@ class MeshPrimitive extends GltfProperty {
     }
 
     void checkMorphTargetAttributeSemanticName(String semantic) {
-      if (!context.morphAttributeAccessorFormats.containsKey(semantic) &&
-          !semantic.startsWith('_')) {
+      // Skip custom semantics
+      if (semantic.isNotEmpty && semantic.codeUnitAt(0) == 95 /*underscore*/) {
+        return;
+      }
+
+      if (ATTRIBUTE_SEMANTIC_MEMBERS.contains(semantic)) {
+        return;
+      }
+
+      final semParts = semantic.split('_');
+      if (!ATTRIBUTE_SEMANTIC_MORPH_TARGET_ARRAY_MEMBERS
+              .contains(semParts[0]) ||
+          semParts.length != 2 ||
+          parseAttributeSemanticIndex(semParts[1].codeUnits) == -1) {
         context.addIssue(SemanticError.meshPrimitiveInvalidAttribute,
             name: semantic);
       }
@@ -597,7 +604,7 @@ class MeshPrimitive extends GltfProperty {
 
               final format = AccessorFormat.fromAccessor(accessor);
               final validFormats =
-                  context.morphAttributeAccessorFormats[semantic];
+                  context.morphAttributeAccessorFormats[semantic.split('_')[0]];
 
               if (validFormats != null && !validFormats.contains(format)) {
                 context.addIssue(
