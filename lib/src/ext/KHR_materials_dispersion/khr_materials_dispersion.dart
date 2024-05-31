@@ -29,7 +29,7 @@ class KhrMaterialsDispersion extends GltfProperty {
     }
 
     final dispersion =
-        getFloat(map, DISPERSION, context, min: 0, def: 0, standalone: 0);
+        getFloat(map, DISPERSION, context, min: 0, def: 0);
 
     final extensions = getExtensions(map, KhrMaterialsDispersion, context);
 
