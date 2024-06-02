@@ -1,7 +1,7 @@
 {
     "uri": "test/ext/KHR_materials_dispersion/data/material/no_volume.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.9",
+    "validatorVersion": "2.0.0-dev.3.10",
     "issues": {
         "numErrors": 0,
         "numWarnings": 1,
