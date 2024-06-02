@@ -241,7 +241,8 @@
             "index_buffer_primitive_restart.gltf": "Index buffer with primitive restart value",
             "normals_tangents_non_unit_invalid_sign.gltf": "Non-unit normals and tangents, invalid sign",
             "colors_non_clamped.gltf": "Non-clamped vertex colors",
-            "joints_weights_complex.gltf": "Complex joints/weights data check"
+            "joints_weights_complex.gltf": "Complex joints/weights data check",
+            "joints_no_weights.gltf": "Missing weights data"
         }
     },
     "node": {
