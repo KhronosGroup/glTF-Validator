@@ -420,11 +420,14 @@ Future main() async {
       final mesh = gltf.meshes[0];
       final primitive = mesh.primitives[0];
       expect(primitive.attributes['POSITION'], gltf.accessors[1]);
+      expect(primitive.attributes['COLOR_0'], gltf.accessors[4]);
       expect(primitive.indices, gltf.accessors[0]);
       expect(primitive.material, gltf.materials[0]);
       expect(primitive.mode, 4);
       expect(primitive.targets[0]['POSITION'], gltf.accessors[2]);
       expect(primitive.targets[1]['POSITION'], gltf.accessors[3]);
+      expect(primitive.targets[0]['COLOR_0'], gltf.accessors[5]);
+      expect(primitive.targets[1]['COLOR_0'], gltf.accessors[6]);
       expect(primitive.extensions, isEmpty);
       expect(mesh.weights, [0.7, 0.2]);
       expect(mesh.extensions, isEmpty);

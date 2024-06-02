@@ -1,7 +1,7 @@
 {
     "uri": "test/base/data/mesh/valid.gltf",
     "mimeType": "model/gltf+json",
-    "validatorVersion": "2.0.0-dev.3.0",
+    "validatorVersion": "2.0.0-dev.3.10",
     "issues": {
         "numErrors": 0,
         "numWarnings": 0,
@@ -30,6 +30,6 @@
         "totalTriangleCount": 2,
         "maxUVs": 0,
         "maxInfluences": 0,
-        "maxAttributes": 1
+        "maxAttributes": 2
     }
 }

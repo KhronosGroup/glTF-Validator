@@ -19,6 +19,26 @@
                     }
                 }
             ]
+        },
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "targets": [
+                        {
+                            "TEXCOORD_00": 1,
+                            "TEXCOORD_01": 1,
+                            "TEXCOORD_1": 1,
+                            "INVALID_": 0,
+                            "INVALID_1_1": 0,
+                            "INVALID_11": 0,
+                            "INVALID_D": 0
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "accessors": [
