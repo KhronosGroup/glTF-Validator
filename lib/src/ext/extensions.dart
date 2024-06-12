@@ -33,6 +33,8 @@ import 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart'
 import 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
+import 'package:gltf/src/ext/OMI_collider/omi_collider.dart';
+import 'package:gltf/src/ext/OMI_physics_body/omi_physics_body.dart';
 import 'package:gltf/src/hash.dart';
 import 'package:meta/meta.dart';
 
@@ -53,6 +55,8 @@ export 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart'
 export 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 export 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
 export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
+export 'package:gltf/src/ext/OMI_collider/omi_collider.dart';
+export 'package:gltf/src/ext/OMI_physics_body/omi_physics_body.dart';
 
 class Extension {
   const Extension(this.name, this.functions,
@@ -114,5 +118,7 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrMaterialsVariantsExtension,
   khrMaterialsVolumeExtension,
   khrMeshQuantizationExtension,
-  khrTextureTransformExtension
+  khrTextureTransformExtension,
+  omiColliderExtension,
+  omiPhysicsBodyExtension
 ];
