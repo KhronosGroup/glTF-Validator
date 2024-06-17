@@ -694,6 +694,19 @@ class LinkError extends IssueType {
           'Texture binding ${_q(args[0])} '
           "needs 'TEXCOORD_${args[1]}' attribute.");
 
+  static final LinkError meshPrimitiveNoTangentSpace = LinkError._(
+      'MESH_PRIMITIVE_NO_TANGENT_SPACE',
+      (args) => 'Material requires a tangent space but the mesh '
+          'primitive does not provide it and the material does not contain '
+          'a normal map to generate it.');
+
+  static final LinkError meshPrimitiveGeneratedTangentSpace = LinkError._(
+      'MESH_PRIMITIVE_GENERATED_TANGENT_SPACE',
+      (args) => 'Material requires a tangent space but the mesh '
+          'primitive does not provide it. Runtime-generated tangent space '
+          'may be non-portable across implementations.',
+      Severity.Warning);
+
   static final LinkError meshPrimitiveUnequalAccessorsCount = LinkError._(
       'MESH_PRIMITIVE_UNEQUAL_ACCESSOR_COUNT',
       (args) =>

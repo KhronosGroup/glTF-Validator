@@ -1,0 +1,49 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_clearcoat"
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "TEXCOORD_0": 1
+                    },
+                    "material": 0
+                }
+            ]
+        }
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_clearcoat": {
+                    "clearcoatNormalTexture": {
+                        "index": 0
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        { }
+    ],
+    "accessors": [
+        {
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC3",
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        },
+        {
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC2"
+        }
+    ]
+}

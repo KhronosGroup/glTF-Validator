@@ -222,6 +222,7 @@
             "morph_weights_wrong_count.gltf": "Morph weights wrong count",
             "position_accessor_invalid_format.gltf": "Position accessor invalid format",
             "position_accessor_no_bounds.gltf": "Position accessor no bounds",
+            "primitive_generated_tangent_space.gltf": "Primitive generated tangent space",
             "primitive_incompatible_mode.gltf": "Primitive incompatible mode",
             "primitive_no_position.gltf": "Primitive no position",
             "unequal_joints.gltf": "Unequal joints per primitive",

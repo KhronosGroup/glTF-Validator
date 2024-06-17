@@ -1,0 +1,59 @@
+{
+    "uri": "test/base/data/mesh/primitive_generated_tangent_space.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.10",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 4,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "MESH_PRIMITIVE_TANGENT_WITHOUT_NORMAL",
+                "message": "TANGENT attribute without NORMAL found.",
+                "severity": 1,
+                "pointer": "/meshes/0/primitives/2/attributes/TANGENT"
+            },
+            {
+                "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+                "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+                "severity": 1,
+                "pointer": "/meshes/0/primitives/0/material"
+            },
+            {
+                "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+                "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+                "severity": 1,
+                "pointer": "/meshes/0/primitives/1/material"
+            },
+            {
+                "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+                "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+                "severity": 1,
+                "pointer": "/meshes/0/primitives/2/material"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/meshes/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 0,
+        "materialCount": 1,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": true,
+        "hasDefaultScene": false,
+        "drawCallCount": 4,
+        "totalVertexCount": 12,
+        "totalTriangleCount": 4,
+        "maxUVs": 1,
+        "maxInfluences": 0,
+        "maxAttributes": 4
+    }
+}

@@ -28,9 +28,9 @@ class Material extends GltfChildOfRootProperty {
   final double alphaCutoff;
   final bool doubleSided;
 
-  bool _needsTangent = false;
+  bool needsTangent = false;
 
-  bool get needsTangent => _needsTangent;
+  bool get canProvideTangent => normalTexture != null;
 
   final Map<String, int> texCoordIndices = <String, int>{};
 
@@ -250,7 +250,7 @@ class NormalTextureInfo extends TextureInfo {
     while (o != null) {
       o = context.owners[o];
       if (o is Material) {
-        o._needsTangent = true;
+        o.needsTangent = true;
         break;
       }
     }

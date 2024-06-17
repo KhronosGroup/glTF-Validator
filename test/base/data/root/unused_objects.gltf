@@ -24,6 +24,7 @@
         {
           "attributes": {
             "NORMAL": 1,
+            "TANGENT": 7,
             "POSITION": 2,
             "TEXCOORD_0": 3
           },
@@ -115,6 +116,11 @@
       "componentType": 5126,
       "count": 1,
       "type": "VEC3"
+    },
+    {
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC4"
     }
   ],
   "materials": [

@@ -1,5 +1,5 @@
 {
-    "uri": "test/ext/KHR_texture_transform/data/textureInfo/uv_sets.gltf",
+    "uri": "test/ext/KHR_materials_clearcoat/data/material/no_tangent_space.gltf",
     "mimeType": "model/gltf+json",
     "validatorVersion": "2.0.0-dev.3.10",
     "issues": {
@@ -9,8 +9,8 @@
         "numHints": 0,
         "messages": [
             {
-                "code": "MESH_PRIMITIVE_TOO_FEW_TEXCOORDS",
-                "message": "Material is incompatible with mesh primitive: Texture binding '/materials/0/emissiveTexture/extensions/KHR_texture_transform' needs 'TEXCOORD_2' attribute.",
+                "code": "MESH_PRIMITIVE_NO_TANGENT_SPACE",
+                "message": "Material requires a tangent space but the mesh primitive does not provide it and the material does not contain a normal map to generate it.",
                 "severity": 0,
                 "pointer": "/meshes/0/primitives/0/material"
             },
@@ -26,7 +26,7 @@
     "info": {
         "version": "2.0",
         "extensionsUsed": [
-            "KHR_texture_transform"
+            "KHR_materials_clearcoat"
         ],
         "animationCount": 0,
         "materialCount": 1,
@@ -37,8 +37,8 @@
         "drawCallCount": 1,
         "totalVertexCount": 3,
         "totalTriangleCount": 1,
-        "maxUVs": 2,
+        "maxUVs": 1,
         "maxInfluences": 0,
-        "maxAttributes": 5
+        "maxAttributes": 2
     }
 }

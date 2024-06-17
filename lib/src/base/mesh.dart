@@ -526,6 +526,14 @@ class MeshPrimitive extends GltfProperty {
         } else {
           _material.markAsUsed();
 
+          if (!(hasNormal && hasTangent) && _material.needsTangent) {
+            context.addIssue(
+                _material.canProvideTangent
+                    ? LinkError.meshPrimitiveGeneratedTangentSpace
+                    : LinkError.meshPrimitiveNoTangentSpace,
+                name: MATERIAL);
+          }
+
           _material.texCoordIndices.forEach((pointer, texCoord) {
             if (texCoord != -1) {
               if (texCoord + 1 > texCoordCount) {
