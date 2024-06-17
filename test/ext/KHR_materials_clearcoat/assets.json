@@ -3,6 +3,7 @@
         "name": "material.KHR_materials_clearcoat",
         "tests": {
             "custom_property.gltf": "Custom property",
+            "different_texcoords.gltf": "Normal and clearcoat normal textures with different texcoords",
             "no_tangent_space.gltf": "No tangent space",
             "unexpected_extension.gltf": "Unexpected extension object location",
             "valid.gltf": "Valid",
