@@ -27,6 +27,7 @@
         {
           "attributes": {
             "NORMAL": 1,
+            "TANGENT": 8,
             "POSITION": 2,
             "TEXCOORD_0": 3,
             "JOINTS_0": 6,
@@ -110,6 +111,11 @@
     },
     {
       "componentType": 5123,
+      "count": 24,
+      "type": "VEC4"
+    },
+    {
+      "componentType": 5126,
       "count": 24,
       "type": "VEC4"
     },

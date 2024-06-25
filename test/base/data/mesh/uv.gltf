@@ -12,6 +12,8 @@
                     "material": 0,
                     "attributes": {
                         "POSITION": 0,
+                        "NORMAL": 2,
+                        "TANGENT": 3,
                         "TEXCOORD_0": 1
                     }
                 },
@@ -19,6 +21,8 @@
                     "material": 0,
                     "attributes": {
                         "POSITION": 0,
+                        "NORMAL": 2,
+                        "TANGENT": 3,
                         "TEXCOORD_0": 1,
                         "TEXCOORD_1": 1
                     }
@@ -98,6 +102,16 @@
                 1,
                 1
             ]
+        },
+        {
+            "type": "VEC3",
+            "componentType": 5126,
+            "count": 3
+        },
+        {
+            "type": "VEC4",
+            "componentType": 5126,
+            "count": 3
         }
     ],
     "textures": [

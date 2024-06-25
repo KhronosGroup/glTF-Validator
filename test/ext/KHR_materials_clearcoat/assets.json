@@ -3,6 +3,7 @@
         "name": "material.KHR_materials_clearcoat",
         "tests": {
             "custom_property.gltf": "Custom property",
+            "no_tangent_space.gltf": "No tangent space",
             "unexpected_extension.gltf": "Unexpected extension object location",
             "valid.gltf": "Valid",
             "valid_with_tangent.gltf": "Valid with TANGENT"
