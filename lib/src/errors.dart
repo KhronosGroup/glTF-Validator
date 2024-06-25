@@ -489,6 +489,13 @@ class SemanticError extends IssueType {
       (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
           'innerConeAngle (${args[0]}).');
 
+  static final SemanticError
+      khrMaterialsClearcoatClearcoatNormalTextureTexCoord = SemanticError._(
+          'KHR_MATERIALS_CLEARCOAT_CLEARCOAT_NORMAL_TEXTURE_TEXCOORD',
+          (args) => 'Normal and clearcoat normal textures '
+              'should use the same texture coords.',
+          Severity.Warning);
+
   static final SemanticError khrMaterialsDispersionNoVolume = SemanticError._(
       'KHR_MATERIALS_DISPERSION_NO_VOLUME',
       (args) => 'The dispersion extension needs to be combined with '

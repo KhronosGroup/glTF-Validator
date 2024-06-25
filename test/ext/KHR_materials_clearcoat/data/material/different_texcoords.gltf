@@ -1,0 +1,28 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_clearcoat"
+    ],
+    "materials": [
+        {
+            "normalTexture": {
+                "index": 0
+            },
+            "extensions": {
+                "KHR_materials_clearcoat": {
+                    "clearcoatNormalTexture": {
+                        "index": 1,
+                        "texCoord": 1
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        }, {
+        }
+    ]
+}
