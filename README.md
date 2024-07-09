@@ -36,6 +36,7 @@ NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfVal
 - Extensions validation
   - EXT_texture_webp
   - KHR_lights_punctual
+  - KHR_materials_anisotropy
   - KHR_materials_clearcoat
   - KHR_materials_dispersion
   - KHR_materials_emissive_strength

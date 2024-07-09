@@ -1,0 +1,13 @@
+{
+    "material": {
+        "name": "material.KHR_materials_anisotropy",
+        "tests": {
+            "custom_property.gltf": "Custom property",
+            "different_texcoords.gltf": "Normal and anisotropy textures with different texcoords",
+            "no_tangent_space.gltf": "No tangent space",
+            "out_of_range.gltf": "Out of range values",
+            "unexpected_extension.gltf": "Unexpected extension object location",
+            "valid.gltf": "Valid"
+        }
+    }
+}

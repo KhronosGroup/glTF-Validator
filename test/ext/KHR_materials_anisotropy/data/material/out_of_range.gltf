@@ -1,0 +1,24 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_anisotropy"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_anisotropy": {
+                    "anisotropyStrength": -0.5
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_materials_anisotropy": {
+                    "anisotropyStrength": 1.5
+                }
+            }
+        }
+    ]
+}

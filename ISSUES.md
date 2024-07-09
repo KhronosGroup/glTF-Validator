@@ -42,6 +42,7 @@
 |INVALID_EXTENSION_NAME_FORMAT|Extension name has invalid format.|Warning|
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES|outerConeAngle (`%2`) is less than or equal to innerConeAngle (`%1`).|Error|
+|KHR_MATERIALS_ANISOTROPY_ANISOTROPY_TEXTURE_TEXCOORD|Normal and anisotropy textures should use the same texture coords.|Warning|
 |KHR_MATERIALS_CLEARCOAT_CLEARCOAT_NORMAL_TEXTURE_TEXCOORD|Normal and clearcoat normal textures should use the same texture coords.|Warning|
 |KHR_MATERIALS_DISPERSION_NO_VOLUME|The dispersion extension needs to be combined with the volume extension.|Warning|
 |KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR|Emissive strength has no effect when the emissive factor is zero or undefined.|Warning|
