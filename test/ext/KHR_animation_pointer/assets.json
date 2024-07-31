@@ -1,0 +1,15 @@
+{
+    "animation/channel/target": {
+        "name": "animation.channel.target.KHR_animation_pointer",
+        "tests": {
+            "invalid_channel_target_node.gltf": "Invalid channel target node",
+            "invalid_channel_target_path.gltf": "Invalid channel target path",
+            "invalid_pointer_syntax.gltf": "Invalid pointer syntax",
+            "missing_extension_declaration.gltf": "Missing extension declaration",
+            "missing_pointer.gltf": "Missing pointer string",
+            "custom_property.gltf": "Custom property",
+            "unexpected_extension.gltf": "Unexpected extension object location",
+            "valid.gltf": "Valid"
+        }
+    }
+}

@@ -23,10 +23,6 @@ import 'package:gltf/src/errors.dart';
 import 'package:gltf/src/utils.dart' show isNonRelativeUri;
 import 'package:test/test.dart';
 
-Context get ignoreUnusedContext => Context(
-    validate: true,
-    options: ValidationOptions(ignoredIssues: [LinkError.unusedObject.code]));
-
 Future compareReports(String basePath) async {
   final testCases =
       jsonDecode(await File('$basePath/assets.json').readAsString())
@@ -102,10 +98,17 @@ ResourcesLoader _getFileResourceValidator(
       return controller.stream;
     });
 
-Future<GltfReaderResult> read(String path, {bool ignoreUnused = false}) async {
+Future<GltfReaderResult> read(String path,
+    {bool ignoreUnused = false, bool ignoreIncomplete = false}) async {
   final p = 'test/$path';
   final reader = GltfJsonReader(
-      File(p).openRead(), ignoreUnused ? ignoreUnusedContext : null);
+      File(p).openRead(),
+      Context(
+          validate: true,
+          options: ValidationOptions(ignoredIssues: <String>[
+            if (ignoreUnused) LinkError.unusedObject.code,
+            if (ignoreIncomplete) LinkError.incompleteExtensionSupport.code
+          ])));
   final result = await reader.read();
   final validationResult = ValidationResult(
       Uri.parse(p), reader.context, result,

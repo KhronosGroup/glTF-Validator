@@ -484,6 +484,18 @@ class SemanticError extends IssueType {
       (args) => 'This property should not be defined as it will not be used.',
       Severity.Information);
 
+  static final SemanticError khrAnimationPointerAnimationChannelTargetNode =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_NODE',
+          (args) => 'This extension requires the animation channel target node '
+              'to be undefined.');
+
+  static final SemanticError khrAnimationPointerAnimationChannelTargetPath =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_PATH',
+          (args) => 'This extension requires the animation channel target path '
+              "to be 'pointer'. Found ${_q(args[0])} instead.");
+
   static final SemanticError khrLightsPunctualLightSpotAngles = SemanticError._(
       'KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES',
       (args) => 'outerConeAngle (${args[1]}) is less than or equal to '
@@ -652,6 +664,12 @@ class LinkError extends IssueType {
       'IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE',
       (args) => 'bufferView.byteStride must not be defined for '
           'buffer views containing image data.');
+
+  static final LinkError incompleteExtensionSupport = LinkError._(
+      'INCOMPLETE_EXTENSION_SUPPORT',
+      (args) => 'Validation support for this extension is incomplete; '
+          'the asset may have undetected issues.',
+      Severity.Information);
 
   static final LinkError invalidIbmAccessorCount = LinkError._(
       'INVALID_IBM_ACCESSOR_COUNT',

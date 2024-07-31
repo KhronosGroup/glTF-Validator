@@ -305,6 +305,8 @@ class Context {
       const AccessorFormat(VEC4, gl.UNSIGNED_SHORT, normalized: true)
     }
   };
+
+  final animationChannelTargetPaths = [...ANIMATION_CHANNEL_TARGET_PATHS];
 }
 
 class IssuesLimitExceededException implements Exception {

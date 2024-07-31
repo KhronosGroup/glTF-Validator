@@ -1,0 +1,35 @@
+{
+    "uri": "test/ext/KHR_animation_pointer/data/animation/channel/target/missing_extension_declaration.gltf",
+    "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.10",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 1,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "VALUE_NOT_IN_LIST",
+                "message": "Invalid value 'pointer'. Valid values are ('translation', 'rotation', 'scale', 'weights').",
+                "severity": 1,
+                "pointer": "/animations/0/channels/0/target/path"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "animationCount": 1,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

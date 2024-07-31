@@ -1,0 +1,49 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_animation_pointer"
+    ],
+    "accessors": [
+        {
+            "count": 2,
+            "type": "SCALAR",
+            "componentType": 5126,
+            "min": [ 0 ],
+            "max": [ 1 ]
+        },
+        {
+            "count": 2,
+            "type": "VEC4",
+            "componentType": 5126
+        }
+    ],
+    "nodes": [
+        { }
+    ],
+    "animations": [
+        {
+            "channels": [
+                {
+                    "target": {
+                        "node": 0,
+                        "path": "pointer",
+                        "extensions": {
+                            "KHR_animation_pointer": {
+                                "pointer": "/nodes/0/rotation"
+                            }
+                        }
+                    },
+                    "sampler": 0
+                }
+            ],
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1
+                }
+            ]
+        }
+    ]
+}

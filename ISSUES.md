@@ -41,6 +41,8 @@
 |EXTRA_PROPERTY|This property should not be defined as it will not be used.|Information|
 |INVALID_EXTENSION_NAME_FORMAT|Extension name has invalid format.|Warning|
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
+|KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_NODE|This extension requires the animation channel target node to be undefined.|Error|
+|KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_PATH|This extension requires the animation channel target path to be 'pointer'. Found '`%1`' instead.|Error|
 |KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES|outerConeAngle (`%2`) is less than or equal to innerConeAngle (`%1`).|Error|
 |KHR_MATERIALS_ANISOTROPY_ANISOTROPY_TEXTURE_TEXCOORD|Normal and anisotropy textures should use the same texture coords.|Warning|
 |KHR_MATERIALS_CLEARCOAT_CLEARCOAT_NORMAL_TEXTURE_TEXCOORD|Normal and clearcoat normal textures should use the same texture coords.|Warning|
@@ -97,6 +99,7 @@
 |BUFFER_VIEW_TARGET_OVERRIDE|Override of previously set bufferView target or usage. Initial: '`%1`', new: '`%2`'.|Error|
 |BUFFER_VIEW_TOO_LONG|BufferView does not fit buffer (`%1`) byteLength (`%2`).|Error|
 |IMAGE_BUFFER_VIEW_WITH_BYTESTRIDE|bufferView.byteStride must not be defined for buffer views containing image data.|Error|
+|INCOMPLETE_EXTENSION_SUPPORT|Validation support for this extension is incomplete; the asset may have undetected issues.|Information|
 |INVALID_IBM_ACCESSOR_COUNT|IBM accessor must have at least `%1` elements. Found `%2`.|Error|
 |KHR_MATERIALS_VARIANTS_NON_UNIQUE_VARIANT|This variant is used more than once for this mesh primitive.|Error|
 |MESH_PRIMITIVE_ACCESSOR_UNALIGNED|Vertex attribute data must be aligned to 4-byte boundaries.|Error|
