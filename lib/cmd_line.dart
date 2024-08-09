@@ -86,6 +86,7 @@ class ValidationTask {
 ValidationOptions _getValidationOptionsFromYaml(String fileName) {
   const kMaxIssues = 'max-issues';
   const kIgnore = 'ignore';
+  const kOnly = 'only';
   const kOverride = 'override';
 
   void abort(Object e) {
@@ -111,6 +112,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
 
   var maxIssues = 0;
   List<String> ignoredIssues;
+  List<String> onlyIssues;
   Map<String, Severity> severityOverrides;
 
   if (yaml is Map) {
@@ -136,6 +138,21 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
       abort("$kYamlError 'ignored' must be a sequence.");
     }
 
+    final Object yamlOnlyIssues = yaml[kOnly];
+    if (yamlOnlyIssues is List) {
+      onlyIssues = List.generate(yamlOnlyIssues.length, (i) {
+        final Object entry = yamlOnlyIssues[i];
+        if (entry is String) {
+          return entry;
+        } else {
+          abort("$kYamlError each entry in '$kOnly' must be a string.");
+          return null;
+        }
+      }, growable: false);
+    } else if (yamlOnlyIssues != null) {
+      abort("$kYamlError 'only' must be a sequence.");
+    }
+
     final Object yamlSeveritiesMap = yaml[kOverride];
     if (yamlSeveritiesMap is Map) {
       severityOverrides = <String, Severity>{};
@@ -156,6 +173,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
     return ValidationOptions(
         maxIssues: maxIssues,
         ignoredIssues: ignoredIssues,
+        onlyIssues: onlyIssues,
         severityOverrides: severityOverrides);
   } else {
     abort('$kYamlError document must be a map.');
