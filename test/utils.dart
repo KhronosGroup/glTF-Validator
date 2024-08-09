@@ -20,7 +20,7 @@ import 'dart:io';
 
 import 'package:gltf/gltf.dart';
 import 'package:gltf/src/errors.dart';
-import 'package:gltf/src/utils.dart' show isNonRelativeUri;
+import 'package:gltf/src/utils.dart' show IsNonRelativeUri;
 import 'package:test/test.dart';
 
 Future compareReports(String basePath) async {
@@ -73,7 +73,7 @@ ResourcesLoader _getFileResourceValidator(
         // GLB-stored buffer
         return readerResult.buffer;
       }
-      if (isNonRelativeUri(uri)) {
+      if (uri.isNonRelative) {
         return null;
       }
 
@@ -83,7 +83,7 @@ ResourcesLoader _getFileResourceValidator(
         throw GltfExternalResourceNotFoundException(uri.toString());
       });
     }, externalStreamFetch: (uri) {
-      if (isNonRelativeUri(uri)) {
+      if (uri.isNonRelative) {
         return null;
       }
       // TODO: refactor resource loader to remove this

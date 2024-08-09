@@ -418,12 +418,12 @@ ResourcesLoader getFileResourceValidator(
       // GLB-stored buffer
       return readerResult.buffer;
     }
-    if (isNonRelativeUri(uri)) {
+    if (uri.isNonRelative) {
       return null;
     }
     return fileGuarded(uri).readAsBytes();
   }, externalStreamFetch: (uri) {
-    if (isNonRelativeUri(uri)) {
+    if (uri.isNonRelative) {
       return null;
     }
     return fileGuarded(uri).openRead();
