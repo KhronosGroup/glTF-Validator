@@ -46,7 +46,8 @@ class KhrMaterialsDispersion extends GltfProperty {
     while (o != null) {
       o = context.owners[o];
       if (o is Material) {
-        // The dispersion extension needs to be combined with KHR_materials_volume.
+        // The dispersion extension needs to be combined
+        // with KHR_materials_volume.
         if (!o.extensions.containsKey(KHR_MATERIALS_VOLUME)) {
           context.addIssue(SemanticError.khrMaterialsDispersionNoVolume);
         }
