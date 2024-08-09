@@ -1,0 +1,50 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_animation_pointer"
+    ],
+    "materials": [
+        {
+            "pbrMetallicRoughness": { }
+        }
+    ],
+    "accessors": [
+        {
+            "count": 2,
+            "type": "SCALAR",
+            "componentType": 5126,
+            "min": [ 0 ],
+            "max": [ 1 ]
+        },
+        {
+            "count": 2,
+            "type": "VEC4",
+            "componentType": 5126
+        }
+    ],
+    "animations": [
+        {
+            "channels": [
+                {
+                    "target": {
+                        "path": "path",
+                        "extensions": {
+                            "KHR_animation_pointer": {
+                                "pointer": "/materials/0/pbrMetallicRoughness/baseColorFactor"
+                            }
+                        }
+                    },
+                    "sampler": 0
+                }
+            ],
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1
+                }
+            ]
+        }
+    ]
+}

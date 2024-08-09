@@ -340,12 +340,19 @@ class AnimationChannelTarget extends GltfProperty {
       checkMembers(map, ANIMATION_CHANNEL_TARGET_MEMBERS, context);
     }
 
-    return AnimationChannelTarget._(
+    final extensions = getExtensions(map, AnimationChannelTarget, context,
+        overriddenType: Animation);
+
+    final target = AnimationChannelTarget._(
         getIndex(map, NODE, context, req: false),
         getString(map, PATH, context,
-            req: true, list: ANIMATION_CHANNEL_TARGET_PATHS),
-        getExtensions(map, AnimationChannelTarget, context),
+            req: true, list: context.animationChannelTargetPaths),
+        extensions,
         getExtras(map, context));
+
+    context.registerObjectsOwner(target, [...extensions.values]);
+
+    return target;
   }
 
   bool isSameAs(AnimationChannelTarget other) =>

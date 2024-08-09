@@ -18,6 +18,7 @@ library gltf.extensions;
 
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
+import 'package:gltf/src/ext/KHR_animation_pointer/khr_animation_pointer.dart';
 import 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 import 'package:gltf/src/ext/KHR_materials_anisotropy/khr_materials_anisotropy.dart';
 import 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
@@ -38,6 +39,7 @@ import 'package:gltf/src/hash.dart';
 import 'package:meta/meta.dart';
 
 export 'package:gltf/src/ext/EXT_texture_webp/ext_texture_webp.dart';
+export 'package:gltf/src/ext/KHR_animation_pointer/khr_animation_pointer.dart';
 export 'package:gltf/src/ext/KHR_lights_punctual/khr_lights_punctual.dart';
 export 'package:gltf/src/ext/KHR_materials_anisotropy/khr_materials_anisotropy.dart';
 export 'package:gltf/src/ext/KHR_materials_clearcoat/khr_materials_clearcoat.dart';
@@ -102,6 +104,7 @@ class ResourceValidatableExtensionEntry {
 
 const List<Extension> kDefaultExtensions = <Extension>[
   extTextureWebPExtension,
+  khrAnimationPointerExtension,
   khrLightsPunctualExtension,
   khrMaterialsAnisotropyExtension,
   khrMaterialsClearcoatExtension,

@@ -35,6 +35,7 @@ NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfVal
   - Warning on unsupported image features (like animations or custom color spaces).
 - Extensions validation
   - EXT_texture_webp
+  - KHR_animation_pointer (partial)
   - KHR_lights_punctual
   - KHR_materials_anisotropy
   - KHR_materials_clearcoat
