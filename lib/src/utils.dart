@@ -166,7 +166,7 @@ String getString(Map<String, Object> map, String name, Context context,
 Uri getUri(String uriString, Context context) {
   try {
     final uri = Uri.parse(uriString);
-    if (isNonRelativeUri(uri)) {
+    if (uri.isNonRelative) {
       context
           .addIssue(SemanticError.nonRelativeUri, name: URI, args: [uriString]);
     }
@@ -727,13 +727,6 @@ bool isTrsDecomposable(Matrix4 matrix) {
 
 bool isPot(int value) => (value != 0) && (value & (value - 1) == 0);
 
-bool isNonRelativeUri(Uri uri) =>
-    uri.hasScheme ||
-    uri.hasAuthority ||
-    uri.hasAbsolutePath ||
-    uri.hasQuery ||
-    uri.hasFragment;
-
 int padLength(int length) => length + (-length & 3);
 
 List<int> createTypedIntList(int type, int length) {
@@ -764,6 +757,11 @@ extension Vector3IsOneOrZero on Vector3 {
   bool get isOne => x == 1 && y == 1 && z == 1;
 
   bool get isZero => x == 0 && y == 0 && z == 0;
+}
+
+extension IsNonRelativeUri on Uri {
+  bool get isNonRelative =>
+      hasScheme || hasAuthority || hasAbsolutePath || hasQuery || hasFragment;
 }
 
 abstract class ElementChecker<T extends num> {

@@ -27,6 +27,7 @@ import 'dart:math';
 
 import 'dart:typed_data';
 import 'package:gltf/gltf.dart';
+import 'package:gltf/src/utils.dart';
 
 const _kChunkSize = 1024 * 1024;
 const _kMaxReportLength = 512 * 1024;
@@ -143,6 +144,9 @@ Future<ValidationResult> _doValidate(List<File> files) async {
     final resourcesLoader = ResourcesLoader(context, readerResult.gltf,
         externalBytesFetch: ([uri]) {
       if (uri != null) {
+        if (uri.isNonRelative) {
+          return null;
+        }
         final file = _getFileByUri(files, uri);
         if (file != null) {
           return _getFile(file);
@@ -154,6 +158,9 @@ Future<ValidationResult> _doValidate(List<File> files) async {
       }
     }, externalStreamFetch: (uri) {
       if (uri != null) {
+        if (uri.isNonRelative) {
+          return null;
+        }
         final file = _getFileByUri(files, uri);
         if (file != null) {
           return _getFileStream(file);
