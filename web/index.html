@@ -50,8 +50,10 @@
 </div>
 <div id="outputZone">
     <p><em>Validation is performed locally in your browser. Submitted assets are not uploaded.</em></p>
-    <p id="truncatedWarning" style="display: none"><em>Validation report is truncated because it contains too many
+    <p id="truncatedWarning" class="warning" style="display: none"><em>Validation report is truncated because it contains too many
         issues.</em></p>
+    <p id="fileWarning" class="warning" style="display: none"><em>The Validator is opened with the "file" URI Scheme.
+        Resources in directories are not accessible.</em></p>
     <pre><code class="language-json" id="output"></code></pre>
 </div>
 

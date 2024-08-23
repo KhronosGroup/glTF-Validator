@@ -97,6 +97,6 @@ html, body {
     cursor: pointer;
 }
 
-#truncatedWarning {
+.warning {
     color: #c92c2c;
 }
