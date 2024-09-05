@@ -1,18 +1,6 @@
-/*
- * # Copyright (c) 2016-2019 The Khronos Group Inc.
- * #
- * # Licensed under the Apache License, Version 2.0 (the "License");
- * # you may not use this file except in compliance with the License.
- * # You may obtain a copy of the License at
- * #
- * #     http://www.apache.org/licenses/LICENSE-2.0
- * #
- * # Unless required by applicable law or agreed to in writing, software
- * # distributed under the License is distributed on an "AS IS" BASIS,
- * # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * # See the License for the specific language governing permissions and
- * # limitations under the License.
- */
+// Copyright 2016-2024 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: Apache-2.0
 
 // ignore_for_file: avoid_print
 // ignore_for_file: avoid_dynamic_calls
@@ -21,7 +9,17 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html' show querySelector, InputElement, File, FileReader, window;
+import 'dart:html'
+    show
+        querySelector,
+        DataTransferItemList,
+        DirectoryEntry,
+        Entry,
+        InputElement,
+        File,
+        FileEntry,
+        FileReader,
+        window;
 import 'dart:js';
 import 'dart:math';
 
@@ -38,8 +36,12 @@ final _dropZone = querySelector('#dropZone');
 final _output = querySelector('#output');
 final _input = querySelector('#input') as InputElement;
 final _inputLink = querySelector('#inputLink');
+final _fileWarning = querySelector('#fileWarning');
 final _truncatedWarning = querySelector('#truncatedWarning');
 final _validityLabel = querySelector('#validityLabel');
+
+final _isFileUri = window.location.protocol == 'file:';
+final _assetPattern = RegExp(r'^[^\/]*\.gl(?:tf|b)$', caseSensitive: false);
 
 final _sw = Stopwatch();
 
@@ -64,7 +66,13 @@ void main() {
 
   _dropZone.onDrop.listen((e) {
     e.preventDefault();
-    _validate(e.dataTransfer.files);
+    // File and Directory Entries API may not work
+    // when the page is opened from a local path.
+    if (_isFileUri) {
+      _validateFiles(e.dataTransfer.files);
+    } else {
+      _validateItems(e.dataTransfer.items);
+    }
   });
 
   _inputLink.onClick.listen((e) {
@@ -76,7 +84,7 @@ void main() {
   _input.onChange.listen((e) {
     e.preventDefault();
     if (_input.files.isNotEmpty) {
-      _validate(_input.files);
+      _validateFiles(_input.files);
     }
   });
 
@@ -84,58 +92,93 @@ void main() {
   print('Supported extensions: ${Context.defaultExtensionNames.join(', ')}');
 }
 
-void _validate(List<File> files) {
+void _preValidate() {
   _output.text = '';
+  _fileWarning.style.display = 'none';
   _truncatedWarning.style.display = 'none';
   _validityLabel.text = 'Validating...';
   _dropZone.classes
     ..clear()
     ..add('drop');
-
-  _doValidate(files).then((result) {
-    _dropZone.classes.remove('drop');
-    if (result != null) {
-      if (result.context.isTruncated) {
-        _truncatedWarning.style.display = 'block';
-      }
-
-      if (result.context.errors.isEmpty) {
-        _dropZone.classes.add('valid');
-        _validityLabel.text = 'The asset is valid.';
-      } else {
-        _dropZone.classes.add('invalid');
-        _validityLabel.text = 'The asset contains errors.';
-      }
-    } else {
-      _validityLabel.text = 'No glTF asset provided.';
-    }
-  });
 }
 
-Future<ValidationResult> _doValidate(List<File> files) async {
+void _postValidate(ValidationResult result) {
+  _dropZone.classes.remove('drop');
+  if (result != null) {
+    if (_isFileUri) {
+      _fileWarning.style.display = 'block';
+    }
+
+    if (result.context.isTruncated) {
+      _truncatedWarning.style.display = 'block';
+    }
+
+    if (result.context.errors.isEmpty) {
+      _dropZone.classes.add('valid');
+      _validityLabel.text = 'The asset is valid.';
+    } else {
+      _dropZone.classes.add('invalid');
+      _validityLabel.text = 'The asset contains errors.';
+    }
+  } else {
+    _validityLabel.text =
+        'No glTF asset was found or a file access error has occurred.';
+  }
+}
+
+void _validateFiles(List<File> files) {
+  _preValidate();
+  final filesMap = <String, File>{for (final file in files) file.name: file};
+  _doValidate(filesMap).then(_postValidate);
+}
+
+void _validateItems(DataTransferItemList items) {
+  _preValidate();
+  _getFilesMapFromItems(items)
+      .then(_doValidate, onError: (Object _) => null)
+      .then(_postValidate);
+}
+
+Future<Map<String, File>> _getFilesMapFromItems(DataTransferItemList items) {
+  final entries = List.generate(items.length, (i) => items[i].getAsEntry(),
+      growable: false);
+  return _traverseDirectory(entries, <String, File>{});
+}
+
+Future<Map<String, File>> _traverseDirectory(
+    List<Entry> entries, Map<String, File> result) async {
+  for (final entry in entries) {
+    if (entry.isFile) {
+      final fileEntry = entry as FileEntry;
+      result[fileEntry.fullPath.substring(1)] = await fileEntry.file();
+    } else if (entry.isDirectory) {
+      final directoryEntry = entry as DirectoryEntry;
+      await _traverseDirectory(
+          await directoryEntry.createReader().readEntries(), result);
+    }
+  }
+  return result;
+}
+
+Future<ValidationResult> _doValidate(Map<String, File> files) async {
   _sw
     ..reset()
     ..start();
-  File gltfFile;
   GltfReader reader;
 
   final context =
       Context(options: ValidationOptions(maxIssues: _kMaxIssuesCount));
 
-  for (gltfFile in files) {
-    final lowerCaseName = gltfFile.name.toLowerCase();
-    if (lowerCaseName.endsWith('.gltf')) {
-      reader = GltfJsonReader(_getFileStream(gltfFile), context);
-      break;
-    }
-    if (lowerCaseName.endsWith('.glb')) {
-      reader = GlbReader(_getFileStream(gltfFile), context);
-      break;
-    }
+  final assetFilename =
+      files.keys.firstWhere(_assetPattern.hasMatch, orElse: () => null);
+  if (assetFilename == null) {
+    return null;
   }
 
-  if (reader == null) {
-    return null;
+  if (assetFilename.toLowerCase().endsWith('.gltf')) {
+    reader = GltfJsonReader(_getFileStream(files[assetFilename]), context);
+  } else {
+    reader = GlbReader(_getFileStream(files[assetFilename]), context);
   }
 
   final readerResult = await reader.read();
@@ -149,7 +192,7 @@ Future<ValidationResult> _doValidate(List<File> files) async {
         }
         final file = _getFileByUri(files, uri);
         if (file != null) {
-          return _getFile(file);
+          return _getFileBytes(file);
         } else {
           throw GltfExternalResourceNotFoundException(uri.toString());
         }
@@ -174,7 +217,7 @@ Future<ValidationResult> _doValidate(List<File> files) async {
     await resourcesLoader.load();
   }
   final validationResult =
-      ValidationResult(Uri.parse(gltfFile.name), context, readerResult);
+      ValidationResult(Uri.parse(assetFilename), context, readerResult);
 
   _sw.stop();
   print('Validation: ${_sw.elapsedMilliseconds}ms.');
@@ -188,10 +231,8 @@ Future<ValidationResult> _doValidate(List<File> files) async {
   return validationResult;
 }
 
-File _getFileByUri(List<File> files, Uri uri) {
-  final fileName = Uri.decodeComponent(uri.path);
-  return files.firstWhere((file) => file.name == fileName, orElse: () => null);
-}
+File _getFileByUri(Map<String, File> files, Uri uri) =>
+    files[Uri.decodeComponent(uri.path)];
 
 Stream<Uint8List> _getFileStream(File file) {
   var isCanceled = false;
@@ -227,7 +268,7 @@ Stream<Uint8List> _getFileStream(File file) {
   return controller.stream;
 }
 
-Future<Uint8List> _getFile(File file) async {
+Future<Uint8List> _getFileBytes(File file) async {
   final fileReader = FileReader()..readAsArrayBuffer(file);
   await fileReader.onLoadEnd.first;
   final result = fileReader.result;
@@ -241,8 +282,7 @@ void _writeMap(Map<String, Object> jsonMap) {
   final report = _kJsonEncoder.convert(jsonMap);
   _output.text = report;
   if (report.length < _kMaxReportLength) {
-    context['Prism']
-        .callMethod('highlightAll', [window.location.protocol != 'file:']);
+    context['Prism'].callMethod('highlightAll', [!_isFileUri]);
   } else {
     print('Report is too big: ${report.length} bytes. '
         'Syntax highlighting disabled.');
