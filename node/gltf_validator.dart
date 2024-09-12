@@ -63,6 +63,8 @@ abstract class Exports {
 abstract class _JSValidationOptions {
   external Object get uri;
 
+  external Object get format;
+
   external ExternalResourceFunction get externalResourceFunction;
 
   external bool get writeTimestamp;
@@ -116,13 +118,22 @@ Future<Map<String, Object>> validateBytes(
   final _options = _checkOptionsObject(options);
   final context = _getContextFromOptions(_options);
 
-  GltfReaderResult readerResult;
-  try {
-    final reader = await GltfReader.detect(Stream.value(data), context);
-    readerResult = await reader.read();
-  } on GltfInvalidFormatException {
-    rethrow;
+  GltfReader reader;
+  switch ((_options?.format as String)?.toLowerCase()) {
+    case 'glb':
+      reader = GlbReader(Stream.value(data), context);
+      break;
+    case 'gltf':
+      reader = GltfJsonReader(Stream.value(data), context);
+      break;
+    default:
+      try {
+        reader = await GltfReader.detect(Stream.value(data), context);
+      } on GltfInvalidFormatException {
+        rethrow;
+      }
   }
+  final readerResult = await reader.read();
 
   return _validateResourcesAndGetReport(_options, context, readerResult);
 }
@@ -204,6 +215,10 @@ Context _getContextFromOptions(_JSValidationOptions options) {
   List<String> ignoredIssues;
 
   if (options != null) {
+    if (options.format != null && options.format is! String) {
+      throw ArgumentError('options.format: Value must be a string.');
+    }
+
     if (options.maxIssues != null &&
         (options.maxIssues is! int || options.maxIssues < 0)) {
       throw ArgumentError(

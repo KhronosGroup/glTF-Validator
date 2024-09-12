@@ -48,6 +48,7 @@ const asset = fs.readFileSync(fullpath);
 
 validator.validateBytes(new Uint8Array(asset), {
     uri: filename,
+    format: 'gltf', // skip auto-detection and parse the input as glTF JSON
     maxIssues: 10, // limit max number of output issues to 10
     ignoredIssues: ['UNSUPPORTED_EXTENSION'], // mute UNSUPPORTED_EXTENSION issue
     severityOverrides: { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 }, // treat degenerate triangles as errors

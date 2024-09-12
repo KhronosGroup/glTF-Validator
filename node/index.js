@@ -47,6 +47,7 @@ exports.validateString = (json, options) => validator.validateString(json, optio
 /**
  @typedef {Object} ValidationOptions
  @property {string} uri - Absolute or relative asset URI that will be copied to validation report.
+ @property {string} format - Set to `glb` or `gltf` to skip auto-detection of the asset format based on the first byte; any other value will be ignored. This option has no effect on `validateString`.
  @property {ExternalResourceFunction} externalResourceFunction - Function for loading external resources. If omitted, external resources are not validated.
  @property {boolean} writeTimestamp - Set to `false` to omit timestamp from the validation report. Default is `true`.
  @property {number} maxIssues - Max number of reported issues. Use `0` for unlimited output.
