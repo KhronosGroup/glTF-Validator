@@ -73,6 +73,8 @@ abstract class _JSValidationOptions {
 
   external List get ignoredIssues;
 
+  external List get onlyIssues;
+
   external Object get severityOverrides;
 }
 
@@ -213,6 +215,7 @@ Context _getContextFromOptions(_JSValidationOptions options) {
   ValidationOptions validationOptions;
   Map<String, Severity> severityOverrides;
   List<String> ignoredIssues;
+  List<String> onlyIssues;
 
   if (options != null) {
     if (options.format != null && options.format is! String) {
@@ -223,6 +226,28 @@ Context _getContextFromOptions(_JSValidationOptions options) {
         (options.maxIssues is! int || options.maxIssues < 0)) {
       throw ArgumentError(
           'options.maxIssues: Value must be a non-negative integer.');
+    }
+
+    if (options.onlyIssues != null && options.ignoredIssues != null) {
+      throw ArgumentError(
+          'options.onlyIssues cannot be used along with options.ignoredIssues.');
+    }
+
+    if (options.onlyIssues != null) {
+      if (options.onlyIssues is! List) {
+        throw ArgumentError('options.onlyIssues: Value must be an array.');
+      }
+
+      onlyIssues = <String>[];
+      for (var i = 0; i < options.onlyIssues.length; ++i) {
+        final Object entry = options.onlyIssues[i];
+        if (entry is String && entry.isNotEmpty) {
+          onlyIssues.add(entry);
+        } else {
+          throw ArgumentError(
+              'options.onlyIssues[$i]: Value must be a non-empty String.');
+        }
+      }
     }
 
     if (options.ignoredIssues != null) {
@@ -267,6 +292,7 @@ Context _getContextFromOptions(_JSValidationOptions options) {
     validationOptions = ValidationOptions(
         maxIssues: options.maxIssues,
         ignoredIssues: ignoredIssues,
+        onlyIssues: onlyIssues,
         severityOverrides: severityOverrides);
   }
 

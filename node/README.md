@@ -51,6 +51,7 @@ validator.validateBytes(new Uint8Array(asset), {
     format: 'gltf', // skip auto-detection and parse the input as glTF JSON
     maxIssues: 10, // limit max number of output issues to 10
     ignoredIssues: ['UNSUPPORTED_EXTENSION'], // mute UNSUPPORTED_EXTENSION issue
+    onlyIssues: ['ACCESSOR_INVALID_FLOAT'], // only consider ACCESSOR_INVALID_FLOAT an issue. Cannot be used along with ignoredIssues.
     severityOverrides: { 'ACCESSOR_INDEX_TRIANGLE_DEGENERATE': 0 }, // treat degenerate triangles as errors
     externalResourceFunction: (uri) =>
         new Promise((resolve, reject) => {
