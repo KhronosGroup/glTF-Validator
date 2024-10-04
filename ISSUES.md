@@ -48,7 +48,6 @@
 |KHR_MATERIALS_CLEARCOAT_CLEARCOAT_NORMAL_TEXTURE_TEXCOORD|Normal and clearcoat normal textures should use the same texture coords.|Warning|
 |KHR_MATERIALS_DISPERSION_NO_VOLUME|The dispersion extension needs to be combined with the volume extension.|Warning|
 |KHR_MATERIALS_EMISSIVE_STRENGTH_ZERO_FACTOR|Emissive strength has no effect when the emissive factor is zero or undefined.|Warning|
-|KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID|Thickness maximum must be greater than or equal to the thickness minimum.|Error|
 |KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_WITHOUT_TEXTURE|Thickness minimum has no effect when a thickness texture is not defined.|Information|
 |KHR_MATERIALS_IRIDESCENCE_THICKNESS_TEXTURE_UNUSED|Thickness texture has no effect when the thickness minimum is equal to the thickness maximum.|Information|
 |KHR_MATERIALS_VOLUME_DOUBLE_SIDED|The volume extension should not be used with double-sided materials.|Warning|

@@ -547,12 +547,6 @@ class SemanticError extends IssueType {
               'when a thickness texture is not defined.',
           Severity.Information);
 
-  static final SemanticError khrMaterialsIridescenceThicknessRangeInvalid =
-      SemanticError._(
-          'KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID',
-          (args) => 'Thickness maximum must be greater than or '
-              'equal to the thickness minimum.');
-
   static final SemanticError khrMaterialsIridescenceThicknessTextureUnused =
       SemanticError._(
           'KHR_MATERIALS_IRIDESCENCE_THICKNESS_TEXTURE_UNUSED',

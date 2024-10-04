@@ -65,13 +65,6 @@ class KhrMaterialsIridescence extends GltfProperty {
         map, IRIDESCENCE_THICKNESS_TEXTURE, context, TextureInfo.fromMap);
 
     if (context.validate) {
-      if (iridescenceThicknessMinimum > iridescenceThicknessMaximum) {
-        context.addIssue(
-            SemanticError.khrMaterialsIridescenceThicknessRangeInvalid,
-            name: map.containsKey(IRIDESCENCE_THICKNESS_MINIMUM)
-                ? IRIDESCENCE_THICKNESS_MINIMUM
-                : IRIDESCENCE_THICKNESS_MAXIMUM);
-      }
       if (iridescenceThicknessTexture != null) {
         if (iridescenceThicknessMinimum == iridescenceThicknessMaximum) {
           context.addIssue(

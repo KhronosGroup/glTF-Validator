@@ -4,7 +4,6 @@
         "tests": {
             "custom_property.gltf": "Custom property",
             "unexpected_extension.gltf": "Unexpected extension object location",
-            "invalid_thickness_range.gltf": "Invalid thickness range",
             "unused_thickness_texture.gltf": "Unused thickness texture",
             "unused_thickness_minimum.gltf": "Unused thickness minimum",
             "valid.gltf": "Valid"
