@@ -25,13 +25,20 @@ import 'package:gltf/src/gl.dart' as gl;
 class ValidationOptions {
   final int maxIssues;
   final Set<String> ignoredIssues = <String>{};
+  final Set<String> onlyIssues = <String>{};
   final Map<String, Severity> severityOverrides;
 
   ValidationOptions(
-      {int maxIssues, List<String> ignoredIssues, this.severityOverrides})
+      {int maxIssues,
+      List<String> ignoredIssues,
+      List<String> onlyIssues,
+      this.severityOverrides})
       : maxIssues = maxIssues ?? 0 {
     if (ignoredIssues != null) {
       this.ignoredIssues.addAll(ignoredIssues);
+    }
+    if (onlyIssues != null) {
+      this.onlyIssues.addAll(onlyIssues);
     }
   }
 }
@@ -217,6 +224,11 @@ class Context {
       int index,
       bool noPointer = false}) {
     if (options.ignoredIssues.contains(issueType.code)) {
+      return;
+    }
+
+    if (options.onlyIssues.isNotEmpty &&
+        !options.onlyIssues.contains(issueType.code)) {
       return;
     }
 
