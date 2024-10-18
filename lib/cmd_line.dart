@@ -90,7 +90,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
   const kOverride = 'override';
 
   void abort(Object e) {
-    stderr.write(e);
+    stderr.writeln(e);
     exit(kErrorCode);
   }
 
@@ -135,7 +135,7 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
         }
       }, growable: false);
     } else if (yamlIgnoredIssues != null) {
-      abort("$kYamlError 'ignored' must be a sequence.");
+      abort("$kYamlError '$kIgnore' must be a sequence.");
     }
 
     final Object yamlOnlyIssues = yaml[kOnly];
@@ -150,7 +150,12 @@ ValidationOptions _getValidationOptionsFromYaml(String fileName) {
         }
       }, growable: false);
     } else if (yamlOnlyIssues != null) {
-      abort("$kYamlError 'only' must be a sequence.");
+      abort("$kYamlError '$kOnly' must be a sequence.");
+    }
+
+    if (onlyIssues != null && ignoredIssues != null) {
+      abort("$kYamlError option '$kOnly' cannot be used "
+          "along with option '$kIgnore'.");
     }
 
     final Object yamlSeveritiesMap = yaml[kOverride];
