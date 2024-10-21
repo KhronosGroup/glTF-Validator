@@ -1,5 +1,45 @@
 # Changelog
 
+## 2.0.0-dev.3.10
+
+### New Features
+
+* Added support for `KHR_materials_anisotropy` extension.
+  * Added `KHR_MATERIALS_ANISOTROPY_ANISOTROPY_TEXTURE_TEXCOORD` validation warning.
+
+* Added support for `KHR_materials_dispersion` extension.
+  * Added `KHR_MATERIALS_DISPERSION_NO_VOLUME` validation warning.
+
+* Added new tangent space validations: `MESH_PRIMITIVE_NO_TANGENT_SPACE` validation error and `MESH_PRIMITIVE_GENERATED_TANGENT_SPACE` validation warning.
+
+* Added new `KHR_MATERIALS_CLEARCOAT_CLEARCOAT_NORMAL_TEXTURE_TEXCOORD` validation warning.
+
+* Added partial support for the `KHR_animation_pointer` extension.
+  * Added new `KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_NODE` and `KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_PATH` validation errors.
+  * Added new `INCOMPLETE_EXTENSION_SUPPORT` validation info.
+
+* Web version now supports external resources in directories.
+
+### Changes
+
+* Removed `UNRESERVED_EXTENSION_PREFIX` validation warning.
+
+* Removed `KHR_MATERIALS_IRIDESCENCE_THICKNESS_RANGE_INVALID` validation error following the spec update.
+
+### Bugfixes
+
+* Fixed incorrect errors when an indexed attribute, e.g., `COLOR_0`, is used in morph targets (#178, #213).
+
+* Fixed incorrect errors in the Web version when an asset contains non-relative URIs (#229).
+
+* Fixed crash when skin weights data is missing (#196).
+
+### Integration updates
+
+* The `validateBytes` JS API function now supports a `format` validation option to bypass format detection and force GLB or glTF JSON explicitly.
+
+* Added an option to ignore all validation issues except those passed explicitly; supported in both JS API and YAML config file.
+
 ## 2.0.0-dev.3.9
 
 ### Bugfixes
