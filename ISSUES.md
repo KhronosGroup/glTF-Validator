@@ -66,7 +66,8 @@
 |NODE_MATRIX_NON_TRS|Matrix must be decomposable to TRS.|Error|
 |NODE_MATRIX_TRS|A node can have either a matrix or any combination of translation/rotation/scale (TRS) properties.|Error|
 |NODE_SKINNED_MESH_LOCAL_TRANSFORMS|Local transforms will not affect a skinned mesh.|Warning|
-|NODE_SKINNED_MESH_NON_ROOT|Node with a skinned mesh is not root. Parent transforms will not affect a skinned mesh.|Warning|
+|NODE_SKINNED_MESH_NON_ROOT|Node with a skinned mesh is not root. Parent transforms will not affect a skinned mesh.|Information|
+|NODE_SKINNED_MESH_PARENT_TRANSFORMS|Node with a skinned mesh has parent nodes with transforms. Parent transforms will not affect a skinned mesh.|Warning|
 |NODE_SKIN_NO_SCENE|A node with a skinned mesh is used in a scene that does not contain joint nodes.|Error|
 |NON_OBJECT_EXTRAS|Prefer JSON Objects for extras.|Information|
 |NON_RELATIVE_URI|Non-relative URI found: '`%1`'.|Warning|
