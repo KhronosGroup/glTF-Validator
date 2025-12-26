@@ -1,0 +1,41 @@
+{
+    "uri": "test/ext/KHR_node_visibility/data/node/custom_property.gltf",
+    "mimeType": "model/gltf+json",
+    "issues": {
+        "numErrors": 0,
+        "numWarnings": 1,
+        "numInfos": 1,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "UNEXPECTED_PROPERTY",
+                "message": "Unexpected property.",
+                "severity": 1,
+                "pointer": "/nodes/0/extensions/KHR_node_visibility/customProperty"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/0"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": ["KHR_node_visibility"],
+        "animationCount": 0,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}
