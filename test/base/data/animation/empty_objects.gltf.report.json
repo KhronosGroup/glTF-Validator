@@ -34,12 +34,6 @@
             },
             {
                 "code": "UNDEFINED_PROPERTY",
-                "message": "Property 'sampler' must be defined.",
-                "severity": 0,
-                "pointer": "/animations/2/channels/0"
-            },
-            {
-                "code": "UNDEFINED_PROPERTY",
                 "message": "Property 'target' must be defined.",
                 "severity": 0,
                 "pointer": "/animations/2/channels/0"
@@ -48,13 +42,19 @@
                 "code": "UNDEFINED_PROPERTY",
                 "message": "Property 'sampler' must be defined.",
                 "severity": 0,
-                "pointer": "/animations/2/channels/1"
+                "pointer": "/animations/2/channels/0"
             },
             {
                 "code": "UNDEFINED_PROPERTY",
                 "message": "Property 'path' must be defined.",
                 "severity": 0,
                 "pointer": "/animations/2/channels/1/target"
+            },
+            {
+                "code": "UNDEFINED_PROPERTY",
+                "message": "Property 'sampler' must be defined.",
+                "severity": 0,
+                "pointer": "/animations/2/channels/1"
             },
             {
                 "code": "UNDEFINED_PROPERTY",

@@ -2,6 +2,7 @@
     "node": {
         "name": "node.KHR_node_visibility",
         "tests": {
+            "animation_pointer.gltf": "Animation pointer",
             "custom_property.gltf": "Custom property",
             "unexpected_extension.gltf": "Unexpected extension object location",
             "valid.gltf": "Valid"

@@ -84,9 +84,59 @@ class KhrMaterialsSpecular extends GltfProperty {
       context.path.removeLast();
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_SPECULAR) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_SPECULAR)) {
+      return PointerValidity.invalid;
+    }
+    final specularExt =
+        mat.extensions[KHR_MATERIALS_SPECULAR] as KhrMaterialsSpecular;
+    final subProp = pointer[inPropDepth + 2];
+    TextureInfo texInfoCheckTransform;
+    switch (subProp) {
+      case SPECULAR_COLOR_FACTOR:
+        if (specularExt.specularColorFactor == null ||
+            specularExt.specularColorFactor.length != 3) {
+          return PointerValidity.invalid;
+        }
+        return PointerValidity.validIfVec3;
+      case SPECULAR_FACTOR:
+        return PointerValidity.validIfScalar;
+      case SPECULAR_COLOR_TEXTURE:
+        if (specularExt.specularColorTexture == null) {
+          return PointerValidity.invalid;
+        }
+        texInfoCheckTransform = specularExt.specularColorTexture;
+        break;
+      case SPECULAR_TEXTURE:
+        if (specularExt.specularTexture == null) {
+          return PointerValidity.invalid;
+        }
+        texInfoCheckTransform = specularExt.specularTexture;
+        break;
+    }
+    if (texInfoCheckTransform != null) {
+      // KHR_materials_specular can be used with KHR_texture_transform.
+      return KhrTextureTransform.validateExtensionPointer(
+          context, pointer, texInfoCheckTransform, inPropDepth + 3);
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsSpecularExtension = Extension(
-    KHR_MATERIALS_SPECULAR, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsSpecular.fromMap)
-});
+    KHR_MATERIALS_SPECULAR,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsSpecular.fromMap)
+    },
+    validateExtensionPointer: KhrMaterialsSpecular.validateExtensionPointer);

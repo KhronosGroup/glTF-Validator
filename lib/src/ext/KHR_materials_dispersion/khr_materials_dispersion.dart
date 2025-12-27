@@ -55,9 +55,33 @@ class KhrMaterialsDispersion extends GltfProperty {
       }
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_DISPERSION) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_DISPERSION)) {
+      return PointerValidity.invalid;
+    }
+    final subProp = pointer[inPropDepth + 2];
+    switch (subProp) {
+      case DISPERSION:
+        return PointerValidity.validIfScalar;
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsDispersionExtension = Extension(
-    KHR_MATERIALS_DISPERSION, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsDispersion.fromMap)
-});
+    KHR_MATERIALS_DISPERSION,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsDispersion.fromMap)
+    },
+    validateExtensionPointer: KhrMaterialsDispersion.validateExtensionPointer);

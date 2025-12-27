@@ -311,14 +311,13 @@ class AnimationChannel extends GltfProperty {
     if (context.validate) {
       checkMembers(map, ANIMATION_CHANNEL_MEMBERS, context);
     }
-
-    return AnimationChannel._(
-        getIndex(map, SAMPLER, context),
-        getObjectFromInnerMap<AnimationChannelTarget>(
-            map, TARGET, context, AnimationChannelTarget.fromMap,
-            req: true),
-        getExtensions(map, AnimationChannel, context),
-        getExtras(map, context));
+    final target = getObjectFromInnerMap<AnimationChannelTarget>(
+        map, TARGET, context, AnimationChannelTarget.fromMap,
+        req: true);
+    final channel = AnimationChannel._(getIndex(map, SAMPLER, context), target,
+        getExtensions(map, AnimationChannel, context), getExtras(map, context));
+    context.registerObjectsOwner(channel, [target]);
+    return channel;
   }
 }
 

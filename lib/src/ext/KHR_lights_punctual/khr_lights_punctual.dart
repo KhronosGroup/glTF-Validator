@@ -19,12 +19,7 @@ library gltf.extensions.khr_lights_punctual;
 import 'package:gltf/src/base/gltf_property.dart';
 import 'package:gltf/src/ext/extensions.dart';
 
-const Extension khrLightsPunctualExtension =
-    Extension('KHR_lights_punctual', <Type, ExtensionDescriptor>{
-  Gltf: ExtensionDescriptor(KhrLightsPunctualGltf.fromMap),
-  Node: ExtensionDescriptor(KhrLightsPunctualNode.fromMap)
-});
-
+const String KHR_LIGHTS_PUNCTUAL = 'KHR_lights_punctual';
 const String LIGHTS = 'lights';
 const String LIGHT = 'light';
 const String COLOR = 'color';
@@ -108,6 +103,64 @@ class KhrLightsPunctualGltf extends GltfProperty {
       });
       context.path.removeLast();
     }
+  }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer.length < inPropDepth + 5) {
+      return PointerValidity.unknown;
+    }
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_LIGHTS_PUNCTUAL ||
+        pointer[inPropDepth + 2] != LIGHTS) {
+      return PointerValidity.unknown;
+    }
+    if (prop.extensions == null ||
+        !prop.extensions.containsKey(KHR_LIGHTS_PUNCTUAL)) {
+      return PointerValidity.invalid;
+    }
+    final lightsExtension =
+        prop.extensions[KHR_LIGHTS_PUNCTUAL] as KhrLightsPunctualGltf;
+    final lightIndex = int.tryParse(pointer[inPropDepth + 3]);
+    if (lightIndex == null ||
+        lightIndex < 0 ||
+        lightIndex >= lightsExtension.lights.length) {
+      return PointerValidity.invalid;
+    }
+    final light = lightsExtension.lights[lightIndex];
+    final subProp = pointer[inPropDepth + 4];
+    switch (subProp) {
+      case COLOR:
+        if (light.color == null || light.color.length != 3) {
+          return PointerValidity.invalid;
+        }
+        return PointerValidity.validIfVec3;
+      case INTENSITY:
+        if (light.intensity.isNaN) {
+          return PointerValidity.invalid;
+        }
+        return PointerValidity.validIfScalar;
+      case RANGE:
+        if (light.range.isNaN || light.type == DIRECTIONAL) {
+          return PointerValidity.invalid;
+        }
+        return PointerValidity.validIfScalar;
+      case SPOT:
+        if (light.type != SPOT || light.spot == null) {
+          return PointerValidity.invalid;
+        }
+        if (pointer.length < inPropDepth + 6) {
+          return PointerValidity.invalid;
+        }
+        final spotSubProp = pointer[inPropDepth + 5];
+        switch (spotSubProp) {
+          case INNER_CONE_ANGLE:
+          case OUTER_CONE_ANGLE:
+            return PointerValidity.validIfScalar;
+        }
+        return PointerValidity.unknown;
+    }
+    return PointerValidity.unknown;
   }
 }
 
@@ -239,3 +292,11 @@ class KhrLightsPunctualNode extends GltfProperty {
 
   KhrLightsPunctualLight get light => _light;
 }
+
+const Extension khrLightsPunctualExtension = Extension(
+    KHR_LIGHTS_PUNCTUAL,
+    <Type, ExtensionDescriptor>{
+      Gltf: ExtensionDescriptor(KhrLightsPunctualGltf.fromMap),
+      Node: ExtensionDescriptor(KhrLightsPunctualNode.fromMap)
+    },
+    validateExtensionPointer: KhrLightsPunctualGltf.validateExtensionPointer);
