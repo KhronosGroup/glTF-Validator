@@ -1,5 +1,13 @@
 # Changelog
 
+### New Features
+
+* Added new `NODE_SKINNED_MESH_PARENT_TRANSFORMS` validation warning.
+
+### Changes
+
+* Changed `NODE_SKINNED_MESH_NON_ROOT` default severity to Information.
+
 ## 2.0.0-dev.3.10
 
 ### New Features

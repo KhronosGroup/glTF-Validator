@@ -441,16 +441,22 @@ class SemanticError extends IssueType {
   static final SemanticError nodeEmpty = SemanticError._(
       'NODE_EMPTY', (args) => 'Empty node encountered.', Severity.Information);
 
-  static final SemanticError nodeSkinnedMeshNonRoot = SemanticError._(
-      'NODE_SKINNED_MESH_NON_ROOT',
-      (args) => 'Node with a skinned mesh is not root. '
-          'Parent transforms will not affect a skinned mesh.',
-      Severity.Warning);
-
   static final SemanticError nodeSkinnedMeshLocalTransforms = SemanticError._(
       'NODE_SKINNED_MESH_LOCAL_TRANSFORMS',
       (args) => 'Local transforms will not affect a skinned mesh.',
       Severity.Warning);
+
+  static final SemanticError nodeSkinnedMeshParentTransforms = SemanticError._(
+      'NODE_SKINNED_MESH_PARENT_TRANSFORMS',
+      (args) => 'Node with a skinned mesh has parent nodes with transforms. '
+          'Parent transforms will not affect a skinned mesh.',
+      Severity.Warning);
+
+  static final SemanticError nodeSkinnedMeshNonRoot = SemanticError._(
+      'NODE_SKINNED_MESH_NON_ROOT',
+      (args) => 'Node with a skinned mesh is not root. '
+          'Parent transforms will not affect a skinned mesh.',
+      Severity.Information);
 
   static final SemanticError nodeSkinNoScene = SemanticError._(
       'NODE_SKIN_NO_SCENE',

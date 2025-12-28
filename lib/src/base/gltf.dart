@@ -308,13 +308,21 @@ class Gltf extends GltfProperty {
 
         // Node has a skinned mesh, check hierarchy and scenes
         if (node.skin != null) {
-          if (node.parent != null) {
-            context.addIssue(SemanticError.nodeSkinnedMeshNonRoot, index: i);
-          }
-
           if (node.hasTransform) {
             context.addIssue(SemanticError.nodeSkinnedMeshLocalTransforms,
                 index: i);
+          }
+          if (node.parent != null) {
+            var parent = node.parent;
+            while (parent != null) {
+              if (parent.hasTransform) {
+                context.addIssue(SemanticError.nodeSkinnedMeshParentTransforms,
+                    index: i);
+                break;
+              }
+              parent = parent.parent;
+            }
+            context.addIssue(SemanticError.nodeSkinnedMeshNonRoot, index: i);
           }
 
           final topCommonRoot = node.skin.commonRoots

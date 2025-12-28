@@ -5,13 +5,19 @@
     "issues": {
         "numErrors": 0,
         "numWarnings": 1,
-        "numInfos": 1,
+        "numInfos": 2,
         "numHints": 0,
         "messages": [
             {
+                "code": "NODE_SKINNED_MESH_PARENT_TRANSFORMS",
+                "message": "Node with a skinned mesh has parent nodes with transforms. Parent transforms will not affect a skinned mesh.",
+                "severity": 1,
+                "pointer": "/nodes/2"
+            },
+            {
                 "code": "NODE_SKINNED_MESH_NON_ROOT",
                 "message": "Node with a skinned mesh is not root. Parent transforms will not affect a skinned mesh.",
-                "severity": 1,
+                "severity": 2,
                 "pointer": "/nodes/2"
             },
             {
