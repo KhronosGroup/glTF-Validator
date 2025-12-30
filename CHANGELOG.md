@@ -12,6 +12,10 @@
 
 * Changed `NODE_SKINNED_MESH_NON_ROOT` default severity to Information.
 
+### Integration updates
+
+* CLI tool now outputs assets with errors in sorted order when validating a directory.
+
 ## 2.0.0-dev.3.10
 
 ### New Features
