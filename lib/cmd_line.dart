@@ -301,6 +301,7 @@ Future<void> run(List<String> args) async {
             watch.stop();
             errPipe.write('Elapsed total: ${watch.elapsedMilliseconds}ms\n');
             if (assetsWithErrors.isNotEmpty) {
+              assetsWithErrors.sort();
               errPipe
                 ..write('\nAssets with errors:\n')
                 ..writeAll(assetsWithErrors.map<String>((a) => '\t$a\n'));
