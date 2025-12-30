@@ -67,11 +67,38 @@ class KhrTextureTransform extends GltfProperty {
       }
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_TEXTURE_TRANSFORM) {
+      return PointerValidity.unknown;
+    }
+    final texInfo = prop as TextureInfo;
+    if (texInfo == null) {
+      return PointerValidity.invalid;
+    }
+    if (texInfo.extensions == null ||
+        !texInfo.extensions.containsKey(KHR_TEXTURE_TRANSFORM)) {
+      return PointerValidity.invalid;
+    }
+    final texSubProp = pointer[inPropDepth + 2];
+    switch (texSubProp) {
+      case OFFSET:
+      case SCALE:
+        return PointerValidity.validIfVec2;
+      case ROTATION:
+        return PointerValidity.validIfScalar;
+    }
+    return PointerValidity.unknown;
+  }
 }
 
-const Extension khrTextureTransformExtension =
-    Extension(KHR_TEXTURE_TRANSFORM, <Type, ExtensionDescriptor>{
-  TextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
-  NormalTextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
-  OcclusionTextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
-});
+const Extension khrTextureTransformExtension = Extension(
+    KHR_TEXTURE_TRANSFORM,
+    <Type, ExtensionDescriptor>{
+      TextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
+      NormalTextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
+      OcclusionTextureInfo: ExtensionDescriptor(KhrTextureTransform.fromMap),
+    },
+    validateExtensionPointer: KhrTextureTransform.validateExtensionPointer);

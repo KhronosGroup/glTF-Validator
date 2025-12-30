@@ -32,9 +32,33 @@ class KhrMaterialsIor extends GltfProperty {
 
     return KhrMaterialsIor._(ior, extensions, getExtras(map, context));
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_IOR) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_IOR)) {
+      return PointerValidity.invalid;
+    }
+    final subProp = pointer[inPropDepth + 2];
+    switch (subProp) {
+      case IOR:
+        return PointerValidity.validIfScalar;
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsIorExtension = Extension(
-    KHR_MATERIALS_IOR, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsIor.fromMap)
-});
+    KHR_MATERIALS_IOR,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsIor.fromMap)
+    },
+    validateExtensionPointer: KhrMaterialsIor.validateExtensionPointer);

@@ -116,9 +116,56 @@ class KhrMaterialsIridescence extends GltfProperty {
       context.path.removeLast();
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_IRIDESCENCE) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_IRIDESCENCE)) {
+      return PointerValidity.invalid;
+    }
+    final iridescenceExt =
+        mat.extensions[KHR_MATERIALS_IRIDESCENCE] as KhrMaterialsIridescence;
+    final subProp = pointer[inPropDepth + 2];
+    TextureInfo texInfoCheckTransform;
+    switch (subProp) {
+      case IRIDESCENCE_FACTOR:
+      case IRIDESCENCE_IOR:
+      case IRIDESCENCE_THICKNESS_MINIMUM:
+      case IRIDESCENCE_THICKNESS_MAXIMUM:
+        return PointerValidity.validIfScalar;
+      case IRIDESCENCE_TEXTURE:
+        if (iridescenceExt.iridescenceTexture == null) {
+          return PointerValidity.invalid;
+        }
+        texInfoCheckTransform = iridescenceExt.iridescenceTexture;
+        break;
+      case IRIDESCENCE_THICKNESS_TEXTURE:
+        if (iridescenceExt.iridescenceThicknessTexture == null) {
+          return PointerValidity.invalid;
+        }
+        texInfoCheckTransform = iridescenceExt.iridescenceThicknessTexture;
+        break;
+    }
+    if (texInfoCheckTransform != null) {
+      // KHR_materials_iridescence can be used with KHR_texture_transform.
+      return KhrTextureTransform.validateExtensionPointer(
+          context, pointer, texInfoCheckTransform, inPropDepth + 3);
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsIridescenceExtension = Extension(
-    KHR_MATERIALS_IRIDESCENCE, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsIridescence.fromMap)
-});
+    KHR_MATERIALS_IRIDESCENCE,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsIridescence.fromMap)
+    },
+    validateExtensionPointer: KhrMaterialsIridescence.validateExtensionPointer);

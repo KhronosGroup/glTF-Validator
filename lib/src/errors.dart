@@ -502,6 +502,43 @@ class SemanticError extends IssueType {
           (args) => 'This extension requires the animation channel target path '
               "to be 'pointer'. Found ${_q(args[0])} instead.");
 
+  static final SemanticError khrAnimationPointerCannotValidateExtras =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_CANNOT_VALIDATE_EXTRAS',
+          (args) => 'Cannot validate pointers into non-standardized extras.',
+          Severity.Hint);
+
+  static final SemanticError khrAnimationPointerInvalidPointer =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_INVALID_POINTER',
+          (args) => 'The pointer ${_q(args[0])} does not point to a valid '
+              'property in the glTF JSON. Animated properties must be '
+              'defined in the JSON document.');
+
+  static final SemanticError khrAnimationPointerIntegerNonStepInterpolation =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_INTEGER_NON_STEP_INTERPOLATION',
+          (args) => 'Animation samplers used with int or bool Object Model '
+              'Data Types MUST use STEP interpolation. '
+              'Pointer: ${_q(args[0])}, expected: ${_q(args[1])}, '
+              'found: ${_q(args[2])}.');
+
+  static final SemanticError khrAnimationPointerComponentTypeMismatch =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_COMPONENT_TYPE_MISMATCH',
+          (args) => 'The output component type of the accessor does not '
+              'match the required type of the glTF Object Model property '
+              'being targeted by the pointer ${_q(args[0])}. '
+              'Expected type: ${_q(args[1])}, found type: ${_q(args[2])}.');
+
+  static final SemanticError khrAnimationPointerVectorSizeMismatch =
+      SemanticError._(
+          'KHR_ANIMATION_POINTER_VECTOR_SIZE_MISMATCH',
+          (args) => 'The output vector size of the accessor does not match '
+              'the required vector size of the glTF Object Model property '
+              'being targeted by the pointer ${_q(args[0])}. '
+              'Expected size: ${args[1]}, found size: ${args[2]}.');
+
   static final SemanticError khrLightsPunctualLightSpotAngles = SemanticError._(
       'KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES',
       (args) => 'outerConeAngle (${args[1]}) is less than or equal to '

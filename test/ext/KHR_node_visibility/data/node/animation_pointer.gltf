@@ -1,0 +1,35 @@
+{
+    "accessors": [
+        { "componentType": 5126, "count": 11, "max": [5.0], "min": [0.0], "normalized": false, "type": "SCALAR" },
+        { "componentType": 5121, "count": 11, "max": [1], "min": [0], "normalized": false, "type": "SCALAR" }
+    ],
+    "animations": [
+        {
+            "channels": [{ "sampler": 0, "target": { "extensions": { "KHR_animation_pointer": { "pointer": "/nodes/0/extensions/KHR_node_visibility/visible" } },
+            "path": "pointer" } }],
+            "samplers": [{ "input": 0, "interpolation": "STEP", "output": 1 }]
+        },
+        {
+            "channels": [{ "sampler": 0, "target": { "extensions": { "KHR_animation_pointer": { "pointer": "/nodes/1/extensions/KHR_node_visibility/visible" } },
+            "path": "pointer" } }],
+            "samplers": [{ "input": 0, "interpolation": "STEP", "output": 1 }]
+        },
+        {
+            "channels": [{ "sampler": 0, "target": { "extensions": { "KHR_animation_pointer": { "pointer": "/nodes/2/extensions/KHR_node_visibility/visible" } },
+            "path": "pointer" } }],
+            "samplers": [{ "input": 0, "interpolation": "STEP", "output": 1 }]
+        },
+        {
+            "channels": [{ "sampler": 0, "target": { "extensions": { "KHR_animation_pointer": { "pointer": "/nodes/0/extensions/KHR_node_visibility/invalidProperty" } },
+            "path": "pointer" } }],
+            "samplers": [{ "input": 0, "interpolation": "STEP", "output": 1 }]
+        }
+    ],
+    "asset": { "copyright": "2025 The Khronos Group", "version": "2.0" },
+    "extensionsRequired": ["KHR_node_visibility"],
+    "extensionsUsed": ["KHR_animation_pointer", "KHR_node_visibility"],
+    "nodes": [
+        { "extensions": { "KHR_node_visibility": { "visible": false } }, "name": "AnimatedVisibility" },
+        { "name": "LackingVisibilityExtension" }
+    ]
+}

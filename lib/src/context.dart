@@ -54,6 +54,29 @@ class Context {
   static Iterable<String> get defaultExtensionNames =>
       kDefaultExtensions.map((e) => e.name);
 
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    for (final extension in context._userExtensions) {
+      final func = extension.validateExtensionPointer;
+      if (func != null) {
+        final result = func(context, pointer, prop, inPropDepth);
+        if (result != PointerValidity.unknown) {
+          return result;
+        }
+      }
+    }
+    for (final extension in kDefaultExtensions) {
+      final func = extension.validateExtensionPointer;
+      if (func != null) {
+        final result = func(context, pointer, prop, inPropDepth);
+        if (result != PointerValidity.unknown) {
+          return result;
+        }
+      }
+    }
+    return PointerValidity.unknown;
+  }
+
   Context({this.validate = true, ValidationOptions options})
       : options = options ?? ValidationOptions() {
     _extensionsLoadedView = UnmodifiableListView(_extensionsLoaded);

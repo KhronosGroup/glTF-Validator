@@ -3,10 +3,24 @@
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_animation_pointer"
+        "KHR_animation_pointer",
+        "KHR_materials_sheen",
+        "KHR_texture_transform"
     ],
     "materials": [
         {
+            "extensions": {
+                "KHR_materials_sheen": {
+                    "sheenColorTexture": {
+                        "index": 0,
+                        "extensions": {
+                            "KHR_texture_transform": {
+                                "offset": [ 0.1, 0.2 ]
+                            }
+                        }
+                    }
+                }
+            },
             "pbrMetallicRoughness": { }
         }
     ],
@@ -20,12 +34,7 @@
         },
         {
             "count": 2,
-            "type": "VEC4",
-            "componentType": 5126
-        },
-        {
-            "count": 2,
-            "type": "SCALAR",
+            "type": "VEC2",
             "componentType": 5126
         }
     ],
@@ -37,7 +46,7 @@
                         "path": "pointer",
                         "extensions": {
                             "KHR_animation_pointer": {
-                                "pointer": "/materials/0/pbrMetallicRoughness/baseColorFactor"
+                                "pointer": "/materials/0/extensions/KHR_materials_sheen/sheenColorTexture/extensions/KHR_texture_transform/offset"
                             }
                         }
                     },
@@ -48,23 +57,24 @@
                         "path": "pointer",
                         "extensions": {
                             "KHR_animation_pointer": {
-                                "pointer": "/materials/0/pbrMetallicRoughness/roughnessFactor"
+                                "pointer": "/materials/0/extensions/KHR_materials_sheen/sheenRoughnessTexture/extensions/KHR_texture_transform/offset"
                             }
                         }
                     },
-                    "sampler": 1
+                    "sampler": 0
                 }
             ],
             "samplers": [
                 {
                     "input": 0,
                     "output": 1
-                },
-                {
-                    "input": 0,
-                    "output": 2
                 }
             ]
+        }
+    ],
+    "textures": [
+        {
+
         }
     ]
 }

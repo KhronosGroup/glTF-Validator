@@ -7,6 +7,11 @@
             "invalid_pointer_syntax.gltf": "Invalid pointer syntax",
             "missing_extension_declaration.gltf": "Missing extension declaration",
             "missing_pointer.gltf": "Missing pointer string",
+            "pointer_to_extras.gltf": "Pointer to extras",
+            "pointer_to_invalid_material.gltf": "Pointer to invalid material",
+            "pointer_to_light.gltf": "One valid pointer to light property, one invalid pointer",
+            "pointer_to_sheen_material.gltf": "One valid pointer to sheen material property, one invalid pointer",
+            "pointer_to_unknown_extension.gltf": "Pointer to unknown extension",
             "custom_property.gltf": "Custom property",
             "unexpected_extension.gltf": "Unexpected extension object location",
             "valid.gltf": "Valid"

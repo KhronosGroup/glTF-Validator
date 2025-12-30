@@ -5,7 +5,7 @@
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
-        "numInfos": 2,
+        "numInfos": 1,
         "numHints": 0,
         "messages": [
             {
@@ -13,12 +13,6 @@
                 "message": "Value 'materials/0/pbrMetallicRoughness/baseColorFactor' does not match regexp pattern '^(?:\\/(?:[^/~]|~0|~1)*)*$'.",
                 "severity": 0,
                 "pointer": "/animations/0/channels/0/target/extensions/KHR_animation_pointer/pointer"
-            },
-            {
-                "code": "INCOMPLETE_EXTENSION_SUPPORT",
-                "message": "Validation support for this extension is incomplete; the asset may have undetected issues.",
-                "severity": 2,
-                "pointer": "/animations/0/channels/0/target/extensions/KHR_animation_pointer"
             },
             {
                 "code": "UNUSED_OBJECT",
