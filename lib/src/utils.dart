@@ -64,17 +64,22 @@ int getIndex(Map<String, Object> map, String name, Context context,
   return -1;
 }
 
-bool getBool(Map<String, Object> map, String name, Context context) {
+bool getBool(Map<String, Object> map, String name, Context context,
+    {bool req = false, bool def = false}) {
   final value = _getGuarded(map, name, _kBoolean, context);
   if (value == null) {
-    return false;
+    if (!req) {
+      return def;
+    }
+    context.addIssue(SchemaError.undefinedProperty, args: [name]);
+    return def;
   }
   if (value is bool) {
     return value;
   }
   context
       .addIssue(SchemaError.typeMismatch, name: name, args: [value, _kBoolean]);
-  return false;
+  return def;
 }
 
 int getUint(Map<String, Object> map, String name, Context context,
