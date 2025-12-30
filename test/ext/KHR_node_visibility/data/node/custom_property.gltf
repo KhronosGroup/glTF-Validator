@@ -1,6 +1,10 @@
 {
-    "asset": { "version": "2.0" },
-    "extensionsUsed": ["KHR_node_visibility"],
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_node_visibility"
+    ],
     "nodes": [
         {
             "extensions": {

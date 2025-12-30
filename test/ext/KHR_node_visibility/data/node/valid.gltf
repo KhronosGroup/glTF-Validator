@@ -1,9 +1,29 @@
 {
-    "asset": { "version": "2.0" },
-    "extensionsUsed": ["KHR_node_visibility"],
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_node_visibility"
+    ],
     "nodes": [
-        { "extensions": { "KHR_node_visibility": { "visible": false } }, "name": "InvisibleCube" },
-        { "extensions": { "KHR_node_visibility": { "visible": true } }, "name": "VisibleCube" },
-        { "extensions": { "KHR_node_visibility": {} }, "name": "EmptyExtensionObject" }
+        {
+            "extensions": {
+                "KHR_node_visibility": {
+                    "visible": false
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_node_visibility": {
+                    "visible": true
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_node_visibility": {}
+            }
+        }
     ]
 }

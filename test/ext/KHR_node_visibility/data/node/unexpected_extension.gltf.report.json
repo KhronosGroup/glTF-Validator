@@ -1,6 +1,7 @@
 {
     "uri": "test/ext/KHR_node_visibility/data/node/unexpected_extension.gltf",
     "mimeType": "model/gltf+json",
+    "validatorVersion": "2.0.0-dev.3.11",
     "issues": {
         "numErrors": 1,
         "numWarnings": 0,
@@ -24,7 +25,9 @@
     },
     "info": {
         "version": "2.0",
-        "extensionsUsed": ["KHR_node_visibility"],
+        "extensionsUsed": [
+            "KHR_node_visibility"
+        ],
         "animationCount": 0,
         "materialCount": 1,
         "hasMorphTargets": false,
