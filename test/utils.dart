@@ -56,6 +56,7 @@ Future compareReports(String basePath) async {
             final oldReport =
                 jsonDecode(await File('$path.report.json').readAsString())
                     as Map;
+            expect(oldReport, contains('validatorVersion'));
 
             expect(newReport..remove('validatorVersion'),
                 equals(oldReport..remove('validatorVersion')));
