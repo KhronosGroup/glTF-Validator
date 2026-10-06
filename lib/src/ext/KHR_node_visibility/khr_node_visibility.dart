@@ -26,9 +26,37 @@ class KhrNodeVisibility extends GltfProperty {
         getExtensions(map, KhrNodeVisibility, context),
         getExtras(map, context));
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_NODE_VISIBILITY) {
+      return PointerValidity.unknown;
+    }
+    final node = prop as Node;
+    if (node == null) {
+      return PointerValidity.invalid;
+    }
+    if (node.extensions == null ||
+        !node.extensions.containsKey(KHR_NODE_VISIBILITY)) {
+      return PointerValidity.invalid;
+    }
+    final subProp = pointer[inPropDepth + 2];
+    switch (subProp) {
+      case VISIBLE:
+        return PointerValidity.validIfBool;
+      case EXTENSIONS:
+      case EXTRAS:
+        return PointerValidity.unknown;
+      default:
+        return PointerValidity.invalid;
+    }
+  }
 }
 
-const Extension khrNodeVisibilityExtension =
-    Extension(KHR_NODE_VISIBILITY, <Type, ExtensionDescriptor>{
-  Node: ExtensionDescriptor(KhrNodeVisibility.fromMap),
-});
+const Extension khrNodeVisibilityExtension = Extension(
+    KHR_NODE_VISIBILITY,
+    <Type, ExtensionDescriptor>{
+      Node: ExtensionDescriptor(KhrNodeVisibility.fromMap),
+    },
+    validateExtensionPointer: KhrNodeVisibility.validateExtensionPointer);

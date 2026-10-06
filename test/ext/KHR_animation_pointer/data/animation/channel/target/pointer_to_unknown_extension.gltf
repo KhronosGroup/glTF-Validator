@@ -22,11 +22,6 @@
             "count": 2,
             "type": "VEC4",
             "componentType": 5126
-        },
-        {
-            "count": 2,
-            "type": "SCALAR",
-            "componentType": 5126
         }
     ],
     "animations": [
@@ -37,32 +32,17 @@
                         "path": "pointer",
                         "extensions": {
                             "KHR_animation_pointer": {
-                                "pointer": "/materials/0/pbrMetallicRoughness/baseColorFactor"
+                                "pointer": "/materials/0/extensions/UNKNOWN_extension/someProperty"
                             }
                         }
                     },
                     "sampler": 0
-                },
-                {
-                    "target": {
-                        "path": "pointer",
-                        "extensions": {
-                            "KHR_animation_pointer": {
-                                "pointer": "/materials/0/pbrMetallicRoughness/roughnessFactor"
-                            }
-                        }
-                    },
-                    "sampler": 1
                 }
             ],
             "samplers": [
                 {
                     "input": 0,
                     "output": 1
-                },
-                {
-                    "input": 0,
-                    "output": 2
                 }
             ]
         }

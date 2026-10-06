@@ -43,6 +43,11 @@
 |INVALID_GL_VALUE|Invalid value `%1` for GL type '`%2`'.|Error|
 |KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_NODE|This extension requires the animation channel target node to be undefined.|Error|
 |KHR_ANIMATION_POINTER_ANIMATION_CHANNEL_TARGET_PATH|This extension requires the animation channel target path to be 'pointer'. Found '`%1`' instead.|Error|
+|KHR_ANIMATION_POINTER_INTEGER_NON_STEP_INTERPOLATION|Animation samplers used with int or bool Object Model Data Types MUST use STEP interpolation. Pointer: '`%1`', expected: '`%2`', found: '`%3`'.|Error|
+|KHR_ANIMATION_POINTER_CANNOT_VALIDATE_EXTRAS|Cannot validate pointers into non-standardized extras.|Hint|
+|KHR_ANIMATION_POINTER_INVALID_POINTER|The pointer '`%1`' does not point to a valid property in the glTF JSON. Animated properties must be defined in the JSON document.|Error|
+|KHR_ANIMATION_POINTER_COMPONENT_TYPE_MISMATCH|The output component type of the accessor does not match the required type of the glTF Object Model property being targeted by the pointer '`%1`'. Expected type: '`%2`', found type: '`%3`'.|Error|
+|KHR_ANIMATION_POINTER_VECTOR_SIZE_MISMATCH|The output vector size of the accessor does not match the required vector size of the glTF Object Model property being targeted by the pointer '`%1`'. Expected size: `%2`, found size: `%3`.|Error|
 |KHR_LIGHTS_PUNCTUAL_LIGHT_SPOT_ANGLES|outerConeAngle (`%2`) is less than or equal to innerConeAngle (`%1`).|Error|
 |KHR_MATERIALS_ANISOTROPY_ANISOTROPY_TEXTURE_TEXCOORD|Normal and anisotropy textures should use the same texture coords.|Warning|
 |KHR_MATERIALS_CLEARCOAT_CLEARCOAT_NORMAL_TEXTURE_TEXCOORD|Normal and clearcoat normal textures should use the same texture coords.|Warning|

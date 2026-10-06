@@ -55,9 +55,43 @@ class KhrMaterialsTransmission extends GltfProperty {
       context.path.removeLast();
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_TRANSMISSION) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_TRANSMISSION)) {
+      return PointerValidity.invalid;
+    }
+    final transmissionExt =
+        mat.extensions[KHR_MATERIALS_TRANSMISSION] as KhrMaterialsTransmission;
+    final subProp = pointer[inPropDepth + 2];
+    switch (subProp) {
+      case TRANSMISSION_FACTOR:
+        return PointerValidity.validIfScalar;
+      case TRANSMISSION_TEXTURE:
+        if (transmissionExt.transmissionTexture == null) {
+          return PointerValidity.invalid;
+        }
+        // KHR_materials_transmission can be used with KHR_texture_transform.
+        return KhrTextureTransform.validateExtensionPointer(context, pointer,
+            transmissionExt.transmissionTexture, inPropDepth + 3);
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsTransmissionExtension = Extension(
-    KHR_MATERIALS_TRANSMISSION, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsTransmission.fromMap)
-});
+    KHR_MATERIALS_TRANSMISSION,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsTransmission.fromMap)
+    },
+    validateExtensionPointer:
+        KhrMaterialsTransmission.validateExtensionPointer);

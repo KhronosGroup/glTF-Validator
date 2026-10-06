@@ -5,7 +5,7 @@
     "issues": {
         "numErrors": 0,
         "numWarnings": 1,
-        "numInfos": 2,
+        "numInfos": 1,
         "numHints": 0,
         "messages": [
             {
@@ -13,12 +13,6 @@
                 "message": "Unexpected property.",
                 "severity": 1,
                 "pointer": "/animations/0/channels/0/target/extensions/KHR_animation_pointer/customProperty"
-            },
-            {
-                "code": "INCOMPLETE_EXTENSION_SUPPORT",
-                "message": "Validation support for this extension is incomplete; the asset may have undetected issues.",
-                "severity": 2,
-                "pointer": "/animations/0/channels/0/target/extensions/KHR_animation_pointer"
             },
             {
                 "code": "UNUSED_OBJECT",

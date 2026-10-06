@@ -1,0 +1,66 @@
+{
+    "uri": "test/ext/KHR_node_visibility/data/node/animation_pointer.gltf",
+    "mimeType": "model/gltf+json",
+    "issues": {
+        "numErrors": 3,
+        "numWarnings": 0,
+        "numInfos": 3,
+        "numHints": 0,
+        "messages": [
+            {
+                "code": "KHR_ANIMATION_POINTER_INVALID_POINTER",
+                "message": "The pointer '/nodes/1/extensions/KHR_node_visibility/visible' does not point to a valid property in the glTF JSON. Animated properties must be defined in the JSON document.",
+                "severity": 0,
+                "pointer": "/animations/1/channels/0/target/extensions/KHR_animation_pointer"
+            },
+            {
+                "code": "KHR_ANIMATION_POINTER_INVALID_POINTER",
+                "message": "The pointer '/nodes/2/extensions/KHR_node_visibility/visible' does not point to a valid property in the glTF JSON. Animated properties must be defined in the JSON document.",
+                "severity": 0,
+                "pointer": "/animations/2/channels/0/target/extensions/KHR_animation_pointer"
+            },
+            {
+                "code": "KHR_ANIMATION_POINTER_INVALID_POINTER",
+                "message": "The pointer '/nodes/0/extensions/KHR_node_visibility/invalidProperty' does not point to a valid property in the glTF JSON. Animated properties must be defined in the JSON document.",
+                "severity": 0,
+                "pointer": "/animations/3/channels/0/target/extensions/KHR_animation_pointer"
+            },
+            {
+                "code": "NODE_EMPTY",
+                "message": "Empty node encountered.",
+                "severity": 2,
+                "pointer": "/nodes/1"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/0"
+            },
+            {
+                "code": "UNUSED_OBJECT",
+                "message": "This object may be unused.",
+                "severity": 2,
+                "pointer": "/nodes/1"
+            }
+        ],
+        "truncated": false
+    },
+    "info": {
+        "version": "2.0",
+        "extensionsUsed": ["KHR_animation_pointer", "KHR_node_visibility"],
+        "extensionsRequired": ["KHR_node_visibility"],
+        "animationCount": 4,
+        "materialCount": 0,
+        "hasMorphTargets": false,
+        "hasSkins": false,
+        "hasTextures": false,
+        "hasDefaultScene": false,
+        "drawCallCount": 0,
+        "totalVertexCount": 0,
+        "totalTriangleCount": 0,
+        "maxUVs": 0,
+        "maxInfluences": 0,
+        "maxAttributes": 0
+    }
+}

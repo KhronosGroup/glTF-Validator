@@ -79,9 +79,46 @@ class KhrMaterialsAnisotropy extends GltfProperty {
       context.path.removeLast();
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_ANISOTROPY) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_ANISOTROPY)) {
+      return PointerValidity.invalid;
+    }
+    final anisoExt =
+        mat.extensions[KHR_MATERIALS_ANISOTROPY] as KhrMaterialsAnisotropy;
+    final subProp = pointer[inPropDepth + 2];
+    switch (subProp) {
+      case ANISOTROPY_STRENGTH:
+      case ANISOTROPY_ROTATION:
+        return PointerValidity.validIfScalar;
+      case ANISOTROPY_TEXTURE:
+        if (anisoExt.anisotropyTexture == null) {
+          return PointerValidity.invalid;
+        }
+        if (pointer.length < inPropDepth + 6) {
+          return PointerValidity.unknown;
+        }
+        // KHR_materials_anisotropy can be used with KHR_texture_transform.
+        return KhrTextureTransform.validateExtensionPointer(
+            context, pointer, anisoExt.anisotropyTexture, inPropDepth + 3);
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsAnisotropyExtension = Extension(
-    KHR_MATERIALS_ANISOTROPY, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsAnisotropy.fromMap)
-});
+    KHR_MATERIALS_ANISOTROPY,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsAnisotropy.fromMap)
+    },
+    validateExtensionPointer: KhrMaterialsAnisotropy.validateExtensionPointer);

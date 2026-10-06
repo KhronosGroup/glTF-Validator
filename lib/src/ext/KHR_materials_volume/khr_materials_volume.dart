@@ -95,9 +95,49 @@ class KhrMaterialsVolume extends GltfProperty {
       }
     }
   }
+
+  static PointerValidity validateExtensionPointer(Context context,
+      List<String> pointer, GltfProperty prop, int inPropDepth) {
+    if (pointer[inPropDepth] != EXTENSIONS ||
+        pointer[inPropDepth + 1] != KHR_MATERIALS_VOLUME) {
+      return PointerValidity.unknown;
+    }
+    final mat = prop as Material;
+    if (mat == null) {
+      return PointerValidity.invalid;
+    }
+    if (mat.extensions == null ||
+        !mat.extensions.containsKey(KHR_MATERIALS_VOLUME)) {
+      return PointerValidity.invalid;
+    }
+    final volumeExt =
+        mat.extensions[KHR_MATERIALS_VOLUME] as KhrMaterialsVolume;
+    final subProp = pointer[inPropDepth + 2];
+    switch (subProp) {
+      case THICKNESS_FACTOR:
+      case ATTENUATION_DISTANCE:
+        return PointerValidity.validIfScalar;
+      case ATTENUATION_COLOR:
+        if (volumeExt.attenuationColor == null ||
+            volumeExt.attenuationColor.length != 3) {
+          return PointerValidity.invalid;
+        }
+        return PointerValidity.validIfVec3;
+      case THICKNESS_TEXTURE:
+        if (volumeExt.thicknessTexture == null) {
+          return PointerValidity.invalid;
+        }
+        // KHR_materials_volume can be used with KHR_texture_transform.
+        return KhrTextureTransform.validateExtensionPointer(
+            context, pointer, volumeExt.thicknessTexture, inPropDepth + 3);
+    }
+    return PointerValidity.unknown;
+  }
 }
 
 const Extension khrMaterialsVolumeExtension = Extension(
-    KHR_MATERIALS_VOLUME, <Type, ExtensionDescriptor>{
-  Material: ExtensionDescriptor(KhrMaterialsVolume.fromMap)
-});
+    KHR_MATERIALS_VOLUME,
+    <Type, ExtensionDescriptor>{
+      Material: ExtensionDescriptor(KhrMaterialsVolume.fromMap)
+    },
+    validateExtensionPointer: KhrMaterialsVolume.validateExtensionPointer);

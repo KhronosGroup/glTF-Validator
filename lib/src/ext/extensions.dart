@@ -62,11 +62,13 @@ export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
 
 class Extension {
   const Extension(this.name, this.functions,
-      {this.init, this.required = false});
+      {this.init, this.validateExtensionPointer, this.required = false});
 
   final String name;
   final Map<Type, ExtensionDescriptor> functions;
   final void Function(Context) init;
+  final PointerValidity Function(Context, List<String>, GltfProperty, int)
+      validateExtensionPointer;
   final bool required;
 }
 

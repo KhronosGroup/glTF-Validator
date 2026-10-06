@@ -4,6 +4,11 @@
 
 ### New Features
 
+* Added full support for `KHR_animation_pointer` extension.
+  * Added new `KHR_ANIMATION_POINTER_CANNOT_VALIDATE_EXTRAS`, `KHR_ANIMATION_POINTER_INVALID_POINTER`, `KHR_ANIMATION_POINTER_INTEGER_NON_STEP_INTERPOLATION`, `KHR_ANIMATION_POINTER_COMPONENT_TYPE_MISMATCH`, and `KHR_ANIMATION_POINTER_VECTOR_SIZE_MISMATCH` validation errors.
+  * The `INCOMPLETE_EXTENSION_SUPPORT` validation info will now be reported far less often, only for unknown extensions.
+  * Extensions can define validation for their own pointer targets by implementing the `validateExtensionPointer` method in their extension class.
+
 * Added support for the `KHR_node_visibility` extension.
 
 * Added new `NODE_SKINNED_MESH_PARENT_TRANSFORMS` validation warning.
