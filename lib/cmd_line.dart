@@ -418,7 +418,7 @@ Future<bool> _processFile(ValidationTask task) async {
     outPipe.writeln(reportString);
   } else {
     await File('${task.filename}.report.json')
-        .writeAsString(reportString, flush: true);
+        .writeAsString('$reportString\n', flush: true);
   }
 
   return errors.isNotEmpty;

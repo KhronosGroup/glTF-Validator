@@ -20,6 +20,8 @@
 
 * CLI tool now outputs assets with errors in sorted order when validating a directory.
 
+* CLI tool now adds a trailing newline to report files.
+
 ## 2.0.0-dev.3.10
 
 ### New Features

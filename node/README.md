@@ -68,11 +68,11 @@ validator.validateBytes(new Uint8Array(asset), {
         })
 }).then((result) => {
     // [result] will contain validation report in object form.
-    // You can convert it to JSON to see its internal structure. 
+    // You can convert it to JSON to see its internal structure.
     console.log(JSON.stringify(result, null, '  '));
 }, (result) => {
-    // Promise rejection means that arguments were invalid or validator was unable 
-    // to detect file format (glTF or GLB). 
+    // Promise rejection means that arguments were invalid or validator was unable
+    // to detect file format (glTF or GLB).
     // [result] will contain exception string.
     console.error(result);
 });
