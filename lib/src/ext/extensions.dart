@@ -35,6 +35,8 @@ import 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 import 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart';
 import 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 import 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
+import 'package:gltf/src/ext/KHR_node_hoverability/khr_node_hoverability.dart';
+import 'package:gltf/src/ext/KHR_node_selectability/khr_node_selectability.dart';
 import 'package:gltf/src/ext/KHR_node_visibility/khr_node_visibility.dart';
 import 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
 import 'package:gltf/src/hash.dart';
@@ -59,6 +61,8 @@ export 'package:gltf/src/ext/KHR_materials_unlit/khr_materials_unlit.dart';
 export 'package:gltf/src/ext/KHR_materials_variants/KHR_materials_variants.dart';
 export 'package:gltf/src/ext/KHR_materials_volume/khr_materials_volume.dart';
 export 'package:gltf/src/ext/KHR_mesh_quantization/khr_mesh_quantization.dart';
+export 'package:gltf/src/ext/KHR_node_hoverability/khr_node_hoverability.dart';
+export 'package:gltf/src/ext/KHR_node_selectability/khr_node_selectability.dart';
 export 'package:gltf/src/ext/KHR_node_visibility/khr_node_visibility.dart';
 export 'package:gltf/src/ext/KHR_texture_transform/khr_texture_transform.dart';
 
@@ -125,6 +129,8 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrMaterialsVariantsExtension,
   khrMaterialsVolumeExtension,
   khrMeshQuantizationExtension,
+  khrNodeHoverabilityExtension,
+  khrNodeSelectabilityExtension,
   khrNodeVisibilityExtension,
   khrTextureTransformExtension
 ];

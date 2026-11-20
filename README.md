@@ -44,6 +44,7 @@ NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfVal
   - KHR_materials_ior
   - KHR_materials_iridescence
   - KHR_materials_pbrSpecularGlossiness
+  - KHR_materials_retroreflection
   - KHR_materials_sheen
   - KHR_materials_specular
   - KHR_materials_transmission
@@ -51,6 +52,9 @@ NuGet package [Third-party contribution]: https://www.nuget.org/packages/GltfVal
   - KHR_materials_variants
   - KHR_materials_volume
   - KHR_mesh_quantization
+  - KHR_node_hoverability
+  - KHR_node_selectability
+  - KHR_node_visibility
   - KHR_texture_transform
 - [Full list of detectable issues](ISSUES.md).
 

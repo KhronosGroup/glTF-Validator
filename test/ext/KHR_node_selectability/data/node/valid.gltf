@@ -1,0 +1,29 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_node_selectability"
+    ],
+    "nodes": [
+        {
+            "extensions": {
+                "KHR_node_selectability": {
+                    "selectable": false
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_node_selectability": {
+                    "selectable": true
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_node_selectability": {}
+            }
+        }
+    ]
+}

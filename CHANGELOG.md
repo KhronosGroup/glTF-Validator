@@ -6,6 +6,8 @@
 
 * Added support for the `KHR_materials_retroreflection` extension.
 
+* Added support for the `KHR_node_hoverability` and `KHR_node_selectability` extensions.
+
 * Added support for the `KHR_node_visibility` extension.
 
 * Added new `NODE_SKINNED_MESH_PARENT_TRANSFORMS` validation warning.
