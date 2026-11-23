@@ -1,0 +1,29 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_node_hoverability"
+    ],
+    "nodes": [
+        {
+            "extensions": {
+                "KHR_node_hoverability": {
+                    "hoverable": false
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_node_hoverability": {
+                    "hoverable": true
+                }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_node_hoverability": {}
+            }
+        }
+    ]
+}
