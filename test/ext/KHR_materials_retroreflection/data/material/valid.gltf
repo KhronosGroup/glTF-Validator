@@ -1,0 +1,29 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_materials_retroreflection"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_retroreflection": { }
+            }
+        },
+        {
+            "extensions": {
+                "KHR_materials_retroreflection": {
+                    "retroreflectionFactor": 0.5,
+                    "retroreflectionTexture": {
+                        "index": 0
+                    }
+                }
+            }
+        }
+    ],
+    "textures": [
+        {
+        }
+    ]
+}

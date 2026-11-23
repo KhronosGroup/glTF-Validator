@@ -27,6 +27,7 @@ import 'package:gltf/src/ext/KHR_materials_emissive_strength/khr_materials_emiss
 import 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 import 'package:gltf/src/ext/KHR_materials_iridescence/khr_materials_iridescence.dart';
 import 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
+import 'package:gltf/src/ext/KHR_materials_retroreflection/khr_materials_retroreflection.dart';
 import 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
 import 'package:gltf/src/ext/KHR_materials_specular/khr_materials_specular.dart';
 import 'package:gltf/src/ext/KHR_materials_transmission/khr_materials_transmission.dart';
@@ -49,6 +50,7 @@ export 'package:gltf/src/ext/KHR_materials_emissive_strength/khr_materials_emiss
 export 'package:gltf/src/ext/KHR_materials_ior/khr_materials_ior.dart';
 export 'package:gltf/src/ext/KHR_materials_iridescence/khr_materials_iridescence.dart';
 export 'package:gltf/src/ext/KHR_materials_pbrSpecularGlossiness/khr_materials_pbr_specular_glossiness.dart';
+export 'package:gltf/src/ext/KHR_materials_retroreflection/khr_materials_retroreflection.dart';
 export 'package:gltf/src/ext/KHR_materials_sheen/khr_materials_sheen.dart';
 export 'package:gltf/src/ext/KHR_materials_specular/khr_materials_specular.dart'
     hide SPECULAR_FACTOR;
@@ -115,6 +117,7 @@ const List<Extension> kDefaultExtensions = <Extension>[
   khrMaterialsIorExtension,
   khrMaterialsIridescenceExtension,
   khrMaterialsPbrSpecularGlossinessExtension,
+  khrMaterialsRetroreflectionExtension,
   khrMaterialsSheenExtension,
   khrMaterialsSpecularExtension,
   khrMaterialsTransmissionExtension,
