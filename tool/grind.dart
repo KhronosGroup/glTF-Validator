@@ -193,8 +193,8 @@ void _npmBuild({bool release = true}) {
     ..remove('scripts');
 
   log('Copying updated $packageJson to $_nodeTarget');
-  File(p.join(_nodeTarget, packageJson))
-      .writeAsStringSync(const JsonEncoder.withIndent('    ').convert(jsonMap));
+  final jsonString = const JsonEncoder.withIndent('    ').convert(jsonMap);
+  File(p.join(_nodeTarget, packageJson)).writeAsStringSync('$jsonString\n');
 
   copy(File(p.join(_nodeSource, 'index.js')), _nodeTargetDir);
   copy(File(p.join(_nodeSource, 'module.mjs')), _nodeTargetDir);
